@@ -44,19 +44,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-sm font-medium">Nombre del fondo</label>
-                        <input name="fondo" class="mt-1 block w-full rounded border-gray-300" type="text" />
+                        <input name="fondo" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="text" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium">Gestor</label>
-                        <input name="gestor" class="mt-1 block w-full rounded border-gray-300" type="text" />
+                        <input name="gestor" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="text" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium">Fecha</label>
-                        <input name="fecha" class="mt-1 block w-full rounded border-gray-300" type="date" />
+                        <input name="fecha" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="date" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium">Moneda</label>
-                        <select name="moneda" class="mt-1 block w-full rounded border-gray-300">
+                        <select name="moneda" class="mt-1 p-2.5 block w-full rounded border border-gray-300">
                             <option value="PEN">PEN</option>
                             <option value="USD">USD</option>
                             <option value="EUR">EUR</option>
@@ -69,31 +69,40 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-sm">Número del llamado</label>
-                            <input name="num_llamado" class="mt-1 block w-full rounded border-gray-300" type="text" />
+                            <input name="num_llamado" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="text" />
                         </div>
                         <div>
                             <label class="block text-sm">Monto del llamado</label>
-                            <input name="monto_llamado" class="mt-1 block w-full rounded border-gray-300" type="number" step="0.01" />
+                            <input name="monto_llamado" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="number" step="0.01" />
                         </div>
                         <div>
                             <label class="block text-sm">N° cuenta FCR (cargo)</label>
-                            <input name="cta_fcr_desde" class="mt-1 block w-full rounded border-gray-300" type="text" />
+                            <input name="cta_fcr_desde" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="text" />
                         </div>
                         <div>
                             <label class="block text-sm">N° cuenta gestor y SWIFT (pago)</label>
-                            <input name="cta_gestor" class="mt-1 block w-full rounded border-gray-300" type="text" />
+                            <input name="cta_gestor" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="text" />
                         </div>
                     </div>
 
-                    <div class="mt-3">
+                    <div class="mt-3" id="sustento_llamado">
                         <label class="block text-sm">Sustento (Carta N°)</label>
                         <div class="flex gap-2 mt-2">
-                            <input name="carta_num_llamado" class="block w-1/3 rounded border-gray-300" type="text" placeholder="N° de carta" />
-                            <input name="carta_file_llamado" class="block w-2/3" type="file" />
+                            <input name="carta_num_llamado" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="text" placeholder="N° de carta" />
+                            <input 
+                                name="carta_file_llamado" 
+                                type="file" 
+                                class="block w-2/3 text-sm text-gray-700 
+                                        file:mr-4 file:py-2 file:px-4 
+                                        file:rounded-md file:border-0 
+                                        file:text-sm file:font-semibold 
+                                        file:bg-blue-50 file:text-blue-700 
+                                        hover:file:bg-blue-100"
+                                />
                         </div>
                     </div>
 
-                    <div class="mt-3 flex items-center gap-3">
+                    <div class="mt-3 flex items-center gap-3" id="instruccionOperacion">
                         <label class="flex items-center gap-2">
                             <input id="instruirOperacion" type="checkbox" />
                             <span>Instruir operación</span>
@@ -107,55 +116,107 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-sm">Número de distribución / retorno</label>
-                            <input name="num_distribucion" class="mt-1 block w-full rounded border-gray-300" type="text" />
+                            <input name="num_distribucion" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="text" />
                         </div>
                         <div>
                             <label class="block text-sm">Monto</label>
-                            <input name="monto_distribucion" class="mt-1 block w-full rounded border-gray-300" type="number" step="0.01" />
+                            <input name="monto_distribucion" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="number" step="0.01" />
                         </div>
                         <div>
                             <label class="block text-sm">N° cuenta FCR (destino)</label>
-                            <input name="cta_fcr_hacia" class="mt-1 block w-full rounded border-gray-300" type="text" />
+                            <input name="cta_fcr_hacia" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="text" />
                         </div>
                     </div>
 
-                    <div class="mt-3">
+                    <div class="mt-3" id="sustento_otros">
                         <label class="block text-sm">Sustento (Carta N°)</label>
                         <div class="flex gap-2 mt-2">
-                            <input name="carta_num_dist" class="block w-1/3 rounded border-gray-300" type="text" placeholder="N° de carta" />
-                            <input name="carta_file_dist" class="block w-2/3" type="file" />
+                            <input name="carta_num_dist" class="mt-1 p-2.5 block w-full rounded border border-gray-300" type="text" placeholder="N° de carta" />
+                            <input name="carta_file_dist" class="block w-2/3 text-sm text-gray-700 
+                                        file:mr-4 file:py-2 file:px-4 
+                                        file:rounded-md file:border-0 
+                                        file:text-sm file:font-semibold 
+                                        file:bg-blue-50 file:text-blue-700 
+                                        hover:file:bg-blue-100" type="file" />
                         </div>
                     </div>
 
-                    <div class="mt-4">
-                        <label class="block font-medium mb-2">Custodia</label>
-                        <div class="flex gap-4 items-center">
-                            <label class="flex items-center gap-2">
-                                <input type="radio" name="custodio" value="si" class="custodio-radio">
-                                <span>Tiene custodio</span>
-                            </label>
-                            <label class="flex items-center gap-2">
-                                <input type="radio" name="custodio" value="no" class="custodio-radio">
-                                <span>No tiene custodio</span>
-                            </label>
-                        </div>
+                    <div id="custodioSection" class="mt-6">
+  <!-- Card -->
+  <fieldset class="rounded-xl border border-slate-200 bg-slate-50/70 p-4 md:p-5">
+    <legend class="px-2 text-sm font-semibold text-slate-700 flex items-center gap-2">
+      <!-- icono -->
+      <svg class="h-5 w-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke-width="1.5"></circle>
+        <path d="M8 13l2.5 2.5L16 10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      Custodia
+    </legend>
 
-                        <div id="tieneCustodioOpciones" class="hidden mt-3 flex items-center gap-3">
-                            <label class="flex items-center gap-2">
-                                <input id="comunicarRegistro" type="checkbox" />
-                                <span>Comunicar el registro de la instrucción para transferencia de recursos</span>
-                            </label>
-                            <button id="btnComunicarOGR" type="button" class="ml-auto px-4 py-2 bg-blue-600 text-white rounded hidden">Comunicar</button>
-                        </div>
+    <!-- Radios como chips -->
+    <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <label class="cursor-pointer rounded-lg border border-slate-200 bg-white p-3 flex items-center gap-3 hover:border-slate-300 focus-within:ring-2 focus-within:ring-blue-500 transition">
+        <input type="radio" name="custodio" value="si" class="custodio-radio sr-only peer">
+        <span class="h-2.5 w-2.5 rounded-full border border-slate-400 peer-checked:bg-blue-600 peer-checked:border-blue-600"></span>
+        <span class="text-slate-800">Tiene custodio</span>
+      </label>
 
-                        <div id="noCustodioOpciones" class="hidden mt-3 flex items-center gap-3">
-                            <label class="flex items-center gap-2">
-                                <input id="solicitarConfirmacion" type="checkbox" />
-                                <span>Solicitar confirmación de la transferencia</span>
-                            </label>
-                            <button id="btnSolicitarOADTE" type="button" class="ml-auto px-4 py-2 bg-blue-600 text-white rounded hidden">Solicitar</button>
-                        </div>
+      <label class="cursor-pointer rounded-lg border border-slate-200 bg-white p-3 flex items-center gap-3 hover:border-slate-300 focus-within:ring-2 focus-within:ring-blue-500 transition">
+        <input type="radio" name="custodio" value="no" class="custodio-radio sr-only peer">
+        <span class="h-2.5 w-2.5 rounded-full border border-slate-400 peer-checked:bg-blue-600 peer-checked:border-blue-600"></span>
+        <span class="text-slate-800">No tiene custodio</span>
+      </label>
+    </div>
+
+    <!-- Línea divisoria que aparece cuando se muestra alguna opción -->
+    <div id="dividerCustodia" class="hidden mt-4 border-t border-slate-200"></div>
+
+    <!-- Opciones: tiene custodio -->
+    <div id="tieneCustodioOpciones" class="hidden mt-4">
+      <div class="flex items-start gap-3">
+        <label class="inline-flex items-start gap-3 cursor-pointer select-none">
+          <input id="comunicarRegistro" type="checkbox" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+          <span class="text-sm text-slate-700 leading-snug">
+            Comunicar el registro de la instrucción para transferencia de recursos
+            <span class="block text-xs text-slate-500">Se notificará a OGR con los datos del registro.</span>
+          </span>
+        </label>
+
+        <button
+  id="btnComunicarOGR"
+  type="button"
+  class="ml-auto flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hidden"
+>
+  <!-- icono -->
+  <span class="leading-none">Comunicar</span>
+</button>
+      </div>
+    </div>
+
+    <!-- Opciones: no tiene custodio -->
+    <div id="noCustodioOpciones" class="hidden mt-4">
+      <div class="flex items-start gap-3">
+        <label class="inline-flex items-start gap-3 cursor-pointer select-none">
+          <input id="solicitarConfirmacion" type="checkbox" class="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+          <span class="text-sm text-slate-700 leading-snug">
+            Solicitar confirmación de la transferencia
+            <span class="block text-xs text-slate-500">Se solicitará confirmación a OAD.TE.</span>
+          </span>
+        </label>
+
+        <button
+          id="btnSolicitarOADTE"
+          type="button"
+          class="ml-auto inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hidden"
+        >
+          <!-- icono -->
+          Solicitar
+        </button>
+      </div>
+    </div>
+  </fieldset>
                     </div>
+
                 </div>
 
                 <div class="mt-4 flex items-center gap-3">
