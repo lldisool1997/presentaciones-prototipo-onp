@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Presentaciones - Índice</title>
+
+    <!-- Tailwind (Play CDN para desarrollo rápido) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="min-h-screen bg-gray-100 flex items-center justify-center">
+
+    <main class="w-full max-w-md px-6 py-10 bg-white rounded-lg shadow-md">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Índice</h1>
+
+        <div class="flex justify-center">
+            <!-- Anchor usado como botón -->
+            <a id="btnDistribucion"
+                 href="/LLAMADOS_DISTR_CAPITAL/index.html"
+                 class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                 aria-label="Ir a Distribución de capital">
+                Distribución de capital
+            </a>
+        </div>
+    </main>
+
+    <script>
+        // Uso mínimo de jQuery como solicitaste: podemos añadir pequeña accesibilidad o trazado
+        $(function(){
+            // Ejemplo simple: foco visual al cargar
+            $('#btnDistribucion').focus();
+            // Puedes añadir más lógica aquí si lo necesitas más adelante
+        });
+    </script>
+</body>
+</html>
