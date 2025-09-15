@@ -10,28 +10,75 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-<body class="min-h-screen bg-gray-100 flex items-center justify-center">
+<body class="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
+    <header>
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Prototipos de Presentaciones</h1>
+    </header>
+    <div>
+    <div class="flex flex-col gap-4">
+        <div class="w-full px-6 py-10 bg-white rounded-lg shadow-md">
+            <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">GESTIÓN DE LLAMADOS Y DISTRIBUCIÓN DE CAPITAL</h1>
 
-    <main class="w-full max-w-md px-6 py-10 bg-white rounded-lg shadow-md">
-        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Índice</h1>
-
-        <div class="flex justify-center">
-            <!-- Anchor usado como botón -->
-            <a id="btnDistribucion"
-                 href="LLAMADOS_DISTR_CAPITAL/index.html"
-                 class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
-                 aria-label="Ir a Distribución de capital">
-                Distribución de capital
-            </a>
+            <div class="flex justify-center">
+                <div class="flex flex-row gap-3">
+                    <a id="btnDistribucion"
+                    href="LLAMADOS_DISTR_CAPITAL/index.html"
+                    class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                    aria-label="Ir a Distribución de capital">
+                    O16.2.4-Gestión de Llamados y Distribución de Capital
+                </a>
+                <a id="btnDistribucion"
+                    href="LLAMADOS_DISTR_CAPITAL/index.html"
+                    class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                    aria-label="Ir a Distribución de capital">
+                    S7.2.2.1.1.2-Llamado de capital
+                </a>
+                <a id="btnDistribucion"
+                    href="LLAMADOS_DISTR_CAPITAL/index.html"
+                    class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                    aria-label="Ir a Distribución de capital">
+                    S7.2.2.2.3-Distribución de capital, utilidades, rebates y otros
+                </a>
+                </div>
+                <!-- Anchor usado como botón -->
+            
+            </div>
         </div>
-    </main>
+        <div class="w-full px-6 py-10 bg-white rounded-lg shadow-md">
+            <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">ADMINISTRACIÓN DE RECURSOS FINANCIEROS DE CORTO PLAZO</h1>
+
+            <div class="flex justify-center">
+                <div class="flex flex-row gap-3">
+                    <a id="btnDistribucion"
+                    href="LLAMADOS_DISTR_CAPITAL/index.html"
+                    class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                    aria-label="Ir a Distribución de capital">
+                    O16.2.5.1.1-Gestión de Subasta de Fondos
+                </a>
+                <a id="btnDistribucion"
+                    href="LLAMADOS_DISTR_CAPITAL/index.html"
+                    class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                    aria-label="Ir a Distribución de capital">
+                    S7.2.2.1.2-Subasta de depósitos a plazo fijo e inversiones en DPZ y sintéticos
+                </a>
+                <a id="btnDistribucion"
+                    href="LLAMADOS_DISTR_CAPITAL/index.html"
+                    class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                    aria-label="Ir a Distribución de capital">
+                    O16.2.5.1.2-Operaciones cambiarias
+                </a>
+                </div>
+            
+            </div>
+        </div>
+    </div>
+
+    </div>
+
 
     <script>
-        // Uso mínimo de jQuery como solicitaste: podemos añadir pequeña accesibilidad o trazado
         $(function(){
-            // Ejemplo simple: foco visual al cargar
             $('#btnDistribucion').focus();
-            // Puedes añadir más lógica aquí si lo necesitas más adelante
         });
     </script>
 </body>

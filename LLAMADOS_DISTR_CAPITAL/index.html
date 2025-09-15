@@ -17,7 +17,6 @@
     <div class="max-w-3xl mx-auto bg-white shadow rounded-lg p-6">
         <h1 class="text-2xl font-semibold mb-4">Registro de Llamado / Distribución / Retorno de Capital</h1>
 
-        <!-- Tipo -->
         <div class="mb-4">
             <label class="block font-medium mb-2">Seleccione tipo:</label>
             <div class="flex gap-4">
@@ -36,7 +35,6 @@
             </div>
         </div>
 
-        <!-- Campos comunes -->
         <form id="formRegistro" class="space-y-4">
             <div id="camposGenerales" class="hidden bg-gray-50 p-4 rounded">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -62,7 +60,6 @@
                     </div>
                 </div>
 
-                <!-- Llamado fields -->
                 <div id="seccionLlamado" class="hidden mt-4 p-3 border rounded bg-white">
                     <h3 class="font-medium mb-2">Datos para Llamado de Capital</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -101,7 +98,6 @@
                     </div>
                 </div>
 
-                <!-- Distribucion / Retorno fields -->
                 <div id="seccionDistribucion" class="hidden mt-4 p-3 border rounded bg-white">
                     <h3 class="font-medium mb-2">Datos para Distribución / Retorno</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -140,7 +136,6 @@
                             </label>
                         </div>
 
-                        <!-- Si tiene custodio -->
                         <div id="tieneCustodioOpciones" class="hidden mt-3 flex items-center gap-3">
                             <label class="flex items-center gap-2">
                                 <input id="comunicarRegistro" type="checkbox" />
@@ -149,7 +144,6 @@
                             <button id="btnComunicarOGR" type="button" class="ml-auto px-4 py-2 bg-blue-600 text-white rounded hidden">Comunicar</button>
                         </div>
 
-                        <!-- Si no tiene custodio -->
                         <div id="noCustodioOpciones" class="hidden mt-3 flex items-center gap-3">
                             <label class="flex items-center gap-2">
                                 <input id="solicitarConfirmacion" type="checkbox" />
@@ -160,7 +154,6 @@
                     </div>
                 </div>
 
-                <!-- Guardar -->
                 <div class="mt-4 flex items-center gap-3">
                     <button id="btnGuardar" type="button" class="px-4 py-2 bg-green-600 text-white rounded">Guardar registro</button>
                     <div id="registroInfo" class="ml-auto text-sm text-gray-600"></div>
