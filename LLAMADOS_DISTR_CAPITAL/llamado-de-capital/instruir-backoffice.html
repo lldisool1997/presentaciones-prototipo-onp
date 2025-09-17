@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Notificaciones de Llamado de Capital — Lista</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-tailwind@5/tailwind.min.css" rel="stylesheet"/>
+  <!-- Select2 -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.full.min.js"></script>
+  <style>
+    .menu-open .menu-panel{ display:block; }
+    /* Select2 con padding 2.5 y borde gris */
+    .select2-container--default .select2-selection--single{
+      height: 44px; border:1px solid rgb(203 213 225); border-radius: .75rem;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered{
+      line-height: 44px; padding-left: .75rem;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow{
+      height: 44px; right: .5rem;
+    }
+    .select2-container--default.select2-container--focus .select2-selection--single{
+      border-color: rgb(99 102 241) !important; box-shadow: 0 0 0 1px rgb(99 102 241 / .2);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-slate-800">
+  <div class="max-w-6xl mx-auto p-6">
+    <!-- Volver atrás -->
+    <button type="button" onclick="history.back()" class="mb-4 inline-flex items-center gap-2 text-sm text-slate-600 hover:text-slate-800">
+      <span class="text-xl">←</span> Volver atrás
+    </button>
+
+    <!-- Topbar con campana -->
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-semibold">Notificaciones de Llamado de Capital</h1>
+      <div class="relative">
+        <button id="btnBell" class="relative rounded-lg border border-slate-300 px-3 py-2.5 hover:bg-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5 align-[-2px]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2a7 7 0 0 0-7 7v3.764l-1.447 2.894A1 1 0 0 0 4.447 17H19.553a1 1 0 0 0 .894-1.447L19 12.764V9a7 7 0 0 0-7-7Zm0 20a3 3 0 0 0 3-3H9a3 3 0 0 0 3 3Z"/>
+          </svg>
+          <span id="bellBadge" class="ml-2 inline-flex items-center justify-center min-w-[1.25rem] px-1.5 text-xs rounded-full bg-amber-500 text-white">0</span>
+        </button>
+        <div id="bellMenu" class="menu-panel hidden absolute right-0 mt-2 w-64 rounded-xl border border-slate-200 bg-white shadow-lg">
+          <div class="px-4 py-3 border-b border-slate-100">
+            <div class="text-sm font-medium">Notificaciones</div>
+          </div>
+          <div id="notifList" class="max-h-72 overflow-auto"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Búsqueda -->
+    <div class="mb-3 flex items-center gap-3">
+      <input id="search" type="text" placeholder="Buscar…" class="w-full sm:w-80 rounded-xl border border-slate-300 px-3 p-2.5 text-sm"/>
+    </div>
+
+    <!-- Tabla -->
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50">
+            <tr class="text-left">
+              <th class="py-3 px-4">ID</th>
+              <th class="py-3 px-4">Documento</th>
+              <th class="py-3 px-4">Monto (Neto)</th>
+              <th class="py-3 px-4">Fecha</th>
+              <th class="py-3 px-4">Banco</th>
+              <th class="py-3 px-4">Gestor</th>
+              <th class="py-3 px-4">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="rows" class="divide-y divide-slate-100"></tbody>
+        </table>
+      </div>
+      <div id="empty" class="p-6 text-center text-slate-500 text-sm hidden">Aún no hay notificaciones.</div>
+    </div>
+  </div>
+
+  <!-- Backdrop -->
+  <div id="backdrop" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
+
+  <!-- Modal VER -->
+  <div id="modalView" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="min-h-full flex items-center justify-center p-4">
+      <div class="w-full max-w-xl bg-white rounded-2xl shadow-xl border border-slate-200">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+          <h2 class="text-lg font-semibold">Detalle de notificación</h2>
+          <button class="p-2 rounded-lg hover:bg-slate-100 btn-close-view" aria-label="Cerrar">✕</button>
+        </div>
+        <div class="px-6 py-5 space-y-3 text-sm">
+          <div><span class="text-slate-500">ID:</span> <span id="v-id" class="font-medium"></span></div>
+          <div><span class="text-slate-500">Documento:</span> <span id="v-doc" class="font-medium"></span></div>
+          <div><span class="text-slate-500">Monto:</span> <span id="v-monto" class="font-medium"></span></div>
+          <div><span class="text-slate-500">Fecha:</span> <span id="v-fecha" class="font-medium"></span></div>
+          <div><span class="text-slate-500">Banco:</span> <span id="v-banco" class="font-medium"></span></div>
+          <div><span class="text-slate-500">Gestor:</span> <span id="v-gestor" class="font-medium"></span></div>
+          <div class="pt-2">
+            <span class="text-slate-500">Estados:</span>
+            <div id="v-states" class="mt-1 flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+        <div class="px-6 py-4 border-t border-slate-200 flex justify-end">
+          <button class="rounded-xl px-3 py-2 border border-slate-300 hover:bg-slate-50 btn-close-view">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal ADICIONAR -->
+  <div id="modalAdd" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="min-h-full flex items-center justify-center p-4">
+      <div class="w-full max-w-screen-2xl bg-white rounded-2xl shadow-xl border border-slate-200">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+          <h2 id="addTitle" class="text-lg font-semibold">Adicionar información</h2>
+          <button class="p-2 rounded-lg hover:bg-slate-100 btn-close-add" aria-label="Cerrar">✕</button>
+        </div>
+
+        <!-- FORMULARIO -->
+        <form id="formAdd" class="px-6 py-5 space-y-6">
+          <input type="hidden" id="addType"> <!-- agregado | carta | constancia -->
+          <input type="hidden" id="addRecId">
+
+          <!-- SOLO AGREGADO -->
+          <div id="agregadoBlock" class="hidden space-y-6">
+            <!-- Inversión + autocompletados -->
+            <div class="rounded-xl border border-slate-200 p-4 space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-sm font-medium mb-1">Inversión (ID) <span class="text-rose-600">*</span></label>
+                  <select id="invId" class="w-full"></select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">Glosa</label>
+                  <input id="glosa" type="text" class="w-full rounded-xl border border-slate-300 px-3 p-2.5 bg-slate-50" readonly>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">Descripción / Instrumento</label>
+                  <input id="desc" type="text" class="w-full rounded-xl border border-slate-300 px-3 p-2.5 bg-slate-50" readonly>
+                </div>
+              </div>
+            </div>
+
+            <!-- Detalle del llamado -->
+            <div class="rounded-xl border border-slate-200">
+              <div class="px-4 py-3 border-b border-slate-200">
+                <div class="font-medium">Detalle del llamado</div>
+                <p class="text-xs text-slate-500">
+                  Distribuciones y Llamados. La suma debe coincidir con el Neto del registro.
+                </p>
+              </div>
+
+              <div class="p-4 flex flex-row gap-3 divide-x divide-slate-200">
+                                <!-- Llamados -->
+                <div class="space-y-3 w-1/2 p-2.5 ">
+                  <div class="flex items-center justify-between">
+                    <div class="font-medium">Llamados</div>
+                    <div class="flex items-center gap-2">
+                      <input id="filterCall" type="text" placeholder="Filtrar ítems…" class="rounded-lg border border-slate-300 px-3 p-2.5 text-sm w-48">
+                      <button type="button" id="btnAddCall" class="rounded-lg border border-slate-300 px-2.5 py-1.5 hover:bg-slate-50 text-sm">+ Ítem</button>
+                    </div>
+                  </div>
+                  <div id="callList" class="grid grid-cols-1 md:grid-cols-1 gap-3"></div>
+                  <div class="text-right text-sm">
+                    <span class="text-slate-500">Total llamados: </span>
+                    <span id="totalCall" class="font-medium">S/ 0.00</span>
+                  </div>
+                </div>
+
+                <!-- Distribuciones -->
+                <div class="space-y-3 w-1/2 p-2.5 ">
+                  <div class="flex items-center justify-between">
+                    <div class="font-medium">Distribuciones (+)</div>
+                    <div class="flex items-center gap-2">
+                      <input id="filterDist" type="text" placeholder="Filtrar ítems…" class="rounded-lg border border-slate-300 px-3 p-2.5 text-sm w-48">
+                      <button type="button" id="btnAddDist" class="rounded-lg border border-slate-300 px-2.5 py-1.5 hover:bg-slate-50 text-sm">+ Ítem</button>
+                    </div>
+                  </div>
+                  <!-- Grid de 2 columnas para muchos ítems -->
+                  <div id="distList" class="grid grid-cols-1 md:grid-cols-1 gap-3"></div>
+                  <div class="text-right text-sm">
+                    <span class="text-slate-500">Total distribuciones: </span>
+                    <span id="totalDist" class="font-medium">S/ 0.00</span>
+                  </div>
+                </div>
+
+
+              </div>
+
+              <div class="px-4 py-3 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-4 gap-3 text-sm">
+                <div><span class="text-slate-500">Neto registrado:</span> <div id="netoReg" class="font-medium">S/ 0.00</div></div>
+                <div><span class="text-slate-500">Total detalle:</span> <div id="totalDet" class="font-medium">S/ 0.00</div></div>
+                <div class="sm:col-span-2">
+                  <span class="text-slate-500">Diferencia:</span>
+                  <div id="diferencia" class="font-medium">S/ 0.00</div>
+                  <p id="diffMsg" class="text-xs mt-1"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARTA / CONSTANCIA (archivo + comentario) — sin cambios -->
+          <div id="archivoBlock" class="hidden space-y-5">
+            <div>
+              <label class="block text-sm font-medium mb-1"><span id="fileLabel">Archivo</span> <span class="text-rose-600">*</span></label>
+              <div class="rounded-xl border-2 border-dashed border-slate-300 p-4 flex items-center gap-3 bg-slate-50">
+                <input id="addFile" type="file" class="hidden" accept=".pdf,.jpg,.jpeg,.png">
+                <button type="button" id="btnAddFile" class="rounded-lg border border-slate-300 px-3 py-2.5 hover:bg-white">
+                  Seleccionar archivo
+                </button>
+                <span id="addFileName" class="text-sm text-slate-500 truncate">Ningún archivo seleccionado</span>
+              </div>
+             <!-- <p class="text-xs text-slate-500 mt-1">PDF/JPG/PNG. Máx 5MB.</p>-->
+            </div>
+            <!--<div>
+              <label class="block text-sm font-medium mb-1">Comentario <span class="text-rose-600">*</span></label>
+              <textarea id="addComment" rows="3" class="w-full rounded-xl border border-slate-300 px-3 p-2.5" placeholder="Describe brevemente..."></textarea>
+            </div>-->
+          </div>
+
+          <!-- BOTONES -->
+          <div class="flex items-center justify-end pt-4 border-t border-slate-200">
+            <button type="button" class="mr-3 rounded-xl px-3 py-2 border border-slate-300 hover:bg-slate-50 btn-close-add">Cancelar</button>
+            <button type="submit" class="rounded-xl bg-indigo-600 text-white px-4 py-2 hover:bg-indigo-700">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ========= “BD” JSON (simulada) ========= */
+const INVEST_DB = [
+  { id: "INV-001", glosa: "Llamado Q3 FIBRA II", descripcion: "FIBRA II" },
+  { id: "INV-002", glosa: "Llamado Extraordinario", descripcion: "FIBRA III" },
+  { id: "INV-003", glosa: "Distribución Semestral", descripcion: "Fondo Infra I" },
+  { id: "FIBRA-II", glosa: "Llamado FIBRA II - Set", descripcion: "FIBRA II" }
+];
+
+const CONCEPTS_DB = {
+  distribuciones: [
+    { id: "DIST-UTIL", text: "Distribución de utilidades" },
+    { id: "DIST-RES",  text: "Distribución de reservas" },
+    { id: "DIST-INT",  text: "Distribución de intereses" }
+  ],
+  llamados: [
+    { id: "CALL-APORT", text: "Llamado de aportes" },
+    { id: "CALL-GAST",  text: "Llamado para gastos" },
+    { id: "CALL-IMP",   text: "Llamado por impuestos" }
+  ]
+};
+
+/* ========= DATA DE PRUEBA ========= */
+let DATA = [
+  { id: 1, monto: 150000, fecha: "2025-09-01", banco: "BCP",       gestor: "ABC Asset Management", fileName: "notificacion_001.pdf", pending: true },
+  { id: 2, monto: 80000,  fecha: "2025-09-05", banco: "BBVA",      gestor: "XYZ Investments",      fileName: "notificacion_002.pdf", pending: true },
+  { id: 3, monto: 120000, fecha: "2025-09-08", banco: "Scotiabank",gestor: "Gestor 123",           fileName: "notificacion_003.pdf", pending: false }
+];
+
+let currentViewIndex = -1;
+let currentAddIndex  = -1;
+
+const money = n => (Number(n||0)).toLocaleString('es-PE', { style:'currency', currency:'PEN' });
+const toNum  = v => isNaN(Number(v)) ? 0 : Number(v);
+
+function render(filter='') {
+  const $rows = $('#rows').empty();
+  const filtered = DATA.filter(r => {
+    if (!filter) return true;
+    const t = (String(r.id) + ' ' + (r.fileName||'') + ' ' + r.monto + ' ' + r.fecha + ' ' + (r.banco||'') + ' ' + (r.gestor||'')).toLowerCase();
+    return t.includes(filter.toLowerCase());
+  });
+  $('#empty').toggleClass('hidden', filtered.length > 0);
+
+  filtered.forEach((r) => {
+    const idx = DATA.indexOf(r);
+    const $tr = $(`
+      <tr class="hover:bg-slate-50">
+        <td class="py-3 px-4">${r.id}</td>
+        <td class="py-3 px-4">
+          ${r.fileName ? `<button class="text-indigo-600 hover:underline btn-pdf" data-i="${idx}">${r.fileName}</button>` : '<span class="text-slate-400">(sin archivo)</span>'}
+        </td>
+        <td class="py-3 px-4 text-right">${money(r.monto)}</td>
+        <td class="py-3 px-4">${r.fecha || ''}</td>
+        <td class="py-3 px-4">${r.banco || ''}</td>
+        <td class="py-3 px-4">${r.gestor || ''}</td>
+        <td class="py-3 px-4">
+          <div class="flex flex-wrap gap-2">
+            <button class="px-2 py-1 rounded-lg border border-slate-300 hover:bg-slate-50 btn-ver" data-i="${idx}">Ver</button>
+            <button class="px-2 py-1 rounded-lg border border-slate-300 hover:bg-slate-50 btn-add" data-t="agregado"  data-i="${idx}">Registrar Agregado</button>
+            <button class="px-2 py-1 rounded-lg border border-slate-300 hover:bg-slate-50 btn-add" data-t="carta"     data-i="${idx}">Registrar Carta de Custodio</button>
+            <button class="px-2 py-1 rounded-lg border border-slate-300 hover:bg-slate-50 btn-add" data-t="constancia" data-i="${idx}">Registrar Constancia de Pago</button>
+          </div>
+        </td>
+      </tr>
+    `);
+    $rows.append($tr);
+  });
+
+  // campana
+  const pendingCount = DATA.filter(r => r.pending).length;
+  $('#bellBadge').text(pendingCount);
+  const $notifList = $('#notifList').empty();
+  if (pendingCount === 0) {
+    $notifList.append(`<div class="px-4 py-3 text-slate-500 text-sm">Sin notificaciones pendientes.</div>`);
+  } else {
+    DATA.forEach(r => r.pending && $notifList.append(
+      `<button class="w-full text-left px-4 py-3 hover:bg-slate-50 text-sm btn-go" data-i="${DATA.indexOf(r)}">Instrucción pendiente (Notif. #${r.id})</button>`
+    ));
+  }
+}
+
+/* ======= VER ======= */
+function openView(idx) {
+  currentViewIndex = idx;
+  const r = DATA[idx];
+  $('#v-id').text(r.id);
+  $('#v-doc').text(r.fileName || '(sin archivo)');
+  $('#v-monto').text(money(r.monto));
+  $('#v-fecha').text(r.fecha || '');
+  $('#v-banco').text(r.banco || '');
+  $('#v-gestor').text(r.gestor || '');
+
+  const $states = $('#v-states').empty();
+  if (r.pending) $states.append(`<span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-amber-100 text-amber-700">Instrucción pendiente</span>`);
+  if (Array.isArray(r.agregados) && r.agregados.length)  $states.append(`<span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-sky-100 text-sky-700">Agregados: ${r.agregados.length}</span>`);
+  if (Array.isArray(r.cartas) && r.cartas.length)        $states.append(`<span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-indigo-100 text-indigo-700">Cartas: ${r.cartas.length}</span>`);
+  if (Array.isArray(r.constancias) && r.constancias.length)$states.append(`<span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-emerald-100 text-emerald-700">Constancias: ${r.constancias.length}</span>`);
+
+  $('#backdrop, #modalView').removeClass('hidden');
+}
+function closeView(){ $('#backdrop, #modalView').addClass('hidden'); }
+
+/* ======= ADICIONAR ======= */
+function openAdd(idx, type){
+  currentAddIndex = idx;
+  $('#addRecId').val(DATA[idx].id);
+  $('#addType').val(type);
+
+  $('#agregadoBlock, #archivoBlock').addClass('hidden');
+
+  // reset comunes
+  $('#addFile').val(''); $('#addFileName').text('Ningún archivo seleccionado');
+  $('#addComment').val(''); $('#aggComment').val('');
+
+  // reset detalle
+  $('#distList, #callList').empty();
+  $('#filterDist, #filterCall').val('');
+  updateTotals();
+
+  if (type === 'agregado') {
+    $('#addTitle').text('Registrar Agregado (adicionar información)');
+    $('#agregadoBlock').removeClass('hidden');
+
+    // neto del registro
+    $('#netoReg').text(money(DATA[idx].monto));
+
+    // inversión select2
+    if (!$('#invId').data('select2')) {
+      $('#invId').select2({
+        placeholder: 'Buscar/ingresar ID de inversión',
+        tags: true, width: '100%',
+        data: INVEST_DB.map(x => ({id:x.id, text:x.id})),
+        dropdownParent: $('#modalAdd')
+      }).on('change', function(){
+        const inv = INVEST_DB.find(x => x.id === $(this).val());
+        $('#glosa').val(inv ? inv.glosa : '');
+        $('#desc').val(inv ? inv.descripcion : '');
+      });
+    } else {
+      $('#invId').val(null).trigger('change');
+      $('#glosa').val(''); $('#desc').val('');
+    }
+
+  } else {
+    $('#addTitle').text(type === 'carta' ? 'Registrar Carta de Custodio' : 'Registrar Constancia de Pago');
+    $('#archivoBlock').removeClass('hidden');
+    $('#fileLabel').text(type === 'carta' ? 'Carta de custodio (archivo)' : 'Constancia de pago (archivo)');
+  }
+
+  $('#backdrop, #modalAdd').removeClass('hidden');
+}
+function closeAdd(){ $('#backdrop, #modalAdd').addClass('hidden'); }
+
+/* ======= Ítem (compacto + 2 columnas) ======= */
+function addDetailRow(containerSel, kind /* 'dist' | 'call' */){
+  const id = Math.random().toString(36).slice(2,8);
+  const badge = kind === 'call'
+    ? '<span class="text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">Llamado</span>'
+    : '<span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Distribución</span>';
+
+  const $card = $(`
+    <div class="rounded-lg border border-slate-200 p-3 space-y-2" data-id="${id}" data-kind="${kind}">
+      <div class="flex items-center justify-between">
+        ${badge}
+        <button type="button" class="rounded-md border border-rose-300 text-rose-700 hover:bg-rose-50 px-2 py-1 text-xs btn-del">Quitar</button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-5 gap-2">
+        <div class="sm:col-span-3">
+          <select class="w-full sel-concepto"></select>
+        </div>
+        <div class="sm:col-span-2">
+          <input type="number" step="0.01" min="0" placeholder="Monto"
+                 class="w-full rounded-lg border border-slate-300 px-3 p-2.5 inp-monto"/>
+        </div>
+      </div>
+    </div>
+  `);
+
+  $(containerSel).append($card);
+
+  // Conceptos Select2
+  const data = kind === 'dist' ? CONCEPTS_DB.distribuciones : CONCEPTS_DB.llamados;
+  $card.find('.sel-concepto').select2({
+    placeholder: 'Concepto…',
+    tags: true, width: '100%',
+    data,
+    dropdownParent: $('#modalAdd')
+  });
+}
+
+/* ======= Totales (distribuciones +, llamados −) ======= */
+function sumContainerSigned(containerSel, sign /* +1 | -1 */){
+  let s = 0;
+  $(containerSel).find('.inp-monto').each(function(){
+    const raw = toNum($(this).val());
+    s += (sign * Math.abs(raw)); // siempre tomamos el valor absoluto
+  });
+  return s;
+}
+function updateTotals(){
+  // distrib (+1), llamados (−1)
+  const totalDist = sumContainerSigned('#distList', -1);
+  const totalCall = sumContainerSigned('#callList', +1);
+  const totalDet  = totalDist + totalCall;
+  $('#totalDist').text(money(totalDist));
+  $('#totalCall').text(money(totalCall)); // puede mostrarse negativo
+  $('#totalDet').text(money(totalDet));
+
+  const idx = currentAddIndex;
+  const neto = idx >= 0 ? Number(DATA[idx].monto) : 0;
+  const diff = totalDet - neto;
+  $('#diferencia').text(money(diff));
+  const $msg = $('#diffMsg').removeClass('text-rose-600 text-emerald-600');
+  if (diff === 0) $msg.text('La suma del detalle coincide con el neto registrado.').addClass('text-emerald-600');
+  else $msg.text('La suma del detalle NO coincide con el neto registrado.').addClass('text-rose-600');
+}
+
+/* ======= Util ======= */
+function addItemToRecord(rec, type, payload){
+  const key = type === 'carta' ? 'cartas' : (type === 'constancia' ? 'constancias' : 'agregados');
+  if (!Array.isArray(rec[key])) rec[key] = [];
+  rec[key].push(payload);
+}
+
+/* ======= Eventos ======= */
+$(function(){
+  // campana
+  $('#btnBell').on('click', function(){ $(this).toggleClass('menu-open'); $('#bellMenu').toggleClass('hidden'); });
+  $(document).on('click', function(e){
+    if (!$(e.target).closest('#btnBell, #bellMenu').length) { $('#bellMenu').addClass('hidden'); $('#btnBell').removeClass('menu-open'); }
+  });
+
+  // buscar
+  $('#search').on('input', function(){ render(this.value); });
+
+  // ver
+  $('#rows').on('click', '.btn-ver', function(){ openView(Number($(this).data('i'))); });
+  $('.btn-close-view').on('click', closeView);
+
+  // notifs
+  $('#notifList').on('click', '.btn-go', function(){
+    openView(Number($(this).data('i'))); $('#bellMenu').addClass('hidden');
+  });
+
+  // pdf
+  $('#rows').on('click', '.btn-pdf', function(){
+    const r = DATA[Number($(this).data('i'))];
+    if (!r?.file) return Swal.fire('Sin documento', 'Este registro no tiene archivo de notificación.', 'info');
+    const url = URL.createObjectURL(r.file); window.open(url, '_blank'); setTimeout(()=>URL.revokeObjectURL(url), 10000);
+  });
+
+  // abrir modal agregar/carta/constancia
+  $('#rows').on('click', '.btn-add', function(){ openAdd(Number($(this).data('i')), $(this).data('t')); });
+  $('.btn-close-add').on('click', closeAdd);
+
+  // archivo (carta/constancia)
+  $('#btnAddFile').on('click', () => $('#addFile').click());
+  $('#addFile').on('change', function(){ const f = this.files[0]; $('#addFileName').text(f ? f.name : 'Ningún archivo seleccionado'); });
+
+  // agregar filas
+  $('#btnAddDist').on('click', () => { addDetailRow('#distList', 'dist'); });
+  $('#btnAddCall').on('click', () => { addDetailRow('#callList', 'call'); });
+
+  // actualizar totales en input
+  $('#distList, #callList').on('input', '.inp-monto', updateTotals);
+  $('#distList, #callList').on('click', '.btn-del', function(){ $(this).closest('[data-id]').remove(); updateTotals(); });
+
+  // filtros de ítems (por texto del concepto seleccionado)
+  function applyFilter(listSel, inputSel){
+    const q = $(inputSel).val().toLowerCase();
+    $(listSel).children('[data-id]').each(function(){
+      const txt = $(this).find('.select2-selection__rendered').attr('title') || '';
+      $(this).toggle(txt.toLowerCase().includes(q));
+    });
+  }
+  $('#filterDist').on('input', () => applyFilter('#distList', '#filterDist'));
+  $('#filterCall').on('input', () => applyFilter('#callList', '#filterCall'));
+
+  // guardar
+  $('#formAdd').on('submit', async function(e){
+    e.preventDefault();
+    const type = $('#addType').val();
+    const rec  = DATA[currentAddIndex];
+
+    if (type === 'agregado') {
+      const invId = $('#invId').val();
+      if (!invId) return Swal.fire('Inversión requerida','Selecciona o escribe el ID de la inversión.','error');
+
+      // al menos un ítem total
+      if ($('#distList [data-id]').length + $('#callList [data-id]').length === 0)
+        return Swal.fire('Sin ítems','Agrega al menos un ítem en Distribuciones o Llamados.','error');
+
+      // sumas con signo
+      const totalDist = (function(){ let s=0; $('#distList .inp-monto').each(function(){ s += -Math.abs(toNum($(this).val())); }); return s; })();
+      const totalCall = (function(){ let s=0; $('#callList .inp-monto').each(function(){ s += Math.abs(toNum($(this).val())); }); return s; })();
+      const totalDet  = totalDist + totalCall;
+      const neto      = Number(rec.monto);
+      const diff      = totalDet - neto;
+      if (diff !== 0) return Swal.fire('Suma no coincide','Distribuciones y Llamados deben totalizar el Neto.','error');
+
+      const toArray = (listSel, kind) => {
+        const arr = [];
+        $(listSel).children('[data-id]').each(function(){
+          const concepto = $(this).find('.sel-concepto').val();
+          const rawMonto = Math.abs(toNum($(this).find('.inp-monto').val()));
+          if (!concepto || !(rawMonto > 0)) { arr.length = 0; return false; }
+          const monto = kind === 'call' ? -rawMonto : rawMonto; // llamada negativa
+          arr.push({ concepto, monto });
+        });
+        return arr;
+      };
+      const distribuciones = toArray('#distList', 'dist'); if (!distribuciones) return Swal.fire('Campos incompletos','Completa concepto y monto en distribuciones.','error');
+      const llamados       = toArray('#callList', 'call'); if (!llamados) return Swal.fire('Campos incompletos','Completa concepto y monto en llamados.','error');
+
+      const inv = INVEST_DB.find(x => x.id === invId);
+      const payload = {
+        inversionId: invId,
+        glosa: inv ? inv.glosa : null,
+        descripcion: inv ? inv.descripcion : null,
+        distribuciones, llamados,
+        totalDistribuciones: totalDist, totalLlamados: totalCall, totalDetalle: totalDet,
+        comentario: $('#aggComment').val()?.trim() || null,
+        ts: new Date().toISOString()
+      };
+
+      const a = await Swal.fire({ title:'¿Guardar agregado?', icon:'question', showCancelButton:true, confirmButtonText:'Sí, continuar' });
+      if (!a.isConfirmed) return;
+      const b = await Swal.fire({ title:'Confirmación final', text:'Confirma que la información es correcta.', icon:'info', showCancelButton:true, confirmButtonText:'Guardar' });
+      if (!b.isConfirmed) return;
+
+      // guarda en el registro (mock)
+      if (!Array.isArray(rec.agregados)) rec.agregados = [];
+      rec.agregados.push(payload);
+
+      closeAdd();
+      Swal.fire('Listo', 'Agregado registrado correctamente.', 'success');
+      render($('#search').val()||'');
+    } else {
+      // carta / constancia (como antes)
+      const file = document.getElementById('addFile').files[0];
+      const comment = $('#addComment').val()?.trim();
+      if (!file) return Swal.fire('Archivo requerido','Adjunta un archivo.','error');
+      if (file.size > 5*1024*1024) return Swal.fire('Archivo muy grande','Máximo 5MB.','error');
+      if (!comment) return Swal.fire('Comentario requerido','Ingresa un comentario.','error');
+
+      const a = await Swal.fire({ title:'¿Guardar información?', icon:'question', showCancelButton:true, confirmButtonText:'Sí, continuar' });
+      if (!a.isConfirmed) return;
+      const b = await Swal.fire({ title:'Confirmación final', text:'Confirma que la información es correcta.', icon:'info', showCancelButton:true, confirmButtonText:'Guardar' });
+      if (!b.isConfirmed) return;
+
+      if (!Array.isArray(rec[$('#addType').val()])) rec[$('#addType').val()] = [];
+      rec[$('#addType').val()].push({ file, fileName:file.name, comment, ts:new Date().toISOString() });
+
+      closeAdd();
+      Swal.fire('Listo', 'Información adicionada al registro.', 'success');
+      render($('#search').val()||'');
+    }
+  });
+
+  // render inicial
+  render();
+});
+</script>
+</body>
+</html>
