@@ -132,6 +132,44 @@
             color: #333;
         }
 
+                .config-section {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .add-document-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .add-document-btn:hover {
+            background: #218838;
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .remove-btn:hover {
+            background: #c82333;
+        }
+
   </style>
 </head>
 <body class="bg-gray-100 text-ink">
@@ -478,6 +516,115 @@
         $("#cta_banco").val(null).trigger("change");
         $fileName.addClass("hidden").text("");
       });
+
+
+       function createDocumentField(docName, fieldId, isCustom = false) {
+            const container = document.getElementById('documentFields');
+
+            const fieldGroup = document.createElement('div');
+            fieldGroup.className = 'file-upload-group';
+            fieldGroup.id = `field_${fieldId}`;
+
+            const label = document.createElement('label');
+            label.textContent = docName;
+            if (isCustom) {
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.textContent = '✕';
+                removeBtn.onclick = () => removeCustomDocument(fieldId);
+                label.appendChild(removeBtn);
+            }
+
+            const uploadArea = document.createElement('div');
+            uploadArea.className = 'file-upload-area';
+            uploadArea.onclick = () => triggerFileInput(fieldId);
+            uploadArea.innerHTML = `
+                <div class="upload-text">📄 Seleccionar archivo</div>
+                <div class="upload-text" style="font-size: 0.8rem; color: #999; margin-top: 0.25rem;">PDF</div>
+            `;
+
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.id = fieldId;
+            fileInput.style.display = 'none';
+            fileInput.accept = '.pdf';
+            fileInput.onchange = (e) => handleFileUpload(e.target, docName);
+
+            fieldGroup.appendChild(label);
+            fieldGroup.appendChild(uploadArea);
+            fieldGroup.appendChild(fileInput);
+            container.appendChild(fieldGroup);
+
+            filesUploaded[fieldId] = false;
+        }
+
+        function triggerFileInput(inputId) {
+            document.getElementById(inputId).click();
+        }
+
+        function handleFileUpload(input, documentType) {
+            const fileArea = input.previousElementSibling;
+
+            if (input.files.length > 0) {
+                const file = input.files[0];
+                const fileName = file.name;
+
+                if (fileName.toLowerCase().endsWith('.pdf')) {
+                    fileArea.innerHTML = `
+                        <div class="file-name">📄 ${fileName}</div>
+                        <div class="upload-text" style="font-size: 0.8rem; color: #28a745;">Archivo cargado correctamente</div>
+                    `;
+                    filesUploaded[input.id] = true;
+                } else {
+                    fileArea.innerHTML = `
+                        <div class="upload-text" style="color: #dc3545;">⌫ Solo se permiten archivos PDF</div>
+                        <div class="upload-text" style="font-size: 0.8rem; color: #999; margin-top: 0.25rem;">PDF</div>
+                    `;
+                    input.value = '';
+                    filesUploaded[input.id] = false;
+                }
+            } else {
+                fileArea.innerHTML = `
+                    <div class="upload-text">📄 Seleccionar archivo</div>
+                    <div class="upload-text" style="font-size: 0.8rem; color: #999; margin-top: 0.25rem;">PDF</div>
+                `;
+                filesUploaded[input.id] = false;
+            }
+
+            checkFormCompletion();
+        }
+
+        function addCustomDocument(event) {
+  // Evitar que el formulario se envíe
+  if (event) event.preventDefault();
+
+  const input = document.getElementById('newDocumentName');
+  const docName = input.value.trim();
+
+  if (!docName) {
+    alert('Por favor ingrese un nombre para el documento');
+    return;
+  }
+
+  const fieldId = `custom_${currentArea}_${documentCounter++}`;
+  createDocumentField(docName, fieldId, true);
+
+  if (!documentRequirements[currentArea + '_custom']) {
+    documentRequirements[currentArea + '_custom'] = [];
+  }
+  documentRequirements[currentArea + '_custom'].push(docName);
+
+  input.value = '';
+}
+
+
+        function removeCustomDocument(fieldId) {
+            const fieldElement = document.getElementById(`field_${fieldId}`);
+            if (fieldElement) {
+                fieldElement.remove();
+                delete filesUploaded[fieldId];
+            }
+        }
     });
   </script>
 </body>
