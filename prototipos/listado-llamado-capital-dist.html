@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lista de Inversiones · Llamados (con colapsable)</title>
+
+  <!-- jQuery + Toastr -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    *{box-sizing:border-box}
+    body{font-family:Segoe UI,system-ui,-apple-system,sans-serif;background:#f5f5f5;color:#2c3e50;margin:0}
+    .container{max-width:1600px;margin:0 auto;padding:20px}
+    .main-container{background:#fff;border-radius:15px;box-shadow:0 8px 32px rgba(0,0,0,.1);overflow:hidden;margin-bottom:20px;position:relative}
+    .profile-info{position:absolute;top:15px;right:25px;background:rgba(255,255,255,.15);color:white;padding:8px 15px;border-radius:20px;font-size:.85em;font-weight:500;z-index:10;border:1px solid rgba(255,255,255,.2)}
+    .header{background:linear-gradient(135deg,#005C97 0%, #004a7c 100%);color:white;padding:30px;text-align:center}
+    .header h1{font-size:2rem;font-weight:600;margin:0 0 .5rem}
+    .content-wrapper{padding:30px}
+    .section-header{color:#2c3e50;font-size:1.3em;font-weight:600;margin:20px 0;padding-left:15px;border-left:4px solid #1976d2;border-bottom:2px solid #3498db}
+
+    .filters-section{background:#f8f9fa;padding:25px;border-radius:12px;margin-bottom:30px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+    .filters-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+    .form-group{display:flex;flex-direction:column;gap:8px}
+    label{font-weight:600;color:#2c3e50;font-size:.9em}
+    select,input{padding:12px 15px;border:2px solid #e0e0e0;border-radius:8px;font-size:1em;background:white;transition:border-color .3s}
+    select:focus,input:focus{outline:none;border-color:#3498db}
+
+    .btn{padding:12px 25px;border:none;border-radius:8px;font-size:1em;font-weight:600;cursor:pointer;transition:.2s;text-transform:uppercase;letter-spacing:.5px}
+    .btn-primary{background:linear-gradient(135deg,#3498db 0%, #2980b9 100%);color:white}
+    .btn-primary:hover{background:linear-gradient(135deg,#2980b9 0%, #1f5f8b 100%);transform:translateY(-2px);box-shadow:0 5px 15px rgba(52,152,219,.3)}
+    .btn-action{padding:6px 12px;font-size:1em;border-radius:5px;text-transform:none;letter-spacing:normal}
+    .btn-llamado-registro{background:#2766ae;color:#fff}
+    .btn-instruir{background:#0f766e;color:#fff}
+    .btn-cancelar{background:#b91c1c;color:#fff}
+
+    .table-container{background:white;border-radius:12px;overflow-x:auto;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:20px;width:100%}
+    table{width:100%;min-width:1500px;border-collapse:collapse}
+    th{background:linear-gradient(135deg,#34495e 0%, #2c3e50 100%);color:white;padding:15px 8px;text-align:center;font-weight:600;font-size:.8em;white-space:nowrap}
+    td{padding:12px 8px;text-align:center;border-bottom:1px solid #eee;font-size:.8em;white-space:nowrap}
+    .text-left{text-align:left!important}
+    .text-right{text-align:right!important}
+    tr:nth-child(even){background:#f8f9fa}
+    tr:hover{background:#eaf4ff}
+    tr.selected{background:#cce5ff!important;border-left:4px solid #1976d2}
+    tr.selected td{font-weight:600}
+
+    .status-badge{padding:5px 12px;border-radius:20px;font-size:1.1em;font-weight:700;text-transform:uppercase}
+    .status-cancelada{background:#f8d7da;color:#721c24}
+    .status-aprobado{background:#d7ebf8;color:#1f1c72}
+
+    /* Colapsable */
+    .toggle{cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+    .toggle .sign{display:inline-block;width:20px;height:20px;line-height:20px;border-radius:6px;background:#eef2f7;color:#334155;font-weight:900}
+    .child-row td{background:#fbfdff}
+    .child-wrap{overflow:hidden;display:none} /* jQuery slideToggle animará esta capa */
+
+    /* Toastr limpio */
+    #toast-container>.toast{border-radius:12px;padding:10px 14px;border:1px solid #e5e7eb;background:#fff;box-shadow:0 12px 28px rgba(0,0,0,.12);color:#0f172a}
+    #toast-container>.toast-success{border-left:6px solid #16a34a;background-image:none}
+    #toast-container>.toast-error{border-left:6px solid #dc2626;background-image:none}
+    #toast-container>.toast-info{border-left:6px solid #2563eb;background-image:none}
+    #toast-container>.toast-warning{border-left:6px solid #f59e0b;background-image:none}
+    #toast-container.toast-top-right{top:18px;right:18px}
+
+    @media (max-width: 1200px){
+      .filters-row{flex-direction:column;align-items:stretch}
+    }
+    @media (max-width: 768px){
+      table{font-size:.7em}
+      .actions-cell{flex-direction:column;gap:5px}
+      .profile-info{position:static;margin-bottom:10px;text-align:center}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="main-container">
+      <div class="profile-info">Perfil: -</div>
+      <div class="header">
+        <h1>Lista de Inversiones</h1>
+        <div>Sin cuponera: llamados / distribuciones / rebates (estados: Registrado, Instruido, Cancelado)</div>
+      </div>
+
+      <div class="content-wrapper">
+        <!-- === Filtros (NO tocados) === -->
+        <div class="filters-section" style="background-color:#f8f9fa;">
+          <div class="filters-row" style="margin-bottom:20px;">
+            <div class="form-group">
+              <label for="entidad">Entidad:</label>
+              <select id="entidad">
+                <option value="">Todas las entidades</option>
+                <option value="fdo-consolidado" selected>Fondo Consolidado de Reservas Previsionales – FCR</option>
+                <option value="fcr-macrofondo">FCR-MACROFONDO</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="unidadNegocio">Unidad de Negocio:</label>
+              <select id="unidadNegocio">
+                <option value="">Todas las unidades</option>
+                <option value="fcr-macrofondo" selected>FCR-MACROFONDO</option>
+                <option value="bonos-corporativos">BONOS CORPORATIVOS</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tipoInstrumento">Tipo Instrumento:</label>
+              <select id="tipoInstrumento">
+                <option value="">Todos los tipos</option>
+                <option value="bonos-corporativos" selected>BONOS CORPORATIVOS</option>
+                <option value="depositos-plazo">Depósitos a Plazo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="inversionNum">Inversión #:</label>
+              <input type="text" id="inversionNum" placeholder="Número de inversión">
+            </div>
+          </div>
+
+          <div class="filters-row" style="margin-bottom:20px;">
+            <div class="form-group">
+              <label for="numeroDeposito"># Depósito:</label>
+              <input type="text" id="numeroDeposito" placeholder="Número de depósito">
+            </div>
+
+            <div class="form-group">
+              <label for="estadoFiltro">Estado del hijo:</label>
+              <select id="estadoFiltro">
+                <option value="">Todos</option>
+                <option value="REGISTRADO">Registrado</option>
+                <option value="NOTIFICADO A BACK OFFICE">Notificado a Back Office</option>
+                <option value="CANCELADO">Cancelado</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Fechas:</label>
+              <div style="display:flex;gap:10px;align-items:center;">
+                <label style="display:flex;align-items:center;gap:5px;font-weight:normal;">
+                  <input type="checkbox" id="checkFechaCompra"> F. Compra
+                </label>
+                <label style="display:flex;align-items:center;gap:5px;font-weight:normal;">
+                  <input type="checkbox" id="checkFechaEmision"> F. Emisión
+                </label>
+                <label style="display:flex;align-items:center;gap:5px;font-weight:normal;">
+                  <input type="checkbox" id="checkFechaVencim"> F. Vencim.
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filters-row">
+            <!--<button class="btn btn-primary" id="btnBuscar">Buscar</button>-->
+            <button class="btn" id="btnLimpiar" style="background:#eef5fb">Limpiar</button>
+          </div>
+        </div>
+
+        <div class="section-header">Inversiones Registradas</div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Ver</th>
+                <th>Estado</th>
+                <th>Inversión #</th>
+                <th>Inv. Principal</th>
+                <th class="text-left">Producto</th>
+                <th class="text-left">Número Depósito</th>
+                <th>Fecha Compra</th>
+                <th>Fecha Emisión</th>
+                <th>Fecha Vencim.</th>
+                <th>Carta Apertura</th>
+                <th>Carta Cancelación</th>
+                <th>Moneda</th>
+                <th>Valor Nominal</th>
+                <th>Compra Spot Cupón</th>
+                <th>P.Compra/Cupón%</th>
+                <th>Eco Instrumento</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="inversionesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // =============== TOASTR CONFIG ===============
+  toastr.options = {
+    closeButton:true,newestOnTop:true,progressBar:true,
+    positionClass:"toast-top-right",timeOut:2600,extendedTimeOut:1200,
+    showDuration:160,hideDuration:160,showMethod:"fadeIn",hideMethod:"fadeOut"
+  };
+
+  // =============== DATA MOCK ===============
+  // Hijos usan estados: REGISTRADO, NOTIFICADO A BACK OFFICE, CANCELADO
+  const inversiones = [
+    {
+      entidad:"fdo-consolidado",
+      unidad:"fcr-macrofondo",
+      tipo:"bonos-corporativos",
+      estado:"APROBADO",
+      inversionNum:"6122",
+      invPrincipal:"6122",
+      producto:"Fondos Alternativos – Secondaries",
+      numeroDeposito:"ALPINV-SEC-22",
+      fechaCompra:"24/01/2015",
+      fechaEmision:"24/01/2015",
+      fechaVencimiento:"24/07/2026",
+      cataApertura:"24/07/2026",
+      cataCancelacion:"Local",
+      moneda:"USD",
+      valorNominal:"24,500,000.00",
+      compraSpotCupon:"",
+      pCompraCupon:"100.00",
+      ecoInstrument:"ALTERNATIVOS",
+      hijos:[
+        { id:"C-1001", tipo:"Llamado",        fecha:"2024-08-10", monto:"1,250,000.00", documento:"call_1001.pdf", estado:"REGISTRADO" },
+        { id:"C-1001", tipo:"Llamado",        fecha:"2024-08-10", monto:"1,250,000.00", documento:"call_1001.pdf", estado:"NOTIFICADO A BACK OFFICE" },
+        //{ id:"C-1002", tipo:"Distribución",   fecha:"2024-12-05", monto:"-250,000.00",  documento:"dist_1002.pdf", estado:"INSTRUIDO" }
+      ]
+    },
+    {
+      entidad:"fdo-consolidado",
+      unidad:"fcr-macrofondo",
+      tipo:"bonos-corporativos",
+      estado:"APROBADO",
+      inversionNum:"6121",
+      invPrincipal:"6121",
+      producto:"Fondo Mutuo Renta Variable Global",
+      numeroDeposito:"FM-RV-GLB-01",
+      fechaCompra:"03/02/2016",
+      fechaEmision:"03/02/2016",
+      fechaVencimiento:"—",
+      cataApertura:"—",
+      cataCancelacion:"—",
+      moneda:"USD",
+      valorNominal:"10,000,000.00",
+      compraSpotCupon:"",
+      pCompraCupon:"—",
+      ecoInstrument:"FONDOS MUTUOS",
+      hijos:[
+        //{ id:"C-2001", tipo:"Rebate",         fecha:"2025-01-31", monto:"-15,400.00",   documento:"reb_2001.pdf",  estado:"REGISTRADO" },
+        //{ id:"C-2002", tipo:"Rescate",        fecha:"2025-06-12", monto:"-500,000.00",  documento:"res_2002.pdf",  estado:"CANCELADO" }
+      ]
+    },
+    {
+      entidad:"fcr-macrofondo",
+      unidad:"bonos-corporativos",
+      tipo:"depositos-plazo",
+      estado:"APROBADO",
+      inversionNum:"6120",
+      invPrincipal:"6120",
+      producto:"ETF S&P 500",
+      numeroDeposito:"ETF-SPX-ACC",
+      fechaCompra:"10/05/2017",
+      fechaEmision:"—",
+      fechaVencimiento:"—",
+      cataApertura:"—",
+      cataCancelacion:"—",
+      moneda:"USD",
+      valorNominal:"8,300,000.00",
+      compraSpotCupon:"",
+      pCompraCupon:"—",
+      ecoInstrument:"ETF",
+      hijos:[
+        //{ id:"C-3001", tipo:"Rescate",        fecha:"2025-07-02", monto:"-300,000.00",  documento:"res_3001.pdf",  estado:"INSTRUIDO" }
+      ]
+    }
+  ];
+
+  // =============== RENDER ===============
+  function estadoBadge(st){
+    if(st==="APROBADO") return 'status-aprobado';
+    if(st==="CANCELADA") return 'status-cancelada';
+    return '';
+  }
+  function badgeHijo(st){
+    if(st==="REGISTRADO") return '<span class="status-badge" style="background:#e0e7ff;color:#3730a3">REGISTRADO</span>';
+    if(st==="NOTIFICADO A BACK OFFICE")  return '<span class="status-badge" style="background:#d1fae5;color:#065f46">NOTIFICADO A BACK OFFICE</span>';
+    return '<span class="status-badge" style="background:#fee2e2;color:#991b1b">CANCELADO</span>';
+  }
+
+  function renderTabla(list){
+    const $tb = $("#inversionesBody").empty();
+    list.forEach((inv, idx)=>{
+      const rowKey = `r${idx}`;
+
+      // fila padre
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>
+          <span class="toggle" data-target="${rowKey}">
+            <span class="sign" id="sign-${rowKey}">+</span>
+          </span>
+        </td>
+        <td><span class="status-badge ${estadoBadge(inv.estado)}">${inv.estado}</span></td>
+        <td>${inv.inversionNum}</td>
+        <td>${inv.invPrincipal}</td>
+        <td class="text-left">${inv.producto}</td>
+        <td class="text-left">${inv.numeroDeposito}</td>
+        <td>${inv.fechaCompra}</td>
+        <td>${inv.fechaEmision}</td>
+        <td>${inv.fechaVencimiento}</td>
+        <td>${inv.cataApertura}</td>
+        <td>${inv.cataCancelacion}</td>
+        <td class="text-right">${inv.moneda}</td>
+        <td class="text-left">${inv.valorNominal}</td>
+        <td>${inv.compraSpotCupon}</td>
+        <td>${inv.pCompraCupon}</td>
+        <td>${inv.ecoInstrument}</td>
+        <td>
+          <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+            <button class="btn btn-action btn-llamado-registro" onclick="irARegistroLlamado('${inv.invPrincipal}')">
+              REALIZAR LLAMADO
+            </button>
+          </div>
+        </td>
+      `;
+      $tb.append(tr);
+
+      // fila hijo (colspan con tabla interior) animada
+      const trChild = document.createElement("tr");
+      trChild.className = "child-row";
+      trChild.innerHTML = `
+        <td colspan="17" style="padding:0;border-bottom:none">
+          <div class="child-wrap" id="wrap-${rowKey}">
+            <div style="padding:12px 16px 16px">
+              <table style="width:100%;min-width:1100px;border-collapse:collapse">
+                <thead>
+                  <tr>
+                    <th style="background:#eef2f7;color:#334155;padding:8px;border-radius:6px 0 0 6px">ID</th>
+                    <th style="background:#eef2f7;color:#334155;padding:8px">Tipo</th>
+                    <th style="background:#eef2f7;color:#334155;padding:8px">Fecha</th>
+                    <th style="background:#eef2f7;color:#334155;padding:8px">Monto</th>
+                    <th style="background:#eef2f7;color:#334155;padding:8px">Documento</th>
+                    <th style="background:#eef2f7;color:#334155;padding:8px">Estado</th>
+                    <th style="background:#eef2f7;color:#334155;padding:8px;border-radius:0 6px 6px 0">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="child-body-${rowKey}">
+                  ${(inv.hijos||[]).map((h,j)=>`
+                    <tr style="border-bottom:1px dashed #e8eef5">
+                      <td style="padding:8px"><b>${h.id}</b></td>
+                      <td style="padding:8px">${h.tipo}</td>
+                      <td style="padding:8px">${h.fecha}</td>
+                      <td style="padding:8px" class="text-right">${h.monto}</td>
+                      <td style="padding:8px" class="text-left">${h.documento}</td>
+                      <td style="padding:8px">${badgeHijo(h.estado)}</td>
+                      <td style="padding:8px">
+                            ${
+                                h.estado === "REGISTRADO"
+                                ? `<button class="btn btn-action btn-instruir"
+                                    onclick="instruirMovimiento(${idx},${j})">
+                                    Notificar (Instruir)
+                                    </button>`
+                                : ""
+                            }
+                            ${
+                                h.estado === "NOTIFICADO A BACK OFFICE"
+                                ? `<button class="btn btn-action btn-cancelar"
+                                    onclick="irABackOffice(${idx},${j})">
+                                    Registrar en Back Office
+                                    </button>`
+                                : ""
+                            }
+                            ${
+                                h.estado === "CANCELADO"
+                                ? `<span style="color:#888;font-size:.8em;">Ya registrado en Back Office</span>`
+                                : ""
+                            }
+
+                      </td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </td>
+      `;
+      $tb.append(trChild);
+    });
+
+    // toggles con animación
+    $(".toggle").off("click").on("click", function(e){
+      e.stopPropagation();
+      const key = $(this).data("target");
+      const $wrap = $(`#wrap-${key}`);
+      const $sign = $(`#sign-${key}`);
+      const isHidden = $wrap.is(":hidden");
+      $wrap.stop(true,true).slideToggle(160);
+      $sign.text(isHidden ? "−" : "+");
+    });
+
+    // seleccionar fila padre (solo highlight)
+    $("#inversionesBody > tr").off("click").on("click", function(){
+      $("#inversionesBody > tr").removeClass("selected");
+      $(this).addClass("selected");
+    });
+  }
+
+  // =============== ACCIONES HIJO ===============
+  function instruirMovimiento(i,j){
+    const h = inversiones[i].hijos[j];
+    if(h.estado!=="REGISTRADO"){ toastr.error("Solo puedes instruir un movimiento en estado REGISTRADO."); return; }
+    h.estado = "NOTIFICADO A BACK OFFICE";
+    toastr.success(`Movimiento ${h.id} Notificado a Back Office.`);
+    applyFilters();
+  }
+  function cancelarMovimiento(i,j){
+    const h = inversiones[i].hijos[j];
+    if(h.estado==="CANCELADO"){ toastr.info("El movimiento ya estaba cancelado."); return; }
+    h.estado = "CANCELADO";
+    toastr.warning(`Movimiento ${h.id} cancelado.`);
+    applyFilters();
+  }
+
+  // Redirige a Back Office (cambia el archivo si usarás otro)
+const BACKOFFICE_URL = "backoffice-instruccion.html";
+
+async function instruirMovimiento(i, j){
+  const h = inversiones[i].hijos[j];
+  if(h.estado !== "REGISTRADO"){
+    toastr.error("Solo puedes notificar un movimiento en estado REGISTRADO.");
+    return;
+  }
+
+  // Primera confirmación
+  const step1 = await Swal.fire({
+    title: `¿Notificar a Back Office?`,
+    text: `Movimiento ${h.id} (${h.tipo}) por ${h.monto}`,
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Sí, notificar",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#2563eb"
+  });
+
+  if(!step1.isConfirmed){
+    toastr.info("Notificación cancelada.");
+    return;
+  }
+
+  // Segunda confirmación
+  const step2 = await Swal.fire({
+    title: "Confirmación final",
+    text: "¿Estás completamente seguro de enviar la instrucción?. Esta acción no se puede deshacer.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, enviar",
+    cancelButtonText: "No",
+    confirmButtonColor: "#dc2626"
+  });
+
+  if(!step2.isConfirmed){
+    toastr.info("Notificación cancelada.");
+    return;
+  }
+
+  // Cambiar estado
+  h.estado = "NOTIFICADO A BACK OFFICE";
+  Swal.fire({
+    icon: "success",
+    title: "Notificado",
+    text: `Movimiento ${h.id} fue notificado a Back Office.`,
+    timer: 2000,
+    showConfirmButton: false
+  });
+  applyFilters();
+}
+
+async function cancelarMovimiento(i, j){
+  const inv = inversiones[i];
+  const h = inv.hijos[j];
+
+  if(h.estado !== "NOTIFICADO A BACK OFFICE"){
+    toastr.error("Para continuar, el movimiento debe estar NOTIFICADO A BACK OFFICE (notificado).");
+    return;
+  }
+
+  const go = await Swal.fire({
+    title: "Registrar en Back Office",
+    text: `¿Deseas ir a la vista de Back Office para registrar el movimiento ${h.id}?`,
+    icon: "info",
+    showCancelButton: true,
+    confirmButtonText: "Sí, continuar",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#16a34a"
+  });
+
+  if(go.isConfirmed){
+    const qs = new URLSearchParams({
+      inv: inv.invPrincipal,
+      mov: h.id,
+      tipo: h.tipo,
+      fecha: h.fecha,
+      monto: h.monto,
+      doc: h.documento
+    }).toString();
+
+    window.location.href = `${BACKOFFICE_URL}?${qs}`;
+  }
+}
+
+
+  // =============== NAVEGACIÓN ===============
+  function irARegistroLlamado(inversionId){
+    if(inversionId){
+      window.location.href = `registro-llamado-capital.html?inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "registro-llamado-capital.html";
+    }
+  }
+  window.irARegistroLlamado = irARegistroLlamado;
+
+   function irABackOffice(i, j) {
+  const inv = inversiones[i];
+  const h   = inv.hijos[j];
+
+  // Armar URL con todos los datos necesarios
+  const url = new URL("prototipos/backoffice-instruccion.html", window.location.origin);
+  url.searchParams.set("inv", inv.inversionNum);
+  url.searchParams.set("mov", h.id);
+  url.searchParams.set("tipo", h.tipo);
+  url.searchParams.set("fecha", h.fecha);
+  url.searchParams.set("monto", h.monto);
+  url.searchParams.set("doc", h.documento);
+  url.searchParams.set("bank", inv.banco || "Banco de Crédito del Perú (BCP)"); // si no lo tienes aún, agrega en mock
+
+  window.location.href = url.toString();
+}
+window.irABackOffice = irABackOffice;
+  window.irARegistroLlamado = irARegistroLlamado;
+
+  // =============== FILTROS (manteniendo los tuyos) ===============
+  function filtrar(base){
+    const fEntidad = $("#entidad").val() || "";
+    const fUnidad  = $("#unidadNegocio").val() || "";
+    const fTipo    = $("#tipoInstrumento").val() || "";
+    const fInvNum  = ($("#inversionNum").val()||"").trim().toLowerCase();
+    const fDep     = ($("#numeroDeposito").val()||"").trim().toLowerCase();
+    const fEstadoH = $("#estadoFiltro").val() || "";
+
+    return base.filter(r=>{
+      if(fEntidad && r.entidad!==fEntidad) return false;
+      if(fUnidad  && r.unidad !==fUnidad ) return false;
+      if(fTipo    && r.tipo   !==fTipo   ) return false;
+      if(fInvNum  && !(`${r.inversionNum}`.toLowerCase().includes(fInvNum))) return false;
+      if(fDep     && !(`${r.numeroDeposito}`.toLowerCase().includes(fDep))) return false;
+      if(fEstadoH){
+        if(!(r.hijos||[]).some(h=>h.estado===fEstadoH)) return false;
+      }
+      return true;
+    });
+  }
+
+  function applyFilters(){
+    renderTabla(filtrar(inversiones));
+  }
+
+  // =============== INIT ===============
+  $(function(){
+    // Inputs de texto -> al escribir
+    $("#inversionNum, #numeroDeposito").on("input", applyFilters);
+
+    // Selects y checkboxes -> al cambiar
+    $("#entidad, #unidadNegocio, #tipoInstrumento, #estadoFiltro, #checkFechaCompra, #checkFechaEmision, #checkFechaVencim")
+    .on("change", applyFilters);
+
+
+    $("#btnBuscar").on("click", applyFilters);
+    $("#btnLimpiar").on("click", function(){
+      $("#entidad").val(""); $("#unidadNegocio").val("");
+      $("#tipoInstrumento").val(""); $("#inversionNum").val("");
+      $("#numeroDeposito").val(""); $("#estadoFiltro").val("");
+      $("#checkFechaCompra").prop("checked", false);
+      $("#checkFechaEmision").prop("checked", false);
+      $("#checkFechaVencim").prop("checked", false);
+      applyFilters();
+    });
+
+    applyFilters();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Back Office · Registrar Instrucción</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand1:'#005C97', brand2:'#004a7c', line:'#e5e7eb', ink:'#2c3e50', muted:'#f9fafb' },
+          boxShadow: { card:'0 8px 32px rgba(0,0,0,.08)', panel:'0 10px 30px rgba(0,0,0,.15)' }
+        }
+      }
+    }
+  </script>
+
+  <!-- jQuery + Toastr -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+  <style>
+    #toast-container > .toast-success,
+#toast-container > .toast-error,
+#toast-container > .toast-info,
+#toast-container > .toast-warning {
+  background-image: none !important;
+  background-repeat: none !important;
+  padding-left: 14px !important; /* ajusta porque antes dejaba espacio al ícono */
+}
+
+  </style>
+</head>
+<body class="bg-gray-100 text-ink">
+
+  <!-- Topbar -->
+  <header class="sticky top-0 z-40 bg-gradient-to-br from-brand1 to-brand2 text-white shadow-md">
+    <div class="max-w-[1100px] mx-auto px-4 py-3 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-white/15 border border-white/25 grid place-items-center">
+        <svg viewBox="0 0 24 24" class="w-5 h-5 fill-white"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm7 6-7 4-7-4m0 0 7-4m7 4v8l-7 4m-7-12v8l7 4"/></svg>
+      </div>
+      <div class="font-semibold">SGAFCR · Back Office · Registrar Instrucción</div>
+      <div class="ml-auto text-sm opacity-90">Llamado de Capital</div>
+    </div>
+  </header>
+
+  <main class="max-w-[1100px] mx-auto px-4 py-6 space-y-5">
+
+    <!-- Cabecera (solo lectura) -->
+    <section class="bg-white rounded-2xl border border-line shadow-card p-5">
+      <h2 class="text-lg font-semibold mb-3">Resumen del movimiento</h2>
+      <div id="head" class="grid md:grid-cols-3 gap-3 text-[15px]"></div>
+      <div class="mt-3 grid md:grid-cols-3 gap-3 text-[15px]">
+        <div class="bg-muted border rounded-xl p-3">
+          <div class="text-xs text-gray-500">Banco</div>
+          <div id="head_banco" class="font-semibold">—</div>
+        </div>
+        <div class="bg-muted border rounded-xl p-3">
+          <div class="text-xs text-gray-500">Documento</div>
+          <div class="flex items-center gap-3">
+            <span id="head_doc" class="font-semibold">—</span>
+            <a id="btnDescargar" href="#" download
+              class="ml-auto px-3 py-1.5 rounded-lg border-2 border-gray-300 bg-white hover:bg-gray-50 text-sm">
+              Descargar
+            </a>
+          </div>
+        </div>
+        <div class="bg-muted border rounded-xl p-3">
+          <div class="text-xs text-gray-500">Estado esperado</div>
+          <div class="font-semibold">CANCELADO (al guardar instrucción)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Desagregado -->
+    <section class="bg-white rounded-2xl border border-line shadow-card p-5">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-lg font-semibold">Desagregado contable (Debe/Haber)</h3>
+        <div class="text-sm">
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">Debe: <b id="sumDebe">0.00</b></span>
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 ml-1">Haber: <b id="sumHaber">0.00</b></span>
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 ml-1">Diferencia: <b id="sumDiff">0.00</b></span>
+        </div>
+      </div>
+
+      <div class="border rounded-2xl overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-gray-50 text-gray-600">
+              <th class="text-left p-3">Concepto</th>
+              <th class="text-center p-3 w-40">Debe/Haber</th>
+              <th class="text-right p-3 w-48">Monto</th>
+              <th class="text-center p-3 w-20">Acción</th>
+            </tr>
+          </thead>
+          <tbody id="tbody" class="divide-y divide-gray-100">
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-3 flex justify-between items-center">
+        <button id="btnAgregar" type="button"
+          class="px-4 py-2.5 rounded-xl bg-white border-2 border-gray-300 hover:bg-gray-50 font-semibold">
+          + Agregar línea
+        </button>
+        <div class="text-xs text-gray-500">La suma debe cuadrar con el monto del llamado.</div>
+      </div>
+    </section>
+
+    <!-- Acciones -->
+    <section class="flex justify-end gap-3">
+      <a href="javascript:history.back()" class="px-4 py-2.5 rounded-xl border-2 border-gray-300 bg-white hover:bg-gray-50">Cancelar</a>
+      <button id="btnGuardar" disabled
+        class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50">
+        Guardar instrucción
+      </button>
+    </section>
+  </main>
+
+<script>
+// =================== TOASTR ===================
+toastr.options = {
+  closeButton:true,newestOnTop:true,progressBar:true,
+  positionClass:"toast-top-right",timeOut:2600,extendedTimeOut:1200,
+  showDuration:160,hideDuration:160,showMethod:"fadeIn",hideMethod:"fadeOut"
+};
+
+// =================== MOCK: Catálogo de conceptos ===================
+// (No necesitas las cuentas; basta el concepto y si sugiere Debe/Haber)
+const CATALOGO_CONCEPTOS = [
+  { concepto:"Capital comprometido",         sugerencia:"DEBE"   },
+  { concepto:"Gastos bancarios",             sugerencia:"DEBE"   },
+  { concepto:"Comisión del gestor",          sugerencia:"DEBE"   },
+  { concepto:"ITF / Impuestos",              sugerencia:"DEBE"   },
+  { concepto:"Ajuste / Redondeo",            sugerencia:"DEBE"   },
+  { concepto:"Costo por transferencia",      sugerencia:"DEBE"   },
+  { concepto:"Reverso / Compensación",       sugerencia:"HABER"  },
+  { concepto:"Descuentos / Bonificaciones",  sugerencia:"HABER"  }
+];
+
+// =================== Helpers ===================
+const qs = new URLSearchParams(location.search);
+const invId     = qs.get("inv")  || "—";
+const movId     = qs.get("mov")  || "—";
+const movTipo   = qs.get("tipo") || "Llamado";
+const movFecha  = qs.get("fecha")|| "—";
+const movMontoS = qs.get("monto")|| "0.00";
+const movDoc    = qs.get("doc")  || "documento.pdf";
+const banco     = qs.get("bank") || "Banco de Crédito del Perú (BCP)";
+
+const montoLlamado = parseFloat(String(movMontoS).replace(/[^\d.-]/g,"")) || 0;
+
+function money(n){ return (n||0).toLocaleString('es-PE',{minimumFractionDigits:2, maximumFractionDigits:2}); }
+function parseMoney(s){ return parseFloat(String(s).replace(/[^\d.-]/g,"")) || 0; }
+
+function renderHeader(){
+  $("#head").html(`
+    <div class="bg-muted border rounded-xl p-3">
+      <div class="text-xs text-gray-500">Inversión</div>
+      <div class="font-semibold">${invId}</div>
+    </div>
+    <div class="bg-muted border rounded-xl p-3">
+      <div class="text-xs text-gray-500">Movimiento</div>
+      <div class="font-semibold">${movId} · ${movTipo}</div>
+    </div>
+    <div class="bg-muted border rounded-xl p-3">
+      <div class="text-xs text-gray-500">Fecha / Monto</div>
+      <div class="font-semibold">${movFecha} · USD ${money(montoLlamado)}</div>
+    </div>
+  `);
+  $("#head_banco").text(banco);
+  $("#head_doc").text(movDoc);
+  // Para demo: si no hay url real, muestra toast
+  $("#btnDescargar").attr("href", "#").on("click", function(e){
+    if(qs.get("docUrl")){
+      $(this).attr("href", qs.get("docUrl"));
+    }else{
+      e.preventDefault();
+      toastr.info("No hay URL real del documento en esta demo.");
+    }
+  });
+}
+
+// =================== Estado del desagregado (sin perder foco) ===================
+let rows = []; // {concepto, dh, monto}
+
+const $tbody = $("#tbody");
+
+const conceptoOptionsHTML = [
+  '<option value="">Seleccione…</option>',
+  ...CATALOGO_CONCEPTOS.map(c => `<option value="${c.concepto}">${c.concepto}</option>`)
+].join("");
+
+function nuevaFila(concepto="", dh="", monto=""){
+  return { concepto, dh, monto };
+}
+
+function buildRowHTML(i, r){
+  return `
+    <tr class="hover:bg-gray-50" data-row="${i}">
+      <td class="p-2">
+        <select data-i="${i}" data-k="concepto"
+          class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
+          ${conceptoOptionsHTML}
+        </select>
+      </td>
+      <td class="p-2 text-center">
+        <select data-i="${i}" data-k="dh"
+          class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500" disabled="true">
+          <option value="">—</option>
+          <option value="DEBE">DEBE</option>
+          <option value="HABER">HABER</option>
+        </select>
+      </td>
+      <td class="p-2 text-right">
+        <input data-i="${i}" data-k="monto" inputmode="decimal" placeholder="0.00"
+          class="w-full text-right rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
+          value="${r.monto||""}">
+      </td>
+      <td class="p-2 text-center">
+        <button type="button" class="px-3 py-1.5 rounded-lg border-2 border-gray-300 bg-white hover:bg-gray-50"
+          onclick="removeRow(${i})">Eliminar</button>
+      </td>
+    </tr>
+  `;
+}
+
+function hydrateRowValues(i){
+  const r = rows[i];
+  const $row = $tbody.find(`tr[data-row="${i}"]`);
+  $row.find('select[data-k="concepto"]').val(r.concepto||"");
+  $row.find('select[data-k="dh"]').val(r.dh||"");
+  $row.find('input[data-k="monto"]').val(r.monto||"");
+}
+
+function attachRowHandlers(i){
+  const $row = $tbody.find(`tr[data-row="${i}"]`);
+  const $concepto = $row.find('select[data-k="concepto"]');
+  const $dh       = $row.find('select[data-k="dh"]');
+  const $monto    = $row.find('input[data-k="monto"]');
+
+  // Concepto: setea state y, si no hay DH, aplica sugerencia sin re-render
+  $concepto.off("change").on("change", function(){
+    const val = $(this).val();
+    rows[i].concepto = val;
+
+    if(!rows[i].dh){
+      const sug = CATALOGO_CONCEPTOS.find(c => c.concepto === val)?.sugerencia || "";
+      rows[i].dh = sug;
+      $dh.val(sug); // reflejar en UI
+    }
+    updateTotals();
+  });
+
+  // Debe/Haber
+  $dh.off("change").on("change", function(){
+    rows[i].dh = $(this).val();
+    updateTotals();
+  });
+
+  // Monto: no re-renderizamos; solo actualizamos state y totales
+  $monto.off("input blur")
+    .on("input", function(){
+      rows[i].monto = $(this).val();
+      updateTotals();
+    })
+    .on("blur", function(){
+      const num = parseMoney($(this).val());
+      rows[i].monto = num ? num.toFixed(2) : "";
+      $(this).val(rows[i].monto);
+      updateTotals();
+    });
+}
+
+function renderAllRows(){
+  $tbody.empty();
+  rows.forEach((r,i)=>{
+    $tbody.append(buildRowHTML(i,r));
+    hydrateRowValues(i);
+    attachRowHandlers(i);
+  });
+  updateTotals();
+}
+
+function addRow(prefill=null){
+  rows.push(prefill || nuevaFila());
+  const i = rows.length - 1;
+  $tbody.append(buildRowHTML(i, rows[i]));
+  hydrateRowValues(i);
+  attachRowHandlers(i);
+  updateTotals();
+  toastr.info("Línea agregada.");
+}
+
+function reindexRowsAfterRemoval(){
+  // Tras eliminar, re-renderizamos todo (evento poco frecuente)
+  renderAllRows();
+}
+
+function removeRow(i){
+  rows.splice(i,1);
+  toastr.warning("Línea eliminada.");
+  reindexRowsAfterRemoval();
+}
+window.removeRow = removeRow;
+
+function updateTotals(){
+  const totDebe  = rows.reduce((acc,r)=> acc + (r.dh==="DEBE"  ? parseMoney(r.monto) : 0), 0);
+  const totHaber = rows.reduce((acc,r)=> acc + (r.dh==="HABER" ? parseMoney(r.monto) : 0), 0);
+  const diff     = (totDebe - totHaber) - montoLlamado;
+
+  $("#sumDebe").text(money(totDebe));
+  $("#sumHaber").text(money(totHaber));
+  $("#sumDiff").text(money(diff));
+
+  const balanced = Math.abs(diff) < 0.005; // tolerancia centavos
+  const allFilled = rows.length>0 && rows.every(r=> r.concepto && (r.dh==="DEBE"||r.dh==="HABER") && parseMoney(r.monto)>0 );
+
+  $("#btnGuardar").prop("disabled", !(allFilled && balanced));
+
+  const $diff = $("#sumDiff").parent();
+  $diff.removeClass("bg-emerald-50 text-emerald-700 bg-amber-50 text-amber-700 bg-red-50 text-red-700");
+  $diff.addClass(balanced ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700");
+}
+
+function guardar(){
+  if($("#btnGuardar").prop("disabled")){
+    toastr.error("El desagregado debe estar completo y cuadrado con el monto del llamado.");
+    return;
+  }
+  toastr.success("✅ Instrucción registrada. Movimiento quedará en estado CANCELADO.");
+  // Aquí enviarías rows + invId/movId/... a tu backend
+  setTimeout(()=>{ window.location.href = "index.html?result=ok"; }, 1200);
+}
+
+// =================== INIT ===================
+$(function(){
+  renderHeader();
+  // Sugerimos 1 línea con el total (DEBE) y 1 vacía para ajustes
+  addRow({ concepto:"Capital comprometido", dh:"DEBE", monto: money(montoLlamado) });
+  //addRow();
+
+  $("#btnAgregar").on("click", ()=> addRow());
+  $("#btnGuardar").on("click", guardar);
+});
+</script>
+
+</body>
+</html>

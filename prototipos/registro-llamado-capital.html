@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registrar Llamado de Capital</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand1:'#005C97', brand2:'#004a7c', line:'#e5e7eb', ink:'#2c3e50', muted:'#f9fafb' },
+          boxShadow: { card:'0 8px 32px rgba(0,0,0,.08)', panel:'0 10px 30px rgba(0,0,0,.15)' }
+        }
+      }
+    }
+  </script>
+
+  <!-- Toastr -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+  <style>
+    /* Quitar íconos por defecto de Toastr */
+#toast-container > .toast-success,
+#toast-container > .toast-error,
+#toast-container > .toast-info,
+#toast-container > .toast-warning {
+  background-image: none !important;
+  background-repeat: none !important;
+  padding-left: 14px !important; /* ajusta porque antes dejaba espacio al ícono */
+}
+
+  </style>
+</head>
+<body class="bg-gray-100 text-ink">
+
+  <!-- Topbar -->
+  <header class="sticky top-0 z-40 bg-gradient-to-br from-brand1 to-brand2 text-white shadow-md">
+    <div class="max-w-[1100px] mx-auto px-4 py-3 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-white/15 border border-white/25 grid place-items-center">
+        <svg viewBox="0 0 24 24" class="w-5 h-5 fill-white"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm7 6-7 4-7-4m0 0 7-4m7 4v8l-7 4m-7-12v8l7 4"/></svg>
+      </div>
+      <div class="font-semibold">FCR · Registrar Llamado de Capital</div>
+      <div class="ml-auto text-sm opacity-90"></div>
+    </div>
+  </header>
+
+  <main class="max-w-[1100px] mx-auto px-4 py-6 space-y-4">
+    <!-- Inversión seleccionada -->
+    <section class="bg-white rounded-2xl border border-line shadow-card p-5">
+      <h2 class="text-lg font-semibold mb-3">Inversión seleccionada</h2>
+      <div id="cardInversion" class="grid md:grid-cols-2 gap-3 text-[15px]"></div>
+    </section>
+
+    <!-- Formulario -->
+    <section class="bg-white rounded-2xl border border-line shadow-card p-5">
+      <h3 class="text-lg font-semibold mb-1">Datos del llamado</h3>
+      <form id="formLlamado" class="space-y-5" novalidate>
+        <input type="hidden" id="inv_id"/>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Fecha del llamado</label>
+            <input id="fecha_llamado" type="date" required
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Monto</label>
+            <input id="monto" type="text" inputmode="decimal" required
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
+                   placeholder="Ej. 1,310,067.70">
+           <!-- <p class="text-xs text-gray-500 mt-1">Se formatea al escribir (no afecta la validación).</p>-->
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-1">Documento de notificación</label>
+          <div id="drop" class="rounded-xl border-2 border-dashed border-gray-300 bg-muted p-4">
+            <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg" required class="hidden">
+            <div class="flex items-center justify-between text-sm">
+              <div>
+                <div class="font-semibold">Arrastra aquí o</div>
+                <div class="text-gray-500">PDF/Imagen · Máx 10MB</div>
+              </div>
+              <button type="button" id="btnFile"
+                class="px-3 py-2.5 rounded-lg border-2 border-gray-300 bg-white hover:bg-gray-50">Seleccionar</button>
+            </div>
+            <div id="fileName" class="mt-2 text-blue-700 font-medium hidden"></div>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3">
+          <a href="#" class="px-4 py-2.5 rounded-xl border-2 border-gray-300 bg-white hover:bg-gray-50">Cancelar</a>
+          <button type="submit"
+            class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+            Guardar llamado
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- Modal de confirmación -->
+  <div id="confirmModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-panel w-[560px] max-w-[92vw] p-5">
+      <h4 class="text-lg font-semibold mb-3">Revisar y confirmar</h4>
+      <div id="review" class="space-y-2 text-sm"></div>
+      <label class="flex items-start gap-2 mt-3 text-sm">
+        <input type="checkbox" id="chkConfirm" class="mt-1">
+        <span>Confirmo que verifiqué los datos.</span>
+      </label>
+      <div class="flex justify-end gap-2 mt-4">
+        <button id="btnCancelConfirm" class="px-3 py-2.5 rounded-xl border border-gray-300">Volver</button>
+        <button id="btnConfirmSave"
+          class="px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold disabled:opacity-50"
+          disabled>Confirmar y guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script>
+    // -------- Mock de inversión seleccionada --------
+    const selectedInvestment = {
+      id: "INV-6120",
+      entidad: "FCRP – Fondo Consolidado",
+      descripcion: "AlpInvest FCR Secondaries · Compromiso"
+    };
+
+    // -------- Helpers visuales / validación --------
+    function markInvalid($el){ $el.addClass("ring-2 ring-red-400 border-red-400"); }
+    function clearInvalid($el){ $el.removeClass("ring-2 ring-red-400 border-red-400"); }
+
+    // monto: formateo suave (no cambia validación)
+    function fmtMoney(s){
+      return (s||"")
+        .replace(/[^\d.,]/g,"")
+        .replace(/\./g,"")
+        .replace(/,/g,".")
+        .replace(/(\d+)(\.\d{0,2})?.*/, (_,a,b)=> {
+          const n = b ? a + b : a;
+          const parts = n.split(".");
+          let int = parts[0].replace(/^0+(?=\d)/,"");
+          let dec = (parts[1]||"").slice(0,2);
+          int = int.replace(/\B(?=(\d{3})+(?!\d))/g,",");
+          return dec ? `${int}.${dec}` : int;
+        });
+    }
+
+    // file: validar extensión/tamaño
+    function validateFile(f){
+      if(!f) return { ok:false, msg:"Adjunta el documento de notificación (PDF/JPG/PNG)." };
+      const okExt = /(\.pdf|\.png|\.jpg|\.jpeg)$/i.test(f.name);
+      if(!okExt) return { ok:false, msg:"Formato no permitido. Solo PDF, JPG o PNG." };
+      if(f.size > 10*1024*1024) return { ok:false, msg:"Archivo supera 10MB. Adjunta uno más liviano." };
+      return { ok:true };
+    }
+
+    // -------- Init --------
+    $(function(){
+      // header
+      $("#cardInversion").html(`
+        <div class="bg-muted border rounded-xl p-3">
+          <div class="text-xs text-gray-500">Entidad</div>
+          <div class="font-semibold">${selectedInvestment.entidad}</div>
+        </div>
+        <div class="bg-muted border rounded-xl p-3">
+          <div class="text-xs text-gray-500">Descripción</div>
+          <div class="font-semibold">${selectedInvestment.descripcion}</div>
+        </div>
+      `);
+      $("#inv_id").val(selectedInvestment.id);
+
+      // toastr cfg
+      toastr.options = { positionClass:"toast-top-right", timeOut:3000, progressBar:true };
+
+      // referencias
+      const $fecha = $("#fecha_llamado");
+      const $monto = $("#monto");
+      const $drop  = $("#drop");
+      const $file  = $("#file");
+      const $fileName = $("#fileName");
+
+      // monto: formateo en vivo
+      $monto.on("input", function(){
+        const caret = this.selectionStart;
+        //$(this).val(fmtMoney($(this).val()));
+        //try { this.setSelectionRange(caret, caret); } catch(e){}
+      });
+
+      // file picker
+      $("#btnFile").on("click", ()=> $file.click());
+      $file.on("change", function(){
+        const f = this.files[0];
+        const v = validateFile(f);
+        if(!v.ok){
+          $(this).val("");
+          $fileName.addClass("hidden").text("");
+          markInvalid($drop);
+          toastr.error(v.msg);
+          return;
+        }
+        clearInvalid($drop);
+        $fileName.removeClass("hidden").text(f.name);
+        toastr.success("Documento adjuntado.");
+      });
+
+      // drag & drop
+      $drop
+        .on("dragover", e=>{ e.preventDefault(); $drop.addClass("ring-2 ring-blue-300"); })
+        .on("dragleave", e=>{ e.preventDefault(); $drop.removeClass("ring-2 ring-blue-300"); })
+        .on("drop", function(e){
+          e.preventDefault();
+          $drop.removeClass("ring-2 ring-blue-300");
+          const dt = e.originalEvent.dataTransfer;
+          if(!(dt && dt.files && dt.files[0])) return;
+          const f = dt.files[0];
+          const v = validateFile(f);
+          if(!v.ok){
+            $file.val("");
+            $fileName.addClass("hidden").text("");
+            markInvalid($drop);
+            toastr.error(v.msg);
+            return;
+          }
+          // asignar archivo al input para el submit
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(f);
+          $file[0].files = dataTransfer.files;
+
+          clearInvalid($drop);
+          $fileName.removeClass("hidden").text(f.name);
+          toastr.success("Documento adjuntado.");
+        });
+
+      // submit -> validar + abrir modal
+      $("#formLlamado").on("submit", function(e){
+        e.preventDefault();
+
+        // limpiar marcas
+        clearInvalid($fecha); clearInvalid($monto); clearInvalid($drop);
+
+        // validar fecha
+        if(!$fecha.val()){
+          markInvalid($fecha); toastr.warning("Indica la fecha del llamado de capital."); $fecha.focus(); return;
+        }
+        // validar monto
+        const montoStr = ($monto.val()||"").trim();
+        const montoNum = parseFloat(montoStr.replace(/,/g,""));
+        if(!montoStr || isNaN(montoNum)){
+          markInvalid($monto); toastr.warning("Monto inválido. Usa formato 1,234.56"); $monto.focus(); return;
+        }
+        // validar file
+        const fileObj = $file[0].files[0];
+        const fv = validateFile(fileObj);
+        if(!fv.ok){
+          markInvalid($drop); toastr.warning(fv.msg); $("#btnFile").focus(); return;
+        }
+
+        // todo ok -> doble check
+        $("#review").html(`
+          <div><b>Inversión:</b> ${selectedInvestment.descripcion}</div>
+          <div><b>Fecha:</b> ${$fecha.val()}</div>
+          <div><b>Monto:</b> ${montoStr}</div>
+          <div><b>Documento:</b> ${fileObj.name}</div>
+        `);
+        $("#chkConfirm").prop("checked", false);
+        $("#btnConfirmSave").prop("disabled", true);
+        $("#confirmModal").removeClass("hidden").addClass("flex");
+      });
+
+      // confirm modal
+      $("#chkConfirm").on("change", function(){
+        $("#btnConfirmSave").prop("disabled", !this.checked);
+      });
+      $("#btnCancelConfirm").on("click", ()=> $("#confirmModal").addClass("hidden").removeClass("flex"));
+      $("#btnConfirmSave").on("click", function(){
+        $("#confirmModal").addClass("hidden").removeClass("flex");
+        toastr.success("✅ Llamado de capital registrado.");
+        $("#formLlamado")[0].reset();
+        $fileName.addClass("hidden").text("");
+      });
+    });
+  </script>
+</body>
+</html>
