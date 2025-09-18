@@ -524,7 +524,7 @@ async function cancelarMovimiento(i, j){
   const h   = inv.hijos[j];
 
   // Armar URL con todos los datos necesarios
-  const url = new URL("/prototipos/backoffice-instruccion.html", window.location.origin);
+  const url = new URL("/backoffice-instruccion.html", window.location.origin);
   url.searchParams.set("inv", inv.inversionNum);
   url.searchParams.set("mov", h.id);
   url.searchParams.set("tipo", h.tipo);
