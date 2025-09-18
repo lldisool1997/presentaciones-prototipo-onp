@@ -34,6 +34,7 @@
     .btn-primary:hover{background:linear-gradient(135deg,#2980b9 0%, #1f5f8b 100%);transform:translateY(-2px);box-shadow:0 5px 15px rgba(52,152,219,.3)}
     .btn-action{padding:6px 12px;font-size:1em;border-radius:5px;text-transform:none;letter-spacing:normal}
     .btn-llamado-registro{background:#2766ae;color:#fff}
+    .btn-aprobar{background:#37ae27;color:#fff}
     .btn-instruir{background:#0f766e;color:#fff}
     .btn-cancelar{background:#b91c1c;color:#fff}
 
@@ -51,6 +52,7 @@
     .status-badge{padding:5px 12px;border-radius:20px;font-size:1.1em;font-weight:700;text-transform:uppercase}
     .status-cancelada{background:#f8d7da;color:#721c24}
     .status-aprobado{background:#d7ebf8;color:#1f1c72}
+    .status-registrado{background:#d7ebf8;color:#30721c}
 
     /* Colapsable */
     .toggle{cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:6px;justify-content:center}
@@ -200,6 +202,26 @@
   // =============== DATA MOCK ===============
   // Hijos usan estados: REGISTRADO, NOTIFICADO A BACK OFFICE, CANCELADO
   const inversiones = [
+        {
+      entidad:"fdo-consolidado",
+      unidad:"fcr-macrofondo",
+      tipo:"bonos-corporativos",
+      estado:"REGISTRADO",
+      inversionNum:"6122",
+      invPrincipal:"6122",
+      producto:"Fondos Alternativos – Secondaries",
+      numeroDeposito:"ALPINV-SEC-22",
+      fechaCompra:"24/01/2015",
+      fechaEmision:"24/01/2015",
+      fechaVencimiento:"24/07/2026",
+      cataApertura:"24/07/2026",
+      cataCancelacion:"Local",
+      moneda:"USD",
+      valorNominal:"24,500,000.00",
+      compraSpotCupon:"",
+      pCompraCupon:"100.00",
+      ecoInstrument:"ALTERNATIVOS",
+    },
     {
       entidad:"fdo-consolidado",
       unidad:"fcr-macrofondo",
@@ -278,6 +300,7 @@
   function estadoBadge(st){
     if(st==="APROBADO") return 'status-aprobado';
     if(st==="CANCELADA") return 'status-cancelada';
+    if(st==="REGISTRADO") return 'status-registrado';
     return '';
   }
   function badgeHijo(st){
@@ -295,9 +318,14 @@
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>
-          <span class="toggle" data-target="${rowKey}">
+           ${
+                                inv.estado !== "REGISTRADO"
+                                ? ` <span class="toggle" data-target="${rowKey}">
             <span class="sign" id="sign-${rowKey}">+</span>
-          </span>
+          </span>`
+                                : ""
+                            }
+         
         </td>
         <td><span class="status-badge ${estadoBadge(inv.estado)}">${inv.estado}</span></td>
         <td>${inv.inversionNum}</td>
@@ -315,11 +343,22 @@
         <td>${inv.pCompraCupon}</td>
         <td>${inv.ecoInstrument}</td>
         <td>
-          <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+          ${
+                                inv.estado !== "REGISTRADO"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroLlamado('${inv.invPrincipal}')">
               REALIZAR LLAMADO
             </button>
-          </div>
+          </div>`
+                                :
+                                
+                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+            <button class="btn btn-action btn-aprobar" onclick="irAAprobacion('${inv.invPrincipal}')">
+              APROBAR
+            </button>
+          </div>`
+                            }
         </td>
       `;
       $tb.append(tr);
@@ -517,7 +556,32 @@ async function cancelarMovimiento(i, j){
       window.location.href = "registro-llamado-capital.html";
     }
   }
-  window.irARegistroLlamado = irARegistroLlamado;
+
+  function irAAprobacion(inversionId) {
+  const claseActivo     = "Inversiones Alternativas";
+  const mercado         = "Local";
+  const subcategoria    = "Fondos de inversión";
+  const tipoInstrumento = "Fondo alternativo";
+
+  // Construir query params
+  const params = new URLSearchParams({
+    claseActivo,
+    mercado,
+    subcategoria,
+    tipoInstrumento
+  });
+
+  // Si además hay inversionId, se agrega
+  if (inversionId) {
+    params.set("inv_id", inversionId);
+  }
+
+  // Redirección con todos los parámetros
+  window.location.href = `aprobacion-instrumento.html?${params.toString()}`;
+}
+
+
+  window.irAAprobacion = irAAprobacion;
 
    function irABackOffice(i, j) {
   const inv = inversiones[i];
