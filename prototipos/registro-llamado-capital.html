@@ -20,17 +20,45 @@
 
   <!-- Toastr -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
-  <style>
-    /* Quitar íconos por defecto de Toastr */
-#toast-container > .toast-success,
-#toast-container > .toast-error,
-#toast-container > .toast-info,
-#toast-container > .toast-warning {
-  background-image: none !important;
-  background-repeat: none !important;
-  padding-left: 14px !important; /* ajusta porque antes dejaba espacio al ícono */
-}
 
+  <!-- Select2 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
+
+  <style>
+    /* Toastr: sin íconos por defecto */
+    #toast-container > .toast-success,
+    #toast-container > .toast-error,
+    #toast-container > .toast-info,
+    #toast-container > .toast-warning {
+      background-image: none !important;
+      background-repeat: none !important;
+      padding-left: 14px !important;
+    }
+    /* Select2 “muted” y p-2.5 */
+    .select2-container--default .select2-selection--single{
+      height: 46px;                     /* p-2.5 + border */
+      border: 2px solid #d1d5db;        /* gray-300 */
+      border-radius: 0.75rem;           /* rounded-xl */
+      background: #fff;
+      display: flex; align-items: center;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered{
+      line-height: 42px;                /* altura interior */
+      padding-left: 12px;               /* p-2.5 feel */
+      color:#111827;                    /* gray-900 */
+      font-size: 15px;
+      font-family: inherit;
+      width: 100%;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow{
+      height: 100%; right: 8px;
+    }
+    .select2-dropdown{
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-ink">
@@ -70,7 +98,15 @@
             <input id="monto" type="text" inputmode="decimal" required
                    class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
                    placeholder="Ej. 1,310,067.70">
-           <!-- <p class="text-xs text-gray-500 mt-1">Se formatea al escribir (no afecta la validación).</p>-->
+          </div>
+        </div>
+
+        <!-- NUEVO: Cuenta Bancaria (Select2) -->
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Cuenta bancaria</label>
+            <select id="cta_banco" style="width:100%"></select>
+            <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde la que se realizará el aporte.</p>
           </div>
         </div>
 
@@ -122,6 +158,9 @@
   <!-- libs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+
   <script>
     // -------- Mock de inversión seleccionada --------
     const selectedInvestment = {
@@ -130,27 +169,18 @@
       descripcion: "AlpInvest FCR Secondaries · Compromiso"
     };
 
+    // -------- Mock cuentas bancarias (reemplaza por las reales) --------
+    const CUENTAS_BANCARIAS = [
+      { id:"BCP-USD-001", text:"BCP • CTA CTE USD 193-1234567-0-12" },
+      { id:"BCP-PEN-002", text:"BCP • CTA CTE PEN 193-8888888-0-12" },
+      { id:"BBVA-USD-003", text:"BBVA • CTA CTE USD 0011-0123456789" },
+      { id:"SCOTIA-USD-004", text:"Scotiabank • CTA CTE USD 000-1234567" }
+    ];
+
     // -------- Helpers visuales / validación --------
     function markInvalid($el){ $el.addClass("ring-2 ring-red-400 border-red-400"); }
     function clearInvalid($el){ $el.removeClass("ring-2 ring-red-400 border-red-400"); }
 
-    // monto: formateo suave (no cambia validación)
-    function fmtMoney(s){
-      return (s||"")
-        .replace(/[^\d.,]/g,"")
-        .replace(/\./g,"")
-        .replace(/,/g,".")
-        .replace(/(\d+)(\.\d{0,2})?.*/, (_,a,b)=> {
-          const n = b ? a + b : a;
-          const parts = n.split(".");
-          let int = parts[0].replace(/^0+(?=\d)/,"");
-          let dec = (parts[1]||"").slice(0,2);
-          int = int.replace(/\B(?=(\d{3})+(?!\d))/g,",");
-          return dec ? `${int}.${dec}` : int;
-        });
-    }
-
-    // file: validar extensión/tamaño
     function validateFile(f){
       if(!f) return { ok:false, msg:"Adjunta el documento de notificación (PDF/JPG/PNG)." };
       const okExt = /(\.pdf|\.png|\.jpg|\.jpeg)$/i.test(f.name);
@@ -159,7 +189,6 @@
       return { ok:true };
     }
 
-    // -------- Init --------
     $(function(){
       // header
       $("#cardInversion").html(`
@@ -177,19 +206,21 @@
       // toastr cfg
       toastr.options = { positionClass:"toast-top-right", timeOut:3000, progressBar:true };
 
-      // referencias
+      // Select2 cuentas
+      $("#cta_banco").select2({
+        data: CUENTAS_BANCARIAS,
+        placeholder: "Selecciona una cuenta...",
+        allowClear: true,
+        width: "100%"
+      });
+
+      // refs
       const $fecha = $("#fecha_llamado");
       const $monto = $("#monto");
+      const $cta   = $("#cta_banco");
       const $drop  = $("#drop");
       const $file  = $("#file");
       const $fileName = $("#fileName");
-
-      // monto: formateo en vivo
-      $monto.on("input", function(){
-        const caret = this.selectionStart;
-        //$(this).val(fmtMoney($(this).val()));
-        //try { this.setSelectionRange(caret, caret); } catch(e){}
-      });
 
       // file picker
       $("#btnFile").on("click", ()=> $file.click());
@@ -226,7 +257,6 @@
             toastr.error(v.msg);
             return;
           }
-          // asignar archivo al input para el submit
           const dataTransfer = new DataTransfer();
           dataTransfer.items.add(f);
           $file[0].files = dataTransfer.files;
@@ -236,35 +266,46 @@
           toastr.success("Documento adjuntado.");
         });
 
-      // submit -> validar + abrir modal
+      // submit -> validar + modal
       $("#formLlamado").on("submit", function(e){
         e.preventDefault();
 
         // limpiar marcas
         clearInvalid($fecha); clearInvalid($monto); clearInvalid($drop);
+        $cta.next(".select2").removeClass("ring-2 ring-red-400");
 
-        // validar fecha
+        // fecha
         if(!$fecha.val()){
           markInvalid($fecha); toastr.warning("Indica la fecha del llamado de capital."); $fecha.focus(); return;
         }
-        // validar monto
+        // monto
         const montoStr = ($monto.val()||"").trim();
         const montoNum = parseFloat(montoStr.replace(/,/g,""));
         if(!montoStr || isNaN(montoNum)){
           markInvalid($monto); toastr.warning("Monto inválido. Usa formato 1,234.56"); $monto.focus(); return;
         }
-        // validar file
+        // cuenta bancaria
+        const ctaId = $cta.val();
+        const ctaTxt = $cta.select2('data')[0]?.text || "";
+        if(!ctaId){
+          $cta.next(".select2").addClass("ring-2 ring-red-400");
+          toastr.warning("Selecciona la cuenta bancaria."); 
+          $cta.select2('open');
+          return;
+        }
+        // archivo
         const fileObj = $file[0].files[0];
         const fv = validateFile(fileObj);
         if(!fv.ok){
           markInvalid($drop); toastr.warning(fv.msg); $("#btnFile").focus(); return;
         }
 
-        // todo ok -> doble check
+        // ok -> doble check
         $("#review").html(`
           <div><b>Inversión:</b> ${selectedInvestment.descripcion}</div>
           <div><b>Fecha:</b> ${$fecha.val()}</div>
           <div><b>Monto:</b> ${montoStr}</div>
+          <div><b>Cuenta bancaria:</b> ${ctaTxt}</div>
           <div><b>Documento:</b> ${fileObj.name}</div>
         `);
         $("#chkConfirm").prop("checked", false);
@@ -281,6 +322,7 @@
         $("#confirmModal").addClass("hidden").removeClass("flex");
         toastr.success("✅ Llamado de capital registrado.");
         $("#formLlamado")[0].reset();
+        $("#cta_banco").val(null).trigger("change");
         $fileName.addClass("hidden").text("");
       });
     });

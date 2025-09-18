@@ -22,6 +22,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     #toast-container > .toast-success,
@@ -130,7 +131,7 @@ toastr.options = {
 };
 
 // =================== MOCK: Catálogo de conceptos ===================
-// (No necesitas las cuentas; basta el concepto y si sugiere Debe/Haber)
+// (Solo concepto y su Debe/Haber asociado; no es editable)
 const CATALOGO_CONCEPTOS = [
   { concepto:"Capital comprometido",         sugerencia:"DEBE"   },
   { concepto:"Gastos bancarios",             sugerencia:"DEBE"   },
@@ -174,7 +175,6 @@ function renderHeader(){
   `);
   $("#head_banco").text(banco);
   $("#head_doc").text(movDoc);
-  // Para demo: si no hay url real, muestra toast
   $("#btnDescargar").attr("href", "#").on("click", function(e){
     if(qs.get("docUrl")){
       $(this).attr("href", qs.get("docUrl"));
@@ -186,7 +186,7 @@ function renderHeader(){
 }
 
 // =================== Estado del desagregado (sin perder foco) ===================
-let rows = []; // {concepto, dh, monto}
+let rows = []; // {concepto, dh(derivado), monto}
 
 const $tbody = $("#tbody");
 
@@ -195,8 +195,17 @@ const conceptoOptionsHTML = [
   ...CATALOGO_CONCEPTOS.map(c => `<option value="${c.concepto}">${c.concepto}</option>`)
 ].join("");
 
-function nuevaFila(concepto="", dh="", monto=""){
+function nuevaFila(concepto="", monto=""){
+  // Deriva DH desde el concepto; si no hay concepto, queda vacío
+  const dh = (concepto && (CATALOGO_CONCEPTOS.find(c => c.concepto===concepto)?.sugerencia)) || "";
   return { concepto, dh, monto };
+}
+
+function dhBadgeHTML(dh){
+  const base = 'px-2.5 py-1 rounded-full text-xs font-semibold';
+  if(dh==="DEBE")  return `<span class="${base} bg-blue-50 text-blue-700" data-role="dh-badge">${dh}</span>`;
+  if(dh==="HABER") return `<span class="${base} bg-emerald-50 text-emerald-700" data-role="dh-badge">${dh}</span>`;
+  return `<span class="${base} bg-gray-100 text-gray-500" data-role="dh-badge">—</span>`;
 }
 
 function buildRowHTML(i, r){
@@ -209,12 +218,10 @@ function buildRowHTML(i, r){
         </select>
       </td>
       <td class="p-2 text-center">
-        <select data-i="${i}" data-k="dh"
-          class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500" disabled="true">
-          <option value="">—</option>
-          <option value="DEBE">DEBE</option>
-          <option value="HABER">HABER</option>
-        </select>
+        <!-- DH solo visual, no editable -->
+        <div data-i="${i}" data-k="dh-view">
+          ${dhBadgeHTML(r.dh)}
+        </div>
       </td>
       <td class="p-2 text-right">
         <input data-i="${i}" data-k="monto" inputmode="decimal" placeholder="0.00"
@@ -233,36 +240,27 @@ function hydrateRowValues(i){
   const r = rows[i];
   const $row = $tbody.find(`tr[data-row="${i}"]`);
   $row.find('select[data-k="concepto"]').val(r.concepto||"");
-  $row.find('select[data-k="dh"]').val(r.dh||"");
+  // badge dh se pinta desde build; si cambiara concepto lo actualizamos in-place
   $row.find('input[data-k="monto"]').val(r.monto||"");
 }
 
 function attachRowHandlers(i){
   const $row = $tbody.find(`tr[data-row="${i}"]`);
   const $concepto = $row.find('select[data-k="concepto"]');
-  const $dh       = $row.find('select[data-k="dh"]');
   const $monto    = $row.find('input[data-k="monto"]');
+  const $dhView   = $row.find('[data-k="dh-view"]');
 
-  // Concepto: setea state y, si no hay DH, aplica sugerencia sin re-render
+  // Concepto: deriva DH y actualiza badge (no editable)
   $concepto.off("change").on("change", function(){
     const val = $(this).val();
     rows[i].concepto = val;
-
-    if(!rows[i].dh){
-      const sug = CATALOGO_CONCEPTOS.find(c => c.concepto === val)?.sugerencia || "";
-      rows[i].dh = sug;
-      $dh.val(sug); // reflejar en UI
-    }
+    rows[i].dh = val ? (CATALOGO_CONCEPTOS.find(c => c.concepto===val)?.sugerencia || "") : "";
+    // Actualiza badge sin re-render
+    $dhView.html(dhBadgeHTML(rows[i].dh));
     updateTotals();
   });
 
-  // Debe/Haber
-  $dh.off("change").on("change", function(){
-    rows[i].dh = $(this).val();
-    updateTotals();
-  });
-
-  // Monto: no re-renderizamos; solo actualizamos state y totales
+  // Monto
   $monto.off("input blur")
     .on("input", function(){
       rows[i].monto = $(this).val();
@@ -287,8 +285,10 @@ function renderAllRows(){
 }
 
 function addRow(prefill=null){
-  rows.push(prefill || nuevaFila());
+  rows.push(prefill ? nuevaFila(prefill.concepto || "", prefill.monto || "") : nuevaFila());
   const i = rows.length - 1;
+  // Recalcular DH de esa fila si vino con concepto
+  rows[i].dh = rows[i].concepto ? (CATALOGO_CONCEPTOS.find(c=>c.concepto===rows[i].concepto)?.sugerencia || "") : "";
   $tbody.append(buildRowHTML(i, rows[i]));
   hydrateRowValues(i);
   attachRowHandlers(i);
@@ -297,8 +297,7 @@ function addRow(prefill=null){
 }
 
 function reindexRowsAfterRemoval(){
-  // Tras eliminar, re-renderizamos todo (evento poco frecuente)
-  renderAllRows();
+  renderAllRows(); // eliminación es poco frecuente → re-render global
 }
 
 function removeRow(i){
@@ -327,11 +326,30 @@ function updateTotals(){
   $diff.addClass(balanced ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700");
 }
 
-function guardar(){
+async function guardar(){
   if($("#btnGuardar").prop("disabled")){
     toastr.error("El desagregado debe estar completo y cuadrado con el monto del llamado.");
     return;
   }
+
+
+  // Segunda confirmación
+  const step2 = await Swal.fire({
+    title: "Confirmación",
+    text: "¿Estás completamente seguro realizar la cancelación?. Esta acción no se puede deshacer.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, enviar",
+    cancelButtonText: "No",
+    confirmButtonColor: "#dc2626"
+  });
+
+  if(!step2.isConfirmed){
+    toastr.info("Notificación cancelada.");
+    return;
+  }
+
+
   toastr.success("✅ Instrucción registrada. Movimiento quedará en estado CANCELADO.");
   // Aquí enviarías rows + invId/movId/... a tu backend
   setTimeout(()=>{ window.location.href = "index.html?result=ok"; }, 1200);
@@ -340,14 +358,15 @@ function guardar(){
 // =================== INIT ===================
 $(function(){
   renderHeader();
-  // Sugerimos 1 línea con el total (DEBE) y 1 vacía para ajustes
-  addRow({ concepto:"Capital comprometido", dh:"DEBE", monto: money(montoLlamado) });
-  //addRow();
+  // 1 línea con el total (DEBE) y 1 vacía para ajustes → DH se deriva del concepto
+  addRow({ concepto:"Capital comprometido", monto: money(montoLlamado) });
+  addRow();
 
   $("#btnAgregar").on("click", ()=> addRow());
   $("#btnGuardar").on("click", guardar);
 });
 </script>
+
 
 </body>
 </html>
