@@ -522,10 +522,9 @@ async function cancelarMovimiento(i, j){
    function irABackOffice(i, j) {
   const inv = inversiones[i];
   const h   = inv.hijos[j];
-  alert("backoffice")
 
   // Armar URL con todos los datos necesarios
-  const url = new URL("/backoffice-instruccion.html", window.location.origin);
+  const url = new URL("backoffice-instruccion.html", window.location.href);
   url.searchParams.set("inv", inv.inversionNum);
   url.searchParams.set("mov", h.id);
   url.searchParams.set("tipo", h.tipo);
