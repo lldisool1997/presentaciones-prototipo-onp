@@ -102,8 +102,8 @@
   <div class="container">
     <div class="main-container">
       <div class="header">
-        <h1>Listado de Homologación (7 campos)</h1>
-        <div style="opacity:.9">Mercado, Grupo, Tipo, Concepto, Debe/Haber, Cuenta, Área</div>
+        <h1>Listado de Homologación</h1>
+        <!--<div style="opacity:.9">Mercado, Grupo, Tipo, Concepto, Debe/Haber, Cuenta, Área</div>-->
       </div>
 
       <div class="content">
@@ -167,7 +167,7 @@
             <tbody id="tbody"></tbody>
           </table>
         </div>
-        <div class="footer-note">“Cuenta Contable” usa Select2 con búsqueda y escritura libre (se guarda).</div>
+        <div class="footer-note"></div>
       </div>
     </div>
   </div>
@@ -346,46 +346,94 @@
     const $fG = $("#flt_grupo");
     const $fT = $("#flt_tipo");
 
-    function initFilterSelects(){
-      $fM.select2({ placeholder:"Todos", allowClear:true, data: toOptions(CATALOGO_INSTRUMENTOS), width:"100%" });
-      $fG.select2({ placeholder:"Todos", allowClear:true, width:"100%" });
-      $fT.select2({ placeholder:"Todos", allowClear:true, width:"100%" });
+function initFilterSelects(){
+  // Mercado: sin selección inicial
+  $fM
+    .empty()
+    .append('<option></option>')
+    .select2({
+      data: toOptions(CATALOGO_INSTRUMENTOS),
+      placeholder: "Todos",
+      allowClear: true,
+      width: "100%"
+    })
+    .val(null).trigger("change");
 
-      $fM.on("change", function(){
-        const m = $(this).val();
-        $fG.empty().trigger("change");
-        $fT.empty().trigger("change");
-        clearAndDisable($fT);
+  // Hijos: crean Select2 pero sin datos y deshabilitados
+  $fG
+    .empty()
+    .append('<option></option>')
+    .select2({ placeholder:"Todos", allowClear:true, width:"100%" })
+    .val(null).trigger("change")
+    .prop("disabled", true);
 
-        if(!m){ clearAndDisable($fG); refreshTable(); return; }
+  $fT
+    .empty()
+    .append('<option></option>')
+    .select2({ placeholder:"Todos", allowClear:true, width:"100%" })
+    .val(null).trigger("change")
+    .prop("disabled", true);
 
-        $fG.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m]), placeholder:"Todos", allowClear:true, width:"100%" });
-        $fG.prop("disabled", false).val(null).trigger("change");
-        refreshTable();
-      });
+  // Cambios en cascada
+  $fM.on("change", function(){
+    const m = $(this).val();
 
-      $fG.on("change", function(){
-        const m = $fM.val(), g = $(this).val();
-        $fT.empty().trigger("change");
-        if(!m || !g){ clearAndDisable($fT); refreshTable(); return; }
-        $fT.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m][g]), placeholder:"Todos", allowClear:true, width:"100%" });
-        $fT.prop("disabled", false).val(null).trigger("change");
-        refreshTable();
-      });
+    // reset hijos
+    $fG.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
+    $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
 
-      $fT.on("change", refreshTable);
-      $("#flt_debehaber").on("change", refreshTable);
-      $("#flt_concepto").on("input", debounce(refreshTable, 250));
+    if(!m){ refreshTable(); return; }
 
-      $("#btnLimpiarFiltros").on("click", ()=>{
-        $("#flt_concepto").val("");
-        $("#flt_debehaber").val("");
-        $fM.val(null).trigger("change");
-        clearAndDisable($fG);
-        clearAndDisable($fT);
-        refreshTable();
-      });
-    }
+    $fG
+      .select2({
+        data: toOptions(CATALOGO_INSTRUMENTOS[m]),
+        placeholder:"Todos",
+        allowClear:true,
+        width:"100%"
+      })
+      .val(null).trigger("change")
+      .prop("disabled", false);
+
+    refreshTable();
+  });
+
+  $fG.on("change", function(){
+    const m = $fM.val(), g = $(this).val();
+
+    $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
+
+    if(!m || !g){ refreshTable(); return; }
+
+    $fT
+      .select2({
+        data: toOptions(CATALOGO_INSTRUMENTOS[m][g]),
+        placeholder:"Todos",
+        allowClear:true,
+        width:"100%"
+      })
+      .val(null).trigger("change")
+      .prop("disabled", false);
+
+    refreshTable();
+  });
+
+  // Auto-aplicados
+  $fT.on("change", refreshTable);
+  $("#flt_debehaber").on("change", refreshTable);
+  $("#flt_concepto").on("input", debounce(refreshTable, 250));
+
+  // Limpiar
+  $("#btnLimpiarFiltros").on("click", ()=>{
+    $("#flt_concepto").val("");
+    $("#flt_debehaber").val("");
+
+    $fM.val(null).trigger("change");
+    $fG.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
+    $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
+
+    refreshTable();
+  });
+}
 
     function applyFilters(){
       const qConcepto  = ($("#flt_concepto").val() || "").trim().toLowerCase();
