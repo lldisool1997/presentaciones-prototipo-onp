@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Registro de Inversiones Financieras</title>
     <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4/dist/autoNumeric.min.js"></script>
+    <!-- CSS opcional para estilos bonitos -->
+<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-default@5/default.css" rel="stylesheet">
+
+<!-- JS principal -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         * {
@@ -448,7 +453,7 @@
                 </div>-->
             </div>
 
-            <button id="registerButton" class="action-button" onclick="registerInvestment()">Registrar</button>
+            <button id="registerButton" class="action-button" onclick="registerInvestment()">Aprobar</button>
 
             <div id="successMessage" class="success-message hidden"></div>
         </div>
@@ -9252,7 +9257,7 @@
 
                     },
                     "Fondos de inversión": {
-                        "Fondo alternativo": [
+                        "Fondo privado": [
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
@@ -11900,33 +11905,53 @@
         // 💾 FUNCIÓN DE REGISTRO
         // ===================================================
 
-        function registerInvestment() {
-            const registerButton = document.getElementById('registerButton');
-            const successMessage = document.getElementById('successMessage');
+       function registerInvestment() {
+  const registerButton = document.getElementById('registerButton');
+  const successMessage = document.getElementById('successMessage');
 
-            if (registerButton.disabled) return;
+  if (registerButton.disabled) return;
 
-            if (!validarCamposNumericos()) return;
+  if (!validarCamposNumericos()) return;
+  if (!validarCamposNumericosNoCero()) return;
 
-            if (!validarCamposNumericosNoCero()) {
-                return;
-            }
+  // 🔹 Confirmación con SweetAlert2
+  Swal.fire({
+    title: '¿Confirmar aprobación?',
+    text: 'Se aprobará la inversión financiera.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, aprobar',
+    cancelButtonText: 'Cancelar',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      registerButton.textContent = 'Guardando...';
+      registerButton.disabled = true;
+      registerButton.classList.remove('enabled');
 
-            registerButton.textContent = 'Guardando...';
-            registerButton.disabled = true;
-            registerButton.classList.remove('enabled');
+      setTimeout(() => {
+        successMessage.textContent = '✅ Inversión financiera aprobada correctamente.';
+        successMessage.classList.remove('hidden');
 
-            setTimeout(() => {
-                successMessage.textContent = '✅ Inversión financiera registrada correctamente. Código del instrumento: INV-21742513';
-                successMessage.classList.remove('hidden');
+        registerButton.textContent = 'Registrar inversión';
+        registerButton.disabled = false;
+        registerButton.classList.add('enabled');
 
-                registerButton.textContent = 'Registrar inversión';
-                registerButton.disabled = false;
-                registerButton.classList.add('enabled');
+        successMessage.scrollIntoView({ behavior: 'smooth' });
 
-                successMessage.scrollIntoView({ behavior: 'smooth' });
-            }, 1500);
-        }
+        // 🔹 Mensaje final de éxito
+        Swal.fire({
+          title: '¡Aprobada!',
+          text: 'La inversión se guardó correctamente.',
+          icon: 'success',
+          timer: 2500,
+          showConfirmButton: false
+        });
+      }, 1500);
+    }
+  });
+}
+
 
         // ===================================================
         // 🚀 INICIALIZACIÓN
