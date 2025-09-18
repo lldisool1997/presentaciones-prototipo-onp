@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Inversiones - Sistema de Gestión de Bonos</title>
+
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* Profile Info */
+        .profile-info {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #005C97 0%, #004a7c 100%);
+            color: white;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Content Wrapper */
+        .content-wrapper {
+            padding: 30px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            color: #2c3e50;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 4px solid #1976d2;
+            border-bottom: 2px solid #3498db;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .filters-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+
+        select,
+        input {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus,
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #1f5f8b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.8em;
+            border-radius: 5px;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .btn-cuponera {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-cuponera:hover {
+            background: #219a52;
+            transform: translateY(-1px);
+        }
+
+        /* Table */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1500px;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 15px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+
+        .text-left {
+            text-align: left !important;
+        }
+
+        .text-right {
+            text-align: right !important;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e3f2fd;
+            cursor: pointer;
+        }
+
+        /* Fila seleccionada */
+        tr.selected {
+            background-color: #cce5ff !important;
+            border-left: 4px solid #1976d2;
+        }
+
+        tr.selected td {
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-cancelada {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-aprobado {
+            background: #d7ebf8;
+            color: #1f1c72;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Checkbox styles */
+        input[type="checkbox"] {
+            margin: 0;
+        }
+
+        @media (max-width: 1200px) {
+            .filters-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filters-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            table {
+                font-size: 0.7em;
+            }
+
+            .actions-cell {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .profile-info {
+                position: static;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Profile Info -->
+            <div class="profile-info">
+                Perfil: OGR
+            </div>
+
+            <!-- Header -->
+            <div class="header">
+                <h1>Lista de Inversiones</h1>
+            </div>
+
+            <!-- Content Wrapper -->
+            <div class="content-wrapper">
+                <!-- Filters Section -->
+                <div class="filters-section" style="background-color: #f8f9fa;">
+                    <!-- Primera fila de filtros -->
+                    <div class="filters-row" style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label for="entidad">Entidad:</label>
+                            <select id="entidad">
+                                <option value="">Todas las entidades</option>
+                                <option value="fdo-consolidado" selected>Fondo Consolidado de Reservas Previsionales –
+                                    FCR
+                                </option>
+                                <option value="fcr-macrofondo">FCR-MACROFONDO</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="unidadNegocio">Unidad de Negocio:</label>
+                            <select id="unidadNegocio">
+                                <option value="">Todas las unidades</option>
+                                <option value="fcr-macrofondo" selected>FCR-MACROFONDO</option>
+                                <option value="bonos-corporativos">BONOS CORPORATIVOS</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipoInstrumento">Tipo Instrumento:</label>
+                            <select id="tipoInstrumento">
+                                <option value="">Todos los tipos</option>
+                                <option value="bonos-corporativos" selected>BONOS CORPORATIVOS</option>
+                                <option value="depositos-plazo">Depósitos a Plazo</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inversionNum">Inversión #:</label>
+                            <input type="text" id="inversionNum" placeholder="Número de inversión">
+                        </div>
+                    </div>
+
+                    <!-- Segunda fila de filtros -->
+                    <div class="filters-row" style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label for="numeroDeposito"># Depósito:</label>
+                            <input type="text" id="numeroDeposito" placeholder="Número de depósito">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="estado">Estado:</label>
+                            <select id="estado">
+                                <option value="">Todos los estados</option>
+                                <option value="cancelada">Cancelada</option>
+                                <option value="aprobado">Aprobado</option>
+                                <option value="registrado">Registrado</option>
+                            </select>
+                        </div>
+
+                        <!-- Checkboxes para fechas -->
+                        <div class="form-group">
+                            <label>Fechas:</label>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="checkFechaCompra"> F. Compra
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="checkFechaEmision"> F. Emisión
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="checkFechaVencim"> F. Vencim.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tercera fila - botones -->
+                    <div class="filters-row">
+                        <button class="btn btn-primary" onclick="filtrarInversiones()">Buscar</button>
+                        <!-- <button class="btn btn-primary" onclick="generarCupon()"
+                            style="background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);">Generar
+                            Cupón</button> -->
+                    </div>
+                </div>
+
+                <!-- Section Header -->
+                <div class="section-header">Inversiones Registradas</div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Inversión #</th>
+                                <th>Inv. Principal</th>
+                                <th>Producto</th>
+                                <th>Número Depósito</th>
+                                <th>Fecha Compra</th>
+                                <th>Fecha Emisión</th>
+                                <th>Fecha Vencim.</th>
+                                <th>Carta Apertura</th>
+                                <th>Carta Cancelación</th>
+                                <th>Moneda</th>
+                                <th>Valor Nominal</th>
+                                <th>Compra Spot Cupón</th>
+                                <th>P.Compra/Cupón%</th>
+                                <th>Eco Instrumento</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inversionesBody">
+                            <!-- Las filas se generarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery and Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        // Configuración de Toastr
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        // Datos de las inversiones (basados en la imagen que me pasaste)
+        const inversiones_ORIGINAL = [
+            // Registro principal (Inversión # = Inv. Principal)
+            {
+                estado: 'APROBADA',
+                inversionNum: '6120',
+                invPrincipal: '6120',
+                producto: 'BC10079',
+                numeroDeposito: '24/01/2015',
+                fechaCompra: '24/01/2015',
+                fechaEmision: '24/01/2015',
+                fechaVencimiento: '24/07/2026',
+                cataApertura: '24/07/2026',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '100.0% BONOS CORPORATIVOS',
+                pCompraCupon: '',
+                ecoInstrument: ''
+            },
+            // Cupones trimestrales generados
+            {
+                estado: 'CANCELADA',
+                inversionNum: '6148',
+                invPrincipal: '6120',
+                producto: 'BC10079 FALABETCA',
+                numeroDeposito: '24/01/2015',
+                fechaCompra: '24/01/2015',
+                fechaEmision: '24/01/2015',
+                fechaVencimiento: '24/04/2015',
+                cataApertura: '24/04/2015',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '100.0% BONOS CORPORATIVOS',
+                pCompraCupon: '',
+                ecoInstrument: ''
+            },
+            {
+                estado: 'CANCELADA',
+                inversionNum: '0943',
+                invPrincipal: '6120',
+                producto: 'BC10079 FALABETCA',
+                numeroDeposito: '24/01/2015',
+                fechaCompra: '24/04/2015',
+                fechaEmision: '24/04/2015',
+                fechaVencimiento: '24/07/2015',
+                cataApertura: '24/07/2015',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '100.0% BONOS CORPORATIVOS',
+                pCompraCupon: '',
+                ecoInstrument: ''
+            },
+            {
+                estado: 'CANCELADA',
+                inversionNum: '8936',
+                invPrincipal: '6120',
+                producto: 'BC10079 FALABETCA',
+                numeroDeposito: '24/01/2015',
+                fechaCompra: '24/07/2015',
+                fechaEmision: '24/07/2015',
+                fechaVencimiento: '24/10/2015',
+                cataApertura: '24/10/2015',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '100.0% BONOS CORPORATIVOS',
+                pCompraCupon: '',
+                ecoInstrument: ''
+            },
+            {
+                estado: 'CANCELADA',
+                inversionNum: '8513',
+                invPrincipal: '6120',
+                producto: 'BC10079 FALABETCA',
+                numeroDeposito: '24/01/2015',
+                fechaCompra: '24/10/2015',
+                fechaEmision: '24/10/2015',
+                fechaVencimiento: '24/01/2016',
+                cataApertura: '24/01/2016',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '100.0% BONOS CORPORATIVOS',
+                pCompraCupon: '',
+                ecoInstrument: ''
+            },
+            {
+                estado: 'CANCELADA',
+                inversionNum: '9376',
+                invPrincipal: '6120',
+                producto: 'BC10079 FALABETCA',
+                numeroDeposito: '24/01/2015',
+                fechaCompra: '24/01/2016',
+                fechaEmision: '24/01/2016',
+                fechaVencimiento: '24/04/2016',
+                cataApertura: '24/04/2016',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '100.0% BONOS CORPORATIVOS',
+                pCompraCupon: '',
+                ecoInstrument: ''
+            },
+            {
+                estado: 'CANCELADA',
+                inversionNum: '5243',
+                invPrincipal: '6120',
+                producto: 'BC10079 FALABETCA',
+                numeroDeposito: '24/01/2015',
+                fechaCompra: '24/04/2016',
+                fechaEmision: '24/04/2016',
+                fechaVencimiento: '24/07/2016',
+                cataApertura: '24/07/2016',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '100.0% BONOS CORPORATIVOS',
+                pCompraCupon: '',
+                ecoInstrument: ''
+            }
+        ];
+
+
+        const inversiones = [
+            // Registro principal (Inversión # = Inv. Principal)
+            {
+                estado: 'APROBADO',
+                inversionNum: '6120',
+                invPrincipal: '6120',
+                producto: 'BC10079',
+                numeroDeposito: 'FALAB1BC1A-INVFA1BC1',
+                fechaCompra: '24/01/2015',
+                fechaEmision: '24/01/2015',
+                fechaVencimiento: '24/07/2026',
+                cataApertura: '24/07/2026',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS CORPORATIVOS'
+            },
+            // Cupones trimestrales generados
+            {
+                estado: 'CANCELADA',
+                inversionNum: '6148',
+                invPrincipal: '6120',
+                producto: 'BC10079',
+                numeroDeposito: 'FALAB1BC1A',
+                fechaCompra: '24/01/2015',
+                fechaEmision: '24/01/2015',
+                fechaVencimiento: '24/04/2015',
+                cataApertura: '24/04/2015',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS CORPORATIVOS'
+            },
+            {
+                estado: 'CANCELADA',
+                inversionNum: '0943',
+                invPrincipal: '6120',
+                producto: 'BC10079',
+                numeroDeposito: 'FALAB1BC1A',
+                fechaCompra: '24/04/2015',
+                fechaEmision: '24/04/2015',
+                fechaVencimiento: '24/07/2015',
+                cataApertura: '24/07/2015',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS CORPORATIVOS'
+            },
+            {
+                estado: 'CANCELADA',
+                inversionNum: '8936',
+                invPrincipal: '6120',
+                producto: 'BC10079',
+                numeroDeposito: 'FALAB1BC1A',
+                fechaCompra: '24/07/2015',
+                fechaEmision: '24/07/2015',
+                fechaVencimiento: '24/10/2015',
+                cataApertura: '24/10/2015',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS CORPORATIVOS'
+            },
+            {
+                estado: 'CANCELADA',
+                inversionNum: '8513',
+                invPrincipal: '6120',
+                producto: 'BC10079',
+                numeroDeposito: 'FALAB1BC1A',
+                fechaCompra: '24/10/2015',
+                fechaEmision: '24/10/2015',
+                fechaVencimiento: '24/01/2016',
+                cataApertura: '24/01/2016',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS CORPORATIVOS'
+            },
+            {
+                estado: 'CANCELADA',
+                inversionNum: '9376',
+                invPrincipal: '6120',
+                producto: 'BC10079',
+                numeroDeposito: 'FALAB1BC1A',
+                fechaCompra: '24/01/2016',
+                fechaEmision: '24/01/2016',
+                fechaVencimiento: '24/04/2016',
+                cataApertura: '24/04/2016',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS CORPORATIVOS'
+            },
+            {
+                estado: 'CANCELADA',
+                inversionNum: '5243',
+                invPrincipal: '6120',
+                producto: 'BC10079',
+                numeroDeposito: 'FALAB1BC1A',
+                fechaCompra: '24/04/2016',
+                fechaEmision: '24/04/2016',
+                fechaVencimiento: '24/07/2016',
+                cataApertura: '24/07/2016',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '24,500,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS CORPORATIVOS'
+            }
+        ];
+
+        // Variable para almacenar la fila seleccionada
+        let filaSeleccionada = null;
+
+        // Generar tabla de inversiones
+        function generarTablaInversiones() {
+            const tbody = document.getElementById('inversionesBody');
+            tbody.innerHTML = '';
+
+            inversiones.forEach((inversion, index) => {
+                const row = tbody.insertRow();
+
+                // Agregar event listener para seleccionar fila
+                row.addEventListener('click', function () {
+                    seleccionarFila(row, index, inversion);
+                });
+
+                // Determinar si es registro principal (puede generar cuponera)
+                const esPrincipal = inversion.inversionNum === inversion.invPrincipal;
+
+                row.innerHTML = `
+                    <td><span class="status-badge status-${inversion.estado.toLowerCase()}">${inversion.estado}</span></td>
+                    <td>${inversion.inversionNum}</td>
+                    <td>${inversion.invPrincipal}</td>
+                    <td class="text-left">${inversion.producto}</td>
+                    <td class="text-left">${inversion.numeroDeposito}</td>
+                    <td>${inversion.fechaCompra}</td>
+                    <td>${inversion.fechaEmision}</td>
+                    <td>${inversion.fechaVencimiento}</td>
+                    <td>${inversion.cataApertura}</td>
+                    <td>${inversion.cataCancelacion}</td>
+                    <td class="text-right">${inversion.moneda}</td>
+                    <td class="text-left">${inversion.valorNominal}</td>
+                    <td>${inversion.compraSpotCupon}</td>
+                    <td>${inversion.pCompraCupon}</td>
+                    <td>${inversion.ecoInstrument}</td>
+                    <td>
+                        <div class="actions-cell">
+                            ${esPrincipal ?
+                        `<button class="btn btn-action btn-cuponera" onclick="generarCuponera('${inversion.invPrincipal}', '${inversion.inversionNum}')">
+                                    GENERAR CUPÓN
+                                </button>` :
+                        '<span style="color: #999; font-size: 0.8em;">Cupón generado</span>'
+                    }
+                        </div>
+                    </td>
+                `;
+            });
+        }
+
+        // Función para seleccionar fila
+        function seleccionarFila(row, index, inversion) {
+            // Quitar selección anterior
+            if (filaSeleccionada) {
+                filaSeleccionada.classList.remove('selected');
+            }
+
+            // Seleccionar nueva fila
+            row.classList.add('selected');
+            filaSeleccionada = row;
+
+            // Mostrar información de la fila seleccionada
+            const esPrincipal = inversion.inversionNum === inversion.invPrincipal;
+            const mensaje = esPrincipal ?
+                `Registro principal seleccionado: ${inversion.inversionNum} - Puede generar cuponera` :
+                `Cupón seleccionado: ${inversion.inversionNum} (derivado de inversión principal ${inversion.invPrincipal})`;
+
+            toastr.info(mensaje);
+        }
+
+        // Función para generar cupón
+        function generarCupon() {
+            toastr.info('Generando cupón...');
+            // Aquí iría la lógica para generar cupón
+            setTimeout(() => {
+                toastr.success('Cupón generado correctamente');
+            }, 1000);
+        }
+        // Función para generar cuponera (navegar a la otra pantalla)
+        function generarCuponera(invPrincipal, inversionNum) {
+            toastr.success(`Abriendo Generar Cuponera en nueva pestaña - Inversión Principal: ${invPrincipal}`);
+
+            // Simular un pequeño delay de carga
+            setTimeout(() => {
+                // RUTA RELATIVA: Para archivos en la misma carpeta
+                const rutaCuponera = './generacion-cuponera.html';
+
+                // Pasar parámetros por URL
+                const parametros = `?inv=${invPrincipal}&num=${inversionNum}&entidad=fdo-consolidado`;
+
+                // Navegación en nueva pestaña
+                window.open(rutaCuponera + parametros, '_blank');
+
+                // Para desarrollo - también mostrar en consola
+                console.log('Abriendo en nueva pestaña:', rutaCuponera + parametros);
+                toastr.info('Nueva pestaña abierta con la cuponera');
+
+            }, 800);
+        }
+
+        // Función para filtrar inversiones
+        function filtrarInversiones() {
+            const entidad = document.getElementById('entidad').value;
+            const estado = document.getElementById('estado').value;
+            const tipoInstrumento = document.getElementById('tipoInstrumento').value;
+
+            toastr.info('Aplicando filtros...');
+
+            // Aquí iría la lógica de filtrado real
+            setTimeout(() => {
+                toastr.success('Filtros aplicados correctamente');
+            }, 500);
+        }
+
+        // Inicializar tabla al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            generarTablaInversiones();
+        });
+    </script>
+</body>
+
+</html>

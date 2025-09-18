@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Homologación SGAFCR ↔ SIGA (7 campos)</title>
+
+  <!-- Select2 & Toastr -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+
+  <style>
+    *{box-sizing:border-box}
+    body{font-family:Segoe UI,system-ui,-apple-system,sans-serif;background:#f5f5f5;color:#2c3e50;margin:0}
+    .container{max-width:1400px;margin:0 auto;padding:20px}
+    .main-container{background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.08);overflow:hidden}
+    .header{background:linear-gradient(135deg,#005C97 0%, #004a7c 100%);color:#fff;padding:26px;text-align:center}
+    .header h1{margin:0;font-weight:600}
+    .content{padding:24px}
+
+    .toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+    .btn{border:0;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}
+    .btn-primary{background:linear-gradient(135deg,#3498db,#2980b9);color:#fff}
+    .btn-ghost{background:#eef5fb}
+    .btn-danger{background:#e74c3c;color:#fff}
+
+    .card{background:#fff;border:1px solid #e8eef5;border-radius:12px;padding:18px;margin-bottom:18px}
+    .section-title{font-weight:700;margin:0 0 12px 0;border-left:4px solid #1976d2;padding-left:10px}
+
+    .grid{display:grid;gap:14px}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+    label{font-size:.9rem;font-weight:600;margin-bottom:6px;display:block}
+    input[type="text"], select, .select2-container--default .select2-selection--single{
+      width:100%;background:#fff;border:2px solid #e6e8ec;border-radius:8px;padding:10px 12px;font-size:.95rem
+    }
+    input:focus, select:focus{outline:none;border-color:#3498db}
+
+    .table-wrap{overflow:auto;border-radius:12px;border:1px solid #e8eef5}
+    table{width:100%;min-width:1200px;border-collapse:collapse}
+    th{background:linear-gradient(135deg,#34495e,#2c3e50);color:#fff;font-size:.8rem;padding:12px 8px;text-align:center}
+    td{padding:10px 8px;border-bottom:1px solid #f0f3f7;font-size:.88rem;text-align:center}
+    tr:nth-child(even){background:#f9fbfd}
+    tr:hover{background:#eef6ff}
+    .text-left{text-align:left}
+    .pill{display:inline-block;padding:4px 10px;border-radius:999px;font-size:.75rem;font-weight:700}
+    .pill.blue{background:#e8f2ff;color:#1a56db}
+    .pill.teal{background:#e6fffb;color:#0d9488}
+    .actions{display:flex;gap:8px;justify-content:center}
+    .footer-note{font-size:.85rem;color:#556;margin-top:10px}
+
+    /* Modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}
+    .modal.open{display:flex}
+    .modal-card{background:#fff;max-width:1200px;width:100%;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.2);overflow:hidden}
+    .modal-hd{padding:16px 18px;background:#0f3d64;color:#fff;display:flex;align-items:center;justify-content:space-between}
+    .modal-bd{padding:18px}
+
+    /* Select2 muted */
+    #sel_mercado + .select2-container .select2-selection--single,
+    #sel_subcat  + .select2-container .select2-selection--single,
+    #sel_tipo    + .select2-container .select2-selection--single,
+    #f_cuenta    + .select2-container .select2-selection--single,
+    #flt_mercado + .select2-container .select2-selection--single,
+    #flt_grupo   + .select2-container .select2-selection--single,
+    #flt_tipo    + .select2-container .select2-selection--single{
+      background:#f9fafb;border:1.5px solid #e5e7eb;border-radius:10px;height:42px
+    }
+    #sel_mercado + .select2-container .select2-selection__rendered,
+    #sel_subcat  + .select2-container .select2-selection__rendered,
+    #sel_tipo    + .select2-container .select2-selection__rendered,
+    #f_cuenta    + .select2-container .select2-selection__rendered,
+    #flt_mercado + .select2-container .select2-selection__rendered,
+    #flt_grupo   + .select2-container .select2-selection__rendered,
+    #flt_tipo    + .select2-container .select2-selection__rendered{
+      line-height:40px;color:#374151;padding-left:12px;font-weight:500;  top: -10px; position: relative
+    }
+
+    #sel_mercado + .select2-container .select2-selection__arrow,
+    #sel_subcat  + .select2-container .select2-selection__arrow,
+    #sel_tipo    + .select2-container .select2-selection__arrow,
+    #f_cuenta    + .select2-container .select2-selection__arrow,
+    #flt_mercado + .select2-container .select2-selection__arrow,
+    #flt_grupo   + .select2-container .select2-selection__arrow,
+    #flt_tipo    + .select2-container .select2-selection__arrow
+    {
+       top: 10px;
+    }
+    
+    #sel_mercado + .select2-container .select2-dropdown,
+    #sel_subcat  + .select2-container .select2-dropdown,
+    #sel_tipo    + .select2-container .select2-dropdown,
+    #f_cuenta    + .select2-container .select2-dropdown,
+    #flt_mercado + .select2-container .select2-dropdown,
+    #flt_grupo   + .select2-container .select2-dropdown,
+    #flt_tipo    + .select2-container .select2-dropdown{
+      border:1.5px solid #e5e7eb;border-radius:10px;box-shadow:0 6px 16px rgba(0,0,0,.06)
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="main-container">
+      <div class="header">
+        <h1>Listado de Homologación (7 campos)</h1>
+        <div style="opacity:.9">Mercado, Grupo, Tipo, Concepto, Debe/Haber, Cuenta, Área</div>
+      </div>
+
+      <div class="content">
+        <!-- ======= FILTROS (auto-aplicados) ======= -->
+        <div class="card" id="filtrosListado">
+          <h3 class="section-title">Filtros del listado</h3>
+
+          <div class="grid grid-3">
+            <div>
+              <label for="flt_concepto">Concepto</label>
+              <input type="text" id="flt_concepto" placeholder="Buscar por concepto…">
+            </div>
+            <div>
+              <label for="flt_debehaber">Debe/Haber</label>
+              <select id="flt_debehaber">
+                <option value="">Todos</option>
+                <option>Saldo Positivo (+)</option>
+                <option>Saldo Negativo (-)</option>
+                <option>Ingreso (+)</option>
+              </select>
+            </div>
+            <div>
+              <label for="flt_mercado">Mercado</label>
+              <select id="flt_mercado" style="width:100%"></select>
+            </div>
+          </div>
+
+          <div class="grid grid-3" style="margin-top:12px">
+            <div>
+              <label for="flt_grupo">Grupo de Instrumento</label>
+              <select id="flt_grupo" style="width:100%" disabled></select>
+            </div>
+            <div>
+              <label for="flt_tipo">Tipo de Instrumento</label>
+              <select id="flt_tipo" style="width:100%" disabled></select>
+            </div>
+            <div style="display:flex; align-items:end; gap:10px">
+              <button class="btn btn-ghost" id="btnLimpiarFiltros">Limpiar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button class="btn btn-primary" id="btnNuevo">+ Registrar homologación</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Mercado</th>
+                <th>Grupo de Instrumento</th>
+                <th>Tipo de Instrumento</th>
+                <th class="text-left">Concepto (SGAFCR)</th>
+                <th>Debe/Haber</th>
+                <th>Cuenta Contable</th>
+                <th>Área</th>
+                <th style="width:150px">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div class="footer-note">“Cuenta Contable” usa Select2 con búsqueda y escritura libre (se guarda).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Form -->
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <div class="modal-hd">
+        <div id="modalTitle">Registrar homologación</div>
+        <button class="btn btn-danger" id="btnCerrarModal">X</button>
+      </div>
+      <div class="modal-bd">
+        <form id="form">
+          <!-- 1) Clasificación: Mercado → Grupo → Tipo -->
+          <div class="card">
+            <h3 class="section-title">Clasificación de Instrumentos</h3>
+            <div class="grid grid-3">
+              <div>
+                <label for="sel_mercado">Mercado</label>
+                <select id="sel_mercado" style="width:100%"></select>
+              </div>
+              <div>
+                <label for="sel_subcat">Grupo de Instrumento</label>
+                <select id="sel_subcat" style="width:100%" disabled></select>
+              </div>
+              <div>
+                <label for="sel_tipo">Tipo de Instrumento</label>
+                <select id="sel_tipo" style="width:100%" disabled></select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2) Campos de homologación -->
+          <div class="grid grid-3">
+            <div>
+              <label>Concepto (SGAFCR)</label>
+              <input type="text" id="f_concepto" placeholder="Llamado de Capital, Rescate, Dividendos…" required/>
+            </div>
+            <div>
+              <label>Debe/Haber</label>
+              <select id="f_debehaber" required>
+                <option value="">Seleccione…</option>
+                <option>Saldo Positivo (+)</option>
+                <option>Saldo Negativo (-)</option>
+                <option>Ingreso (+)</option>
+              </select>
+            </div>
+            <div>
+              <label>Cuenta Contable</label>
+              <select id="f_cuenta" style="width:100%"></select>
+            </div>
+          </div>
+
+          <div class="grid grid-2" style="margin-top:12px">
+            <div>
+              <label>Área encargada</label>
+              <select id="f_area" required>
+                <option value="">Seleccione…</option>
+                <option>Tesorería</option>
+                <option>Contabilidad</option>
+                <option>Rebates Tesorería</option>
+                <option>Rebates Contabilidad</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;display:flex;gap:10px;justify-content:flex-end">
+            <button type="button" class="btn btn-ghost" id="btnCancelar">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="btnGuardar">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+  <script>
+    /* ---------- JSON MOCK de 3 niveles ---------- */
+    const CATALOGO_INSTRUMENTOS = {
+      "Local": {
+        "Depósitos y Certificados en el BCRP": ["Depósito BCRP","Certificado del BCRP"],
+        "Depósitos en el Sistema Financiero": ["Depósito a Plazo","Instrumento Sintético","Instrumento Estructurado","Cuenta Remunerada"],
+        "Instrumentos de Corto Plazo": ["Instrumento de Corto Plazo","Papel Comercial","Pagarés","Operación de Reporte"],
+        "Gobierno": ["Bono Soberano","Bono Global","Bono con Garantía de Gobierno","Bono Titulizado Gobierno"],
+        "Bonos Sistema Financiero": ["Bono Corporativo","Bono Subordinado","Bono Hipotecario","Otros Sistema Financiero","Bonos de Arrendamiento Financiero"],
+        "Bonos Empresas no Financieras": ["Bono Corporativo"],
+        "Instrumentos Titulizados": ["Bono en Fideicomiso","Bono Titulizados"],
+        "Instrumento de Mediano Plazo y Largo Plazo": ["Instrumento de Mediano Plazo y Largo Plazo"],
+        "Fondos de Renta Fija": ["Fondo Privado"],
+        "Mandato": ["Mandato"],
+        "Fondos Mutuos": ["Fondo Mutuo"],
+        "Inversiones Inmobiliarias": ["Inmobiliarias"],
+        "Fondos de Inversión": ["Fondo Privado"]
+      },
+      "Extranjero": {
+        "Depósitos en el Sistema Financiero": ["Depósito a Plazo","Instrumento Sintético","Instrumento Estructurado","Cuenta Remunerada"],
+        "Depósitos en el BCRP": ["Depósito BCRP"],
+        "Instrumentos de Corto Plazo": ["Instrumento de Corto Plazo","Papel Comercial"],
+        "Mandato": ["Mandato"],
+        "Instrumentos de Deuda": ["Instrumento Organismos Supranacionales","Inversiones en Notas y Depósitos Estructurados"],
+        "Fondos de Renta Fija": ["Fondo Mutuo","ETF","Fondo Privado"],
+        "Inversión Directa en Instrumentos de Capital": ["Fondo Mutuo","ETF"],
+        "Mandatos de Private Equity": ["Mandato"],
+        "Inversión Directa en Private Equity": ["Fondo Privado"],
+        "Fondos de Real Assets": ["Fondo Mutuo","Fondo Privado"]
+      }
+    };
+
+    /* ---------- MOCK de filas iniciales (7 campos) ---------- */
+    const MOCK = [
+      { mercado:"Extranjero", grupo:"Instrumentos de Deuda", tipoCatalogo:"Instrumento Organismos Supranacionales", concepto:"Llamado de Capital", debehaber:"Saldo Positivo (+)", cuenta:"3025203", area:"Tesorería" },
+      { mercado:"Extranjero", grupo:"Instrumentos de Corto Plazo", tipoCatalogo:"Papel Comercial", concepto:"Rescate de Capital", debehaber:"Saldo Negativo (-)", cuenta:"3025202", area:"Tesorería" },
+      { mercado:"Local", grupo:"Gobierno", tipoCatalogo:"Bono Soberano", concepto:"Distribución de dividendos", debehaber:"Ingreso (+)", cuenta:"7731104", area:"Tesorería" },
+      { mercado:"Local", grupo:"Instrumentos de Corto Plazo", tipoCatalogo:"Pagarés", concepto:"Ganancia por Diferencia de cambio", debehaber:"Ingreso (+)", cuenta:"7767301", area:"Contabilidad" },
+      { mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"ETF", concepto:"Ingreso extra (Rebates)", debehaber:"Ingreso (+)", cuenta:"1682209", area:"Rebates Tesorería" }
+    ];
+
+    const CUENTAS = ["3025202","3025203","3025204","3025205","7731104","6767301","7767301","1682209","3026203","3026205"];
+
+    /* ---------- STATE ---------- */
+    const STORAGE_KEY = "homologacion_7campos_v1";
+    let data = [];
+    let editIndex = null;
+
+    /* ---------- helpers ---------- */
+    const toOptions = (arrOrObj) => Array.isArray(arrOrObj)
+      ? arrOrObj.map(v=>({id:v,text:v}))
+      : Object.keys(arrOrObj).map(k=>({id:k,text:k}));
+    const habilitar = ($el, enabled) => $el.prop("disabled", !enabled).trigger("change.select2");
+    const clearAndDisable = ($el)=>{ $el.val(null).trigger("change"); $el.prop("disabled", true); };
+
+    // debounce para texto
+    const debounce = (fn, ms=250) => {
+      let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,args), ms); };
+    };
+
+    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+    function load(){
+      const persisted = localStorage.getItem(STORAGE_KEY);
+      data = persisted ? JSON.parse(persisted) : MOCK.slice();
+      refreshTable(); // respeta filtros activos
+    }
+
+    /* ---------- Render tabla ---------- */
+    function renderTableRows(rows){
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+      if(!rows.length){
+        tbody.innerHTML = `<tr><td colspan="8" style="color:#667">Sin resultados</td></tr>`;
+        return;
+      }
+      rows.forEach((r, i)=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><span class="pill blue">${r.mercado}</span></td>
+          <td>${r.grupo}</td>
+          <td>${r.tipoCatalogo}</td>
+          <td class="text-left">${r.concepto}</td>
+          <td>${r.debehaber}</td>
+          <td><span class="pill teal">${r.cuenta}</span></td>
+          <td>${r.area}</td>
+          <td class="actions">
+            <button class="btn btn-ghost" onclick="onEdit(${i})">Editar</button>
+            <button class="btn btn-danger" onclick="onDelete(${i})">Eliminar</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* ---------- Filtros (auto-aplicados) ---------- */
+    const $fM = $("#flt_mercado");
+    const $fG = $("#flt_grupo");
+    const $fT = $("#flt_tipo");
+
+    function initFilterSelects(){
+      $fM.select2({ placeholder:"Todos", allowClear:true, data: toOptions(CATALOGO_INSTRUMENTOS), width:"100%" });
+      $fG.select2({ placeholder:"Todos", allowClear:true, width:"100%" });
+      $fT.select2({ placeholder:"Todos", allowClear:true, width:"100%" });
+
+      $fM.on("change", function(){
+        const m = $(this).val();
+        $fG.empty().trigger("change");
+        $fT.empty().trigger("change");
+        clearAndDisable($fT);
+
+        if(!m){ clearAndDisable($fG); refreshTable(); return; }
+
+        $fG.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m]), placeholder:"Todos", allowClear:true, width:"100%" });
+        $fG.prop("disabled", false).val(null).trigger("change");
+        refreshTable();
+      });
+
+      $fG.on("change", function(){
+        const m = $fM.val(), g = $(this).val();
+        $fT.empty().trigger("change");
+        if(!m || !g){ clearAndDisable($fT); refreshTable(); return; }
+        $fT.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m][g]), placeholder:"Todos", allowClear:true, width:"100%" });
+        $fT.prop("disabled", false).val(null).trigger("change");
+        refreshTable();
+      });
+
+      $fT.on("change", refreshTable);
+      $("#flt_debehaber").on("change", refreshTable);
+      $("#flt_concepto").on("input", debounce(refreshTable, 250));
+
+      $("#btnLimpiarFiltros").on("click", ()=>{
+        $("#flt_concepto").val("");
+        $("#flt_debehaber").val("");
+        $fM.val(null).trigger("change");
+        clearAndDisable($fG);
+        clearAndDisable($fT);
+        refreshTable();
+      });
+    }
+
+    function applyFilters(){
+      const qConcepto  = ($("#flt_concepto").val() || "").trim().toLowerCase();
+      const qDebeHaber = $("#flt_debehaber").val() || "";
+      const qMercado   = $fM.val() || "";
+      const qGrupo     = $fG.val() || "";
+      const qTipo      = $fT.val() || "";
+
+      return data.filter(r=>{
+        if(qConcepto && !(`${r.concepto||""}`.toLowerCase().includes(qConcepto))) return false;
+        if(qDebeHaber && r.debehaber !== qDebeHaber) return false;
+        if(qMercado && r.mercado !== qMercado) return false;
+        if(qGrupo && r.grupo !== qGrupo) return false;
+        if(qTipo && r.tipoCatalogo !== qTipo) return false;
+        return true;
+      });
+    }
+
+    function refreshTable(){
+      renderTableRows(applyFilters());
+    }
+
+    /* ---------- Modal & Select2 Init ---------- */
+    const modal = $("#modal");
+    function openModal(t){ $("#modalTitle").text(t); modal.addClass("open"); }
+    function closeModal(){
+      modal.removeClass("open");
+      $("#form")[0].reset();
+      $("#sel_mercado, #sel_subcat, #sel_tipo, #f_cuenta").val(null).trigger("change");
+      $("#sel_subcat, #sel_tipo").prop("disabled", true);
+      editIndex = null;
+    }
+
+    $(document).ready(function(){
+      // Cuenta contable con write-in
+      $("#f_cuenta").select2({ tags:true, data: CUENTAS.map(v=>({id:v,text:v})), placeholder:"Escriba o seleccione la cuenta", width:"100%" });
+
+      // Cascada del modal
+      const $mercado = $("#sel_mercado");
+      const $subcat  = $("#sel_subcat");
+      const $tipo    = $("#sel_tipo");
+
+      $mercado.select2({ placeholder:"Selecciona un mercado", allowClear:true, data: toOptions(CATALOGO_INSTRUMENTOS), width:"100%" });
+      $subcat .select2({ placeholder:"Selecciona un grupo",   allowClear:true, width:"100%" });
+      $tipo   .select2({ placeholder:"Selecciona un tipo",    allowClear:true, width:"100%" });
+
+      $mercado.on("change", function(){
+        const m = $(this).val();
+        $subcat.empty().trigger("change"); 
+        $tipo.empty().trigger("change");
+        habilitar($tipo,false);
+        if(!m){ habilitar($subcat,false); return; }
+        $subcat.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m]), placeholder:"Selecciona un grupo", width:"100%", allowClear:true });
+        $subcat.val(null).trigger("change");
+        habilitar($subcat,true);
+      });
+
+      $subcat.on("change", function(){
+        const m = $mercado.val(); const s = $(this).val();
+        $tipo.empty().trigger("change");
+        if(!m || !s){ habilitar($tipo,false); return; }
+        $tipo.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m][s]), placeholder:"Selecciona un tipo", width:"100%", allowClear:true });
+        $tipo.val(null).trigger("change");
+        habilitar($tipo,true);
+      });
+
+      // Toastr
+      toastr.options = { positionClass:"toast-top-right", progressBar:true, timeOut:2500 };
+
+      // Botones
+      $("#btnNuevo").on("click", ()=>{ editIndex=null; openModal("Registrar homologación"); });
+      $("#btnCerrarModal, #btnCancelar").on("click", closeModal);
+
+      // Submit
+      $("#form").on("submit", (e)=>{
+        e.preventDefault();
+        const row = {
+          mercado: $("#sel_mercado").val(),
+          grupo: $("#sel_subcat").val(),
+          tipoCatalogo: $("#sel_tipo").val(),
+          concepto: $("#f_concepto").val().trim(),
+          debehaber: $("#f_debehaber").val(),
+          cuenta: $("#f_cuenta").val(),
+          area: $("#f_area").val()
+        };
+        if(!row.mercado || !row.grupo || !row.tipoCatalogo){
+          toastr.error("Completa Mercado, Grupo y Tipo de Instrumento"); return;
+        }
+        if(editIndex===null){ data.push(row); toastr.success("Registrado correctamente"); }
+        else{ data[editIndex]=row; toastr.success("Actualizado correctamente"); }
+        save(); refreshTable(); closeModal();
+      });
+
+      initFilterSelects();
+      load();
+    });
+
+    /* ---------- CRUD ---------- */
+    function onEdit(i){
+      const r = data[i]; editIndex = i;
+
+      // cascada modal
+      $("#sel_mercado").val(r.mercado).trigger("change");
+      setTimeout(()=>{
+        $("#sel_subcat").select2({ data: toOptions(CATALOGO_INSTRUMENTOS[r.mercado]), width:"100%" })
+                        .prop("disabled", false).val(r.grupo).trigger("change");
+        setTimeout(()=>{
+          $("#sel_tipo").select2({ data: toOptions(CATALOGO_INSTRUMENTOS[r.mercado][r.grupo]), width:"100%" })
+                        .prop("disabled", false).val(r.tipoCatalogo).trigger("change");
+        },0);
+      },0);
+
+      $("#f_concepto").val(r.concepto);
+      $("#f_debehaber").val(r.debehaber);
+
+      if(!$("#f_cuenta").find(`option[value="${r.cuenta}"]`).length){
+        $("#f_cuenta").append(new Option(r.cuenta, r.cuenta, true, true)).trigger("change");
+      }else{
+        $("#f_cuenta").val(r.cuenta).trigger("change");
+      }
+      $("#f_area").val(r.area);
+
+      openModal("Editar homologación");
+    }
+    function onDelete(i){
+      if(!confirm("¿Eliminar este registro?")) return;
+      data.splice(i,1); save(); refreshTable(); toastr.warning("Registro eliminado");
+    }
+    window.onEdit = onEdit; window.onDelete = onDelete;
+  </script>
+</body>
+</html>
