@@ -408,7 +408,7 @@ function createDocumentField(docName, fieldId, isCustom = false) {
   const container = ensureDocumentFieldsContainer();
 
   const fieldGroup = document.createElement('div');
-  fieldGroup.className = 'file-upload-group p-3 rounded-xl bg-white w-[30%]';
+  fieldGroup.className = 'file-upload-group p-3 rounded-xl w-1/3';
   fieldGroup.id = `field_${fieldId}`;
 
   const labelWrap = document.createElement('div');
