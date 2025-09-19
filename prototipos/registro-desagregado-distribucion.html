@@ -70,7 +70,7 @@
 
   <main class="max-w-[1100px] mx-auto px-4 py-6">
     <div class="header rounded-2xl rounded-b-none">
-      <h1>Pago del llamado de capital</h1>
+      <h1>Recepción de la distribución de capital</h1>
     </div>
 
     <!-- 1. Resumen -->
@@ -139,7 +139,7 @@
                 class="px-4 py-2.5 rounded-xl bg-white border-2 border-gray-300 hover:bg-gray-50 font-semibold">
           + Agregar línea
         </button>
-        <div class="text-xs text-gray-500">La suma debe cuadrar con el monto del llamado.</div>
+        <div class="text-xs text-gray-500">La suma debe cuadrar con el monto de la distribución.</div>
       </div>
     </section>
 
@@ -532,7 +532,7 @@
     // 3) Confirmación
     const step2 = await Swal.fire({
       title: "Confirmación",
-      text: "¿Confirmas registrar el pago del llamado de capital? Esta acción no se puede deshacer.",
+      text: "¿Confirmas registrar el pago de la distribución de capital? Esta acción no se puede deshacer.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Sí, guardar",
