@@ -75,18 +75,14 @@
     #flt_tipo    + .select2-container .select2-selection__rendered{
       line-height:40px;color:#374151;padding-left:12px;font-weight:500;  top: -10px; position: relative
     }
-
     #sel_mercado + .select2-container .select2-selection__arrow,
     #sel_subcat  + .select2-container .select2-selection__arrow,
     #sel_tipo    + .select2-container .select2-selection__arrow,
     #f_cuenta    + .select2-container .select2-selection__arrow,
     #flt_mercado + .select2-container .select2-selection__arrow,
     #flt_grupo   + .select2-container .select2-selection__arrow,
-    #flt_tipo    + .select2-container .select2-selection__arrow
-    {
-       top: 10px;
-    }
-    
+    #flt_tipo    + .select2-container .select2-selection__arrow{ top: 10px; }
+
     #sel_mercado + .select2-container .select2-dropdown,
     #sel_subcat  + .select2-container .select2-dropdown,
     #sel_tipo    + .select2-container .select2-dropdown,
@@ -98,12 +94,12 @@
     }
 
     /* ===== Pagination ===== */
-.pagination{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0}
-.pager-left{font-size:.9rem;color:#445}
-.pager-controls{display:flex;align-items:center;gap:8px}
-.btn-slim{border:1px solid #e2e8f0;background:#fff;border-radius:8px;padding:6px 10px;font-weight:600;cursor:pointer}
-.btn-slim[disabled]{opacity:.4;cursor:not-allowed}
-#pageSize{border:1px solid #e2e8f0;border-radius:8px;padding:6px 8px}
+    .pagination{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0}
+    .pager-left{font-size:.9rem;color:#445}
+    .pager-controls{display:flex;align-items:center;gap:8px}
+    .btn-slim{border:1px solid #e2e8f0;background:#fff;border-radius:8px;padding:6px 10px;font-weight:600;cursor:pointer}
+    .btn-slim[disabled]{opacity:.4;cursor:not-allowed}
+    #pageSize{border:1px solid #e2e8f0;border-radius:8px;padding:6px 8px}
   </style>
 </head>
 <body>
@@ -111,11 +107,10 @@
     <div class="main-container">
       <div class="header">
         <h1>Listado de Homologación: Concepto vs Cta. Contable</h1>
-        <!--<div style="opacity:.9">Mercado, Grupo, Tipo, Concepto, Debe/Haber, Cuenta, Área</div>-->
       </div>
 
       <div class="content">
-        <!-- ======= FILTROS (auto-aplicados) ======= -->
+        <!-- ======= FILTROS ======= -->
         <div class="card" id="filtrosListado">
           <h3 class="section-title">Filtros del listado</h3>
 
@@ -126,12 +121,14 @@
             </div>
             <div>
               <label for="flt_debehaber">Debe/Haber</label>
-              <select id="flt_debehaber">
-                <option value="">Todos</option>
-                <option>Saldo Positivo (+)</option>
-                <option>Saldo Negativo (-)</option>
-                <option>Ingreso (+)</option>
-              </select>
+            <select id="flt_debehaber">
+            <option value="">Todos</option>
+            <option>Saldo Positivo (+)</option>
+            <option>Saldo Negativo (-)</option>
+            <option>Ingreso (+)</option>
+            <option>Ingreso (-)</option>
+            <option>Diferencia por tipo de cambio (+)</option>
+          </select>
             </div>
             <div>
               <label for="flt_mercado">Mercado</label>
@@ -148,8 +145,26 @@
               <label for="flt_tipo">Tipo de Instrumento</label>
               <select id="flt_tipo" style="width:100%" disabled></select>
             </div>
-            <div style="display:flex; align-items:end; gap:10px">
+            <div>
+              <label for="flt_cuenta">Cuenta contable</label>
+              <input type="text" id="flt_cuenta" placeholder="Buscar por nro. de cuenta…">
+            </div>
+            <!--<div style="display:flex; align-items:end; gap:10px">
               <button class="btn btn-ghost" id="btnLimpiarFiltros">Limpiar</button>
+            </div>-->
+          </div>
+
+          <!-- Filtros adicionales -->
+          <div class="grid grid-3" style="margin-top:12px">
+            
+            <div>
+              <label for="flt_area">Área</label>
+              <select id="flt_area">
+                <option value="">Todas</option>
+              </select>
+            </div>
+            <div style="display:flex; align-items:end; gap:10px">
+              <button class="btn btn-ghost" id="btnLimpiarFiltros2">Limpiar filtros</button>
             </div>
           </div>
         </div>
@@ -175,6 +190,28 @@
             <tbody id="tbody"></tbody>
           </table>
         </div>
+
+        <!-- Paginación -->
+        <div class="pagination">
+          <div class="pager-left">
+            <span id="rangeLabel">Mostrando 0–0 de 0</span>
+          </div>
+          <div class="pager-controls">
+            <button id="pgFirst"  class="btn-slim" title="Primera">«</button>
+            <button id="pgPrev"   class="btn-slim" title="Anterior">‹</button>
+            <span id="pageInfo">Página 1 de 1</span>
+            <button id="pgNext"   class="btn-slim" title="Siguiente">›</button>
+            <button id="pgLast"   class="btn-slim" title="Última">»</button>
+            <span style="margin-left:6px">/ por página</span>
+            <select id="pageSize">
+              <option selected>10</option>
+              <option >25</option>
+              <option>50</option>
+              <option>100</option>
+            </select>
+          </div>
+        </div>
+
         <div class="footer-note"></div>
       </div>
     </div>
@@ -217,11 +254,13 @@
             <div>
               <label>Debe/Haber</label>
               <select id="f_debehaber" required>
-                <option value="">Seleccione…</option>
-                <option>Saldo Positivo (+)</option>
-                <option>Saldo Negativo (-)</option>
-                <option>Ingreso (+)</option>
-              </select>
+  <option value="">Seleccione…</option>
+  <option>Saldo Positivo (+)</option>
+  <option>Saldo Negativo (-)</option>
+  <option>Ingreso (+)</option>
+  <option>Ingreso (-)</option>
+  <option>Diferencia por tipo de cambio (+)</option>
+</select>
             </div>
             <div>
               <label>Cuenta Contable</label>
@@ -257,7 +296,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
   <script>
-   /* ---------- JSON MOCK de 3 niveles ---------- */
+/* ---------- JSON MOCK de 3 niveles ---------- */
 const CATALOGO_INSTRUMENTOS = {
   "Local": {
     "Depósitos y Certificados en el BCRP": ["Depósito BCRP","Certificado del BCRP"],
@@ -266,16 +305,20 @@ const CATALOGO_INSTRUMENTOS = {
     "Gobierno": ["Bono Soberano","Bono Global","Bono con Garantía de Gobierno","Bono Titulizado Gobierno"],
     "Bonos Sistema Financiero": ["Bono Corporativo","Bono Subordinado","Bono Hipotecario","Otros Sistema Financiero","Bonos de Arrendamiento Financiero"],
     "Bonos Empresas no Financieras": ["Bono Corporativo"],
-    "Instrumentos Titulizados": ["Bono en Fideicomiso","Bono Titulizados"],
+    "Instrumentos Titulizados": ["Bono en Fideicomiso","Bonos Titulizados"],
     "Instrumento de Mediano Plazo y Largo Plazo": ["Instrumento de Mediano Plazo y Largo Plazo"],
     "Fondos de Renta Fija": ["Fondo Privado"],
     "Mandato": ["Mandato"],
     "Fondos Mutuos": ["Fondo Mutuo"],
     "Inversiones Inmobiliarias": ["Inmobiliarias"],
-    "Fondos de Inversión": ["Fondo Privado"]
+    "Fondos de Inversión": ["Fondo Privado"],
+
+    // === Tus nombres exactos para FI local ===
+    "FI: FONDO DE INVERSION": ["FI1: FONDO DE INVERSIÓN"]
   },
+
   "Extranjero": {
-    "Depósitos en el Sistema Financiero": ["Depósito a Plazo","Instrumento Sintético","Instrumento Etructurado","Cuenta Remunerada"],
+    "Depósitos en el Sistema Financiero": ["Depósito a Plazo","Instrumento Sintético","Instrumento Estructurado","Cuenta Remunerada"],
     "Depósitos en el BCRP": ["Depósito BCRP"],
     "Instrumentos de Corto Plazo": ["Instrumento de Corto Plazo","Papel Comercial"],
     "Mandato": ["Mandato"],
@@ -284,9 +327,19 @@ const CATALOGO_INSTRUMENTOS = {
     "Inversión Directa en Instrumentos de Capital": ["Fondo Mutuo","ETF"],
     "Mandatos de Private Equity": ["Mandato"],
     "Inversión Directa en Private Equity": ["Fondo Privado"],
-    "Fondos de Real Assets": ["Fondo Mutuo","Fondo Privado"]
+    "Fondos de Real Assets": ["Fondo Mutuo","Fondo Privado"],
+
+    // === Tus nombres exactos para FI/IK exterior ===
+    "FI: FONDO DE INVERSION": ["FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO"],
+    "IK: FONDOS MUTUOS MERCADO EXTERNO": ["IK1: FONDOS MUTUOS MERCADO EXTERNO"]
+  },
+
+  // === Mercado extra para EUR con tu nombre exacto ===
+  "Extranjero EUR": {
+    "FI: FONDO DE INVERSION": ["FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO"]
   }
 };
+
 /* ---------- HOMOLOGACIÓN (Mercado + Concepto → Debe/Haber, Cuenta, Área) ---------- */
 const HOMOLOGACION = {
   // ===== EXTRANJERO =====
@@ -327,6 +380,9 @@ const HOMOLOGACION = {
   "Extranjero::Cancelación por Ingreso a Tesorería (Haber)":   { debehaber:"Ingreso (-)", cuenta:"1682209", area:"Rebates Tesorería" }
 };
 
+/* Áreas únicas para filtro */
+const AREAS = Array.from(new Set(Object.values(HOMOLOGACION).map(x => x.area))).sort();
+
 /* ---------- Derivados ---------- */
 function buildFila({ mercado, grupo, tipoCatalogo, concepto }) {
   const h = HOMOLOGACION[`${mercado}::${concepto}`];
@@ -335,44 +391,44 @@ function buildFila({ mercado, grupo, tipoCatalogo, concepto }) {
 }
 
 const MOCK = [
-  // ===== EXTRANJERO (FI) =====
-  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Llamado de Capital" }),
-  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Rescate de Capital" }),
-  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Devolución de capital" }),
-  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Distribución de dividendos" }),
-  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Perdida Distribucion de dividendos" }),
-  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Perdida por Diferencia de cambio" }),
-  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Ganancia por Diferencia de cambio" }),
+  // ===== FI: FONDO DE INVERSION — LOCAL (FI1) =====
+  buildFila({ mercado:"Local", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FI1: FONDO DE INVERSIÓN", concepto:"Llamado de Capital" }),
+  buildFila({ mercado:"Local", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FI1: FONDO DE INVERSIÓN", concepto:"Rescate de Capital" }),
+  buildFila({ mercado:"Local", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FI1: FONDO DE INVERSIÓN", concepto:"Devolución de capital" }),
+  buildFila({ mercado:"Local", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FI1: FONDO DE INVERSIÓN", concepto:"Distribución de dividendos" }),
+  buildFila({ mercado:"Local", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FI1: FONDO DE INVERSIÓN", concepto:"Perdida Distribucion de dividendos" }),
+  buildFila({ mercado:"Local", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FI1: FONDO DE INVERSIÓN", concepto:"Perdida por Diferencia de cambio" }),
+  buildFila({ mercado:"Local", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FI1: FONDO DE INVERSIÓN", concepto:"Ganancia por Diferencia de cambio" }),
 
-  // ===== LOCAL (FI1) =====
-  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Llamado de Capital" }),
-  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Rescate de Capital" }),
-  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Devolución de capital" }),
-  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Distribución de dividendos" }),
-  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Perdida Distribucion de dividendos" }),
-  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Perdida por Diferencia de cambio" }),
-  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Ganancia por Diferencia de cambio" }),
+  // ===== FI: FONDO DE INVERSION — EXTRANJERO =====
+  buildFila({ mercado:"Extranjero", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Llamado de Capital" }),
+  buildFila({ mercado:"Extranjero", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Rescate de Capital" }),
+  buildFila({ mercado:"Extranjero", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Devolución de capital" }),
+  buildFila({ mercado:"Extranjero", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Distribución de dividendos" }),
+  buildFila({ mercado:"Extranjero", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Perdida Distribucion de dividendos" }),
+  buildFila({ mercado:"Extranjero", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Perdida por Diferencia de cambio" }),
+  buildFila({ mercado:"Extranjero", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Ganancia por Diferencia de cambio" }),
 
-  // ===== EXTRANJERO EUR (FI) =====
-  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Llamado de Capital" }),
-  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Rescate de Capital (o Retrocesión)" }),
-  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Devolución de capital" }),
-  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Distribucion de dividendos (o dietas)" }),
-  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Perdida Distribucion de dividendos" }),
-  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Ganancia por Diferencia de cambio" }),
+  // ===== FI: FONDO DE INVERSION — EXTRANJERO EUR =====
+  buildFila({ mercado:"Extranjero EUR", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Llamado de Capital" }),
+  buildFila({ mercado:"Extranjero EUR", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Rescate de Capital (o Retrocesión)" }),
+  buildFila({ mercado:"Extranjero EUR", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Devolución de capital" }),
+  buildFila({ mercado:"Extranjero EUR", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Distribucion de dividendos (o dietas)" }),
+  buildFila({ mercado:"Extranjero EUR", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Perdida Distribucion de dividendos" }),
+  buildFila({ mercado:"Extranjero EUR", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Perdida por Diferencia de cambio" }),
+  buildFila({ mercado:"Extranjero EUR", grupo:"FI: FONDO DE INVERSION", tipoCatalogo:"FIX: FONDOS DE INVERSIÓN MERCADO EXTERNO", concepto:"Ganancia por Diferencia de cambio" }),
 
-  // ===== IK / REBATES (Fondos Mutuos mercado externo) =====
-  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Compra" }),
-  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Liquidación" }),
-  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Ingreso extra (Rebates)" }),
-  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Estimación/Provisión: Cuenta x cobrar (Debe)" }),
-  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Estimación/Provisión: Cuenta x cobrar (Haber)" }),
-  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Cancelación por Reinversión (Debe)" }),
-  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Cancelación por Reinversión (Haber)" }),
-  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Cancelación por Ingreso a Tesorería (Debe)" }),
-  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Cancelación por Ingreso a Tesorería (Haber)" })
+  // ===== IK: FONDOS MUTUOS MERCADO EXTERNO — EXTRANJERO =====
+  buildFila({ mercado:"Extranjero", grupo:"IK: FONDOS MUTUOS MERCADO EXTERNO", tipoCatalogo:"IK1: FONDOS MUTUOS MERCADO EXTERNO", concepto:"Compra" }),
+  buildFila({ mercado:"Extranjero", grupo:"IK: FONDOS MUTUOS MERCADO EXTERNO", tipoCatalogo:"IK1: FONDOS MUTUOS MERCADO EXTERNO", concepto:"Liquidación" }),
+  buildFila({ mercado:"Extranjero", grupo:"IK: FONDOS MUTUOS MERCADO EXTERNO", tipoCatalogo:"IK1: FONDOS MUTUOS MERCADO EXTERNO", concepto:"Ingreso extra (Rebates)" }),
+  buildFila({ mercado:"Extranjero", grupo:"IK: FONDOS MUTUOS MERCADO EXTERNO", tipoCatalogo:"IK1: FONDOS MUTUOS MERCADO EXTERNO", concepto:"Estimación/Provisión: Cuenta x cobrar (Debe)" }),
+  buildFila({ mercado:"Extranjero", grupo:"IK: FONDOS MUTUOS MERCADO EXTERNO", tipoCatalogo:"IK1: FONDOS MUTUOS MERCADO EXTERNO", concepto:"Estimación/Provisión: Cuenta x cobrar (Haber)" }),
+  buildFila({ mercado:"Extranjero", grupo:"IK: FONDOS MUTUOS MERCADO EXTERNO", tipoCatalogo:"IK1: FONDOS MUTUOS MERCADO EXTERNO", concepto:"Cancelación por Reinversión (Debe)" }),
+  buildFila({ mercado:"Extranjero", grupo:"IK: FONDOS MUTUOS MERCADO EXTERNO", tipoCatalogo:"IK1: FONDOS MUTUOS MERCADO EXTERNO", concepto:"Cancelación por Reinversión (Haber)" }),
+  buildFila({ mercado:"Extranjero", grupo:"IK: FONDOS MUTUOS MERCADO EXTERNO", tipoCatalogo:"IK1: FONDOS MUTUOS MERCADO EXTERNO", concepto:"Cancelación por Ingreso a Tesorería (Debe)" }),
+  buildFila({ mercado:"Extranjero", grupo:"IK: FONDOS MUTUOS MERCADO EXTERNO", tipoCatalogo:"IK1: FONDOS MUTUOS MERCADO EXTERNO", concepto:"Cancelación por Ingreso a Tesorería (Haber)" })
 ].filter(Boolean);
-
 
 const CUENTAS = Array.from(new Set(Object.values(HOMOLOGACION).map(x => x.cuenta)));
 
@@ -381,6 +437,11 @@ const STORAGE_KEY = "homologacion_7campos_v1";
 let data = [];
 let editIndex = null;
 
+/* ===== PAGINATION STATE ===== */
+let pageIndex = 1;     // 1-based
+let pageSize  = 10;    // default
+let totalPages = 1;
+
 /* ---------- helpers ---------- */
 const toOptions = (arrOrObj) => Array.isArray(arrOrObj)
   ? arrOrObj.map(v=>({id:v,text:v}))
@@ -388,22 +449,21 @@ const toOptions = (arrOrObj) => Array.isArray(arrOrObj)
 const habilitar = ($el, enabled) => $el.prop("disabled", !enabled).trigger("change.select2");
 const clearAndDisable = ($el)=>{ $el.val(null).trigger("change"); $el.prop("disabled", true); };
 const debounce = (fn, ms=250) => { let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,args), ms); }; };
-// SIN persistencia
-function save(){ /* no-op: no guardes nada */ }
 
-function load(){
-  data = MOCK.slice();   // siempre parte del MOCK actual
-  refreshTable();
-}
-/* ---------- Render tabla ---------- */
-function renderTableRows(rows){
+/* SIN persistencia */
+function save(){ /* no-op */ }
+function load(){ data = MOCK.slice(); refreshTable(); }
+
+/* ---------- Render tabla (paginada) ---------- */
+function renderTableRows(rowsPaged){
   const tbody = document.getElementById("tbody");
   tbody.innerHTML = "";
-  if(!rows.length){
+  if(!rowsPaged.length){
     tbody.innerHTML = `<tr><td colspan="8" style="color:#667">Sin resultados</td></tr>`;
     return;
   }
-  rows.forEach((r, i)=>{
+  rowsPaged.forEach((r)=>{
+    const idx = data.indexOf(r);
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><span class="pill blue">${r.mercado}</span></td>
@@ -414,77 +474,53 @@ function renderTableRows(rows){
       <td><span class="pill teal">${r.cuenta}</span></td>
       <td>${r.area}</td>
       <td class="actions">
-        <button class="btn btn-ghost" onclick="onEdit(${i})">Editar</button>
-        <button class="btn btn-danger" onclick="onDelete(${i})">Eliminar</button>
+        <button class="btn btn-ghost" onclick="onEdit(${idx})">Editar</button>
+        <button class="btn btn-danger" onclick="onDelete(${idx})">Eliminar</button>
       </td>`;
     tbody.appendChild(tr);
   });
 }
 
-/* ---------- Filtros ---------- */
-const $fM = $("#flt_mercado");
-const $fG = $("#flt_grupo");
-const $fT = $("#flt_tipo");
-
-function initFilterSelects(){
-  $fM.empty().append('<option></option>').select2({
-    data: toOptions(CATALOGO_INSTRUMENTOS),
-    placeholder: "Todos",
-    allowClear: true,
-    width: "100%"
-  }).val(null).trigger("change");
-
-  $fG.empty().append('<option></option>').select2({ placeholder:"Todos", allowClear:true, width:"100%" }).prop("disabled", true);
-  $fT.empty().append('<option></option>').select2({ placeholder:"Todos", allowClear:true, width:"100%" }).prop("disabled", true);
-
-  $fM.on("change", function(){
-    const m = $(this).val();
-    $fG.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
-    $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
-    if(!m){ refreshTable(); return; }
-    $fG.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m]), placeholder:"Todos", allowClear:true, width:"100%" })
-       .val(null).trigger("change").prop("disabled", false);
-    refreshTable();
-  });
-
-  $fG.on("change", function(){
-    const m = $fM.val(), g = $(this).val();
-    $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
-    if(!m || !g){ refreshTable(); return; }
-    $fT.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m][g]), placeholder:"Todos", allowClear:true, width:"100%" })
-       .val(null).trigger("change").prop("disabled", false);
-    refreshTable();
-  });
-
-  $fT.on("change", refreshTable);
-  $("#flt_debehaber").on("change", refreshTable);
-  $("#flt_concepto").on("input", debounce(refreshTable, 250));
-  $("#btnLimpiarFiltros").on("click", ()=>{
-    $("#flt_concepto").val(""); $("#flt_debehaber").val("");
-    $fM.val(null).trigger("change");
-    $fG.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
-    $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
-    refreshTable();
-  });
-}
-
+/* ---------- Filtros (incluye Cuenta y Área) ---------- */
 function applyFilters(){
   const qConcepto  = ($("#flt_concepto").val() || "").trim().toLowerCase();
   const qDebeHaber = $("#flt_debehaber").val() || "";
-  const qMercado   = $fM.val() || "";
-  const qGrupo     = $fG.val() || "";
-  const qTipo      = $fT.val() || "";
+  const qMercado   = $("#flt_mercado").val() || "";
+  const qGrupo     = $("#flt_grupo").val() || "";
+  const qTipo      = $("#flt_tipo").val() || "";
+  const qCuenta    = ($("#flt_cuenta").val() || "").trim();
+  const qArea      = $("#flt_area").val() || "";
+
   return data.filter(r=>{
     if(qConcepto && !(`${r.concepto||""}`.toLowerCase().includes(qConcepto))) return false;
     if(qDebeHaber && r.debehaber !== qDebeHaber) return false;
     if(qMercado && r.mercado !== qMercado) return false;
     if(qGrupo && r.grupo !== qGrupo) return false;
     if(qTipo && r.tipoCatalogo !== qTipo) return false;
+    if(qCuenta && !String(r.cuenta||"").includes(qCuenta)) return false;   // búsqueda por cuenta
+    if(qArea && r.area !== qArea) return false;
     return true;
   });
 }
 
-function refreshTable(){ renderTableRows(applyFilters()); }
+/* ---------- Paginación + render ---------- */
+function refreshTable(){
+  const rows = applyFilters();
+
+  totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+  if(pageIndex > totalPages) pageIndex = totalPages;
+
+  const start = (pageIndex - 1) * pageSize;
+  const end   = Math.min(start + pageSize, rows.length);
+  const pageRows = rows.slice(start, end);
+
+  renderTableRows(pageRows);
+
+  $("#rangeLabel").text(`Mostrando ${rows.length ? (start+1) : 0}–${end} de ${rows.length}`);
+  $("#pageInfo").text(`Página ${pageIndex} de ${totalPages}`);
+  $("#pgFirst, #pgPrev").prop("disabled", pageIndex <= 1);
+  $("#pgNext, #pgLast").prop("disabled", pageIndex >= totalPages);
+}
 
 /* ---------- Modal & Select2 Init ---------- */
 const modal = $("#modal");
@@ -498,6 +534,7 @@ function closeModal(){
 }
 
 $(document).ready(function(){
+  // cuenta select2 (tags)
   $("#f_cuenta").select2({ tags:true, data: CUENTAS.map(v=>({id:v,text:v})), placeholder:"Escriba o seleccione la cuenta", width:"100%" });
 
   const $mercado = $("#sel_mercado");
@@ -533,7 +570,7 @@ $(document).ready(function(){
   $("#btnNuevo").on("click", ()=>{ editIndex=null; openModal("Registrar homologación"); });
   $("#btnCerrarModal, #btnCancelar").on("click", closeModal);
 
-  /* ---------- Submit (con autocompletado por HOMOLOGACION) ---------- */
+  /* Submit (autocompleta por HOMOLOGACION) */
   $("#form").on("submit", (e)=>{
     e.preventDefault();
     let row = {
@@ -560,10 +597,78 @@ $(document).ready(function(){
     }
     if(editIndex===null){ data.push(row); toastr.success("Registrado correctamente"); }
     else{ data[editIndex]=row; toastr.success("Actualizado correctamente"); }
-    save(); refreshTable(); closeModal();
+    save(); pageIndex = 1; refreshTable(); closeModal();
   });
 
-  initFilterSelects();
+  /* Filtros (select2 en cascada ya arriba) */
+  const $fM = $("#flt_mercado");
+  const $fG = $("#flt_grupo");
+  const $fT = $("#flt_tipo");
+
+  $fM.empty().append('<option></option>').select2({
+    data: toOptions(CATALOGO_INSTRUMENTOS),
+    placeholder: "Todos",
+    allowClear: true,
+    width: "100%"
+  }).val(null).trigger("change");
+
+  $fG.empty().append('<option></option>').select2({ placeholder:"Todos", allowClear:true, width:"100%" }).prop("disabled", true);
+  $fT.empty().append('<option></option>').select2({ placeholder:"Todos", allowClear:true, width:"100%" }).prop("disabled", true);
+
+  $fM.on("change", function(){
+    const m = $(this).val();
+    $fG.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
+    $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
+    if(!m){ pageIndex=1; refreshTable(); return; }
+    $fG.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m]), placeholder:"Todos", allowClear:true, width:"100%" })
+       .val(null).trigger("change").prop("disabled", false);
+    pageIndex=1; refreshTable();
+  });
+
+  $fG.on("change", function(){
+    const m = $fM.val(), g = $(this).val();
+    $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
+    if(!m || !g){ pageIndex=1; refreshTable(); return; }
+    $fT.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m][g]), placeholder:"Todos", allowClear:true, width:"100%" })
+       .val(null).trigger("change").prop("disabled", false);
+    pageIndex=1; refreshTable();
+  });
+
+  $("#flt_tipo").on("change", ()=>{ pageIndex=1; refreshTable(); });
+  $("#flt_debehaber").on("change", ()=>{ pageIndex=1; refreshTable(); });
+  $("#flt_concepto").on("input", debounce(()=>{ pageIndex=1; refreshTable(); }, 250));
+
+  // Filtros nuevos
+  AREAS.forEach(a => $("#flt_area").append(`<option>${a}</option>`));
+  $("#flt_cuenta").on("input", debounce(()=>{ pageIndex=1; refreshTable(); }, 200));
+  $("#flt_area").on("change", ()=>{ pageIndex=1; refreshTable(); });
+
+  // Limpiar
+  $("#btnLimpiarFiltros").on("click", ()=>{
+    $("#flt_concepto").val(""); $("#flt_debehaber").val("");
+    $fM.val(null).trigger("change");
+    $fG.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
+    $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
+  });
+  $("#btnLimpiarFiltros2").on("click", ()=>{
+    $("#flt_cuenta").val("");
+    $("#flt_area").val("");
+    $("#btnLimpiarFiltros").trigger("click");
+    pageIndex=1; refreshTable();
+  });
+
+  // Paginación
+  pageSize = parseInt($("#pageSize").val(),10) || 10;
+  $("#pageSize").on("change", function(){
+    pageSize = parseInt(this.value,10) || 10;
+    pageIndex = 1;
+    refreshTable();
+  });
+  $("#pgFirst").on("click", ()=>{ pageIndex=1; refreshTable(); });
+  $("#pgPrev").on("click",  ()=>{ if(pageIndex>1) pageIndex--; refreshTable(); });
+  $("#pgNext").on("click",  ()=>{ if(pageIndex<totalPages) pageIndex++; refreshTable(); });
+  $("#pgLast").on("click",  ()=>{ pageIndex=totalPages; refreshTable(); });
+
   load();
 });
 
@@ -599,7 +704,6 @@ function onDelete(i){
 
 window.onEdit = onEdit;
 window.onDelete = onDelete;
-
   </script>
 </body>
 </html>
