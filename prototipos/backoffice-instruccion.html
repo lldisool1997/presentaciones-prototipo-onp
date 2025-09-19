@@ -80,7 +80,7 @@
     <!-- Desagregado -->
     <section class="bg-white rounded-2xl border border-line shadow-card p-5">
       <div class="flex items-center justify-between mb-2">
-        <h3 class="text-lg font-semibold">Desagregado contable (Debe/Haber)</h3>
+        <h3 class="text-lg font-semibold">Desagregado</h3>
         <div class="text-sm">
           <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">Debe: <b id="sumDebe">0.00</b></span>
           <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 ml-1">Haber: <b id="sumHaber">0.00</b></span>
@@ -130,23 +130,61 @@ toastr.options = {
   showDuration:160,hideDuration:160,showMethod:"fadeIn",hideMethod:"fadeOut"
 };
 
-// =================== MOCK: Catálogo de conceptos ===================
-// (Solo concepto y su Debe/Haber asociado; no es editable)
-const CATALOGO_CONCEPTOS = [
-  { concepto:"Llamado de Capital",         sugerencia:"DEBE"   },
-  { concepto:"Rescate de Capital",             sugerencia:"HABER"   },
-  { concepto:"Devolución de Capital",             sugerencia:"HABER"   },
-];
+// =================== Catálogo de conceptos por FLAG ===================
+// 1 = Local, 2 = Extranjero, 3 = Extranjero EUR, 4 = IK (Instrumentos de Capital)
+const CATALOGO_CONCEPTOS_BY_FLAG = {
+  "1": [ // LOCAL
+    { concepto:"Capital comprometido",               dhLabel:"Saldo Positivo (+)",                         side:"DEBE"  },
+    { concepto:"Llamado de Capital",                 dhLabel:"Saldo Positivo (+)",                         side:"DEBE"  },
+    { concepto:"Rescate de Capital",                 dhLabel:"Saldo Negativo (-)",                         side:"HABER" },
+    { concepto:"Devolución de capital",              dhLabel:"Saldo Negativo (-)",                         side:"HABER" },
+    { concepto:"Distribución de dividendos",         dhLabel:"Ingreso (+)",                                side:"HABER" },
+    { concepto:"Perdida Distribucion de dividendos", dhLabel:"Ingreso (-)",                                side:"DEBE"  },
+    { concepto:"Perdida por Diferencia de cambio",   dhLabel:"Diferencia por tipo de cambio (+)",          side:"DEBE"  },
+    { concepto:"Ganancia por Diferencia de cambio",  dhLabel:"Ingreso (+)",                                side:"HABER" }
+  ],
+  "2": [ // EXTRANJERO
+    { concepto:"Capital comprometido",               dhLabel:"Saldo Positivo (+)",                         side:"DEBE"  },
+    { concepto:"Llamado de Capital",                 dhLabel:"Saldo Positivo (+)",                         side:"DEBE"  },
+    { concepto:"Rescate de Capital",                 dhLabel:"Saldo Negativo (-)",                         side:"HABER" },
+    { concepto:"Devolución de capital",              dhLabel:"Saldo Negativo (-)",                         side:"HABER" },
+    { concepto:"Distribución de dividendos",         dhLabel:"Ingreso (+)",                                side:"HABER" },
+    { concepto:"Perdida Distribucion de dividendos", dhLabel:"Ingreso (-)",                                side:"DEBE"  },
+    { concepto:"Perdida por Diferencia de cambio",   dhLabel:"Diferencia por tipo de cambio (+)",          side:"DEBE"  },
+    { concepto:"Ganancia por Diferencia de cambio",  dhLabel:"Ingreso (+)",                                side:"HABER" }
+  ],
+  "3": [ // EXTRANJERO EUR
+    { concepto:"Capital comprometido",               dhLabel:"Saldo Positivo (+)",                         side:"DEBE"  },
+    { concepto:"Llamado de Capital",                 dhLabel:"Saldo Positivo (+)",                         side:"DEBE"  },
+    { concepto:"Rescate de Capital (o Retrocesión)", dhLabel:"Saldo Negativo (-)",                         side:"HABER" },
+    { concepto:"Devolución de capital",              dhLabel:"Saldo Negativo (-)",                         side:"HABER" },
+    { concepto:"Distribucion de dividendos (o dietas)", dhLabel:"Ingreso (+)",                             side:"HABER" },
+    { concepto:"Perdida Distribucion de dividendos", dhLabel:"Ingreso (-)",                                side:"DEBE"  },
+    { concepto:"Ganancia por Diferencia de cambio",  dhLabel:"Diferencia por tipo de cambio (+)",          side:"DEBE"  }
+  ],
+  "4": [ // IK: Instrumentos de Capital / Rebates (mercado externo)
+    { concepto:"Compra",                                              dhLabel:"Ingreso (+)",                 side:"HABER" },
+    { concepto:"Liquidación",                                         dhLabel:"Ingreso (-)",                 side:"DEBE"  },
+    { concepto:"Ingreso extra (Rebates)",                             dhLabel:"Ingreso (+)",                 side:"HABER" },
+    { concepto:"Estimación/Provisión: Cuenta x cobrar (Debe)",        dhLabel:"Ingreso (+)",                 side:"HABER" },
+    { concepto:"Estimación/Provisión: Cuenta x cobrar (Haber)",       dhLabel:"Ingreso (-)",                 side:"DEBE"  },
+    { concepto:"Cancelación por Reinversión (Debe)",                  dhLabel:"Ingreso (+)",                 side:"HABER" },
+    { concepto:"Cancelación por Reinversión (Haber)",                 dhLabel:"Ingreso (-)",                 side:"DEBE"  },
+    { concepto:"Cancelación por Ingreso a Tesorería (Debe)",          dhLabel:"Ingreso (+)",                 side:"HABER" },
+    { concepto:"Cancelación por Ingreso a Tesorería (Haber)",         dhLabel:"Ingreso (-)",                 side:"DEBE"  }
+  ]
+};
 
 // =================== Helpers ===================
-const qs = new URLSearchParams(location.search);
-const invId     = qs.get("inv")  || "—";
-const movId     = qs.get("mov")  || "—";
-const movTipo   = qs.get("tipo") || "Llamado";
-const movFecha  = qs.get("fecha")|| "—";
-const movMontoS = qs.get("monto")|| "0.00";
-const movDoc    = qs.get("doc")  || "documento.pdf";
-const banco     = qs.get("bank") || "Banco de Crédito del Perú (BCP)";
+const qs       = new URLSearchParams(location.search);
+const invId    = qs.get("inv")  || "—";
+const movId    = qs.get("mov")  || "—";
+const movTipo  = qs.get("tipo") || "Llamado";
+const movFecha = qs.get("fecha")|| "—";
+const movMontoS= qs.get("monto")|| "0.00";
+const flagCtas = (qs.get("ctas") || "1").trim();  // default Local
+const movDoc   = qs.get("doc")  || "documento.pdf";
+const banco    = qs.get("bank") || "Banco de Crédito del Perú (BCP)";
 
 const montoLlamado = parseFloat(String(movMontoS).replace(/[^\d.-]/g,"")) || 0;
 
@@ -180,27 +218,36 @@ function renderHeader(){
   });
 }
 
-// =================== Estado del desagregado (sin perder foco) ===================
-let rows = []; // {concepto, dh(derivado), monto}
+// ===== Activa catálogo según flag =====
+const CATALOGO_CONCEPTOS = CATALOGO_CONCEPTOS_BY_FLAG[flagCtas] || CATALOGO_CONCEPTOS_BY_FLAG["1"];
 
+// =================== Estado del desagregado ===================
+let rows = []; // { concepto, dh, dhLabel, monto }
 const $tbody = $("#tbody");
 
+// Options del select
 const conceptoOptionsHTML = [
   '<option value="">Seleccione…</option>',
   ...CATALOGO_CONCEPTOS.map(c => `<option value="${c.concepto}">${c.concepto}</option>`)
 ].join("");
 
+// Fila base
 function nuevaFila(concepto="", monto=""){
-  // Deriva DH desde el concepto; si no hay concepto, queda vacío
-  const dh = (concepto && (CATALOGO_CONCEPTOS.find(c => c.concepto===concepto)?.sugerencia)) || "";
-  return { concepto, dh, monto };
+  const item = CATALOGO_CONCEPTOS.find(c => c.concepto === concepto);
+  return {
+    concepto: concepto || "",
+    dh:       item?.side    || "",   // para sumar
+    dhLabel:  item?.dhLabel || "",   // lo que se muestra
+    monto
+  };
 }
 
-function dhBadgeHTML(dh){
+// Chip/Badge para DH (colorea por side y muestra el label)
+function dhBadgeHTML(label, side){
   const base = 'px-2.5 py-1 rounded-full text-xs font-semibold';
-  if(dh==="DEBE")  return `<span class="${base} bg-blue-50 text-blue-700" data-role="dh-badge">${dh}</span>`;
-  if(dh==="HABER") return `<span class="${base} bg-emerald-50 text-emerald-700" data-role="dh-badge">${dh}</span>`;
-  return `<span class="${base} bg-gray-100 text-gray-500" data-role="dh-badge">—</span>`;
+  if(side === "DEBE")  return `<span class="${base} bg-blue-50 text-blue-700"    data-role="dh-badge">${label||"—"}</span>`;
+  if(side === "HABER") return `<span class="${base} bg-emerald-50 text-emerald-700" data-role="dh-badge">${label||"—"}</span>`;
+  return `<span class="${base} bg-gray-100 text-gray-500" data-role="dh-badge">${label||"—"}</span>`;
 }
 
 function buildRowHTML(i, r){
@@ -213,9 +260,8 @@ function buildRowHTML(i, r){
         </select>
       </td>
       <td class="p-2 text-center">
-        <!-- DH solo visual, no editable -->
         <div data-i="${i}" data-k="dh-view">
-          ${dhBadgeHTML(r.dh)}
+          ${dhBadgeHTML(r.dhLabel, r.dh)}
         </div>
       </td>
       <td class="p-2 text-right">
@@ -235,7 +281,6 @@ function hydrateRowValues(i){
   const r = rows[i];
   const $row = $tbody.find(`tr[data-row="${i}"]`);
   $row.find('select[data-k="concepto"]').val(r.concepto||"");
-  // badge dh se pinta desde build; si cambiara concepto lo actualizamos in-place
   $row.find('input[data-k="monto"]').val(r.monto||"");
 }
 
@@ -245,17 +290,16 @@ function attachRowHandlers(i){
   const $monto    = $row.find('input[data-k="monto"]');
   const $dhView   = $row.find('[data-k="dh-view"]');
 
-  // Concepto: deriva DH y actualiza badge (no editable)
   $concepto.off("change").on("change", function(){
-    const val = $(this).val();
-    rows[i].concepto = val;
-    rows[i].dh = val ? (CATALOGO_CONCEPTOS.find(c => c.concepto===val)?.sugerencia || "") : "";
-    // Actualiza badge sin re-render
-    $dhView.html(dhBadgeHTML(rows[i].dh));
+    const val  = $(this).val();
+    const item = CATALOGO_CONCEPTOS.find(c => c.concepto === val);
+    rows[i].concepto = val || "";
+    rows[i].dh       = item?.side    || "";
+    rows[i].dhLabel  = item?.dhLabel || "";
+    $dhView.html(dhBadgeHTML(rows[i].dhLabel, rows[i].dh));
     updateTotals();
   });
 
-  // Monto
   $monto.off("input blur")
     .on("input", function(){
       rows[i].monto = $(this).val();
@@ -282,8 +326,6 @@ function renderAllRows(){
 function addRow(prefill=null){
   rows.push(prefill ? nuevaFila(prefill.concepto || "", prefill.monto || "") : nuevaFila());
   const i = rows.length - 1;
-  // Recalcular DH de esa fila si vino con concepto
-  rows[i].dh = rows[i].concepto ? (CATALOGO_CONCEPTOS.find(c=>c.concepto===rows[i].concepto)?.sugerencia || "") : "";
   $tbody.append(buildRowHTML(i, rows[i]));
   hydrateRowValues(i);
   attachRowHandlers(i);
@@ -291,10 +333,7 @@ function addRow(prefill=null){
   toastr.info("Línea agregada.");
 }
 
-function reindexRowsAfterRemoval(){
-  renderAllRows(); // eliminación es poco frecuente → re-render global
-}
-
+function reindexRowsAfterRemoval(){ renderAllRows(); }
 function removeRow(i){
   rows.splice(i,1);
   toastr.warning("Línea eliminada.");
@@ -302,6 +341,7 @@ function removeRow(i){
 }
 window.removeRow = removeRow;
 
+// Totales: sumamos por 'side'
 function updateTotals(){
   const totDebe  = rows.reduce((acc,r)=> acc + (r.dh==="DEBE"  ? parseMoney(r.monto) : 0), 0);
   const totHaber = rows.reduce((acc,r)=> acc + (r.dh==="HABER" ? parseMoney(r.monto) : 0), 0);
@@ -311,9 +351,8 @@ function updateTotals(){
   $("#sumHaber").text(money(totHaber));
   $("#sumDiff").text(money(diff));
 
-  const balanced = Math.abs(diff) < 0.005; // tolerancia centavos
+  const balanced = Math.abs(diff) < 0.005;
   const allFilled = rows.length>0 && rows.every(r=> r.concepto && (r.dh==="DEBE"||r.dh==="HABER") && parseMoney(r.monto)>0 );
-
   $("#btnGuardar").prop("disabled", !(allFilled && balanced));
 
   const $diff = $("#sumDiff").parent();
@@ -326,9 +365,6 @@ async function guardar(){
     toastr.error("El desagregado debe estar completo y cuadrado con el monto del llamado.");
     return;
   }
-
-
-  // Segunda confirmación
   const step2 = await Swal.fire({
     title: "Confirmación",
     text: "¿Estás completamente seguro realizar la cancelación?. Esta acción no se puede deshacer.",
@@ -338,29 +374,29 @@ async function guardar(){
     cancelButtonText: "No",
     confirmButtonColor: "#dc2626"
   });
-
-  if(!step2.isConfirmed){
-    toastr.info("Notificación cancelada.");
-    return;
-  }
-
+  if(!step2.isConfirmed){ toastr.info("Notificación cancelada."); return; }
 
   toastr.success("✅ Instrucción registrada. Movimiento quedará en estado CANCELADO.");
-  // Aquí enviarías rows + invId/movId/... a tu backend
   setTimeout(()=>{ window.location.href = "index.html?result=ok"; }, 1200);
 }
 
 // =================== INIT ===================
 $(function(){
   renderHeader();
-  // 1 línea con el total (DEBE) y 1 vacía para ajustes → DH se deriva del concepto
-  addRow({ concepto:"Capital comprometido", monto: money(montoLlamado) });
+
+  // Concepto default: "Capital comprometido" si existe; si no (IK), primero del catálogo
+  const DEFAULT_CONCEPTO =
+    (CATALOGO_CONCEPTOS.find(c => c.concepto === "Capital comprometido")?.concepto)
+    || (CATALOGO_CONCEPTOS[0]?.concepto || "");
+
+  addRow({ concepto: DEFAULT_CONCEPTO, monto: money(montoLlamado) });
   addRow();
 
   $("#btnAgregar").on("click", ()=> addRow());
   $("#btnGuardar").on("click", guardar);
 });
 </script>
+
 
 
 </body>

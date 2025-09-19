@@ -173,116 +173,158 @@
   <!-- jQuery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script>
-    // Mock de notificaciones con HREF real
-    const notifications = [
-        {
+   "use strict";
+
+// Mock de notificaciones con HREF real
+const notifications = [
+  {
     id: 1,
     title: "Llamado de capital",
-    detail: "Fondo Consolidado de Reservas Previsionales – FCR · S/ 1,250,000.00",
-     href: "backoffice-instruccion.html?inv=6122&mov=C-1001&tipo=Llamado&fecha=2024-08-10&monto=1%2C250%2C000.00&doc=call_1001.pdf&bank=Banco+de+Crédito+del+Perú+%28BCP%29",
+    detail: "Fondo Consolidado de Reservas Previsionales – FCR · S/ 10,000,000.00",
+    href: "backoffice-instruccion.html?inv=6122&mov=C-1001&tipo=Llamado&fecha=2024-08-10&monto=1%2C250%2C000.00&doc=call_1001.pdf&bank=Banco+de+Crédito+del+Perú+%28BCP%29",
     unread: true
   },
-     {
+  {
     id: 2,
     title: "Registro de Inversión Financiera",
-    detail: "Nueva inversión financiera registrada INV #:21742513",
-     href: "listado.html",
+    detail: "Nueva inversión financiera registrada INV #:6123",
+    href: "listado-llamado-capital-dist.html",
     unread: true
   },
-   {
+  {
     id: 3,
     title: "Nuevo cupón aprobado",
     detail: "El cupón con INV #:21742513 ha sido aprobado y está pendiente de cancelación.",
-     href: "listado.html",
+    href: "listado.html",
     unread: true
-  },
-/*    {
-    id: 2,
+  }
+  // Ejemplos adicionales que dejaste comentados:
+  /*
+  {
+    id: 4,
     title: "Retorno de capital",
     detail: "Monroe Capital Fund III · USD 2,661,020",
     href: "backoffice-instruccion.html?inv=6122&mov=C-1001&tipo=Llamado&fecha=2024-08-10&monto=1%2C250%2C000.00&doc=call_1001.pdf&bank=Banco+de+Crédito+del+Perú+%28BCP%29",
     unread: true
   },
   {
-    id: 3,
+    id: 5,
     title: "Capital Call & Distribución",
     detail: "Credicorp Inmobiliario Perú · S/ 3,611,528.93",
     href: "#credicorp",
     unread: false
-  }*/
-      //{ id:2, title:"Rebate recibido", detail:"Custodio Internacional · hace 1 h", href:"homologacion.html", unread:true },
-      //{ id:3, title:"Cuponera generada", detail:"BC10079 · ayer", href:"#reportes", unread:true }
-    ];
+  }
+  */
+];
 
-    function renderNotifications(){
-      const $list = $("#notiList").empty();
-      let unread = 0;
-      notifications.forEach(n=>{
-        unread += n.unread ? 1 : 0;
-        $list.append(`
-          <a href="${n.href}" class="block p-3 rounded-xl bg-muted border border-line hover:bg-white transition">
-            <div class="flex gap-3">
-              <div class="w-2 h-2 mt-2 rounded-full ${n.unread ? 'bg-emerald-500':'bg-gray-400'}"></div>
-              <div class="flex-1">
-                <div class="font-semibold">${n.title}</div>
-                <div class="text-xs text-gray-500 mt-0.5">${n.detail}</div>
-              </div>
-            </div>
-          </a>
-        `);
-      });
-      $("#badgeCount").text(unread).toggle(unread>0);
-    }
+// ===== Helpers =====
+function getQueryParam(name){
+  try {
+    return new URLSearchParams(window.location.search).get(name);
+  } catch(_) {
+    return null;
+  }
+}
 
-    function openMobileNav(){
-      $("#sidenavMobile").addClass("opacity-100 translate-y-0 scale-100 pointer-events-auto");
-    }
-    function closeMobileNav(){
-      $("#sidenavMobile").removeClass("opacity-100 translate-y-0 scale-100 pointer-events-auto");
-    }
-    function toggleMobileNav(){
-      const open = $("#sidenavMobile").hasClass("opacity-100");
-      open ? closeMobileNav() : openMobileNav();
-    }
+// Estado: id seleccionado por query (?id_notificacion=)
+let selectedNotiId = null;
 
-    $(function(){
-      renderNotifications();
+// Render con filtro opcional por ID
+function renderNotifications(idSelected){
+  const $list = $("#notiList").empty();
 
-      // Abrir/cerrar notificaciones
-      $("#btnBell").on("click", function(e){
-        e.stopPropagation();
-        $("#notiPanel").toggleClass("hidden");
-        $("#userDropdown").addClass("hidden");
-      });
+  // Lista a pintar
+  const list = idSelected
+    ? notifications.filter(n => String(n.id) === String(idSelected))
+    : notifications;
 
-      // Marcar todo leído (badge)
-      $("#btnMarkAll").on("click", function(){
-        notifications.forEach(n=>n.unread=false);
-        renderNotifications();
-      });
+  // === Badge: ahora cuenta según el alcance ===
+  // - si hay idSelected: cuenta no leídos SOLO de la lista filtrada
+  // - si no hay idSelected: cuenta no leídos de todo el arreglo
+  const sourceForBadge = idSelected ? list : notifications;
+  const unreadTotal = sourceForBadge.reduce((acc, n) => acc + (n.unread ? 1 : 0), 0);
+  $("#badgeCount").text(unreadTotal).toggle(unreadTotal > 0);
 
-      // Usuario (dropdown)
-      $("#btnUser").on("click", function(e){
-        e.stopPropagation();
-        $("#userDropdown").toggleClass("hidden");
-        $("#notiPanel").addClass("hidden");
-      });
+  if (!list.length){
+    $list.append(`
+      <div class="p-3 text-sm text-gray-500">
+        No se encontró la notificación solicitada.
+      </div>
+    `);
+    return;
+  }
 
-      // Mobile sidenav
-      $("#btnMenu").on("click", function(e){
-        e.stopPropagation();
-        toggleMobileNav();
-      });
+  list.forEach(n=>{
+    $list.append(`
+      <a href="${n.href}" class="block p-3 rounded-xl bg-muted border border-line hover:bg-white transition">
+        <div class="flex gap-3">
+          <div class="w-2 h-2 mt-2 rounded-full ${n.unread ? 'bg-emerald-500' : 'bg-gray-400'}"></div>
+          <div class="flex-1">
+            <div class="font-semibold">${n.title}</div>
+            <div class="text-xs text-gray-500 mt-0.5">${n.detail}</div>
+          </div>
+        </div>
+      </a>
+    `);
+  });
+}
 
-      // Cerrar paneles si clic fuera
-      $(document).on("click", function(){
-        $("#userDropdown").addClass("hidden");
-        $("#notiPanel").addClass("hidden");
-        closeMobileNav();
-      });
-      // Evitar cierre al click dentro
-      $("#userDropdown, #notiPanel, #sidenavMobile").on("click", function(e){ e.stopPropagation(); });
-    });
+// Mobile sidenav helpers
+function openMobileNav(){
+  $("#sidenavMobile").addClass("opacity-100 translate-y-0 scale-100 pointer-events-auto");
+}
+function closeMobileNav(){
+  $("#sidenavMobile").removeClass("opacity-100 translate-y-0 scale-100 pointer-events-auto");
+}
+function toggleMobileNav(){
+  const open = $("#sidenavMobile").hasClass("opacity-100");
+  open ? closeMobileNav() : openMobileNav();
+}
+
+// ===== Init =====
+$(function(){
+  // Leer param y renderizar
+  selectedNotiId = getQueryParam("id_notificacion");
+  renderNotifications(selectedNotiId);
+
+  // Abrir/cerrar notificaciones (campana)
+  $("#btnBell").on("click", function(e){
+    e.stopPropagation();
+    $("#notiPanel").toggleClass("hidden");
+    $("#userDropdown").addClass("hidden");
+  });
+
+  // Marcar todo como leído (mantiene el filtro vigente)
+  $("#btnMarkAll").on("click", function(){
+    notifications.forEach(n => n.unread = false);
+    renderNotifications(selectedNotiId);
+  });
+
+  // Usuario (dropdown)
+  $("#btnUser").on("click", function(e){
+    e.stopPropagation();
+    $("#userDropdown").toggleClass("hidden");
+    $("#notiPanel").addClass("hidden");
+  });
+
+  // Mobile sidenav
+  $("#btnMenu").on("click", function(e){
+    e.stopPropagation();
+    toggleMobileNav();
+  });
+
+  // Cerrar paneles si clic fuera
+  $(document).on("click", function(){
+    $("#userDropdown").addClass("hidden");
+    $("#notiPanel").addClass("hidden");
+    closeMobileNav();
+  });
+
+  // Evitar cierre al click dentro
+  $("#userDropdown, #notiPanel, #sidenavMobile").on("click", function(e){
+    e.stopPropagation();
+  });
+});
   </script>
 </body>
 </html>

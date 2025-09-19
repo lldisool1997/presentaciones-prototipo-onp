@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Registro de Inversiones Financieras</title>
     <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4/dist/autoNumeric.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         * {
@@ -11912,7 +11913,21 @@
         // 💾 FUNCIÓN DE REGISTRO
         // ===================================================
 
-        function registerInvestment() {
+        async function registerInvestment() {
+
+            // Segunda confirmación
+            const step2 = await Swal.fire({
+            title: "Confirmación",
+            text: "¿Estás completamente seguro de registrar el instrumento?. Esta acción no se puede deshacer.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, registrar",
+            cancelButtonText: "No",
+            confirmButtonColor: "#dc2626"
+            });
+
+
+
             const registerButton = document.getElementById('registerButton');
             const successMessage = document.getElementById('successMessage');
 
@@ -11929,7 +11944,7 @@
             registerButton.classList.remove('enabled');
 
             setTimeout(() => {
-                successMessage.textContent = '✅ Inversión financiera registrada correctamente. Código del instrumento: INV-21742513';
+                successMessage.textContent = '✅ Inversión financiera registrada correctamente. Código del instrumento: INV-6123';
                 successMessage.classList.remove('hidden');
 
                 registerButton.textContent = 'Registrar inversión';

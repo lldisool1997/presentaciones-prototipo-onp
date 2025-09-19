@@ -351,8 +351,6 @@
                 <th>Carta Cancelación</th>
                 <th>Moneda</th>
                 <th>Valor Nominal</th>
-                <th>Compra Spot Cupón</th>
-                <th>P.Compra/Cupón%</th>
                 <th>Eco Instrumento</th>
                 <th>Acciones</th>
               </tr>
@@ -419,7 +417,7 @@
   // =============== DATA MOCK ===============
   // Hijos usan estados: REGISTRADO, NOTIFICADO A BACK OFFICE, CANCELADO
   const inversiones = [
-        {
+      {
       entidad:"fdo-consolidado",
       unidad:"fcr-macrofondo",
       tipo:"bonos-corporativos",
@@ -428,15 +426,15 @@
       invPrincipal:"6123",
       producto:"Fondos Alternativos – Secondaries",
       numeroDeposito:"ALPINV-SEC-22",
-      fechaCompra:"24/01/2015",
-      fechaEmision:"24/01/2015",
-      fechaVencimiento:"24/07/2026",
-      cataApertura:"24/07/2026",
+      fechaCompra:"19/09/2025",
+      fechaEmision:"19/09/2025",
+      fechaVencimiento:"19/09/2030",
+      cataApertura:"19/09/2025",
       cataCancelacion:"Local",
       moneda:"USD",
-      valorNominal:"24,500,000.00",
+      valorNominal:"10,000,000.00",
       compraSpotCupon:"",
-      pCompraCupon:"100.00",
+      pCompraCupon:"-",
       ecoInstrument:"ALTERNATIVOS",
     },
     {
@@ -448,19 +446,20 @@
       invPrincipal:"6122",
       producto:"Fondos Alternativos – Secondaries",
       numeroDeposito:"ALPINV-SEC-22",
-      fechaCompra:"24/01/2015",
-      fechaEmision:"24/01/2015",
-      fechaVencimiento:"24/07/2026",
-      cataApertura:"24/07/2026",
+      fechaCompra:"19/09/2025",
+      fechaEmision:"19/09/2025",
+      fechaVencimiento:"19/09/2030",
+      cataApertura:"19/09/2025",
       cataCancelacion:"Local",
       moneda:"USD",
-      valorNominal:"24,500,000.00",
+      valorNominal:"10,000,000.00",
       compraSpotCupon:"",
-      pCompraCupon:"100.00",
+      pCompraCupon:"-",
       ecoInstrument:"ALTERNATIVOS",
+      flagCtas: "1",
       hijos:[
-        { id:"C-1001", tipo:"Llamado",        fecha:"2024-08-10", monto:"1,250,000.00", documento:"call_1001.pdf", estado:"REGISTRADO" },
-        { id:"C-1001", tipo:"Llamado",        fecha:"2024-08-10", monto:"1,250,000.00", documento:"call_1001.pdf", estado:"NOTIFICADO A BACK OFFICE" },
+        { id:"C-1001", tipo:"Llamado",        fecha:"2024-19-09", monto:"1,000,000.00", documento:"call_1001.pdf", estado:"REGISTRADO" },
+        { id:"C-1001", tipo:"Llamado",        fecha:"2024-19-09", monto:"1,000,000.00", documento:"call_1001.pdf", estado:"NOTIFICADO A BACK OFFICE" },
         //{ id:"C-1002", tipo:"Distribución",   fecha:"2024-12-05", monto:"-250,000.00",  documento:"dist_1002.pdf", estado:"INSTRUIDO" }
       ]
     },
@@ -473,16 +472,17 @@
       invPrincipal:"6121",
       producto:"Fondo Mutuo Renta Variable Global",
       numeroDeposito:"FM-RV-GLB-01",
-      fechaCompra:"03/02/2016",
-      fechaEmision:"03/02/2016",
-      fechaVencimiento:"—",
-      cataApertura:"—",
-      cataCancelacion:"—",
+      fechaCompra:"19/09/2025",
+      fechaEmision:"19/09/2025",
+      fechaVencimiento:"-",
+      cataApertura:"-",
+      cataCancelacion:"Local",
       moneda:"USD",
       valorNominal:"10,000,000.00",
       compraSpotCupon:"",
       pCompraCupon:"—",
-      ecoInstrument:"FONDOS MUTUOS",
+      ecoInstrument:"ALTERNATIVOS",
+      flagCtas: "1",
       hijos:[
         //{ id:"C-2001", tipo:"Rebate",         fecha:"2025-01-31", monto:"-15,400.00",   documento:"reb_2001.pdf",  estado:"REGISTRADO" },
         //{ id:"C-2002", tipo:"Rescate",        fecha:"2025-06-12", monto:"-500,000.00",  documento:"res_2002.pdf",  estado:"CANCELADO" }
@@ -556,12 +556,10 @@
         <td>${inv.cataCancelacion}</td>
         <td class="text-right">${inv.moneda}</td>
         <td class="text-left">${inv.valorNominal}</td>
-        <td>${inv.compraSpotCupon}</td>
-        <td>${inv.pCompraCupon}</td>
         <td>${inv.ecoInstrument}</td>
         <td>
           ${
-                                inv.estado !== "REGISTRADO"
+                                inv.estado !== "REGISTRADO" && getAreaParam() === "DIN"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroLlamado('${inv.invPrincipal}')">
@@ -570,11 +568,19 @@
           </div>`
                                 :
                                 
-                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+                                 ` `
+                            }
+           ${
+                                inv.estado !== "APROBADO" && getAreaParam() === "Tesoreria"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-aprobar" onclick='abrirModalAprobacion(${JSON.stringify(inv)})'>
               APROBAR
             </button>
           </div>`
+                                :
+                                
+                                 `  `
                             }
         </td>
       `;
@@ -610,7 +616,7 @@
                       <td style="padding:8px">${badgeHijo(h.estado)}</td>
                       <td style="padding:8px">
                             ${
-                                h.estado === "REGISTRADO"
+                                h.estado === "REGISTRADO" && getAreaParam() === "DIN"
                                 ? `<button class="btn btn-action btn-instruir"
                                     onclick="instruirMovimiento(${idx},${j})">
                                     Notificar (Instruir)
@@ -618,10 +624,10 @@
                                 : ""
                             }
                             ${
-                                h.estado === "NOTIFICADO A BACK OFFICE"
+                                h.estado === "NOTIFICADO A BACK OFFICE" && getAreaParam() === "Tesoreria"
                                 ? `<button class="btn btn-action btn-cancelar"
                                     onclick="irABackOffice(${idx},${j})">
-                                    Registrar en Back Office
+                                    Cancelar
                                     </button>`
                                 : ""
                             }
@@ -757,7 +763,7 @@ async function cancelarMovimiento(i, j){
       tipo: h.tipo,
       fecha: h.fecha,
       monto: h.monto,
-      doc: h.documento
+      doc: h.documento,
     }).toString();
 
     window.location.href = `${BACKOFFICE_URL}?${qs}`;
@@ -812,6 +818,7 @@ async function cancelarMovimiento(i, j){
   url.searchParams.set("fecha", h.fecha);
   url.searchParams.set("monto", h.monto);
   url.searchParams.set("doc", h.documento);
+  url.searchParams.set("ctas", inv.flagCtas);
   url.searchParams.set("bank", inv.banco || "Banco de Crédito del Perú (BCP)"); // si no lo tienes aún, agrega en mock
 
   window.location.href = url.toString();
@@ -955,7 +962,7 @@ window.irABackOffice = irABackOffice;
             const container = document.getElementById('infoGeneral');
 
             const campos = [
-                { label: 'Código del instrumento', value: 'INV-40459532' },
+                { label: 'Código del instrumento', value: 'INV-6123' },
                 { label: 'Unidad de negocio', value: 'FCR-LEY N° 28046' },
                 { label: 'Plazo de vencimiento', value: 'Se calculará automáticamente' },
                 { label: 'Emisor', value: 'REPUBLICA DEL PERU' },
@@ -967,13 +974,13 @@ window.irABackOffice = irABackOffice;
                 { label: 'Cantidad', value: '1,000.00' },
                 { label: 'Valor unitario', value: '1,000.00' },
                 { label: 'Valor nominal adquirido', value: inversion.valorNominal || '1,000,000.00' },
-                { label: 'Periodicidad del cupón', value: 'Semestral' },
-                { label: 'Cupón (%)', value: '6.5000' },
-                { label: 'Tipo de amortización', value: 'Amortizable' },
+                //{ label: 'Periodicidad del cupón', value: 'Semestral' },
+                //{ label: 'Cupón (%)', value: '6.5000' },
+                //{ label: 'Tipo de amortización', value: 'Amortizable' },
                 { label: 'Fecha de emisión', value: inversion.fechaEmision || '20/09/2025' },
-                { label: 'Fecha Liquidación', value: '21/09/2025' },
+                { label: 'Fecha Liquidación', value: '19/09/2030' },
                 { label: 'Fecha de vencimiento', value: inversion.fechaVencimiento || '20/09/2029' },
-                { label: 'Plazo en años', value: '4' },
+                { label: 'Plazo en años', value: '5' },
                 { label: 'Banco cuenta de cargo', value: 'BANCO DE CRÉDITO' },
                 { label: 'N° de Cuenta Bancaria', value: 'N° 193-13814691-0-31' },
                 { label: 'Tipo de custodia', value: 'Local' },
