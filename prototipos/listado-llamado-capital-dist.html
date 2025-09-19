@@ -774,7 +774,7 @@ async function cancelarMovimiento(i, j){
   // =============== NAVEGACIÓN ===============
   function irARegistroLlamado(inversionId){
     if(inversionId){
-      window.location.href = `registro-llamado-capital.html?inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `registro-llamado-capital.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
       window.location.href = "registro-llamado-capital.html";
     }
@@ -819,6 +819,7 @@ async function cancelarMovimiento(i, j){
   url.searchParams.set("monto", h.monto);
   url.searchParams.set("doc", h.documento);
   url.searchParams.set("ctas", inv.flagCtas);
+  url.searchParams.set("area", "Tesoreria");
   url.searchParams.set("bank", inv.banco || "Banco de Crédito del Perú (BCP)"); // si no lo tienes aún, agrega en mock
 
   window.location.href = url.toString();

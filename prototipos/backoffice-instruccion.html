@@ -34,12 +34,47 @@
   padding-left: 14px !important; /* ajusta porque antes dejaba espacio al ícono */
 }
 
+         .header {
+            background: linear-gradient(135deg, #005C97 0%, #004a7c 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .section-header {
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid #005C97;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
   </style>
 </head>
 <body class="bg-gray-100 text-ink">
-
+  <div id="area-badge"
+     style="position: absolute; top: 15px; right: 20px;
+            background-color: #1e6ba8; color: #fff;
+            font-weight: bold; font-size: 0.9rem;
+            padding: 6px 14px; border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+  Área: -
+</div>
   <!-- Topbar -->
-  <header class="sticky top-0 z-40 bg-gradient-to-br from-brand1 to-brand2 text-white shadow-md">
+  <!--<header class="sticky top-0 z-40 bg-gradient-to-br from-brand1 to-brand2 text-white shadow-md">
     <div class="max-w-[1100px] mx-auto px-4 py-3 flex items-center gap-3">
       <div class="w-9 h-9 rounded-xl bg-white/15 border border-white/25 grid place-items-center">
         <svg viewBox="0 0 24 24" class="w-5 h-5 fill-white"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm7 6-7 4-7-4m0 0 7-4m7 4v8l-7 4m-7-12v8l7 4"/></svg>
@@ -47,13 +82,15 @@
       <div class="font-semibold">SGAFCR · Back Office · Registrar Instrucción</div>
       <div class="ml-auto text-sm opacity-90">Llamado de Capital</div>
     </div>
-  </header>
+  </header>-->
 
-  <main class="max-w-[1100px] mx-auto px-4 py-6 space-y-5">
-
+  <main class="max-w-[1100px] mx-auto px-4 py-6 ">
+                <div class="header rounded-2xl rounded-b-none">
+                <h1>Cancelación del llamado de capital</h1>
+            </div>
     <!-- Cabecera (solo lectura) -->
-    <section class="bg-white rounded-2xl border border-line shadow-card p-5">
-      <h2 class="text-lg font-semibold mb-3">Resumen del movimiento</h2>
+    <section class="bg-white   border-line p-5">
+       <div class="section-header">1. Resumen del movimientoo</div>
       <div id="head" class="grid md:grid-cols-3 gap-3 text-[15px]"></div>
       <div class="mt-3 grid md:grid-cols-3 gap-3 text-[15px]">
         <div class="bg-muted border rounded-xl p-3">
@@ -78,9 +115,10 @@
     </section>
 
     <!-- Desagregado -->
-    <section class="bg-white rounded-2xl border border-line shadow-card p-5">
+    <section class="bg-white rounded-2xl rounded-t-none  border-line  p-5 mb-5">
+      
+            <div class="section-header">2. Desagregado</div>
       <div class="flex items-center justify-between mb-2">
-        <h3 class="text-lg font-semibold">Desagregado</h3>
         <div class="text-sm">
           <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">Debe: <b id="sumDebe">0.00</b></span>
           <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 ml-1">Haber: <b id="sumHaber">0.00</b></span>
@@ -395,6 +433,16 @@ $(function(){
   $("#btnAgregar").on("click", ()=> addRow());
   $("#btnGuardar").on("click", guardar);
 });
+
+             function getAreaParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("area");
+  }
+
+  const area = getAreaParam();
+  if (area) {
+    document.getElementById("area-badge").textContent = "Perfil: " + area;
+  }
 </script>
 
 

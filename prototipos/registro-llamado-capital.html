@@ -183,9 +183,16 @@
   </style>
 </head>
 <body class="bg-gray-100 text-ink">
-
+<div id="area-badge"
+     style="position: absolute; top: 15px; right: 20px;
+            background-color: #1e6ba8; color: #fff;
+            font-weight: bold; font-size: 0.9rem;
+            padding: 6px 14px; border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+  Área: -
+</div>
   <!-- Topbar -->
-  <header class="sticky top-0 z-40 bg-gradient-to-br from-brand1 to-brand2 text-white shadow-md">
+  <!--<header class="sticky top-0 z-40 bg-gradient-to-br from-brand1 to-brand2 text-white shadow-md">
     <div class="max-w-[1100px] mx-auto px-4 py-3 flex items-center gap-3">
       <div class="w-9 h-9 rounded-xl bg-white/15 border border-white/25 grid place-items-center">
         <svg viewBox="0 0 24 24" class="w-5 h-5 fill-white"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm7 6-7 4-7-4m0 0 7-4m7 4v8l-7 4m-7-12v8l7 4"/></svg>
@@ -193,7 +200,7 @@
       <div class="font-semibold">FCR · Registrar Llamado de Capital</div>
       <div class="ml-auto text-sm opacity-90"></div>
     </div>
-  </header>
+  </header>-->
 
   <main class="max-w-screen-2xl mx-auto px-4 py-6">
     
@@ -762,7 +769,15 @@ if (missing.length) {
     });
   }
 });
+             function getAreaParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("area");
+  }
 
+  const area = getAreaParam();
+  if (area) {
+    document.getElementById("area-badge").textContent = "Perfil: " + area;
+  }
   </script>
 </body>
 </html>
