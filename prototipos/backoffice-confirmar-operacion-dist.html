@@ -374,12 +374,12 @@
   function updateTotals(){
     const totDebe  = rows.reduce((acc,r)=> acc + (r.dh==="DEBE"  ? parseMoney(r.monto) : 0), 0);
     const totHaber = rows.reduce((acc,r)=> acc + (r.dh==="HABER" ? parseMoney(r.monto) : 0), 0);
-    const diff     = (totDebe - totHaber) - montoLlamado;
+    const diff     = (totDebe - totHaber) + montoLlamado;
 
     $("#sumDebe").text(money(totDebe));
     $("#sumHaber").text(money(totHaber));
     $("#sumDiff").text(money(diff));
-    $("#montoTotal").text(money(totDebe - totHaber));
+    $("#montoTotal").text(money((-1)*(totDebe - totHaber)));
 
     const balanced  = Math.abs(diff) < 0.005;
     const allFilled = rows.length>0 && rows.every(r=> r.concepto && (r.dh==="DEBE"||r.dh==="HABER") && parseMoney(r.monto)>0 );
@@ -575,11 +575,11 @@
 
     // fila default (Capital comprometido si existe; si no, el primero del catálogo)
     const DEFAULT_CONCEPTO =
-      (CATALOGO_CONCEPTOS.find(c => c.concepto === "Capital comprometido")?.concepto)
+      (CATALOGO_CONCEPTOS.find(c => c.concepto === "Distribución de dividendos")?.concepto)
       || (CATALOGO_CONCEPTOS[0]?.concepto || "");
 
     addRow({ concepto: DEFAULT_CONCEPTO, monto: 1500000 });
-    addRow({ concepto: "Distribución de dividendos", monto: 500000 });
+    addRow({ concepto: "Llamado de Capital", monto: 500000 });
 
     $("#btnAgregar").on("click", ()=> addRow());
     $("#btnGuardar").on("click", guardar);

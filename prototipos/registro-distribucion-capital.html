@@ -769,7 +769,7 @@ if (missing.length) {
   $("#btnCancelConfirm").off('click.main').on("click.main", ()=> $("#confirmModal").addClass("hidden").removeClass("flex"));
   $("#btnConfirmSave").off('click.main').on("click.main", function(){
     $("#confirmModal").addClass("hidden").removeClass("flex");
-    toastr.success("✅ Llamado de capital registrado.");
+    toastr.success("✅ Distribución de capital registrado.");
     $("#formLlamado")[0].reset();
     $("#banco, #cuenta").val(null).trigger("change");
     $("#fileName").addClass("hidden").text("");
