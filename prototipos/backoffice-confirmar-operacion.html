@@ -70,7 +70,7 @@
 
   <main class="max-w-[1100px] mx-auto px-4 py-6">
     <div class="header rounded-2xl rounded-b-none">
-      <h1>Pago del llamado de capital</h1>
+      <h1>Confirmar operación</h1>
     </div>
 
     <!-- 1. Resumen -->
@@ -101,7 +101,7 @@
     </section>
 
     <!-- 2. Desagregado -->
-    <section class="bg-white border-line p-5 mb-4">
+    <section class="bg-white border-line p-5">
       <div class="section-header">2. Desagregado</div>
 
       <div class="flex items-center justify-between mb-2">
@@ -119,30 +119,65 @@
               <th class="text-left p-3">Concepto</th>
               <th class="text-center p-3 w-40">Debe/Haber</th>
               <th class="text-right p-3 w-48">Monto</th>
-              <th class="text-center p-3 w-20">Acción</th>
             </tr>
           </thead>
           <tbody id="tbody" class="divide-y divide-gray-100"></tbody>
+          <tfoot>
+            <tr class="bg-gray-50 text-gray-600">
+              <th class="text-left p-3"></th>
+              <th class="text-center p-3 w-40"></th>
+              <th class="text-right p-3 w-48">1,000,000</th>
+            </tr>
+          </tfoot>
         </table>
       </div>
 
-      <div class="mt-3 flex justify-between items-center">
+      <!--<div class="mt-3 flex justify-between items-center">
         <button id="btnAgregar" type="button"
                 class="px-4 py-2.5 rounded-xl bg-white border-2 border-gray-300 hover:bg-gray-50 font-semibold">
           + Agregar línea
         </button>
         <div class="text-xs text-gray-500">La suma debe cuadrar con el monto del llamado.</div>
-      </div>
+      </div>-->
     </section>
 
     <!-- 3. Sustento documentario (NUEVO) -->
-   
+    <section class="bg-white rounded-2xl rounded-t-none   p-5 mb-5">
+      <div class="section-header">3. Sustento documentario</div>
+
+      <!-- Drop principal (PDF obligatorio) -->
+      <div class="p-4 rounded-xl bg-gray-50 border border-line">
+        <label class="block text-sm font-semibold mb-2">Constancia de operación</label>
+        <div id="drop" class="rounded-md border-2 border-dashed border-gray-300 bg-muted p-4 max-w-md">
+          <input id="file" type="file" accept=".pdf" class="hidden">
+          <div class="text-center text-sm">
+            <div class="font-semibold">📄 Seleccionar archivo</div>
+            <div class="text-gray-500">PDF</div>
+          </div>
+          <div id="fileName" class="mt-2 text-blue-700 font-medium hidden"></div>
+        </div>
+      </div>
+
+      <!-- Campos dinámicos (agregar más PDFs) -->
+      <div class="mt-4">
+        <div id="documentFields" class="grid md:grid-cols-3 gap-3 mb-3"></div>
+        <div class="flex items-center gap-2 mb-2">
+          <input id="newDocumentName" type="text" placeholder="Nombre del nuevo documento"
+                 class="px-3 py-2 rounded-sm border border-gray-300 w-[280px]">
+          <button type="button" class="add-document-btn px-3 py-2 rounded-sm bg-[#218838] hover:bg-[#145221] text-white">
+            + Agregar documento
+          </button>
+        </div>
+        
+      </div>
+    </section>
+
     <!-- 4. Acciones -->
     <section class="flex justify-end gap-3">
       <a href="javascript:history.back()" class="px-4 py-2.5 rounded-xl border-2 border-gray-300 bg-white hover:bg-gray-50">Cancelar</a>
       <button id="btnGuardar" disabled
               class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50">
-        Guardar instrucción
+        Confirmar Operación
       </button>
     </section>
   </main>
@@ -266,7 +301,7 @@
     return `
       <tr class="hover:bg-gray-50" data-row="${i}">
         <td class="p-2">
-          <select data-i="${i}" data-k="concepto"
+          <select disabled data-i="${i}" data-k="concepto"
                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
             ${conceptoOptionsHTML}
           </select>
@@ -275,13 +310,9 @@
           <div data-i="${i}" data-k="dh-view">${dhBadgeHTML(r.dhLabel, r.dh)}</div>
         </td>
         <td class="p-2 text-right">
-          <input data-i="${i}" data-k="monto" inputmode="decimal" placeholder="0.00"
+          <input disabled data-i="${i}" data-k="monto" inputmode="decimal" placeholder="0.00"
                  class="w-full text-right rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
                  value="${r.monto||""}">
-        </td>
-        <td class="p-2 text-center">
-          <button type="button" class="px-3 py-1.5 rounded-lg border-2 border-gray-300 bg-white hover:bg-gray-50"
-                  onclick="removeRow(${i})">Eliminar</button>
         </td>
       </tr>
     `;
@@ -523,10 +554,10 @@
     // 3) Confirmación
     const step2 = await Swal.fire({
       title: "Confirmación",
-      text: "¿Confirmas registrar el pago del llamado de capital? Esta acción no se puede deshacer.",
+      text: "¿Confirmas la operación del llamado de capital?.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, guardar",
+      confirmButtonText: "Sí, confirmar",
       cancelButtonText: "No",
       confirmButtonColor: "#0ea5e9"
     });
@@ -545,8 +576,8 @@
       (CATALOGO_CONCEPTOS.find(c => c.concepto === "Capital comprometido")?.concepto)
       || (CATALOGO_CONCEPTOS[0]?.concepto || "");
 
-    addRow({ concepto: DEFAULT_CONCEPTO, monto: money(montoLlamado) });
-    addRow();
+    addRow({ concepto: DEFAULT_CONCEPTO, monto: 1500000 });
+    addRow({ concepto: "Distribución de dividendos", monto: 500000 });
 
     $("#btnAgregar").on("click", ()=> addRow());
     $("#btnGuardar").on("click", guardar);

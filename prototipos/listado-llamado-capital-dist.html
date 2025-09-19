@@ -563,7 +563,22 @@
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroLlamado('${inv.invPrincipal}')">
-              REALIZAR LLAMADO
+              Llamados
+            </button>
+            <button class="btn btn-action btn-llamado-registro" onclick="irARegistroLlamado('${inv.invPrincipal}')">
+              Distribución
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
+            ${
+                                inv.estado === "REGISTRADO" && getAreaParam() === "DIN"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+                        <button class="btn btn-action btn-aprobar" onclick='abrirModalAprobacion(${JSON.stringify(inv)})'>
+              APROBAR
             </button>
           </div>`
                                 :
@@ -574,9 +589,7 @@
                                 inv.estado !== "APROBADO" && getAreaParam() === "Tesoreria"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
-            <button class="btn btn-action btn-aprobar" onclick='abrirModalAprobacion(${JSON.stringify(inv)})'>
-              APROBAR
-            </button>
+
           </div>`
                                 :
                                 
@@ -619,7 +632,7 @@
                                 h.estado === "REGISTRADO" && getAreaParam() === "DIN"
                                 ? `<button class="btn btn-action btn-instruir"
                                     onclick="instruirMovimiento(${idx},${j})">
-                                    Notificar (Instruir)
+                                    Instruir a Back Office
                                     </button>`
                                 : ""
                             }
@@ -695,11 +708,11 @@ async function instruirMovimiento(i, j){
 
   // Primera confirmación
   const step1 = await Swal.fire({
-    title: `¿Notificar a Back Office?`,
+    title: `¿Instruir a Back Office?`,
     text: `Movimiento ${h.id} (${h.tipo}) por ${h.monto}`,
     icon: "question",
     showCancelButton: true,
-    confirmButtonText: "Sí, notificar",
+    confirmButtonText: "Sí, instruir",
     cancelButtonText: "Cancelar",
     confirmButtonColor: "#2563eb"
   });
@@ -709,28 +722,14 @@ async function instruirMovimiento(i, j){
     return;
   }
 
-  // Segunda confirmación
-  const step2 = await Swal.fire({
-    title: "Confirmación final",
-    text: "¿Estás completamente seguro de enviar la instrucción?. Esta acción no se puede deshacer.",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Sí, enviar",
-    cancelButtonText: "No",
-    confirmButtonColor: "#dc2626"
-  });
 
-  if(!step2.isConfirmed){
-    toastr.info("Notificación cancelada.");
-    return;
-  }
 
   // Cambiar estado
   h.estado = "NOTIFICADO A BACK OFFICE";
   Swal.fire({
     icon: "success",
-    title: "Notificado",
-    text: `Movimiento ${h.id} fue notificado a Back Office.`,
+    title: "Instruido",
+    text: `Movimiento ${h.id} fue instruido a Back Office.`,
     timer: 2000,
     showConfirmButton: false
   });
