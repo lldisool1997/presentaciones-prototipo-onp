@@ -96,6 +96,14 @@
     #flt_tipo    + .select2-container .select2-dropdown{
       border:1.5px solid #e5e7eb;border-radius:10px;box-shadow:0 6px 16px rgba(0,0,0,.06)
     }
+
+    /* ===== Pagination ===== */
+.pagination{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0}
+.pager-left{font-size:.9rem;color:#445}
+.pager-controls{display:flex;align-items:center;gap:8px}
+.btn-slim{border:1px solid #e2e8f0;background:#fff;border-radius:8px;padding:6px 10px;font-weight:600;cursor:pointer}
+.btn-slim[disabled]{opacity:.4;cursor:not-allowed}
+#pageSize{border:1px solid #e2e8f0;border-radius:8px;padding:6px 8px}
   </style>
 </head>
 <body>
@@ -249,320 +257,349 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
   <script>
-    /* ---------- JSON MOCK de 3 niveles ---------- */
-    const CATALOGO_INSTRUMENTOS = {
-      "Local": {
-        "Depósitos y Certificados en el BCRP": ["Depósito BCRP","Certificado del BCRP"],
-        "Depósitos en el Sistema Financiero": ["Depósito a Plazo","Instrumento Sintético","Instrumento Estructurado","Cuenta Remunerada"],
-        "Instrumentos de Corto Plazo": ["Instrumento de Corto Plazo","Papel Comercial","Pagarés","Operación de Reporte"],
-        "Gobierno": ["Bono Soberano","Bono Global","Bono con Garantía de Gobierno","Bono Titulizado Gobierno"],
-        "Bonos Sistema Financiero": ["Bono Corporativo","Bono Subordinado","Bono Hipotecario","Otros Sistema Financiero","Bonos de Arrendamiento Financiero"],
-        "Bonos Empresas no Financieras": ["Bono Corporativo"],
-        "Instrumentos Titulizados": ["Bono en Fideicomiso","Bono Titulizados"],
-        "Instrumento de Mediano Plazo y Largo Plazo": ["Instrumento de Mediano Plazo y Largo Plazo"],
-        "Fondos de Renta Fija": ["Fondo Privado"],
-        "Mandato": ["Mandato"],
-        "Fondos Mutuos": ["Fondo Mutuo"],
-        "Inversiones Inmobiliarias": ["Inmobiliarias"],
-        "Fondos de Inversión": ["Fondo Privado"]
-      },
-      "Extranjero": {
-        "Depósitos en el Sistema Financiero": ["Depósito a Plazo","Instrumento Sintético","Instrumento Estructurado","Cuenta Remunerada"],
-        "Depósitos en el BCRP": ["Depósito BCRP"],
-        "Instrumentos de Corto Plazo": ["Instrumento de Corto Plazo","Papel Comercial"],
-        "Mandato": ["Mandato"],
-        "Instrumentos de Deuda": ["Instrumento Organismos Supranacionales","Inversiones en Notas y Depósitos Estructurados"],
-        "Fondos de Renta Fija": ["Fondo Mutuo","ETF","Fondo Privado"],
-        "Inversión Directa en Instrumentos de Capital": ["Fondo Mutuo","ETF"],
-        "Mandatos de Private Equity": ["Mandato"],
-        "Inversión Directa en Private Equity": ["Fondo Privado"],
-        "Fondos de Real Assets": ["Fondo Mutuo","Fondo Privado"]
-      }
-    };
+   /* ---------- JSON MOCK de 3 niveles ---------- */
+const CATALOGO_INSTRUMENTOS = {
+  "Local": {
+    "Depósitos y Certificados en el BCRP": ["Depósito BCRP","Certificado del BCRP"],
+    "Depósitos en el Sistema Financiero": ["Depósito a Plazo","Instrumento Sintético","Instrumento Estructurado","Cuenta Remunerada"],
+    "Instrumentos de Corto Plazo": ["Instrumento de Corto Plazo","Papel Comercial","Pagarés","Operación de Reporte"],
+    "Gobierno": ["Bono Soberano","Bono Global","Bono con Garantía de Gobierno","Bono Titulizado Gobierno"],
+    "Bonos Sistema Financiero": ["Bono Corporativo","Bono Subordinado","Bono Hipotecario","Otros Sistema Financiero","Bonos de Arrendamiento Financiero"],
+    "Bonos Empresas no Financieras": ["Bono Corporativo"],
+    "Instrumentos Titulizados": ["Bono en Fideicomiso","Bono Titulizados"],
+    "Instrumento de Mediano Plazo y Largo Plazo": ["Instrumento de Mediano Plazo y Largo Plazo"],
+    "Fondos de Renta Fija": ["Fondo Privado"],
+    "Mandato": ["Mandato"],
+    "Fondos Mutuos": ["Fondo Mutuo"],
+    "Inversiones Inmobiliarias": ["Inmobiliarias"],
+    "Fondos de Inversión": ["Fondo Privado"]
+  },
+  "Extranjero": {
+    "Depósitos en el Sistema Financiero": ["Depósito a Plazo","Instrumento Sintético","Instrumento Etructurado","Cuenta Remunerada"],
+    "Depósitos en el BCRP": ["Depósito BCRP"],
+    "Instrumentos de Corto Plazo": ["Instrumento de Corto Plazo","Papel Comercial"],
+    "Mandato": ["Mandato"],
+    "Instrumentos de Deuda": ["Instrumento Organismos Supranacionales","Inversiones en Notas y Depósitos Estructurados"],
+    "Fondos de Renta Fija": ["Fondo Mutuo","ETF","Fondo Privado"],
+    "Inversión Directa en Instrumentos de Capital": ["Fondo Mutuo","ETF"],
+    "Mandatos de Private Equity": ["Mandato"],
+    "Inversión Directa en Private Equity": ["Fondo Privado"],
+    "Fondos de Real Assets": ["Fondo Mutuo","Fondo Privado"]
+  }
+};
+/* ---------- HOMOLOGACIÓN (Mercado + Concepto → Debe/Haber, Cuenta, Área) ---------- */
+const HOMOLOGACION = {
+  // ===== EXTRANJERO =====
+  "Extranjero::Llamado de Capital":                { debehaber:"Saldo Positivo (+)",  cuenta:"3025203",  area:"Tesorería" },
+  "Extranjero::Rescate de Capital":                { debehaber:"Saldo Negativo (-)",  cuenta:"3025203",  area:"Tesorería" },
+  "Extranjero::Devolución de capital":             { debehaber:"Saldo Negativo (-)",  cuenta:"3025204",  area:"Tesorería" },
+  "Extranjero::Distribución de dividendos":        { debehaber:"Ingreso (+)",         cuenta:"7731104",  area:"Tesorería" },
+  "Extranjero::Perdida Distribucion de dividendos":{ debehaber:"Ingreso (-)",         cuenta:"679310104",area:"Tesorería" },
+  "Extranjero::Perdida por Diferencia de cambio":  { debehaber:"Diferencia por tipo de cambio (+)", cuenta:"6767302", area:"Contabilidad" },
+  "Extranjero::Ganancia por Diferencia de cambio": { debehaber:"Ingreso (+)",         cuenta:"7767302",  area:"Contabilidad" },
 
-    /* ---------- MOCK de filas iniciales (7 campos) ---------- */
-    const MOCK = [
-      { mercado:"Extranjero", grupo:"Instrumentos de Deuda", tipoCatalogo:"Instrumento Organismos Supranacionales", concepto:"Llamado de Capital", debehaber:"Saldo Positivo (+)", cuenta:"3025203", area:"Tesorería" },
-      { mercado:"Extranjero", grupo:"Instrumentos de Corto Plazo", tipoCatalogo:"Papel Comercial", concepto:"Rescate de Capital", debehaber:"Saldo Negativo (-)", cuenta:"3025202", area:"Tesorería" },
-      { mercado:"Local", grupo:"Gobierno", tipoCatalogo:"Bono Soberano", concepto:"Distribución de dividendos", debehaber:"Ingreso (+)", cuenta:"7731104", area:"Tesorería" },
-      { mercado:"Local", grupo:"Instrumentos de Corto Plazo", tipoCatalogo:"Pagarés", concepto:"Ganancia por Diferencia de cambio", debehaber:"Ingreso (+)", cuenta:"7767301", area:"Contabilidad" },
-      { mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"ETF", concepto:"Ingreso extra (Rebates)", debehaber:"Ingreso (+)", cuenta:"1682209", area:"Rebates Tesorería" }
-    ];
+  // ===== LOCAL =====
+  "Local::Llamado de Capital":                     { debehaber:"Saldo Positivo (+)",  cuenta:"3025202",  area:"Tesorería" },
+  "Local::Rescate de Capital":                     { debehaber:"Saldo Negativo (-)",  cuenta:"3025203",  area:"Tesorería" },
+  "Local::Devolución de capital":                  { debehaber:"Saldo Negativo (-)",  cuenta:"3025204",  area:"Tesorería" },
+  "Local::Distribución de dividendos":             { debehaber:"Ingreso (+)",         cuenta:"7731104",  area:"Tesorería" },
+  "Local::Perdida Distribucion de dividendos":     { debehaber:"Ingreso (-)",         cuenta:"679310104",area:"Tesorería" },
+  "Local::Perdida por Diferencia de cambio":       { debehaber:"Diferencia por tipo de cambio (+)", cuenta:"6767301", area:"Contabilidad" },
+  "Local::Ganancia por Diferencia de cambio":      { debehaber:"Ingreso (+)",         cuenta:"7767301",  area:"Contabilidad" },
 
-    const CUENTAS = ["3025202","3025203","3025204","3025205","7731104","6767301","7767301","1682209","3026203","3026205"];
+  // ===== EXTRANJERO EUR =====
+  "Extranjero EUR::Llamado de Capital":            { debehaber:"Saldo Positivo (+)",  cuenta:"3025204",  area:"Tesorería" },
+  "Extranjero EUR::Rescate de Capital (o Retrocesión)": { debehaber:"Saldo Negativo (-)", cuenta:"3025204", area:"Tesorería" },
+  "Extranjero EUR::Devolución de capital":         { debehaber:"Saldo Negativo (-)",  cuenta:"3025204",  area:"Tesorería" },
+  "Extranjero EUR::Distribucion de dividendos (o dietas)": { debehaber:"Ingreso (+)", cuenta:"7731104",  area:"Tesorería" },
+  "Extranjero EUR::Perdida Distribucion de dividendos": { debehaber:"Ingreso (-)",    cuenta:"679310104",area:"Tesorería" },
+  "Extranjero EUR::Ganancia por Diferencia de cambio": { debehaber:"Diferencia por tipo de cambio (+)", cuenta:"7767303", area:"Contabilidad" },
 
-    /* ---------- STATE ---------- */
-    const STORAGE_KEY = "homologacion_7campos_v1";
-    let data = [];
-    let editIndex = null;
+  // ===== IK: INSTRUMENTOS DE CAPITAL =====
+  "Extranjero::Compra":                             { debehaber:"Ingreso (+)",        cuenta:"3026203",  area:"Rebates Tesorería" },
+  "Extranjero::Liquidación":                        { debehaber:"Ingreso (-)",        cuenta:"3026205",  area:"Rebates Tesorería" },
+  "Extranjero::Ingreso extra (Rebates)":            { debehaber:"Ingreso (+)",        cuenta:"1682209",  area:"Rebates Tesorería" },
+  "Extranjero::Estimación/Provisión: Cuenta x cobrar (Debe)":  { debehaber:"Ingreso (+)", cuenta:"7794101", area:"Rebates Contabilidad" },
+  "Extranjero::Estimación/Provisión: Cuenta x cobrar (Haber)": { debehaber:"Ingreso (-)", cuenta:"7794101", area:"Rebates Contabilidad" },
+  "Extranjero::Cancelación por Reinversión (Debe)":            { debehaber:"Ingreso (+)", cuenta:"10XXXX",  area:"Rebates Tesorería" },
+  "Extranjero::Cancelación por Reinversión (Haber)":           { debehaber:"Ingreso (-)", cuenta:"10XXXX",  area:"Rebates Tesorería" },
+  "Extranjero::Cancelación por Ingreso a Tesorería (Debe)":    { debehaber:"Ingreso (+)", cuenta:"1682209", area:"Rebates Tesorería" },
+  "Extranjero::Cancelación por Ingreso a Tesorería (Haber)":   { debehaber:"Ingreso (-)", cuenta:"1682209", area:"Rebates Tesorería" }
+};
 
-    /* ---------- helpers ---------- */
-    const toOptions = (arrOrObj) => Array.isArray(arrOrObj)
-      ? arrOrObj.map(v=>({id:v,text:v}))
-      : Object.keys(arrOrObj).map(k=>({id:k,text:k}));
-    const habilitar = ($el, enabled) => $el.prop("disabled", !enabled).trigger("change.select2");
-    const clearAndDisable = ($el)=>{ $el.val(null).trigger("change"); $el.prop("disabled", true); };
+/* ---------- Derivados ---------- */
+function buildFila({ mercado, grupo, tipoCatalogo, concepto }) {
+  const h = HOMOLOGACION[`${mercado}::${concepto}`];
+  if (!h) return null;
+  return { mercado, grupo, tipoCatalogo, concepto, debehaber: h.debehaber, cuenta: h.cuenta, area: h.area };
+}
 
-    // debounce para texto
-    const debounce = (fn, ms=250) => {
-      let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,args), ms); };
-    };
+const MOCK = [
+  // ===== EXTRANJERO (FI) =====
+  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Llamado de Capital" }),
+  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Rescate de Capital" }),
+  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Devolución de capital" }),
+  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Distribución de dividendos" }),
+  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Perdida Distribucion de dividendos" }),
+  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Perdida por Diferencia de cambio" }),
+  buildFila({ mercado:"Extranjero", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Ganancia por Diferencia de cambio" }),
 
-    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
-    function load(){
-      const persisted = localStorage.getItem(STORAGE_KEY);
-      data = persisted ? JSON.parse(persisted) : MOCK.slice();
-      refreshTable(); // respeta filtros activos
-    }
+  // ===== LOCAL (FI1) =====
+  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Llamado de Capital" }),
+  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Rescate de Capital" }),
+  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Devolución de capital" }),
+  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Distribución de dividendos" }),
+  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Perdida Distribucion de dividendos" }),
+  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Perdida por Diferencia de cambio" }),
+  buildFila({ mercado:"Local", grupo:"Fondos de Inversión", tipoCatalogo:"Fondo Privado", concepto:"Ganancia por Diferencia de cambio" }),
 
-    /* ---------- Render tabla ---------- */
-    function renderTableRows(rows){
-      const tbody = document.getElementById("tbody");
-      tbody.innerHTML = "";
-      if(!rows.length){
-        tbody.innerHTML = `<tr><td colspan="8" style="color:#667">Sin resultados</td></tr>`;
-        return;
-      }
-      rows.forEach((r, i)=>{
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><span class="pill blue">${r.mercado}</span></td>
-          <td>${r.grupo}</td>
-          <td>${r.tipoCatalogo}</td>
-          <td class="text-left">${r.concepto}</td>
-          <td>${r.debehaber}</td>
-          <td><span class="pill teal">${r.cuenta}</span></td>
-          <td>${r.area}</td>
-          <td class="actions">
-            <button class="btn btn-ghost" onclick="onEdit(${i})">Editar</button>
-            <button class="btn btn-danger" onclick="onDelete(${i})">Eliminar</button>
-          </td>`;
-        tbody.appendChild(tr);
-      });
-    }
+  // ===== EXTRANJERO EUR (FI) =====
+  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Llamado de Capital" }),
+  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Rescate de Capital (o Retrocesión)" }),
+  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Devolución de capital" }),
+  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Distribucion de dividendos (o dietas)" }),
+  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Perdida Distribucion de dividendos" }),
+  buildFila({ mercado:"Extranjero EUR", grupo:"Fondos de Renta Fija", tipoCatalogo:"Fondo Privado", concepto:"Ganancia por Diferencia de cambio" }),
 
-    /* ---------- Filtros (auto-aplicados) ---------- */
-    const $fM = $("#flt_mercado");
-    const $fG = $("#flt_grupo");
-    const $fT = $("#flt_tipo");
+  // ===== IK / REBATES (Fondos Mutuos mercado externo) =====
+  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Compra" }),
+  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Liquidación" }),
+  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Ingreso extra (Rebates)" }),
+  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Estimación/Provisión: Cuenta x cobrar (Debe)" }),
+  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Estimación/Provisión: Cuenta x cobrar (Haber)" }),
+  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Cancelación por Reinversión (Debe)" }),
+  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Cancelación por Reinversión (Haber)" }),
+  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Cancelación por Ingreso a Tesorería (Debe)" }),
+  buildFila({ mercado:"Extranjero", grupo:"Inversión Directa en Instrumentos de Capital", tipoCatalogo:"Fondo Mutuo", concepto:"Cancelación por Ingreso a Tesorería (Haber)" })
+].filter(Boolean);
+
+
+const CUENTAS = Array.from(new Set(Object.values(HOMOLOGACION).map(x => x.cuenta)));
+
+/* ---------- STATE ---------- */
+const STORAGE_KEY = "homologacion_7campos_v1";
+let data = [];
+let editIndex = null;
+
+/* ---------- helpers ---------- */
+const toOptions = (arrOrObj) => Array.isArray(arrOrObj)
+  ? arrOrObj.map(v=>({id:v,text:v}))
+  : Object.keys(arrOrObj).map(k=>({id:k,text:k}));
+const habilitar = ($el, enabled) => $el.prop("disabled", !enabled).trigger("change.select2");
+const clearAndDisable = ($el)=>{ $el.val(null).trigger("change"); $el.prop("disabled", true); };
+const debounce = (fn, ms=250) => { let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,args), ms); }; };
+// SIN persistencia
+function save(){ /* no-op: no guardes nada */ }
+
+function load(){
+  data = MOCK.slice();   // siempre parte del MOCK actual
+  refreshTable();
+}
+/* ---------- Render tabla ---------- */
+function renderTableRows(rows){
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = "";
+  if(!rows.length){
+    tbody.innerHTML = `<tr><td colspan="8" style="color:#667">Sin resultados</td></tr>`;
+    return;
+  }
+  rows.forEach((r, i)=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><span class="pill blue">${r.mercado}</span></td>
+      <td>${r.grupo}</td>
+      <td>${r.tipoCatalogo}</td>
+      <td class="text-left">${r.concepto}</td>
+      <td>${r.debehaber}</td>
+      <td><span class="pill teal">${r.cuenta}</span></td>
+      <td>${r.area}</td>
+      <td class="actions">
+        <button class="btn btn-ghost" onclick="onEdit(${i})">Editar</button>
+        <button class="btn btn-danger" onclick="onDelete(${i})">Eliminar</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ---------- Filtros ---------- */
+const $fM = $("#flt_mercado");
+const $fG = $("#flt_grupo");
+const $fT = $("#flt_tipo");
 
 function initFilterSelects(){
-  // Mercado: sin selección inicial
-  $fM
-    .empty()
-    .append('<option></option>')
-    .select2({
-      data: toOptions(CATALOGO_INSTRUMENTOS),
-      placeholder: "Todos",
-      allowClear: true,
-      width: "100%"
-    })
-    .val(null).trigger("change");
+  $fM.empty().append('<option></option>').select2({
+    data: toOptions(CATALOGO_INSTRUMENTOS),
+    placeholder: "Todos",
+    allowClear: true,
+    width: "100%"
+  }).val(null).trigger("change");
 
-  // Hijos: crean Select2 pero sin datos y deshabilitados
-  $fG
-    .empty()
-    .append('<option></option>')
-    .select2({ placeholder:"Todos", allowClear:true, width:"100%" })
-    .val(null).trigger("change")
-    .prop("disabled", true);
+  $fG.empty().append('<option></option>').select2({ placeholder:"Todos", allowClear:true, width:"100%" }).prop("disabled", true);
+  $fT.empty().append('<option></option>').select2({ placeholder:"Todos", allowClear:true, width:"100%" }).prop("disabled", true);
 
-  $fT
-    .empty()
-    .append('<option></option>')
-    .select2({ placeholder:"Todos", allowClear:true, width:"100%" })
-    .val(null).trigger("change")
-    .prop("disabled", true);
-
-  // Cambios en cascada
   $fM.on("change", function(){
     const m = $(this).val();
-
-    // reset hijos
     $fG.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
     $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
-
     if(!m){ refreshTable(); return; }
-
-    $fG
-      .select2({
-        data: toOptions(CATALOGO_INSTRUMENTOS[m]),
-        placeholder:"Todos",
-        allowClear:true,
-        width:"100%"
-      })
-      .val(null).trigger("change")
-      .prop("disabled", false);
-
+    $fG.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m]), placeholder:"Todos", allowClear:true, width:"100%" })
+       .val(null).trigger("change").prop("disabled", false);
     refreshTable();
   });
 
   $fG.on("change", function(){
     const m = $fM.val(), g = $(this).val();
-
     $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
-
     if(!m || !g){ refreshTable(); return; }
-
-    $fT
-      .select2({
-        data: toOptions(CATALOGO_INSTRUMENTOS[m][g]),
-        placeholder:"Todos",
-        allowClear:true,
-        width:"100%"
-      })
-      .val(null).trigger("change")
-      .prop("disabled", false);
-
+    $fT.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m][g]), placeholder:"Todos", allowClear:true, width:"100%" })
+       .val(null).trigger("change").prop("disabled", false);
     refreshTable();
   });
 
-  // Auto-aplicados
   $fT.on("change", refreshTable);
   $("#flt_debehaber").on("change", refreshTable);
   $("#flt_concepto").on("input", debounce(refreshTable, 250));
-
-  // Limpiar
   $("#btnLimpiarFiltros").on("click", ()=>{
-    $("#flt_concepto").val("");
-    $("#flt_debehaber").val("");
-
+    $("#flt_concepto").val(""); $("#flt_debehaber").val("");
     $fM.val(null).trigger("change");
     $fG.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
     $fT.empty().append('<option></option>').val(null).trigger("change").prop("disabled", true);
-
     refreshTable();
   });
 }
 
-    function applyFilters(){
-      const qConcepto  = ($("#flt_concepto").val() || "").trim().toLowerCase();
-      const qDebeHaber = $("#flt_debehaber").val() || "";
-      const qMercado   = $fM.val() || "";
-      const qGrupo     = $fG.val() || "";
-      const qTipo      = $fT.val() || "";
+function applyFilters(){
+  const qConcepto  = ($("#flt_concepto").val() || "").trim().toLowerCase();
+  const qDebeHaber = $("#flt_debehaber").val() || "";
+  const qMercado   = $fM.val() || "";
+  const qGrupo     = $fG.val() || "";
+  const qTipo      = $fT.val() || "";
+  return data.filter(r=>{
+    if(qConcepto && !(`${r.concepto||""}`.toLowerCase().includes(qConcepto))) return false;
+    if(qDebeHaber && r.debehaber !== qDebeHaber) return false;
+    if(qMercado && r.mercado !== qMercado) return false;
+    if(qGrupo && r.grupo !== qGrupo) return false;
+    if(qTipo && r.tipoCatalogo !== qTipo) return false;
+    return true;
+  });
+}
 
-      return data.filter(r=>{
-        if(qConcepto && !(`${r.concepto||""}`.toLowerCase().includes(qConcepto))) return false;
-        if(qDebeHaber && r.debehaber !== qDebeHaber) return false;
-        if(qMercado && r.mercado !== qMercado) return false;
-        if(qGrupo && r.grupo !== qGrupo) return false;
-        if(qTipo && r.tipoCatalogo !== qTipo) return false;
-        return true;
-      });
+function refreshTable(){ renderTableRows(applyFilters()); }
+
+/* ---------- Modal & Select2 Init ---------- */
+const modal = $("#modal");
+function openModal(t){ $("#modalTitle").text(t); modal.addClass("open"); }
+function closeModal(){
+  modal.removeClass("open");
+  $("#form")[0].reset();
+  $("#sel_mercado, #sel_subcat, #sel_tipo, #f_cuenta").val(null).trigger("change");
+  $("#sel_subcat, #sel_tipo").prop("disabled", true);
+  editIndex = null;
+}
+
+$(document).ready(function(){
+  $("#f_cuenta").select2({ tags:true, data: CUENTAS.map(v=>({id:v,text:v})), placeholder:"Escriba o seleccione la cuenta", width:"100%" });
+
+  const $mercado = $("#sel_mercado");
+  const $subcat  = $("#sel_subcat");
+  const $tipo    = $("#sel_tipo");
+
+  $mercado.select2({ placeholder:"Selecciona un mercado", allowClear:true, data: toOptions(CATALOGO_INSTRUMENTOS), width:"100%" });
+  $subcat .select2({ placeholder:"Selecciona un grupo",   allowClear:true, width:"100%" });
+  $tipo   .select2({ placeholder:"Selecciona un tipo",    allowClear:true, width:"100%" });
+
+  $mercado.on("change", function(){
+    const m = $(this).val();
+    $subcat.empty().trigger("change");
+    $tipo.empty().trigger("change");
+    habilitar($tipo,false);
+    if(!m){ habilitar($subcat,false); return; }
+    $subcat.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m]), placeholder:"Selecciona un grupo", width:"100%", allowClear:true });
+    $subcat.val(null).trigger("change");
+    habilitar($subcat,true);
+  });
+
+  $subcat.on("change", function(){
+    const m = $mercado.val(); const s = $(this).val();
+    $tipo.empty().trigger("change");
+    if(!m || !s){ habilitar($tipo,false); return; }
+    $tipo.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m][s]), placeholder:"Selecciona un tipo", width:"100%", allowClear:true });
+    $tipo.val(null).trigger("change");
+    habilitar($tipo,true);
+  });
+
+  toastr.options = { positionClass:"toast-top-right", progressBar:true, timeOut:2500 };
+
+  $("#btnNuevo").on("click", ()=>{ editIndex=null; openModal("Registrar homologación"); });
+  $("#btnCerrarModal, #btnCancelar").on("click", closeModal);
+
+  /* ---------- Submit (con autocompletado por HOMOLOGACION) ---------- */
+  $("#form").on("submit", (e)=>{
+    e.preventDefault();
+    let row = {
+      mercado: $("#sel_mercado").val(),
+      grupo: $("#sel_subcat").val(),
+      tipoCatalogo: $("#sel_tipo").val(),
+      concepto: ($("#f_concepto").val() || "").trim(),
+      debehaber: $("#f_debehaber").val(),
+      cuenta: $("#f_cuenta").val(),
+      area: $("#f_area").val()
+    };
+    if(!row.mercado || !row.grupo || !row.tipoCatalogo){
+      toastr.error("Completa Mercado, Grupo y Tipo de Instrumento"); return;
     }
-
-    function refreshTable(){
-      renderTableRows(applyFilters());
-    }
-
-    /* ---------- Modal & Select2 Init ---------- */
-    const modal = $("#modal");
-    function openModal(t){ $("#modalTitle").text(t); modal.addClass("open"); }
-    function closeModal(){
-      modal.removeClass("open");
-      $("#form")[0].reset();
-      $("#sel_mercado, #sel_subcat, #sel_tipo, #f_cuenta").val(null).trigger("change");
-      $("#sel_subcat, #sel_tipo").prop("disabled", true);
-      editIndex = null;
-    }
-
-    $(document).ready(function(){
-      // Cuenta contable con write-in
-      $("#f_cuenta").select2({ tags:true, data: CUENTAS.map(v=>({id:v,text:v})), placeholder:"Escriba o seleccione la cuenta", width:"100%" });
-
-      // Cascada del modal
-      const $mercado = $("#sel_mercado");
-      const $subcat  = $("#sel_subcat");
-      const $tipo    = $("#sel_tipo");
-
-      $mercado.select2({ placeholder:"Selecciona un mercado", allowClear:true, data: toOptions(CATALOGO_INSTRUMENTOS), width:"100%" });
-      $subcat .select2({ placeholder:"Selecciona un grupo",   allowClear:true, width:"100%" });
-      $tipo   .select2({ placeholder:"Selecciona un tipo",    allowClear:true, width:"100%" });
-
-      $mercado.on("change", function(){
-        const m = $(this).val();
-        $subcat.empty().trigger("change"); 
-        $tipo.empty().trigger("change");
-        habilitar($tipo,false);
-        if(!m){ habilitar($subcat,false); return; }
-        $subcat.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m]), placeholder:"Selecciona un grupo", width:"100%", allowClear:true });
-        $subcat.val(null).trigger("change");
-        habilitar($subcat,true);
-      });
-
-      $subcat.on("change", function(){
-        const m = $mercado.val(); const s = $(this).val();
-        $tipo.empty().trigger("change");
-        if(!m || !s){ habilitar($tipo,false); return; }
-        $tipo.select2({ data: toOptions(CATALOGO_INSTRUMENTOS[m][s]), placeholder:"Selecciona un tipo", width:"100%", allowClear:true });
-        $tipo.val(null).trigger("change");
-        habilitar($tipo,true);
-      });
-
-      // Toastr
-      toastr.options = { positionClass:"toast-top-right", progressBar:true, timeOut:2500 };
-
-      // Botones
-      $("#btnNuevo").on("click", ()=>{ editIndex=null; openModal("Registrar homologación"); });
-      $("#btnCerrarModal, #btnCancelar").on("click", closeModal);
-
-      // Submit
-      $("#form").on("submit", (e)=>{
-        e.preventDefault();
-        const row = {
-          mercado: $("#sel_mercado").val(),
-          grupo: $("#sel_subcat").val(),
-          tipoCatalogo: $("#sel_tipo").val(),
-          concepto: $("#f_concepto").val().trim(),
-          debehaber: $("#f_debehaber").val(),
-          cuenta: $("#f_cuenta").val(),
-          area: $("#f_area").val()
-        };
-        if(!row.mercado || !row.grupo || !row.tipoCatalogo){
-          toastr.error("Completa Mercado, Grupo y Tipo de Instrumento"); return;
-        }
-        if(editIndex===null){ data.push(row); toastr.success("Registrado correctamente"); }
-        else{ data[editIndex]=row; toastr.success("Actualizado correctamente"); }
-        save(); refreshTable(); closeModal();
-      });
-
-      initFilterSelects();
-      load();
-    });
-
-    /* ---------- CRUD ---------- */
-    function onEdit(i){
-      const r = data[i]; editIndex = i;
-
-      // cascada modal
-      $("#sel_mercado").val(r.mercado).trigger("change");
-      setTimeout(()=>{
-        $("#sel_subcat").select2({ data: toOptions(CATALOGO_INSTRUMENTOS[r.mercado]), width:"100%" })
-                        .prop("disabled", false).val(r.grupo).trigger("change");
-        setTimeout(()=>{
-          $("#sel_tipo").select2({ data: toOptions(CATALOGO_INSTRUMENTOS[r.mercado][r.grupo]), width:"100%" })
-                        .prop("disabled", false).val(r.tipoCatalogo).trigger("change");
-        },0);
-      },0);
-
-      $("#f_concepto").val(r.concepto);
-      $("#f_debehaber").val(r.debehaber);
-
-      if(!$("#f_cuenta").find(`option[value="${r.cuenta}"]`).length){
-        $("#f_cuenta").append(new Option(r.cuenta, r.cuenta, true, true)).trigger("change");
-      }else{
-        $("#f_cuenta").val(r.cuenta).trigger("change");
+    const key = `${row.mercado}::${row.concepto}`;
+    const h = HOMOLOGACION[key];
+    if (h) {
+      row.debehaber = h.debehaber;
+      row.cuenta    = h.cuenta;
+      row.area      = h.area;
+      if(!$("#f_cuenta").find(`option[value="${row.cuenta}"]`).length){
+        $("#f_cuenta").append(new Option(row.cuenta, row.cuenta, true, true)).trigger("change");
       }
-      $("#f_area").val(r.area);
+    }
+    if(editIndex===null){ data.push(row); toastr.success("Registrado correctamente"); }
+    else{ data[editIndex]=row; toastr.success("Actualizado correctamente"); }
+    save(); refreshTable(); closeModal();
+  });
 
-      openModal("Editar homologación");
-    }
-    function onDelete(i){
-      if(!confirm("¿Eliminar este registro?")) return;
-      data.splice(i,1); save(); refreshTable(); toastr.warning("Registro eliminado");
-    }
-    window.onEdit = onEdit; window.onDelete = onDelete;
+  initFilterSelects();
+  load();
+});
+
+/* ---------- CRUD ---------- */
+function onEdit(i){
+  const r = data[i]; editIndex = i;
+  $("#sel_mercado").val(r.mercado).trigger("change");
+  setTimeout(()=>{
+    $("#sel_subcat").select2({ data: toOptions(CATALOGO_INSTRUMENTOS[r.mercado]), width:"100%" })
+                    .prop("disabled", false).val(r.grupo).trigger("change");
+    setTimeout(()=>{
+      $("#sel_tipo").select2({ data: toOptions(CATALOGO_INSTRUMENTOS[r.mercado][r.grupo]), width:"100%" })
+                    .prop("disabled", false).val(r.tipoCatalogo).trigger("change");
+    },0);
+  },0);
+
+  $("#f_concepto").val(r.concepto);
+  $("#f_debehaber").val(r.debehaber);
+
+  if(!$("#f_cuenta").find(`option[value="${r.cuenta}"]`).length){
+    $("#f_cuenta").append(new Option(r.cuenta, r.cuenta, true, true)).trigger("change");
+  }else{
+    $("#f_cuenta").val(r.cuenta).trigger("change");
+  }
+  $("#f_area").val(r.area);
+  openModal("Editar homologación");
+}
+
+function onDelete(i){
+  if(!confirm("¿Eliminar este registro?")) return;
+  data.splice(i,1); save(); refreshTable(); toastr.warning("Registro eliminado");
+}
+
+window.onEdit = onEdit;
+window.onDelete = onDelete;
+
   </script>
 </body>
 </html>

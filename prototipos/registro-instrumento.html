@@ -373,10 +373,22 @@
 </head>
 
 <body>
+    <!-- Badge área en esquina -->
+<div id="area-badge"
+     style="position: absolute; top: 15px; right: 20px;
+            background-color: #1e6ba8; color: #fff;
+            font-weight: bold; font-size: 0.9rem;
+            padding: 6px 14px; border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+  Área: -
+</div>
+
     <div class="container">
-        <div class="header">
-            <h1>Registro de Inversiones Financieras</h1>
-        </div>
+       <div class="header" style="width: 100%; position: relative; text-align: center; padding: 10px 0;">
+  <h1 style="margin: 30px;">Registro de Inversiones Financieras</h1>
+
+</div>
+
 
         <div class="content">
             <!-- Sección 1: Información general -->
@@ -11940,7 +11952,18 @@
             });
             checkFormCompletion();
             generateDocumentFields();
+                    function getAreaParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("area");
+  }
+
+  const area = getAreaParam();
+  if (area) {
+    document.getElementById("area-badge").textContent = "Perfil: " + area;
+  }
         });
+
+ 
 
     </script>
 </body>
