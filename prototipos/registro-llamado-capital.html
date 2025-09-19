@@ -288,9 +288,14 @@
         <!-- NUEVO: Cuenta Bancaria (Select2) -->
         <div class="grid md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-semibold mb-1">Cuenta bancaria</label>
-            <select id="cta_banco" style="width:100%"></select>
-            <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde la que se realizará el aporte.</p>
+            <label class="block text-sm font-semibold mb-1">Banco cuenta de cargo</label>
+            <select id="banco" style="width:100%"></select>
+            <p class="text-xs text-gray-500 mt-1">Selecciona el banco desde donde se realizará el aporte.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Nro cuenta bancaria</label>
+            <select id="cuenta" style="width:100%"></select>
+            <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde donde se realizará el aporte.</p>
           </div>
         </div>
         <div class="section-header">3. Sustento documentario</div>
@@ -345,10 +350,6 @@
     <div class="bg-white rounded-2xl shadow-panel w-[560px] max-w-[92vw] p-5">
       <h4 class="text-lg font-semibold mb-3">Revisar y confirmar</h4>
       <div id="review" class="space-y-2 text-sm"></div>
-      <label class="flex items-start gap-2 mt-3 text-sm">
-        <input type="checkbox" id="chkConfirm" class="mt-1">
-        <span>Confirmo que verifiqué los datos.</span>
-      </label>
       <div class="flex justify-end gap-2 mt-4">
         <button id="btnCancelConfirm" class="px-3 py-2.5 rounded-xl border border-gray-300">Volver</button>
         <button id="btnConfirmSave"
@@ -372,13 +373,18 @@ const selectedInvestment = {
 };
 
 // -------- Mock cuentas bancarias (reemplaza por las reales) --------
-const CUENTAS_BANCARIAS = [
-  { id:"BCP-USD-001", text:"BCP - CTA CTE USD 193-1234567-0-12" },
-  { id:"BCP-PEN-002", text:"BCP - CTA CTE PEN 193-8888888-0-12" },
-  { id:"BBVA-USD-003", text:"BBVA - CTA CTE USD 0011-0123456789" },
-  { id:"SCOTIA-USD-004", text:"Scotiabank - CTA CTE USD 000-1234567" }
+const BANCOS = [
+  { id:"BCP", text:"BCP" },
+  { id:"BBVA", text:"BBVA" },
+  { id:"Scotiabank", text:"Scotiabank" }
 ];
 
+const CUENTAS_BANCARIAS = [
+  { id:"BCP-USD-001", text:"CTA CTE USD 193-1234567-0-12" },
+  { id:"BCP-PEN-002", text:"CTA CTE PEN 193-8888888-0-12" },
+  { id:"BBVA-USD-003", text:"CTA CTE USD 0011-0123456789" },
+  { id:"SCOTIA-USD-004", text:"CTA CTE USD 000-1234567" }
+];
 // -------- Helpers visuales / validación --------
 function markInvalid($el){ $el.addClass("ring-2 ring-red-400 border-red-400"); }
 function clearInvalid($el){ $el.removeClass("ring-2 ring-red-400 border-red-400"); }
@@ -595,17 +601,24 @@ $(function(){
   }
 
   // Select2 cuentas
-  $("#cta_banco").select2({
-    data: CUENTAS_BANCARIAS,
+  $("#banco").select2({
+    data: BANCOS,
     placeholder: "Selecciona una cuenta...",
     allowClear: true,
     width: "100%"
   });
 
+    $("#cuenta").select2({
+    data: CUENTAS_BANCARIAS,
+    placeholder: "Selecciona una cuenta...",
+    allowClear: true,
+    width: "100%"
+  });
   // refs
   const $fecha = $("#fecha_llamado");
   const $monto = $("#monto");
-  const $cta   = $("#cta_banco");
+  const $banco   = $("#banco");
+  const $cta   = $("#cuenta");
   const $drop  = $("#drop");
   const $file  = $("#file");
   const $fileName = $("#fileName");
@@ -681,6 +694,7 @@ $(function(){
     // limpiar marcas
     clearInvalid($fecha); clearInvalid($monto); clearInvalid($drop);
     $cta.next(".select2").removeClass("ring-2 ring-red-400");
+    $cta.next(".select2").removeClass("ring-2 ring-red-400");
 
     // fecha
     if(!$fecha.val()){
@@ -693,6 +707,16 @@ $(function(){
       markInvalid($monto); toastr.warning("Monto inválido. Usa formato 1,234.56"); $monto.focus(); return;
     }
     // cuenta bancaria
+        // cuenta bancaria
+    const bancoId = $banco.val();
+    const bancoTxt = $banco.select2('data')[0]?.text || "";
+    if(!bancoId){
+      $banco.next(".select2").addClass("ring-2 ring-red-400");
+      toastr.warning("Selecciona el banco."); 
+      $banco.select2('open');
+      return;
+    }
+
     const ctaId = $cta.val();
     const ctaTxt = $cta.select2('data')[0]?.text || "";
     if(!ctaId){
@@ -733,7 +757,7 @@ if (missing.length) {
       <div><b>Documento:</b> ${fileObj.name}</div>
     `);
     $("#chkConfirm").prop("checked", false);
-    $("#btnConfirmSave").prop("disabled", true);
+    $("#btnConfirmSave").prop("disabled", false);
     $("#confirmModal").removeClass("hidden").addClass("flex");
   });
 
@@ -746,7 +770,7 @@ if (missing.length) {
     $("#confirmModal").addClass("hidden").removeClass("flex");
     toastr.success("✅ Llamado de capital registrado.");
     $("#formLlamado")[0].reset();
-    $("#cta_banco").val(null).trigger("change");
+    $("#banco").val(null).trigger("change");
     $("#fileName").addClass("hidden").text("");
     // limpia estado de dinámicos
     filesUploaded = {};

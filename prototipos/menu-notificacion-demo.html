@@ -64,8 +64,8 @@
 
       <!-- Usuario -->
       <div id="btnUser" class="relative ml-2 flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-2 py-1.5 hover:bg-white/15 cursor-pointer select-none">
-        <div class="w-7 h-7 rounded-full bg-white text-brand2 font-extrabold grid place-items-center">E</div>
-        <div class="font-semibold hidden sm:block">Evelyn G.</div>
+        <div class="w-7 h-7 rounded-full bg-white text-brand2 font-extrabold grid place-items-center" id="userChar">E</div>
+        <div class="font-semibold hidden sm:block" id="user">Evelyn G.</div>
         <svg viewBox="0 0 24 24" class="w-5 h-5 fill-white/80"><path d="m7 10 5 5 5-5z"/></svg>
 
         <!-- Dropdown usuario (posicionado bajo el botón) -->
@@ -197,7 +197,42 @@ const notifications = [
     detail: "El cupón con INV #:21742513 ha sido aprobado y está pendiente de cancelación.",
     href: "listado.html",
     unread: true
-  }
+  },
+  {
+    id: 4,
+    title: "Aprobación de Inversión Financiera",
+    detail: "Se ha aprobado una inversión financiera con INV #:6123",
+    href: "listado-llamado-capital-dist.html",
+    unread: true
+  },
+    {
+    id: 5,
+    title: "Desagregado Registrado",
+    detail: "OGR ha registrado el desagregado de un llamado a capital",
+    href: "listado-llamado-capital-dist.html",
+    unread: true
+  },
+   {
+    id: 6,
+    title: "Operación Realizada",
+    detail: "Tesorería ha realizado la operación bancaria solicitada para el llamado de capital",
+    href: "listado-llamado-capital-dist.html",
+    unread: true
+  },
+     {
+    id: 7,
+    title: "Desagregado Registrado",
+    detail: "OGR ha registrado el desagregado de una distribución de capital",
+    href: "listado-llamado-capital-dist.html",
+    unread: true
+  },
+     {
+    id: 8,
+    title: "Operación Realizada",
+    detail: "Tesorería ha realizado la operación bancaria solicitada para la distribución de capital",
+    href: "listado-llamado-capital-dist.html",
+    unread: true
+  },
   // Ejemplos adicionales que dejaste comentados:
   /*
   {
@@ -280,12 +315,17 @@ function toggleMobileNav(){
   const open = $("#sidenavMobile").hasClass("opacity-100");
   open ? closeMobileNav() : openMobileNav();
 }
-
+function setUserName(user){
+  $("#user").text(user);
+  $("#userChar").text(user ? user.charAt(0).toUpperCase() : 'U');
+}
 // ===== Init =====
 $(function(){
   // Leer param y renderizar
   selectedNotiId = getQueryParam("id_notificacion");
+  const user = getQueryParam("user");
   renderNotifications(selectedNotiId);
+  setUserName(user || "Evelyn G.");
 
   // Abrir/cerrar notificaciones (campana)
   $("#btnBell").on("click", function(e){
