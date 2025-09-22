@@ -213,60 +213,92 @@
     <!-- Inversión seleccionada -->
     <section class="bg-white rounded-2xl rounded-t-none border border-line shadow-card p-5 mt-0">
          <div class="section-header">1. Información del Instrumento</div>
-                <div class="info-grid">
+                  <div class="info-grid">
                     <div class="info-column">
                         <div class="info-item">
-                            <div class="info-label">Entidad:</div>
-                            <div class="info-value">Fondo Consolidado de Reservas Previsionales – FCR</div>
+                            <div class="info-label">Código del instrumento:</div>
+                            <div class="info-value">INV-6053</div>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Descripción:</div>
-                            <div class="info-value">Inversión de Prueba</div>
+                            <div class="info-label">Nombre de la SAFI o General Partner:</div>
+                            <div class="info-value">SAFI</div>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Unidad de Negocio:</div>
-                            <div class="info-value">FCR-MACROFONDO</div>
-                        </div>
-                    </div>
-
-                    <div class="info-column">
-                        <div class="info-item">
-                            <div class="info-label">Estado:</div>
-                            <div class="info-value">APROBADO</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Inversión #:</div>
-                            <div class="info-value">6120</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Tipo Instrumento:</div>
-                            <div class="info-value">Fondo Privado</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Categoría Riesgo:</div>
-                            <div class="info-value">AA+</div>
-                        </div>
-                    </div>
-
-                    <div class="info-column">
-                        <div class="info-item">
-                            <div class="info-label">Plazo Calificación:</div>
-                            <div class="info-value">Largo</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Valor Nominal:</div>
+                            <div class="info-label">Capital comprometido:</div>
                             <div class="info-value">10,000,000.00</div>
                         </div>
+                         <div class="info-item">
+                            <div class="info-label">Capital comprometido:</div>
+                            <div class="info-value">10,000,000.00</div>
+                        </div>
+                         <div class="info-item">
+                            <div class="info-label">Correo de la persona de contacto (SAFI/GP):</div>
+                            <div class="info-value">correo@gmail.com</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tipo de custodia:</div>
+                            <div class="info-value">Local-ONP</div>
+                        </div>
                     </div>
 
                     <div class="info-column">
                         <div class="info-item">
-                            <div class="info-label">Fecha Emisión:</div>
+                            <div class="info-label">Unidad de negocio:</div>
+                            <div class="info-value">MACROFONDO</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Clasificación de riesgos:</div>
+                            <div class="info-value">AA+</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Fecha de suscripción del contrato:</div>
                             <div class="info-value">22/09/2025</div>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Fecha Vencimiento:</div>
+                            <div class="info-label">Plazo (años):</div>
+                            <div class="info-value">5</div>
+                        </div>
+                         <div class="info-item">
+                            <div class="info-label">Información adicional:</div>
+                            <div class="info-value">a</div>
+                        </div>
+                    </div>
+
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Plazo de vencimiento:</div>
+                            <div class="info-value">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Grupo económico:</div>
+                            <div class="info-value">Grupo Intercorp</div>
+                        </div>
+                           <div class="info-item">
+                            <div class="info-label">Fecha de vencimiento:</div>
                             <div class="info-value">22/09/2030</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Activo custodiado:</div>
+                            <div class="info-value">No</div>
+                        </div>
+                    </div>
+
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Nombre Fondo:</div>
+                            <div class="info-value">Fondo Privado Intercorp</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Moneda:</div>
+                            <div class="info-value">PEN</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Nombre de la persona de contacto (SAFI/GP):</div>
+                            <div class="info-value">persona</div>
+                        </div>
+                         <div class="info-item">
+                            <div class="info-label">Nombre del custodio:</div>
+                            <div class="info-value">Scotiabank</div>
                         </div>
                     </div>
                 </div>
@@ -274,7 +306,7 @@
       <form id="formLlamado" class="space-y-5" novalidate>
         <input type="hidden" id="inv_id"/>
 
-        <div class="grid md:grid-cols-2 gap-4">
+        <div class="grid md:grid-cols-3 gap-4">
           <div>
             <label class="block text-sm font-semibold mb-1">Fecha de la distribución</label>
             <input id="fecha_llamado" type="date" required
@@ -285,6 +317,13 @@
             <input id="monto" type="text" inputmode="decimal" required
                    class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
                    placeholder="Ej. 1,310,067.70">
+          </div>
+            <div>
+            <label class="block text-sm font-semibold mb-1">Moneda</label>
+             <select id="entidad" class="w-1/2 rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
+                <option value="PEN" selected>PEN</option>
+                <option value="USD">USD</option>
+              </select>
           </div>
         </div>
 

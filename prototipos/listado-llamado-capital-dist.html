@@ -413,12 +413,12 @@
     positionClass:"toast-top-right",timeOut:2600,extendedTimeOut:1200,
     showDuration:160,hideDuration:160,showMethod:"fadeIn",hideMethod:"fadeOut"
   };
-
   // =============== DATA MOCK ===============
   // Hijos usan estados: REGISTRADO, INSTRUIDO, CANCELADO
-  const inversiones = [
+  let inversiones = [
       {
       entidad:"fdo-consolidado",
+      accion: "aprobar",
       unidad:"fcr-macrofondo",
       tipo:"Fondo Privado",
       estado:"REGISTRADO",
@@ -439,6 +439,7 @@
     },
     {
       entidad:"fdo-consolidado",
+      accion: "llamado",
       unidad:"fcr-macrofondo",
       tipo:"Fondo Privado",
       estado:"APROBADO",
@@ -459,14 +460,15 @@
       flagCtas: "1",
       hijos:[
        
-        { id:"C-1003", tipo:"Llamado",        fecha:"2025-22-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"APROBADO" },
-        { id:"C-1002", tipo:"Llamado",        fecha:"2025-22-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"DESAGREGADO REGISTRADO" },
-        { id:"C-1001", tipo:"Llamado",        fecha:"2025-22-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"INSTRUIDO" },
+        { id:"C-1001", accion:"registrar-desagregado", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"APROBADO" },
+        { id:"C-1001", accion:"notificar-backoffice", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"DESAGREGADO REGISTRADO" },
+        { id:"C-1001", accion:"realizar-operacion",  tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"INSTRUIDO" },
         //{ id:"C-1002", tipo:"Distribución",   fecha:"2024-12-05", monto:"-250,000.00",  documento:"dist_1002.pdf", estado:"INSTRUIDO" }
       ]
     },
         {
       entidad:"fdo-consolidado",
+      accion: "distribucion",
       unidad:"fcr-macrofondo",
       tipo:"Fondo Privado",
       estado:"APROBADO",
@@ -486,14 +488,15 @@
       ecoInstrument:"ALTERNATIVOS",
       flagCtas: "1",
       hijos:[
-         { id:"D-1006", tipo:"Distribucion",        fecha:"2025-22-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"APROBADO" },
-        { id:"D-1005", tipo:"Distribucion",        fecha:"2025-22-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"DESAGREGADO REGISTRADO" },
-        { id:"D-1004", tipo:"Distribucion",        fecha:"2025-22-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"INSTRUIDO" },
+        { id:"C-1001",  tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"OPERACIÓN REGISTRADA" },
+         { id:"D-1001",accion:"registrar-desagregado",  tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"APROBADO" },
+        { id:"D-1001", accion:"notificar-backoffice", tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"DESAGREGADO REGISTRADO" },
+        { id:"D-1001", accion:"realizar-operacion", tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"INSTRUIDO" },
       
         //{ id:"C-1002", tipo:"Distribución",   fecha:"2024-12-05", monto:"-250,000.00",  documento:"dist_1002.pdf", estado:"INSTRUIDO" }
       ]
     },
-    {
+   /* {
       entidad:"fdo-consolidado",
       unidad:"fcr-macrofondo",
       tipo:"Fondo Privado",
@@ -540,7 +543,7 @@
       hijos:[
         //{ id:"C-3001", tipo:"Rescate",        fecha:"2025-07-02", monto:"-300,000.00",  documento:"res_3001.pdf",  estado:"INSTRUIDO" }
       ]
-    }
+    }*/
   ];
 
   // =============== RENDER ===============
@@ -555,6 +558,8 @@
     if(st==="INSTRUIDO")  return '<span class="status-badge" style="background:#d1fae5;color:#065f46">INSTRUIDO</span>';
     if(st==="DESAGREGADO REGISTRADO")  return '<span class="status-badge" style="background:#dee5a8;color:#62611b">DESAGREGADO REGISTRADO</span>';
     if(st==="APROBADO")  return '<span class="status-badge" style="background:#a8cee5;color:#334c7a">APROBADO</span>';
+    if(st==="OPERACIÓN REGISTRADA")  return '<span class="status-badge" style="background:#8b89df;color:#471970">OPERACIÓN REGISTRADA</span>';
+    
     return '<span class="status-badge" style="background:#fee2e2;color:#991b1b">CANCELADO</span>';
   }
 
@@ -972,6 +977,21 @@ window.irABackOffice = irABackOffice;
   }
 
   function applyFilters(){
+    let accion = getAccion();
+    let subaccion = getSubAccion();
+    inversiones = inversiones.filter(inv => {
+        if (accion && inv.accion !== accion) return false;
+        return true;
+    });
+    
+    inversiones[0].hijos = inversiones[0].hijos ? inversiones[0].hijos.filter(hijo => {
+        if(!hijo.accion) return true;
+        if (subaccion && (hijo.accion !== subaccion)) return false;
+        return true;
+    }) : [];
+
+    console.log(inversiones[0].hijos)
+
     renderTabla(filtrar(inversiones));
   }
 
@@ -1323,6 +1343,16 @@ window.irABackOffice = irABackOffice;
              function getAreaParam() {
     const params = new URLSearchParams(window.location.search);
     return params.get("area");
+  }
+
+      function getAccion() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("accion");
+  }
+
+      function getSubAccion() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("subaccion");
   }
 
   const area = getAreaParam();

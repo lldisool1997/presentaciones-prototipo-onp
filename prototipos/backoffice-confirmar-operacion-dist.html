@@ -255,8 +255,8 @@
   function renderHeader(){
     $("#head").html(`
       <div class="bg-muted border rounded-xl p-3">
-        <div class="text-xs text-gray-500">Inversión</div>
-        <div class="font-semibold">${invId}</div>
+        <div class="text-xs text-gray-500">Código del instrumento</div>
+        <div class="font-semibold">INV-6053</div>
       </div>
       <div class="bg-muted border rounded-xl p-3">
         <div class="text-xs text-gray-500">Movimiento</div>
@@ -264,7 +264,7 @@
       </div>
       <div class="bg-muted border rounded-xl p-3">
         <div class="text-xs text-gray-500">Fecha / Monto</div>
-        <div class="font-semibold">${movFecha} · USD ${money(montoLlamado)}</div>
+        <div class="font-semibold">${movFecha} · PEN ${money(montoLlamado)}</div>
       </div>
     `);
     $("#head_banco").text(banco);

@@ -264,7 +264,7 @@
       </div>
       <div class="bg-muted border rounded-xl p-3">
         <div class="text-xs text-gray-500">Fecha / Monto</div>
-        <div class="font-semibold">${movFecha} · USD ${money(montoLlamado)}</div>
+        <div class="font-semibold">${movFecha} · PEN ${money(montoLlamado)}</div>
       </div>
     `);
     $("#head_banco").text(banco);
@@ -596,8 +596,8 @@
       (CATALOGO_CONCEPTOS.find(c => c.concepto === "Capital comprometido")?.concepto)
       || (CATALOGO_CONCEPTOS[0]?.concepto || "");
 
-    addRow({ concepto: DEFAULT_CONCEPTO, monto: "1,500,000.00" });
-    addRow({ concepto: "Distribución de dividendos", monto: "500,000.00" });
+    addRow({ concepto: DEFAULT_CONCEPTO, monto: "1,000,000.00" });
+    //addRow({ concepto: "Distribución de dividendos", monto: "500,000.00" });
 
     $("#btnAgregar").on("click", ()=> addRow());
     $("#btnGuardar").on("click", guardar);
