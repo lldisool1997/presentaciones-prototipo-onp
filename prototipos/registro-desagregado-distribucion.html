@@ -71,7 +71,7 @@
 
   <main class="max-w-[1100px] mx-auto px-4 py-6">
     <div class="header rounded-2xl rounded-b-none">
-      <h1>Recepción de la distribución de capital</h1>
+      <h1>Registro del desagregado de la distribución de capital</h1>
     </div>
 
     <!-- 1. Resumen -->
@@ -551,7 +551,7 @@ function applyMasks() {
     // 3) Confirmación
     const step2 = await Swal.fire({
       title: "Confirmación",
-      text: "¿Confirmas registrar el pago de la distribución de capital? Esta acción no se puede deshacer.",
+      text: "¿Confirmas registrar el desagregado de la distribución de capital? Esta acción no se puede deshacer.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Sí, guardar",
@@ -560,7 +560,7 @@ function applyMasks() {
     });
     if(!step2.isConfirmed){ toastr.info("Operación cancelada."); return; }
 
-    toastr.success("✅ Instrucción registrada. Movimiento quedará en estado CANCELADO.");
+    toastr.success("✅ Instrucción registrada. Movimiento quedará en estado DESAGREGADO REGISTRADO.");
     setTimeout(()=>{ window.location.href = "index.html?result=ok"; }, 1200);
   }
 
