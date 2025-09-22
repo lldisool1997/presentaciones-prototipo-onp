@@ -336,6 +336,18 @@
             <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde donde se realizará el aporte.</p>
           </div>
         </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Banco cuenta destino</label>
+            <select id="banco_destino" style="width:100%"></select>
+            <p class="text-xs text-gray-500 mt-1">Selecciona el banco desde donde se realizará el aporte.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Nro cuenta destino</label>
+            <select id="cuenta_destino" style="width:100%"></select>
+            <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde donde se realizará el aporte.</p>
+          </div>
+        </div>
         <div class="section-header">3. Sustento documentario</div>
         <div class="p-5 rounded-md bg-gray-100">
                   <div class="text-center justify-center">
@@ -670,6 +682,21 @@ $("#banco").select2({
 
 // Inicializar cuentas (vacías al inicio)
 $("#cuenta").select2({
+  placeholder: "Selecciona una cuenta...",
+  allowClear: true,
+  width: "100%"
+});
+
+
+$("#banco_destino").select2({
+  data: BANCOS,
+  placeholder: "Selecciona un banco...",
+  allowClear: true,
+  width: "100%"
+});
+
+// Inicializar cuentas (vacías al inicio)
+$("#cuenta_destino").select2({
   placeholder: "Selecciona una cuenta...",
   allowClear: true,
   width: "100%"
