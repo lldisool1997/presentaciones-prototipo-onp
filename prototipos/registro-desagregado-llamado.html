@@ -23,6 +23,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
 
   <style>
     /* Toastr sin íconos embebidos */
@@ -93,10 +94,10 @@
             </a>
           </div>
         </div>
-        <div class="bg-muted border rounded-xl p-3">
+       <!-- <div class="bg-muted border rounded-xl p-3">
           <div class="text-xs text-gray-500">Estado esperado</div>
           <div class="font-semibold">CANCELADO (al guardar instrucción)</div>
-        </div>
+        </div>-->
       </div>
     </section>
 
@@ -270,30 +271,45 @@
     return `<span class="${base} bg-gray-100 text-gray-500" data-role="dh-badge">${label||"—"}</span>`;
   }
 
-  function buildRowHTML(i, r){
-    return `
-      <tr class="hover:bg-gray-50" data-row="${i}">
-        <td class="p-2">
-          <select data-i="${i}" data-k="concepto"
-                  class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
-            ${conceptoOptionsHTML}
-          </select>
-        </td>
-        <td class="p-2 text-center">
-          <div data-i="${i}" data-k="dh-view">${dhBadgeHTML(r.dhLabel, r.dh)}</div>
-        </td>
-        <td class="p-2 text-right">
-          <input data-i="${i}" data-k="monto" inputmode="decimal" placeholder="0.00"
-                 class="w-full text-right rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
-                 value="${r.monto||""}">
-        </td>
-        <td class="p-2 text-center">
-          <button type="button" class="px-3 py-1.5 rounded-lg border-2 border-gray-300 bg-white hover:bg-gray-50"
-                  onclick="removeRow(${i})">Eliminar</button>
-        </td>
-      </tr>
-    `;
-  }
+  function buildRowHTML(i, r) {
+  return `
+    <tr class="hover:bg-gray-50" data-row="${i}">
+      <td class="p-2">
+        <select data-i="${i}" data-k="concepto"
+                class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
+          ${conceptoOptionsHTML}
+        </select>
+      </td>
+      <td class="p-2 text-center">
+        <div data-i="${i}" data-k="dh-view">${dhBadgeHTML(r.dhLabel, r.dh)}</div>
+      </td>
+      <td class="p-2 text-right">
+        <input data-i="${i}" data-k="monto" inputmode="decimal" placeholder="0.00"
+               class="monto-input w-full text-right rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
+               value="${r.monto || ""}">
+      </td>
+      <td class="p-2 text-center">
+        <button type="button" class="px-3 py-1.5 rounded-lg border-2 border-gray-300 bg-white hover:bg-gray-50"
+                onclick="removeRow(${i})">Eliminar</button>
+      </td>
+    </tr>
+  `;
+}
+
+// 🟢 Aplica máscara a todos los inputs con class="monto-input"
+function applyMasks() {
+  document.querySelectorAll('.monto-input').forEach(el => {
+    if (!el.cleave) { // evitar aplicar dos veces
+      el.cleave = new Cleave(el, {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand',
+        numeralDecimalMark: '.',
+        delimiter: ',',
+        numeralDecimalScale: 2
+      });
+    }
+  });
+}
 
   function hydrateRowValues(i){
     const r = rows[i];
@@ -322,7 +338,7 @@
       .on("input", function(){ rows[i].monto = $(this).val(); updateTotals(); })
       .on("blur",  function(){
         const num = parseMoney($(this).val());
-        rows[i].monto = num ? num.toFixed(2) : "";
+       // rows[i].monto = num ? num.toFixed(2) : "";
         $(this).val(rows[i].monto); updateTotals();
       });
   }
@@ -330,6 +346,7 @@
   function renderAllRows(){
     $tbody.empty();
     rows.forEach((r,i)=>{ $tbody.append(buildRowHTML(i,r)); hydrateRowValues(i); attachRowHandlers(i); });
+    applyMasks();
     updateTotals();
   }
 
@@ -337,6 +354,7 @@
     rows.push(prefill ? nuevaFila(prefill.concepto || "", prefill.monto || "") : nuevaFila());
     const i = rows.length - 1;
     $tbody.append(buildRowHTML(i, rows[i]));
+    applyMasks();
     hydrateRowValues(i);
     attachRowHandlers(i);
     updateTotals();

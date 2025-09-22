@@ -1575,7 +1575,7 @@
             "general": [
                 "Informe de Riesgos",
                 "Informe Legal",
-                "Acta de Comité de Inversiones"
+                "Acta de Comité de Inversiones",
             ],
             "tesoreria": {
                 // Cada tipo de instrumento tiene sus propios documentos
@@ -1640,7 +1640,7 @@
             "general": [
                 "Informe de Riesgos",
                 "Informe Legal",
-                "Acta de Comité de Inversiones"
+                "Acta de Comité de Inversiones",
             ],
             "tesoreria": {
                 // ===== INSTRUMENTOS ÚNICOS (solo nombre) =====
@@ -10556,9 +10556,14 @@
                 });
 
                 // 🎯 RESTAURAR EL LISTENER ORIGINAL + DOCUMENTOS
-                tipoInstrumentoSelect.onchange = function () {
+                tipoInstrumentoSelect.onchange = function (e) {
                     showFields(); // ✅ Llamada original del HTML
                     // 🎯 REGENERAR DOCUMENTOS DE TESORERÍA SI ESTÁ ACTIVA
+                    const tipoInstrumento = e.target.value;
+                    if(tipoInstrumento === 'Fondo privado'){
+                        documentRequirements['general'].push('Acta de Suscripción');
+                          setTimeout(() => generateDocumentFields(), 100); // Con delay para que termine showFields()
+                    }
                     if (currentArea === 'tesoreria') {
                         setTimeout(() => generateDocumentFields(), 100); // Con delay para que termine showFields()
                     }
