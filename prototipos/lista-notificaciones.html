@@ -278,8 +278,8 @@
       rows.forEach((n)=>{
         const { human } = fmtDate(n.createdAt);
         const pillHtml = n.unread
-          ? `<span class="pill pill--unread"><span class="text-lg leading-none">•</span>SIN LEER</span>`
-          : `<span class="pill pill--read"><span class="text-lg leading-none">•</span>LEÍDO</span>`;
+          ? `<span class="pill pill--unread"><span class="text-lg leading-none">•</span>PENDIENTE</span>`
+          : `<span class="pill pill--read"><span class="text-lg leading-none">•</span>EJECUTADO</span>`;
 
         $tb.append(`
           <tr>
