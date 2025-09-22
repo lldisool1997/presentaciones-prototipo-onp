@@ -651,6 +651,12 @@ $(function(){
     allowClear: true,
     width: "100%"
   });
+    $("#cuenta_destino").empty().select2({
+    data: cuentasFiltradas,
+    placeholder: "Selecciona una cuenta...",
+    allowClear: true,
+    width: "100%"
+  });
   // header (si existe el contenedor)
   if ($("#cardInversion").length){
     $("#cardInversion").html(`
@@ -702,7 +708,6 @@ $("#cuenta_destino").select2({
   width: "100%"
 });
 
-
   new Cleave('#monto', {
     numeral: true,
     numeralThousandsGroupStyle: 'thousand',
@@ -724,7 +729,26 @@ $("#banco").on("change", function () {
     allowClear: true,
     width: "100%"
   });
+  
 });
+
+$("#banco_destino").on("change", function () {
+  const bancoSeleccionado = $(this).val();
+
+  // Filtrar cuentas
+  const cuentasFiltradas = CUENTAS_BANCARIAS.filter(c => c.banco === bancoSeleccionado);
+
+  // Recargar cuentas en select2
+  $("#cuenta_destino").empty().select2({
+    data: cuentasFiltradas,
+    placeholder: "Selecciona una cuenta...",
+    allowClear: true,
+    width: "100%"
+  });
+  
+});
+
+
   // refs
   const $fecha = $("#fecha_llamado");
   const $monto = $("#monto");

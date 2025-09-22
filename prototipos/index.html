@@ -310,6 +310,14 @@ body {
                   Subcategoría: <b>Fondos de Inversión</b> <br>
                   Tipo de instrumento: <b>Fondo Privado</b> <br>
                 </p>
+
+                <p class="mt-auto">
+                <button onclick="abrirVideo('registro-instrumento.mp4')"
+                  class="px-4 py-2 mt-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  Ver Video Instructivo
+                </button>
+              </p>
+
                 
 
                 <a href="registro-instrumento.html?area=DIN" class="btn mt-auto">Registrar un Instrumento</a>
@@ -330,8 +338,14 @@ body {
                 <p>
                   Como usuario del sistema, recibo una notificación informándome que se ha registrado un nuevo instrumento de inversión con el código INV-6053. <br>
                 </p>
+                 <p class="mt-auto">
+                <button onclick="abrirVideo('paso-2.mp4')"
+                  class="px-4 py-2 mt-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  Ver Video Instructivo
+                </button>
+              </p>
 
-                <a href="menu-notificacion-demo.html?id_notificacion=2" class="btn mt-auto">Ver notificación de registro de instrumento</a>
+                <a href="menu-notificacion-demo.html?id_notificacion=2" class="btn">Ver notificación de registro de instrumento</a>
             </div>
 
            <!--             <div class="card">
@@ -360,8 +374,13 @@ body {
                   DIN realiza la búsqueda del instrumento registrado (INV-6053) y procede a registrar el primer llamado de capital asociado a este instrumento. 
                   <br>
                 </p>
-
-                <a href="listado-llamado-capital-dist.html?area=DIN&accion=aprobar" class="btn mt-auto">Registra y aprueba un llamado de Capital</a>
+                   <p class="mt-auto">
+                <button onclick="abrirVideo('paso-2.mp4')"
+                  class="px-4 py-2 mt-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  Ver Video Instructivo
+                </button>
+              </p>
+                <a href="listado-llamado-capital-dist.html?area=DIN&accion=aprobar" class="btn">Registra y aprueba un llamado de Capital</a>
             </div>
 
              <div class="card">
@@ -710,4 +729,57 @@ body {
     </div>
 </body>
 
+
+<style>
+/* Animación de entrada */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+</style>
+<!-- Modal -->
+<div id="modalVideo"
+     class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300">
+  <div class="bg-white rounded-2xl shadow-2xl w-11/12 md:w-3/4 lg:w-1/2 overflow-hidden relative animate-fade-in">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center px-4 py-2 bg-gray-100 border-b">
+      <h2 class="text-lg font-semibold text-gray-800">Video Instructivo</h2>
+      <button onclick="cerrarVideo()" aria-label="Cerrar"
+              class="text-gray-500 hover:text-gray-800 transition text-2xl font-bold">
+        &times;
+      </button>
+    </div>
+
+    <!-- Contenido -->
+    <div class="p-4">
+      <video id="videoPlayer" class="w-full rounded-lg shadow" controls>
+        <source src="" type="video/mp4">
+        Tu navegador no soporta video HTML5.
+      </video>
+    </div>
+  </div>
+</div>
+
 </html>
+
+
+<script>
+function abrirVideo(nombreArchivo) {
+  const ruta = `videos-instructivos/${nombreArchivo}`;
+  const video = document.getElementById("videoPlayer");
+  video.src = ruta;
+  document.getElementById("modalVideo").classList.remove("hidden");
+  video.play();
+}
+
+function cerrarVideo() {
+  const video = document.getElementById("videoPlayer");
+  video.pause();
+  video.currentTime = 0; // reinicia el video
+  document.getElementById("modalVideo").classList.add("hidden");
+}
+</script>
