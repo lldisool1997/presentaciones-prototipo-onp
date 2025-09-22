@@ -20,6 +20,7 @@
 
   <!-- Toastr -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
 
   <!-- Select2 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css"/>
@@ -179,6 +180,8 @@
   border-color: #60a5fa; /* blue-400 */
   box-shadow: inset 0 0 0 2px rgba(59,130,246,.25);
 }
+
+
 
   </style>
 </head>
@@ -348,7 +351,9 @@
   <!-- Modal de confirmación -->
   <div id="confirmModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-panel w-[560px] max-w-[92vw] p-5">
-      <h4 class="text-lg font-semibold mb-3">Revisar y confirmar</h4>
+      <h1 class="text-xl font-semibold text-ink flex items-center">
+            <span class="border-l-4 border-[#3396d8] pl-2">Revisar y confirmar</span>
+      </h1>
       <div id="review" class="space-y-2 text-sm"></div>
       <div class="flex justify-end gap-2 mt-4">
         <button id="btnCancelConfirm" class="px-3 py-2.5 rounded-xl border border-gray-300">Volver</button>
@@ -365,26 +370,35 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
 
   <script>
- // -------- Mock de inversión seleccionada --------
+
+     // -------- Mock de inversión seleccionada --------
 const selectedInvestment = {
   id: "INV-6120",
   entidad: "Fondo Consolidado de Reservas Previsionales – FCR",
-  descripcion: "Inversión Prueba"
+  descripcion: "Inversión de Prueba"
 };
-
-// -------- Mock cuentas bancarias (reemplaza por las reales) --------
+ // -------- Mock de inversión seleccionada --------
 const BANCOS = [
-  { id:"BCP", text:"BCP" },
-  { id:"BBVA", text:"BBVA" },
-  { id:"Scotiabank", text:"Scotiabank" }
+  { id: "BCP", text: "Banco de Crédito del Perú (BCP)" },
+  { id: "Scotiabank", text: "Scotiabank Perú" },
+  { id: "BBVA", text: "BBVA Perú" },
+  { id: "Interbank", text: "Interbank" }
 ];
 
 const CUENTAS_BANCARIAS = [
-  { id:"BCP-USD-001", text:"CTA CTE USD 193-1234567-0-12" },
-  { id:"BCP-PEN-002", text:"CTA CTE PEN 193-8888888-0-12" },
-  { id:"BBVA-USD-003", text:"CTA CTE USD 0011-0123456789" },
-  { id:"SCOTIA-USD-004", text:"CTA CTE USD 000-1234567" }
+  // BCP
+  { id: "BCP-PEN-001", banco: "BCP", text: "193-1990153-0-54" },
+
+  // Scotiabank
+  { id: "SCOTIA-PEN-002", banco: "Scotiabank", text: "970-0700108" },
+
+  // BBVA
+  { id: "BBVA-PEN-003", banco: "BBVA", text: "0011-0661-02-00040907" },
+
+  // Interbank
+  { id: "INTERBANK-PEN-004", banco: "Interbank", text: "200-3067561380" }
 ];
+
 
 // -------- Helpers visuales / validación --------
 function markInvalid($el){ $el.addClass("ring-2 ring-red-400 border-red-400"); }
@@ -581,6 +595,16 @@ window.removeCustomDocument = removeCustomDocument;
 
 // ======= Ready =======
 $(function(){
+      // Filtrar cuentas
+  const cuentasFiltradas = CUENTAS_BANCARIAS.filter(c => c.banco === "BCP");
+
+  // Recargar cuentas en select2
+  $("#cuenta").empty().select2({
+    data: cuentasFiltradas,
+    placeholder: "Selecciona una cuenta...",
+    allowClear: true,
+    width: "100%"
+  });
   // header (si existe el contenedor)
   if ($("#cardInversion").length){
     $("#cardInversion").html(`
@@ -602,19 +626,43 @@ $(function(){
   }
 
   // Select2 cuentas
-  $("#banco").select2({
-    data: BANCOS,
-    placeholder: "Selecciona una cuenta...",
-    allowClear: true,
-    width: "100%"
+ // Inicializar bancos
+$("#banco").select2({
+  data: BANCOS,
+  placeholder: "Selecciona un banco...",
+  allowClear: true,
+  width: "100%"
+});
+
+// Inicializar cuentas (vacías al inicio)
+$("#cuenta").select2({
+  placeholder: "Selecciona una cuenta...",
+  allowClear: true,
+  width: "100%"
+});
+
+  new Cleave('#monto', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand',
+    numeralDecimalMark: '.',
+    delimiter: ','
   });
 
-    $("#cuenta").select2({
-    data: CUENTAS_BANCARIAS,
+// Filtrar cuentas según banco elegido
+$("#banco").on("change", function () {
+  const bancoSeleccionado = $(this).val();
+
+  // Filtrar cuentas
+  const cuentasFiltradas = CUENTAS_BANCARIAS.filter(c => c.banco === bancoSeleccionado);
+
+  // Recargar cuentas en select2
+  $("#cuenta").empty().select2({
+    data: cuentasFiltradas,
     placeholder: "Selecciona una cuenta...",
     allowClear: true,
     width: "100%"
   });
+});
 
   // refs
   const $fecha = $("#fecha_llamado");
@@ -750,13 +798,30 @@ if (missing.length) {
 }
 
     // ok -> doble check
-    $("#review").html(`
-      <div><b>Inversión:</b> ${selectedInvestment.descripcion}</div>
-      <div><b>Fecha:</b> ${$fecha.val()}</div>
-      <div><b>Monto:</b> ${montoStr}</div>
-      <div><b>Cuenta bancaria:</b> ${ctaTxt}</div>
-      <div><b>Documento:</b> ${fileObj.name}</div>
-    `);
+$("#review").html(`
+  <dl class="divide-y divide-gray-200 text-sm text-gray-700">
+    <div class="py-2 flex justify-between">
+      <dt class="font-medium text-gray-600">Inversión:</dt>
+      <dd class="text-gray-900">${selectedInvestment.descripcion}</dd>
+    </div>
+    <div class="py-2 flex justify-between">
+      <dt class="font-medium text-gray-600">Fecha:</dt>
+      <dd class="text-gray-900">${$fecha.val()}</dd>
+    </div>
+    <div class="py-2 flex justify-between">
+      <dt class="font-medium text-gray-600">Monto:</dt>
+      <dd class="text-gray-900">${montoStr}</dd>
+    </div>
+    <div class="py-2 flex justify-between">
+      <dt class="font-medium text-gray-600">Cuenta bancaria:</dt>
+      <dd class="text-gray-900">${ctaTxt}</dd>
+    </div>
+    <div class="py-2 flex justify-between">
+      <dt class="font-medium text-gray-600">Documento:</dt>
+      <dd class="text-gray-900">${fileObj.name}</dd>
+    </div>
+  </dl>
+`);
     $("#chkConfirm").prop("checked", false);
     $("#btnConfirmSave").prop("disabled", false);
     $("#confirmModal").removeClass("hidden").addClass("flex");
