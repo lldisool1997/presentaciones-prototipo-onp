@@ -239,6 +239,7 @@
   // =================== Helpers ===================
   const qs       = new URLSearchParams(location.search);
   const invId    = qs.get("inv")  || "—";
+  const codFCR    = qs.get("codFCR")  || "—";
   const movId    = qs.get("mov")  || "—";
   const movTipo  = qs.get("tipo") || "Llamado";
   const movFecha = qs.get("fecha")|| "—";
@@ -255,8 +256,8 @@
   function renderHeader(){
     $("#head").html(`
       <div class="bg-muted border rounded-xl p-3">
-        <div class="text-xs text-gray-500">Inversión</div>
-        <div class="font-semibold">${invId}</div>
+        <div class="text-xs text-gray-500">Código del instrumento</div>
+        <div class="font-semibold">${codFCR}</div>
       </div>
       <div class="bg-muted border rounded-xl p-3">
         <div class="text-xs text-gray-500">Movimiento</div>

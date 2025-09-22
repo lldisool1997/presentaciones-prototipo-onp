@@ -340,8 +340,8 @@
               <tr>
                 <th>Ver</th>
                 <th>Estado</th>
+                <th>Cod. FCR</th>
                 <th>Inversión #</th>
-                <th>Inv. Principal</th>
                 <th class="text-left">Producto</th>
                 <th class="text-left">Número Depósito</th>
                 <th>Fecha Compra</th>
@@ -424,6 +424,7 @@
       estado:"REGISTRADO",
       inversionNum:"6123",
       invPrincipal:"6123",
+      codFCR:"INV-6053",
       producto:"Fondos Alternativos – Secondaries",
       numeroDeposito:"ALPINV-SEC-22",
       fechaCompra:"19/09/2025",
@@ -445,6 +446,7 @@
       estado:"APROBADO",
       inversionNum:"6122",
       invPrincipal:"6122",
+      codFCR:"INV-6053",
       producto:"Fondos Alternativos – Secondaries",
       numeroDeposito:"ALPINV-SEC-22",
       fechaCompra:"19/09/2025",
@@ -460,9 +462,9 @@
       flagCtas: "1",
       hijos:[
        
-        { id:"C-1001", accion:"registrar-desagregado", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"APROBADO" },
-        { id:"C-1001", accion:"notificar-backoffice", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"DESAGREGADO REGISTRADO" },
-        { id:"C-1001", accion:"realizar-operacion",  tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"INSTRUIDO" },
+        { id:"C-1001", accion:"registrar-desagregado", codFCR: "C-1001", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"APROBADO" },
+        { id:"C-1001", accion:"notificar-backoffice", codFCR: "C-1001", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"DESAGREGADO REGISTRADO" },
+        { id:"C-1001", accion:"realizar-operacion", codFCR: "C-1001", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"INSTRUIDO" },
         //{ id:"C-1002", tipo:"Distribución",   fecha:"2024-12-05", monto:"-250,000.00",  documento:"dist_1002.pdf", estado:"INSTRUIDO" }
       ]
     },
@@ -474,6 +476,7 @@
       estado:"APROBADO",
       inversionNum:"6122",
       invPrincipal:"6122",
+      codFCR:"INV-6053",
       producto:"Fondos Alternativos – Secondaries",
       numeroDeposito:"ALPINV-SEC-22",
       fechaCompra:"19/09/2025",
@@ -488,10 +491,10 @@
       ecoInstrument:"ALTERNATIVOS",
       flagCtas: "1",
       hijos:[
-        { id:"C-1001",  tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"OPERACIÓN REGISTRADA" },
-         { id:"D-1001",accion:"registrar-desagregado",  tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"APROBADO" },
-        { id:"D-1001", accion:"notificar-backoffice", tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"DESAGREGADO REGISTRADO" },
-        { id:"D-1001", accion:"realizar-operacion", tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"INSTRUIDO" },
+        { id:"C-1001", codFCR: "C-1001", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"OPERACIÓN REGISTRADA" },
+         { id:"D-1001",codFCR: "D-1001",accion:"registrar-desagregado",  tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"APROBADO" },
+        { id:"D-1001", codFCR: "D-1001",accion:"notificar-backoffice", tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"DESAGREGADO REGISTRADO" },
+        { id:"D-1001",codFCR: "D-1001", accion:"realizar-operacion", tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"INSTRUIDO" },
       
         //{ id:"C-1002", tipo:"Distribución",   fecha:"2024-12-05", monto:"-250,000.00",  documento:"dist_1002.pdf", estado:"INSTRUIDO" }
       ]
@@ -582,7 +585,7 @@
          
         </td>
         <td><span class="status-badge ${estadoBadge(inv.estado)}">${inv.estado}</span></td>
-        <td>${inv.inversionNum}</td>
+        <td>${inv.codFCR}</td>
         <td>${inv.invPrincipal}</td>
         <td class="text-left">${inv.producto}</td>
         <td class="text-left">${inv.numeroDeposito}</td>
@@ -646,7 +649,7 @@
               <table style="width:100%;min-width:1100px;border-collapse:collapse">
                 <thead>
                   <tr>
-                    <th style="background:#eef2f7;color:#334155;padding:8px;border-radius:6px 0 0 6px">ID</th>
+                    <th style="background:#eef2f7;color:#334155;padding:8px;border-radius:6px 0 0 6px">Cod. FCR</th>
                     <th style="background:#eef2f7;color:#334155;padding:8px">Tipo</th>
                     <th style="background:#eef2f7;color:#334155;padding:8px">Fecha</th>
                     <th style="background:#eef2f7;color:#334155;padding:8px">Monto</th>
@@ -658,7 +661,7 @@
                 <tbody id="child-body-${rowKey}">
                   ${(inv.hijos||[]).map((h,j)=>`
                     <tr style="border-bottom:1px dashed #e8eef5">
-                      <td style="padding:8px"><b>${h.id}</b></td>
+                      <td style="padding:8px"><b>${h.codFCR}</b></td>
                       <td style="padding:8px">${h.tipo}</td>
                       <td style="padding:8px">${h.fecha}</td>
                       <td style="padding:8px" class="text-right">${h.monto}</td>
@@ -788,6 +791,7 @@ async function registrarDesagregado(i, j, tipo){
 
   const qs = new URLSearchParams({
       inv: inv.invPrincipal,
+      codFCR: inv.codFCR,
       mov: h.id,
       tipo: h.tipo,
       fecha: h.fecha,
@@ -829,6 +833,7 @@ async function cancelarMovimiento(i, j){
   if(go.isConfirmed){
     const qs = new URLSearchParams({
       inv: inv.invPrincipal,
+      codFCR: inv.codFCR,
       mov: h.id,
       tipo: h.tipo,
       fecha: h.fecha,
@@ -869,6 +874,7 @@ async function cancelarMovimiento(i, j){
   if(go.isConfirmed){
     const qs = new URLSearchParams({
       inv: inv.invPrincipal,
+      codFCR: inv.codFCR,
       mov: h.id,
       tipo: h.tipo,
       fecha: h.fecha,
@@ -940,6 +946,7 @@ async function cancelarMovimiento(i, j){
         return;
     }
   url.searchParams.set("inv", inv.inversionNum);
+  url.searchParams.set("codFCR", inv.codFCR);
   url.searchParams.set("mov", h.id);
   url.searchParams.set("tipo", h.tipo);
   url.searchParams.set("fecha", h.fecha);
