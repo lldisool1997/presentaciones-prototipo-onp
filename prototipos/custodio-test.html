@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Registro de Inversiones Financieras</title>
     <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4/dist/autoNumeric.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         * {
@@ -366,30 +365,14 @@
                 padding: 1rem;
             }
         }
-
-        .bg-gray {
-            background-color: #e5e7eb !important; /* gris claro */
-        }
     </style>
 </head>
 
 <body>
-    <!-- Badge área en esquina -->
-<div id="area-badge"
-     style="position: absolute; top: 15px; right: 20px;
-            background-color: #1e6ba8; color: #fff;
-            font-weight: bold; font-size: 0.9rem;
-            padding: 6px 14px; border-radius: 20px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
-  Área: -
-</div>
-
     <div class="container">
-       <div class="header" style="width: 100%; position: relative; text-align: center; padding: 10px 0;">
-  <h1 style="margin: 30px;">Registro de Inversiones Financieras</h1>
-
-</div>
-
+        <div class="header">
+            <h1>Registro de Inversiones Financieras</h1>
+        </div>
 
         <div class="content">
             <!-- Sección 1: Información general -->
@@ -1575,7 +1558,7 @@
             "general": [
                 "Informe de Riesgos",
                 "Informe Legal",
-                "Acta de Comité de Inversiones",
+                "Acta de Comité de Inversiones"
             ],
             "tesoreria": {
                 // Cada tipo de instrumento tiene sus propios documentos
@@ -1640,7 +1623,7 @@
             "general": [
                 "Informe de Riesgos",
                 "Informe Legal",
-                "Acta de Comité de Inversiones",
+                "Acta de Comité de Inversiones"
             ],
             "tesoreria": {
                 // ===== INSTRUMENTOS ÚNICOS (solo nombre) =====
@@ -1899,8 +1882,9 @@
         };
 
 
-        const investmentData = {
+        const investmentData =
 
+        {
             "Caja y Equivalentes de Efectivo": {
                 "Local": {
                     "Depósitos y certificados en el BCRP": {
@@ -1975,7 +1959,6 @@
                                     "step": "0.01"
                                 },
                                 "calculationId": "monto_interes"
-
                             },
                             {
                                 "label": "Plazo en días",
@@ -2011,10 +1994,7 @@
                             },
                             {
                                 "label": "Número de depósito",
-                                "type": "text",
-                                // "attributes": {
-                                //     "step": "0.01"
-                                // }
+                                "type": "text"
                             },
                             {
                                 "label": "Banco cuenta de cargo",
@@ -2029,7 +2009,6 @@
                                 "special": "account_number"
                             }
                         ],
-
                         "Certificado del BCRP": [
                             {
                                 "label": "Código del instrumento",
@@ -2046,9 +2025,6 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
-
-
                             {
                                 "label": "Plazo de vencimiento",
                                 "type": "text",
@@ -2059,7 +2035,6 @@
                                 "calculated": true,
                                 "calculationId": "plazo_vencimiento"
                             },
-
                             {
                                 "label": "Emisor",
                                 "type": "select",
@@ -2080,9 +2055,7 @@
                             {
                                 "label": "Clasificación de riesgos",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "ISIN",
@@ -2094,9 +2067,7 @@
                             {
                                 "label": "Moneda",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Valor nominal adquirido",
@@ -2127,8 +2098,6 @@
                                 },
                                 "calculated": true,
                                 "calculationId": "monto_adquisicion"
-
-
                             },
                             {
                                 "label": "Intereses al vencimiento",
@@ -2138,19 +2107,7 @@
                                 },
                                 "calculated": true,
                                 "calculationId": "intereses_al_vencimiento"
-
                             },
-                            // {
-                            //     "label": "Plazo en días",
-                            //     "type": "number",
-                            //     "attributes": {
-                            //         "step": "1"
-                            //     }
-                            // },
-
-
-
-
                             {
                                 "label": "Plazo en días",
                                 "type": "number",
@@ -2161,18 +2118,6 @@
                                 "calculated": true,
                                 "calculationId": "plazo_dias_deposito"
                             },
-
-
-                            // // ocultado por ususario
-                            // {
-                            //     "label": "Monto estimado al vencimiento",
-                            //     "type": "number",
-                            //     "attributes": {
-                            //         "step": "0.01"
-                            //     },
-                            //     "calculated": true,
-                            //     "calculationId": "monto_total_vencimiento"
-                            // },
                             {
                                 "label": "Fecha de subasta",
                                 "type": "date"
@@ -2273,7 +2218,6 @@
                                     "FINANCIERA TFC",
                                     "ICBC PERU BANK",
                                     "MIBANCO"
-
                                 ]
                             },
                             {
@@ -2309,7 +2253,6 @@
                                     "step": "0.01"
                                 },
                                 "calculationId": "monto_interes"
-
                             },
                             {
                                 "label": "Plazo en días",
@@ -2345,10 +2288,7 @@
                             },
                             {
                                 "label": "Número de depósito",
-                                "type": "text",
-                                // "attributes": {
-                                //     "step": "0.01"
-                                // }
+                                "type": "text"
                             },
                             {
                                 "label": "Banco cuenta de cargo",
@@ -2362,7 +2302,6 @@
                                 "options": [],
                                 "special": "account_number"
                             }
-
                         ],
                         "Instrumento sintético": [
                             {
@@ -2380,7 +2319,6 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
                                 "type": "text",
@@ -2396,26 +2334,20 @@
                                 "type": "select",
                                 "options": []
                             },
-
                             {
                                 "label": "Grupo económico",
                                 "type": "select",
                                 "options": []
                             },
-
                             {
                                 "label": "Estructura",
                                 "type": "select",
                                 "options": [
-
                                     "USD-PEN-USD",
                                     "PEN-USD-PEN"
                                 ],
-                                "special": "structure_selector" // ← Agregar esto
-
+                                "special": "structure_selector"
                             },
-
-
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
@@ -2427,11 +2359,9 @@
                                 "type": "select",
                                 "options": [],
                                 "special": "account_number"
-                            }
-
-                            ,
+                            },
                             {
-                                "label": "Entidad Financiera Spot/Forward",//pendiente compromiso
+                                "label": "Entidad Financiera Spot/Forward",
                                 "type": "select",
                                 "options": [
                                     "BANCO BBVA PERÚ",
@@ -2441,7 +2371,6 @@
                                     "BANCO SCOTIABANK"
                                 ]
                             },
-
                             {
                                 "label": "Fecha de operación",
                                 "type": "date"
@@ -2450,8 +2379,6 @@
                                 "label": "Fecha de vencimiento",
                                 "type": "date"
                             },
-
-
                             {
                                 "label": "Tipo de cambio Spot",
                                 "type": "number",
@@ -2459,43 +2386,17 @@
                                     "step": "0.0001"
                                 }
                             },
-
-                            // {
-                            //     "label": "Monto Soles",
-                            //     "type": "number",
-                            //     "attributes": {
-                            //         "step": "0.01"
-                            //     }
-                            // },
-
-                            // {
-                            //     "label": "Monto Dólares",
-                            //     "type": "number",
-                            //     "attributes": {
-                            //         "step": "0.01"
-                            //     }
-                            // },
-
-
                             {
                                 "label": "Moneda DPZ",
                                 "type": "text",
-
                                 "attributes": {
-                                    "readonly": true,
-                                    // "placeholder": "Se calculará automáticamente"
+                                    "readonly": true
                                 },
                                 "calculated": true,
                                 "calculationId": "moneda_dpz"
-
                             },
-
-
-
-
-
                             {
-                                "label": "Entidad Financiera DPZ",//pendiente lista creo
+                                "label": "Entidad Financiera DPZ",
                                 "type": "select",
                                 "options": [
                                     "BANCO BBVA PERÚ",
@@ -2503,27 +2404,16 @@
                                     "BANCO INTERBANK",
                                     "BANCO SANTANDER PERU S.A.",
                                     "BANCO SCOTIABANK"
-
-
                                 ]
-                            }, {
+                            },
+                            {
                                 "label": "Monto",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.01"
                                 },
-                                "autoFilled": true // 🆕 AGREGAR ESTO
-
-
+                                "autoFilled": true
                             },
-                            // {
-                            //     "label": "Plazo (días)",
-                            //     "type": "number",
-                            //     "attributes": {
-                            //         "step": "1"
-                            //     }
-                            // },
-
                             {
                                 "label": "Plazo (días)",
                                 "type": "number",
@@ -2534,22 +2424,18 @@
                                 "calculated": true,
                                 "calculationId": "plazo_dias_deposito"
                             },
-
-
                             {
                                 "label": "Tipo de tasa",
                                 "type": "select",
                                 "options": []
                             },
-
                             {
                                 "label": "Tasa de depósito (%)",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.0001"
                                 },
-                                "calculationId": "tasa_deposito" // ← Agregar esto
-
+                                "calculationId": "tasa_deposito"
                             },
                             {
                                 "label": "Interés al vencimiento",
@@ -2571,12 +2457,8 @@
                             },
                             {
                                 "label": "Número de depósito",
-                                "type": "text",
-                                // "attributes": {
-                                //     "step": "0.01"
-                                // }
+                                "type": "text"
                             },
-
                             {
                                 "label": "Tipo de cambio Forward",
                                 "type": "number",
@@ -2584,7 +2466,6 @@
                                     "step": "0.0001"
                                 }
                             },
-
                             {
                                 "label": "Tasa TEA Sintético (%)",
                                 "type": "number",
@@ -2593,9 +2474,9 @@
                                 },
                                 "calculated": true,
                                 "calculationId": "tasa_tea_sintetico"
-                            },
+                            }
                         ],
-                        "Instrumento estructurado": [//niltoncito
+                        "Instrumento estructurado": [
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
@@ -2611,15 +2492,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-                                // "type": "select",
-                                // "options": [
-                                //     "Cortop",
-                                //     "Largo"
-                                // ]
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -2627,8 +2501,6 @@
                                 },
                                 "calculated": true
                             },
-
-
                             {
                                 "label": "Entidad Financiera Adjudicada",
                                 "type": "select",
@@ -2650,7 +2522,6 @@
                                 "type": "select",
                                 "options": []
                             },
-
                             {
                                 "label": "Monto",
                                 "type": "number",
@@ -2678,9 +2549,9 @@
                                 "attributes": {
                                     "step": "0.0001"
                                 },
-                                "calculationId": "tasa_deposito" // ← Agregar esto
-
-                            }, {
+                                "calculationId": "tasa_deposito"
+                            },
+                            {
                                 "label": "Rendimiento Máximo (%)",
                                 "type": "number",
                                 "attributes": {
@@ -2693,15 +2564,14 @@
                                 "attributes": {
                                     "step": "0.0001"
                                 }
-                            }, {
+                            },
+                            {
                                 "label": "Rebate a la Baja (%)",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.0001"
                                 }
                             },
-
-
                             {
                                 "label": "Subyacente de referencia (%)",
                                 "type": "number",
@@ -2710,22 +2580,19 @@
                                 },
                                 "calculationId": "monto_interes"
                             },
-
-
                             {
                                 "label": "Nombre de índice de referencia",
                                 "type": "text",
-                                "attributes": {
-                                },
+                                "attributes": {}
                             },
                             {
                                 "label": "Fecha de inicio",
                                 "type": "date"
-                            }, {
+                            },
+                            {
                                 "label": "Fecha de vencimiento",
                                 "type": "date"
                             },
-
                             {
                                 "label": "Plazo (días)",
                                 "type": "number",
@@ -2745,8 +2612,6 @@
                                 "calculated": true,
                                 "calculationId": "interes_deposito_simple"
                             },
-
-
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
@@ -2759,8 +2624,6 @@
                                 "options": [],
                                 "special": "account_number"
                             }
-
-
                         ],
                         "Cuenta remunerada": [
                             {
@@ -2778,15 +2641,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-                                // "type": "select",
-                                // "options": [
-                                //     "Cortop",
-                                //     "Largo"
-                                // ]
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -2803,15 +2659,12 @@
                                     "BANCO DE LA NACION",
                                     " BANCO INTERBANK",
                                     "BANCO SCOTIABANK"
-
                                 ]
                             },
                             {
                                 "label": "Clasificación de riesgos",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Fecha Inicio de Remuneración",
@@ -2820,17 +2673,12 @@
                             {
                                 "label": "Moneda",
                                 "type": "select",
-                                "options": [
-
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Tipo de tasa",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Tasa (%)",
@@ -2860,19 +2708,6 @@
                                 "label": "Fecha Fin de Remuneración",
                                 "type": "date"
                             },
-                            // {
-                            //     "label": "Interés al vencimiento",
-                            //     "type": "number",
-                            //     "attributes": {
-                            //         "step": "0.01"
-                            //     }
-                            // },
-                            // {
-                            //     "label": "Banco cuenta cargo",
-                            //     "type": "select",
-                            //     "options": [],
-                            //     "special": "bank_account"
-                            // },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
@@ -2898,15 +2733,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-                                // "type": "select",
-                                // "options": [
-                                //     "Corto",
-                                //     "Largo"
-                                // ]
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -2914,20 +2742,14 @@
                                 },
                                 "calculated": true
                             },
-                            /*
-                            {
-                                "label": "Emisor",
-                                "type": "text"
-                            },//ha sido reemplazad con lista de entidad financiera*/
                             {
                                 "label": "Emisor",
                                 "type": "select",
                                 "options": [
                                     "ALICORP S.A.A",
                                     "VOLCAN COMPAÑIA MINERA S.A.A.",
-                                    "BANCO AGRARIO - AGROBANCO", "COFIDE"
-
-
+                                    "BANCO AGRARIO - AGROBANCO",
+                                    "COFIDE"
                                 ]
                             },
                             {
@@ -2956,14 +2778,8 @@
                                     "SEMINARIO S.A.B.",
                                     "SUDAMERIS PERU S.A.B.     ",
                                     "WIESE SUDAMERIS S.A.B.     "
-
-
-
                                 ]
                             },
-
-
-
                             {
                                 "label": "Clasificación de riesgos",
                                 "type": "select",
@@ -2992,9 +2808,7 @@
                             {
                                 "label": "Moneda",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Valor nominal adquirido",
@@ -3094,16 +2908,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-                                // "type": "select",
-                                // "options": [
-                                //     "Corto",
-                                //     "Largo"
-                                // ]
-
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -3111,12 +2917,6 @@
                                 },
                                 "calculated": true
                             },
-                            // {
-                            //     "label": "Emisor",
-                            //     "type": "text"
-                            // },
-
-
                             {
                                 "label": "Emisor",
                                 "type": "select",
@@ -3125,15 +2925,8 @@
                                     "SAGA FALABELLA,  S.A",
                                     "TELEFONICA DEL PERU SAA",
                                     "TOTTUS"
-
-
                                 ]
                             },
-
-
-
-
-
                             {
                                 "label": "Clasificación de riesgos",
                                 "type": "select",
@@ -3162,9 +2955,7 @@
                             {
                                 "label": "Moneda",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Valor nominal adquirido",
@@ -3249,7 +3040,6 @@
                             }
                         ],
                         "Pagarés": [
-
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
@@ -3265,15 +3055,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-                                // "type": "select",
-                                // "options": [
-                                //     "Cortop",
-                                //     "Largo"
-                                // ]
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -3281,13 +3064,10 @@
                                 },
                                 "calculated": true
                             },
-
-
                             {
                                 "label": "Entidad Financiera Adjudicada",
                                 "type": "select",
-                                "options": [
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Clasificación de riesgos",
@@ -3299,37 +3079,29 @@
                                 "type": "select",
                                 "options": []
                             },
-
-
-
-
-
                             {
                                 "label": "Librador/Emisor",
-
-                                "type": "text",
-
+                                "type": "text"
                             },
                             {
                                 "label": "Benficiario/Tenedor",
-
-                                "type": "text",
-
+                                "type": "text"
                             },
-
                             {
                                 "label": "Avalista",
-
-                                "type": "text",
-
+                                "type": "text"
                             },
-
                             {
                                 "label": "Tipo de Pagare",
                                 "type": "select",
-                                "options": ["A la orden", "No a la orden", "Bancario", "No Bancario"
+                                "options": [
+                                    "A la orden",
+                                    "No a la orden",
+                                    "Bancario",
+                                    "No Bancario"
                                 ]
-                            }, {
+                            },
+                            {
                                 "label": "Moneda",
                                 "type": "select",
                                 "options": []
@@ -3340,18 +3112,15 @@
                                 "attributes": {
                                     "step": "0.01"
                                 }
-                            }
-
-                            , {
+                            },
+                            {
                                 "label": "Fecha de emisión",
                                 "type": "date"
-                            }
-                            , {
+                            },
+                            {
                                 "label": "Fecha de vencimiento",
                                 "type": "date"
                             },
-
-
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
@@ -3364,8 +3133,6 @@
                                 "options": [],
                                 "special": "account_number"
                             }
-
-
                         ],
                         "Operación de reporte": [
                             {
@@ -3383,15 +3150,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-                                // "type": "select",
-                                // "options": [
-                                //     "Corto",
-                                //     "Largo"
-                                // ]
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -3399,7 +3159,6 @@
                                 },
                                 "calculated": true
                             },
-
                             {
                                 "label": "Fecha de inicio",
                                 "type": "date"
@@ -3424,9 +3183,7 @@
                             {
                                 "label": "Prestatario",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "ISIN del valor a prestar",
@@ -3451,9 +3208,7 @@
                             {
                                 "label": "Moneda",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Valor de mercado de los bonos a reportar",
@@ -3536,11 +3291,14 @@
                                 "label": "Entidad Financiera Adjudicada",
                                 "type": "select",
                                 "options": [
-                                    "BANCO CREDIT AGRICOLE INDOSUEZ SWITZERLAND SA", "BANCO SANTANDER GLOBAL CORPORATE BANKING", "BBVA NEW YORK", "CREDIT SUISSE AG", "FONDO LATINOAMERICANO DE RESERVAS",
+                                    "BANCO CREDIT AGRICOLE INDOSUEZ SWITZERLAND SA",
+                                    "BANCO SANTANDER GLOBAL CORPORATE BANKING",
+                                    "BBVA NEW YORK",
+                                    "CREDIT SUISSE AG",
+                                    "FONDO LATINOAMERICANO DE RESERVAS",
                                     "SUMITOMO MITSUI TRUST BANK",
                                     "THE BANK OF NOVA SCOTIA TORONTO",
                                     "UBS SWITZERLAND AG"
-
                                 ]
                             },
                             {
@@ -3615,10 +3373,7 @@
                             },
                             {
                                 "label": "Número de depósito",
-                                "type": "text",
-                                // "attributes": {
-                                //     "step": "0.01"
-                                // }
+                                "type": "text"
                             },
                             {
                                 "label": "Banco cuenta de cargo",
@@ -3649,7 +3404,6 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
                                 "type": "text",
@@ -3665,26 +3419,19 @@
                                 "type": "select",
                                 "options": []
                             },
-
                             {
                                 "label": "Grupo económico",
                                 "type": "select",
                                 "options": []
                             },
-
                             {
                                 "label": "Estructura",
                                 "type": "select",
                                 "options": [
-
-                                    // "USD-PEN-USD",
                                     "PEN-USD-PEN"
                                 ],
-                                "special": "structure_selector" // ← Agregar esto
-
+                                "special": "structure_selector"
                             },
-
-
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
@@ -3696,24 +3443,16 @@
                                 "type": "select",
                                 "options": [],
                                 "special": "account_number"
-                            }
-
-                            ,
+                            },
                             {
-                                "label": "Entidad Financiera Spot/Forward",//pendiente compromiso
+                                "label": "Entidad Financiera Spot/Forward",
                                 "type": "select",
                                 "options": [
                                     "BANCO SANTANDER GLOBAL CORPORATE BANKING",
                                     "BBVA NEW YORK",
                                     "THE BANK OF NOVA SCOTIA TORONTO"
-
-                                    // "INTERBANK",
-                                    // "SCOTIABANK PERU",
-                                    // "BCP",
-                                    // "BBVA"
                                 ]
                             },
-
                             {
                                 "label": "Fecha de operación",
                                 "type": "date"
@@ -3722,8 +3461,6 @@
                                 "label": "Fecha de vencimiento",
                                 "type": "date"
                             },
-
-
                             {
                                 "label": "Tipo de cambio Spot",
                                 "type": "number",
@@ -3731,64 +3468,28 @@
                                     "step": "0.0001"
                                 }
                             },
-
-                            // {
-                            //     "label": "Monto Soles",
-                            //     "type": "number",
-                            //     "attributes": {
-                            //         "step": "0.01"
-                            //     }
-                            // },
-
-                            // {
-                            //     "label": "Monto Dólares",
-                            //     "type": "number",
-                            //     "attributes": {
-                            //         "step": "0.01"
-                            //     }
-                            // },
-
-
                             {
                                 "label": "Moneda DPZ",
                                 "type": "text",
-
                                 "attributes": {
-                                    "readonly": true,
-                                    // "placeholder": "Se calculará automáticamente"
+                                    "readonly": true
                                 },
                                 "calculated": true,
                                 "calculationId": "moneda_dpz"
-
                             },
-
-
-
-
-
                             {
-                                "label": "Entidad Financiera DPZ",//pendiente lista creo
+                                "label": "Entidad Financiera DPZ",
                                 "type": "select",
-                                "options": [
-
-                                ]
-                            }, {
+                                "options": []
+                            },
+                            {
                                 "label": "Monto",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.01"
                                 },
-                                "autoFilled": true // 🆕 AGREGAR ESTO
-
+                                "autoFilled": true
                             },
-                            // {
-                            //     "label": "Plazo (días)",
-                            //     "type": "number",
-                            //     "attributes": {
-                            //         "step": "1"
-                            //     }
-                            // },
-
                             {
                                 "label": "Plazo (días)",
                                 "type": "number",
@@ -3799,22 +3500,18 @@
                                 "calculated": true,
                                 "calculationId": "plazo_dias_deposito"
                             },
-
-
                             {
                                 "label": "Tipo de tasa",
                                 "type": "select",
                                 "options": []
                             },
-
                             {
                                 "label": "Tasa de depósito (%)",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.0001"
                                 },
-                                "calculationId": "tasa_deposito" // ← Agregar esto
-
+                                "calculationId": "tasa_deposito"
                             },
                             {
                                 "label": "Interés al vencimiento",
@@ -3836,12 +3533,8 @@
                             },
                             {
                                 "label": "Número de depósito",
-                                "type": "text",
-                                // "attributes": {
-                                //     "step": "0.01"
-                                // }
+                                "type": "text"
                             },
-
                             {
                                 "label": "Tipo de cambio Forward",
                                 "type": "number",
@@ -3849,7 +3542,6 @@
                                     "step": "0.0001"
                                 }
                             },
-
                             {
                                 "label": "Tasa TEA Sintético (%)",
                                 "type": "number",
@@ -3858,12 +3550,9 @@
                                 },
                                 "calculated": true,
                                 "calculationId": "tasa_tea_sintetico"
-                            },
-
+                            }
                         ],
-
-
-                        "Instrumento estructurado": [//niltoncito 2
+                        "Instrumento estructurado": [
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
@@ -3879,15 +3568,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-                                // "type": "select",
-                                // "options": [
-                                //     "Cortop",
-                                //     "Largo"
-                                // ]
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -3895,8 +3577,6 @@
                                 },
                                 "calculated": true
                             },
-
-
                             {
                                 "label": "Entidad Financiera Adjudicada",
                                 "type": "select",
@@ -3916,7 +3596,6 @@
                                 "type": "select",
                                 "options": []
                             },
-
                             {
                                 "label": "Monto",
                                 "type": "number",
@@ -3944,9 +3623,9 @@
                                 "attributes": {
                                     "step": "0.0001"
                                 },
-                                "calculationId": "tasa_deposito" // ← Agregar esto
-
-                            }, {
+                                "calculationId": "tasa_deposito"
+                            },
+                            {
                                 "label": "Rendimiento Máximo (%)",
                                 "type": "number",
                                 "attributes": {
@@ -3959,15 +3638,14 @@
                                 "attributes": {
                                     "step": "0.0001"
                                 }
-                            }, {
+                            },
+                            {
                                 "label": "Rebate a la Baja (%)",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.0001"
                                 }
                             },
-
-
                             {
                                 "label": "Subyacente de referencia (%)",
                                 "type": "number",
@@ -3976,22 +3654,19 @@
                                 },
                                 "calculationId": "monto_interes"
                             },
-
-
                             {
                                 "label": "Nombre de índice de referencia",
                                 "type": "text",
-                                "attributes": {
-                                },
+                                "attributes": {}
                             },
                             {
                                 "label": "Fecha de inicio",
                                 "type": "date"
-                            }, {
+                            },
+                            {
                                 "label": "Fecha de vencimiento",
                                 "type": "date"
                             },
-
                             {
                                 "label": "Plazo (días)",
                                 "type": "number",
@@ -4011,8 +3686,6 @@
                                 "calculated": true,
                                 "calculationId": "interes_deposito_simple"
                             },
-
-
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
@@ -4025,13 +3698,7 @@
                                 "options": [],
                                 "special": "account_number"
                             }
-
-
                         ],
-
-
-
-
                         "Cuenta remunerada": [
                             {
                                 "label": "Código del instrumento",
@@ -4048,15 +3715,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-                                // "type": "select",
-                                // "options": [
-                                //     "Cortop",
-                                //     "Largo"
-                                // ]
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -4070,7 +3730,6 @@
                                 "options": [
                                     "BANCO CREDIT AGRICOLE",
                                     "UBS SWITZERLAND AG"
-
                                 ]
                             },
                             {
@@ -4090,17 +3749,12 @@
                             {
                                 "label": "Moneda",
                                 "type": "select",
-                                "options": [
-
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Tipo de tasa",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Tasa (%)",
@@ -4130,19 +3784,6 @@
                                 "label": "Fecha Fin de Remuneración",
                                 "type": "date"
                             },
-                            // {
-                            //     "label": "Interés al vencimiento",
-                            //     "type": "number",
-                            //     "attributes": {
-                            //         "step": "0.01"
-                            //     }
-                            // },
-                            // {
-                            //     "label": "Banco cuenta cargo",
-                            //     "type": "select",
-                            //     "options": [],
-                            //     "special": "bank_account"
-                            // },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
@@ -4150,7 +3791,6 @@
                                 "special": "account_number"
                             }
                         ]
-
                     },
                     "Depósitos en el BCRP en moneda extranjera": {
                         "Depósitos BCRP": [
@@ -4186,7 +3826,6 @@
                                     "BANCO CENTRAL DE RESERVA DEL PERU"
                                 ]
                             },
-
                             {
                                 "label": "Clasificación de riesgos",
                                 "type": "select",
@@ -4259,10 +3898,7 @@
                             },
                             {
                                 "label": "Número de depósito",
-                                "type": "text",
-                                // "attributes": {
-                                //     "step": "0.01"
-                                // }
+                                "type": "text"
                             },
                             {
                                 "label": "Banco cuenta de cargo",
@@ -4295,15 +3931,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-                                // "type": "select",
-                                // "options": [
-                                //     "Corto",
-                                //     "Largo"
-                                // ]
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -4314,9 +3943,7 @@
                             {
                                 "label": "Emisor",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Clasificación de riesgos",
@@ -4346,9 +3973,7 @@
                             {
                                 "label": "Moneda",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Valor nominal adquirido",
@@ -4448,15 +4073,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-                                // "type": "select",
-                                // "options": [
-                                //     "Corto",
-                                //     "Largo"
-                                // ]
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -4466,8 +4084,7 @@
                             },
                             {
                                 "label": "Emisor",
-                                "type": "select"
-                                ,
+                                "type": "select",
                                 "options": []
                             },
                             {
@@ -4498,9 +4115,7 @@
                             {
                                 "label": "Moneda",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Valor nominal adquirido",
@@ -4584,15 +4199,9 @@
                                 "special": "custody_name"
                             }
                         ]
-
-
                     }
                 }
-
-
             },
-
-
             "Renta Fija": {
                 "Local": {
                     "Gobierno": {
@@ -4609,11 +4218,9 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
                                 "type": "text",
@@ -4629,7 +4236,6 @@
                                 "type": "select",
                                 "options": [
                                     "REPUBLICA DEL PERU"
-
                                 ]
                             },
                             {
@@ -4693,8 +4299,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Cupón (%)",
@@ -4765,39 +4372,29 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME 444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ],
                         "Bono Global": [
@@ -4813,11 +4410,9 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo calificación",
                                 "type": "select",
@@ -4831,7 +4426,6 @@
                                 "type": "select",
                                 "options": [
                                     "REPUBLICA DEL PERU"
-
                                 ]
                             },
                             {
@@ -4885,8 +4479,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Cupón (%)",
@@ -4957,39 +4552,29 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME 444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ],
                         "Bono con Garantía de Gobierno": [
@@ -5005,11 +4590,9 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
                                 "type": "text",
@@ -5023,9 +4606,7 @@
                             {
                                 "label": "Emisor",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Clasificación de riesgos",
@@ -5088,8 +4669,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Cupón (%)",
@@ -5160,39 +4742,29 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME 444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ],
                         "Bono titulizado Gobierno": [
@@ -5208,11 +4780,9 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
                                 "type": "text",
@@ -5225,9 +4795,8 @@
                             },
                             {
                                 "label": "Emisor",
-                                "type": "text"
-
-                                , "options": [
+                                "type": "text",
+                                "options": [
                                     "TABOADA FINANCE LTD"
                                 ]
                             },
@@ -5292,8 +4861,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Cupón (%)",
@@ -5364,44 +4934,34 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME 444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ]
                     },
                     "Bonos Sistema Financiero": {
-                        "Bono Corporativo": [//holi
+                        "Bono Corporativo": [
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
@@ -5414,11 +4974,9 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
                                 "type": "text",
@@ -5439,14 +4997,13 @@
                             },
                             {
                                 "label": "Emisor",
-                                "type": "select"
-                                , "options": [
-                                    "BANCO BBVA PERÚ", "BANCO DE CREDITO DEL PERU", "BANCO PICHINCHA", "BANCO SCOTIABANK", "MIBANCO"
-
-
-
-
-
+                                "type": "select",
+                                "options": [
+                                    "BANCO BBVA PERÚ",
+                                    "BANCO DE CREDITO DEL PERU",
+                                    "BANCO PICHINCHA",
+                                    "BANCO SCOTIABANK",
+                                    "MIBANCO"
                                 ]
                             },
                             {
@@ -5475,9 +5032,6 @@
                                     "SEMINARIO S.A.B.",
                                     "SUDAMERIS PERU S.A.B.     ",
                                     "WIESE SUDAMERIS S.A.B.     "
-
-
-
                                 ]
                             },
                             {
@@ -5490,7 +5044,6 @@
                                 "type": "select",
                                 "options": []
                             },
-
                             {
                                 "label": "Denominación",
                                 "type": "text"
@@ -5553,8 +5106,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Tasa cupón (%)",
@@ -5600,39 +5154,29 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ],
                         "Bono Subordinado": [
@@ -5648,11 +5192,9 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
                                 "type": "text",
@@ -5663,7 +5205,6 @@
                                 "calculated": true,
                                 "calculationId": "plazo_vencimiento"
                             },
-
                             {
                                 "label": "Tipo de oferta",
                                 "type": "select",
@@ -5678,13 +5219,9 @@
                                 "options": [
                                     "BANCO BBVA PERÚ",
                                     "BANCO DE CREDITO DEL PERU",
-                                    "BANCO GNB PERU S.A", "BANCO INTERBANK"
-
+                                    "BANCO GNB PERU S.A",
+                                    "BANCO INTERBANK"
                                 ]
-
-
-
-
                             },
                             {
                                 "label": "Agente Colocador",
@@ -5712,9 +5249,6 @@
                                     "SEMINARIO S.A.B.",
                                     "SUDAMERIS PERU S.A.B.     ",
                                     "WIESE SUDAMERIS S.A.B.     "
-
-
-
                                 ]
                             },
                             {
@@ -5789,8 +5323,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Tasa cupón (%)",
@@ -5836,39 +5371,29 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ],
                         "Bono Hipotecario": [
@@ -5884,11 +5409,9 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
                                 "type": "text",
@@ -5913,7 +5436,6 @@
                                 "options": [
                                     "BANCO INTERAMERICANO DE FINANZAS",
                                     "BANCO INTERBANK"
-
                                 ]
                             },
                             {
@@ -5942,9 +5464,6 @@
                                     "SEMINARIO S.A.B.",
                                     "SUDAMERIS PERU S.A.B.     ",
                                     "WIESE SUDAMERIS S.A.B.     "
-
-
-
                                 ]
                             },
                             {
@@ -6019,8 +5538,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Tasa cupón (%)",
@@ -6066,38 +5586,32 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ],
-                        "Bonos de Arrendamiento Financiero": [//bye
+                        "Bonos de Arrendamiento Financiero": [
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
@@ -6113,10 +5627,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -6124,7 +5636,6 @@
                                 },
                                 "calculated": true
                             },
-
                             {
                                 "label": "Tipo de oferta",
                                 "type": "select",
@@ -6133,7 +5644,6 @@
                                     "Privada"
                                 ]
                             },
-
                             {
                                 "label": "Emisor",
                                 "type": "select",
@@ -6142,7 +5652,6 @@
                                     "BANCO GNB PERU S.A.",
                                     "BANCO INTERAMERICANO DE FINANZAS",
                                     "BANCO SANTANDER PERU S.A."
-
                                 ]
                             },
                             {
@@ -6155,8 +5664,6 @@
                                 "type": "select",
                                 "options": []
                             },
-
-
                             {
                                 "label": "Denominación",
                                 "type": "text"
@@ -6182,7 +5689,6 @@
                                     "JPY"
                                 ]
                             },
-
                             {
                                 "label": "Cantidad adquirida",
                                 "type": "number",
@@ -6197,7 +5703,6 @@
                                     "step": "0.01"
                                 }
                             },
-
                             {
                                 "label": "Valor nominal adquirido",
                                 "type": "number",
@@ -6212,7 +5717,6 @@
                                     "step": "0.01"
                                 }
                             },
-
                             {
                                 "label": "Precio de compra (%)",
                                 "type": "number",
@@ -6222,8 +5726,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Tasa cupón (%)",
@@ -6252,8 +5757,6 @@
                                 "label": "Fecha de vencimiento",
                                 "type": "date"
                             },
-
-
                             {
                                 "label": "Plazo en años",
                                 "type": "number",
@@ -6271,7 +5774,6 @@
                                     "step": "0.0001"
                                 }
                             },
-
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
@@ -6299,8 +5801,6 @@
                                 "options": [],
                                 "special": "custody_name"
                             }
-
-
                         ],
                         "Otros Sistema Financiero": [
                             {
@@ -6315,9 +5815,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -6343,9 +5842,7 @@
                                 "options": [
                                     "COFIDE",
                                     "CAF",
-
                                     "FONDO MIVIVIENDA"
-
                                 ]
                             },
                             {
@@ -6374,9 +5871,6 @@
                                     "SEMINARIO S.A.B.",
                                     "SUDAMERIS PERU S.A.B.     ",
                                     "WIESE SUDAMERIS S.A.B.     "
-
-
-
                                 ]
                             },
                             {
@@ -6451,8 +5945,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Tasa cupón (%)",
@@ -6498,44 +5993,34 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ]
                     },
                     "Bonos Empresas no Financieras": {
-                        "Bono Corporativo": [//bcc
+                        "Bono Corporativo": [
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
@@ -6548,11 +6033,9 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo calificación",
                                 "type": "select",
@@ -6571,8 +6054,8 @@
                             },
                             {
                                 "label": "Emisor",
-                                "type": "select"
-                                , "options": [
+                                "type": "select",
+                                "options": [
                                     "ADMINISTRADORA JOCKEY PLAZA SHOPPING CENTER S.A",
                                     "ALICORP S.A.A",
                                     "BARRICK  MISCHICHILCA",
@@ -6611,7 +6094,6 @@
                                     "KALLPA GENERACION S.A",
                                     "BNP PARIBAS",
                                     "FALABELLA PERU S.A.A"
-
                                 ]
                             },
                             {
@@ -6640,12 +6122,8 @@
                                     "SEMINARIO S.A.B.",
                                     "SUDAMERIS PERU S.A.B.     ",
                                     "WIESE SUDAMERIS S.A.B.     "
-
-
-
                                 ]
                             },
-
                             {
                                 "label": "Denominación",
                                 "type": "text"
@@ -6708,8 +6186,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Tasa cupón (%)",
@@ -6755,39 +6234,29 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ]
                     },
@@ -6805,11 +6274,9 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo calificación",
                                 "type": "select",
@@ -6821,9 +6288,7 @@
                             {
                                 "label": "Emisor",
                                 "type": "select",
-                                "options": [
-                                    //vacio segun excel
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Denominación",
@@ -6899,8 +6364,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Tipo de interés",
@@ -6962,39 +6428,29 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ],
                         "Bono Titulizados": [
@@ -7010,9 +6466,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -7038,8 +6493,6 @@
                                     "BANCO SCOTIABANK"
                                 ]
                             },
-
-
                             {
                                 "label": "Agente Colocador",
                                 "type": "select",
@@ -7066,9 +6519,6 @@
                                     "SEMINARIO S.A.B.",
                                     "SUDAMERIS PERU S.A.B.     ",
                                     "WIESE SUDAMERIS S.A.B.     "
-
-
-
                                 ]
                             },
                             {
@@ -7081,8 +6531,6 @@
                                 "type": "select",
                                 "options": []
                             },
-
-
                             {
                                 "label": "Denominación",
                                 "type": "text"
@@ -7157,8 +6605,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Tipo de interés",
@@ -7220,39 +6669,29 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ]
                     },
@@ -7270,9 +6709,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -7294,10 +6732,8 @@
                             },
                             {
                                 "label": "Emisor",
-                                "type": "select"
-                                , "options": [
-                                    //sin data
-                                ]
+                                "type": "select",
+                                "options": []
                             },
                             {
                                 "label": "Clasificación de riesgos",
@@ -7371,8 +6807,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Tasa cupón (%)",
@@ -7418,39 +6855,29 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ]
                     },
@@ -7468,9 +6895,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -7484,11 +6910,7 @@
                             },
                             {
                                 "label": "Nombre del fondo",
-                                "type": "text",
-                                // "options":[
-                                //     // "MACROCAPITALES SAFI SA"//por definiri
-
-                                // ]
+                                "type": "text"
                             },
                             {
                                 "label": "Nombre de la SAFI o General Partner",
@@ -7580,43 +7002,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "BBH",
-                                    " Scotiabank",
-                                    "BNY Mellon",
-                                    "JP Morgan",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "SCOT 000-4732923-MACROFONDO",
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             },
                             {
                                 "label": "Información adicional: En caso se desee hacer una precisión adicional sobre el fondo",
@@ -7644,9 +7054,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -7721,43 +7130,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "BBH",
-                                    " Scotiabank",
-                                    "BNY Mellon",
-                                    "JP Morgan",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "SCOT 000-4732923-MACROFONDO",
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ]
                     },
@@ -7775,9 +7172,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -7800,9 +7196,7 @@
                             {
                                 "label": "Emisor",
                                 "type": "select",
-                                "options": [
-                                    //sin data
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Clasificación de riesgos",
@@ -7876,8 +7270,9 @@
                             },
                             {
                                 "label": "Periodicidad del cupón",
-                                "type": "select", "options": [],
-                                "fieldId": "periodicidad_cupon" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "periodicidad_cupon"
                             },
                             {
                                 "label": "Tasa cupón (%)",
@@ -7923,39 +7318,29 @@
                             {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
                             },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
                                 "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ],
                         "Inversiones en Notas y depósitos estructurados": []
@@ -7974,9 +7359,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -8076,42 +7460,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "SCOT000-4732923-MACROFONDO",
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ],
                         "ETF": [
@@ -8127,11 +7500,9 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo calificación",
                                 "type": "select",
@@ -8218,42 +7589,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "SCOT000-4732923-MACROFONDO",
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ],
                         "Fondo privado": [
@@ -8269,9 +7629,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -8349,8 +7708,6 @@
                                 "label": "Fecha fin (PD) ",
                                 "type": "date"
                             },
-
-
                             {
                                 "label": "Fecha de compra",
                                 "type": "date"
@@ -8379,43 +7736,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "BBH",
-                                    " Scotiabank",
-                                    "BNY Mellon",
-                                    "JP Morgan",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ]
+                                    "Local",
+                                    "Internacional"
+                                ],
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "SCOT 000-4732923-MACROFONDO",
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             },
                             {
                                 "label": "Información adicional: En caso se desee hacer una precisión adicional sobre el fondo",
@@ -8445,9 +7790,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -8460,22 +7804,22 @@
                                 "calculationId": "plazo_vencimiento"
                             },
                             {
-                                "label": "Nombre del Mandato",//uuuuuuuuuuuuu
-                                "type": "select"
-                                , "options": [],
-                                "fieldId": "nombre_mandato" // 🆕 Agregar esto
-
+                                "label": "Nombre del Mandato",
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "nombre_mandato"
                             },
                             {
                                 "label": "Tipo de estrategia de inversión",
-                                "type": "select", "options": [],
-                                "fieldId": "tipo_estrategia" // 🆕 Agregar esto
-
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "tipo_estrategia"
                             },
                             {
                                 "label": "Gestor del mandato",
-                                "type": "select", "options": [],
-                                "fieldId": "gestor_mandato" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "gestor_mandato"
                             },
                             {
                                 "label": "Clasificación de riesgos",
@@ -8528,44 +7872,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
+                                    "Local",
+                                    "Internacional"
                                 ],
-                                "attributes": {
-                                    "step": "0.01"
-                                }
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ]
                     },
@@ -8583,9 +7914,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -8598,22 +7928,22 @@
                                 "calculationId": "plazo_vencimiento"
                             },
                             {
-                                "label": "Nombre del fondo",//uuuuuuuuuuuuu
-                                "type": "select"
-                                , "options": [],
-                                "fieldId": "nombre_fondo" // 🆕 Agregar esto
-
+                                "label": "Nombre del fondo",
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "nombre_fondo"
                             },
                             {
                                 "label": "Tipo de estrategia de inversión",
-                                "type": "select", "options": [],
-                                "fieldId": "tipo_estrategia" // 🆕 Agregar esto
-
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "tipo_estrategia"
                             },
                             {
                                 "label": "Gestor del fondo",
-                                "type": "select", "options": [],
-                                "fieldId": "gestor_fondo" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "gestor_fondo"
                             },
                             {
                                 "label": "Clasificación de riesgos",
@@ -8691,44 +8021,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
+                                    "Local",
+                                    "Internacional"
                                 ],
-                                "attributes": {
-                                    "step": "0.01"
-                                }
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ]
                     }
@@ -8748,9 +8065,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -8763,21 +8079,21 @@
                                 "calculationId": "plazo_vencimiento"
                             },
                             {
-                                "label": "Nombre del Mandato",//uuuuuuuuuuuuu
-                                "type": "select"
-                                , "options": [],
-                                "fieldId": "nombre_mandato" // 🆕 Agregar esto
-
+                                "label": "Nombre del Mandato",
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "nombre_mandato"
                             },
                             {
                                 "label": "Tipo de estrategia de inversión",
-                                "type": "select", "options": [],
-                                "fieldId": "tipo_estrategia" // 🆕 Agregar esto
-
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "tipo_estrategia"
                             },
                             {
                                 "label": "Gestor del mandato",
-                                "type": "select", "options": [],
+                                "type": "select",
+                                "options": []
                             },
                             {
                                 "label": "Clasificación de riesgos",
@@ -8830,44 +8146,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
+                                    "Local",
+                                    "Internacional"
                                 ],
-                                "attributes": {
-                                    "step": "0.01"
-                                }
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ]
                     },
@@ -8885,9 +8188,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -8901,18 +8203,21 @@
                             },
                             {
                                 "label": "Nombre del fondo",
-                                "type": "select", "options": [],
-                                "fieldId": "nombre_fondo" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "nombre_fondo"
                             },
                             {
                                 "label": "Tipo de estrategia de inversión",
-                                "type": "select", "options": [],
-                                "fieldId": "tipo_estrategia" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "tipo_estrategia"
                             },
                             {
                                 "label": "Gestor del fondo",
-                                "type": "select", "options": [],
-                                "fieldId": "gestor_fondo" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "gestor_fondo"
                             },
                             {
                                 "label": "Clasificación de riesgos",
@@ -8990,44 +8295,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
+                                    "Local",
+                                    "Internacional"
                                 ],
-                                "attributes": {
-                                    "step": "0.01"
-                                }
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ],
                         "ETF": [
@@ -9043,9 +8335,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -9059,18 +8350,21 @@
                             },
                             {
                                 "label": "Nombre del fondo",
-                                "type": "select", "options": [],
-                                "fieldId": "nombre_fondo" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "nombre_fondo"
                             },
                             {
                                 "label": "Tipo de estrategia de inversión",
-                                "type": "select", "options": [],
-                                "fieldId": "tipo_estrategia" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "tipo_estrategia"
                             },
                             {
                                 "label": "Gestor del fondo",
-                                "type": "select", "options": [],
-                                "fieldId": "gestor_fondo" // 🆕 Agregar esto
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "gestor_fondo"
                             },
                             {
                                 "label": "Clasificación de riesgos",
@@ -9148,44 +8442,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
+                                    "Local",
+                                    "Internacional"
                                 ],
-                                "attributes": {
-                                    "step": "0.01"
-                                }
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             }
                         ]
                     }
@@ -9195,7 +8476,6 @@
                 "Local": {
                     "Inversiones inmobiliarias": {
                         "Inmobiliarias": [
-
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
@@ -9238,34 +8518,23 @@
                                 "type": "select",
                                 "options": []
                             },
-
-
                             {
                                 "label": "Moneda",
                                 "type": "select",
                                 "options": []
                             },
-
                             {
                                 "label": "Fecha de emisión",
                                 "type": "date"
                             },
-
                             {
                                 "label": "Fecha de vencimiento",
                                 "type": "date"
-                            },
-
-
-
-
-
-
+                            }
                         ]
-
                     },
                     "Fondos de inversión": {
-                        "Fondo privado": [
+                        "Fondo alternativo privado": [
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
@@ -9273,15 +8542,13 @@
                                     "readonly": true,
                                     "placeholder": "Se generará automáticamente"
                                 },
-                                "clase": "bg-gray",
                                 "autogenerated": true
                             },
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -9361,6 +8628,18 @@
                                     "Si",
                                     "No"
                                 ]
+                            },
+                            {
+                                "label": "Banco cuenta de cargo",
+                                "type": "select",
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
@@ -9377,25 +8656,6 @@
                                 "options": [],
                                 "special": "custody_name"
                             },
-                            /*{
-                                "label": "Banco cuenta de cargo",
-                                "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "SCOT 000-4732923-MACROFONDO",
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
-                            },*/
                             {
                                 "label": "Información adicional: En caso se desee hacer una precisión adicional sobre el fondo ",
                                 "type": "textarea",
@@ -9409,7 +8669,7 @@
                 },
                 "Extranjero": {
                     "Mandatos de Private Equity": {
-                        "Fondo alternativo privado": [
+                        "Mandato": [
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
@@ -9422,9 +8682,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -9437,14 +8696,6 @@
                                 "calculationId": "plazo_vencimiento"
                             },
                             {
-                                "label": "Nombre del fondo",
-                                "type": "text"
-                            },
-                            {
-                                "label": "Nombre de la SAFI o General Partner",
-                                "type": "text"
-                            },
-                            {
                                 "label": "Clasificación de riesgos",
                                 "type": "select",
                                 "options": []
@@ -9455,14 +8706,19 @@
                                 "options": []
                             },
                             {
+                                "label": "Nombre del Fondo",
+                                "type": "select",
+                                "options": [],
+                                "fieldId": "nombre_fondo"
+                            },
+                            {
+                                "label": "Nombre de la SAFI o General Partner",
+                                "type": "text"
+                            },
+                            {
                                 "label": "Moneda",
                                 "type": "select",
-                                "options": [
-                                    "PEN",
-                                    "USD",
-                                    "EUR",
-                                    "JPY"
-                                ]
+                                "options": []
                             },
                             {
                                 "label": "Capital comprometido",
@@ -9472,11 +8728,7 @@
                                 }
                             },
                             {
-                                "label": "Fecha de suscripición del contrato",
-                                "type": "date"
-                            },
-                            {
-                                "label": "Fecha de vencimiento",
+                                "label": "Fecha de suscripción del contrato",
                                 "type": "date"
                             },
                             {
@@ -9491,14 +8743,14 @@
                                 }
                             },
                             {
-                                "label": "Plazo (años) : (en caso sea un plazo indeterminado se deja en blanco)",
+                                "label": "Plazo (años)",
                                 "type": "number",
                                 "attributes": {
                                     "step": "1"
                                 }
                             },
                             {
-                                "label": "Activo custodiado",
+                                "label": "Acitvo custodiado",
                                 "type": "select",
                                 "options": [
                                     "Si",
@@ -9506,45 +8758,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
+                                    "Local",
+                                    "Internacional"
                                 ],
-                                "attributes": {
-                                    "step": "0.01"
-                                }
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "SCOT 000-4732923-MACROFONDO",
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             },
                             {
                                 "label": "Información adicional: En caso se desee hacer una precisión adicional sobre el fondo ",
@@ -9570,9 +8808,8 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
                             {
                                 "label": "Plazo de vencimiento",
@@ -9593,16 +8830,6 @@
                                 "type": "text"
                             },
                             {
-                                "label": "Moneda",
-                                "type": "select",
-                                "options": [
-                                    "PEN",
-                                    "USD",
-                                    "EUR",
-                                    "JPY"
-                                ]
-                            },
-                            {
                                 "label": "Clasificación de riesgos",
                                 "type": "select",
                                 "options": []
@@ -9611,6 +8838,16 @@
                                 "label": "Grupo económico",
                                 "type": "select",
                                 "options": []
+                            },
+                            {
+                                "label": "Moneda",
+                                "type": "select",
+                                "options": [
+                                    "PEN",
+                                    "USD",
+                                    "EUR",
+                                    "JPY"
+                                ]
                             },
                             {
                                 "label": "Capital comprometido",
@@ -9654,45 +8891,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
+                                    "Local",
+                                    "Internacional"
                                 ],
-                                "attributes": {
-                                    "step": "0.01"
-                                }
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "SCOT 000-4732923-MACROFONDO",
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             },
                             {
                                 "label": "Información adicional: En caso se desee hacer una precisión adicional sobre el fondo ",
@@ -9705,166 +8928,6 @@
                         ]
                     },
                     "Fondos de Real Assets": {
-                        "Fondo alternativo público": [
-                            {
-                                "label": "Código del instrumento",
-                                "type": "text",
-                                "attributes": {
-                                    "readonly": true,
-                                    "placeholder": "Se generará automáticamente"
-                                },
-                                "autogenerated": true
-                            },
-                            {
-                                "label": "Unidad de negocio",
-                                "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
-                            },
-                            {
-                                "label": "Plazo de vencimiento",
-                                "type": "text",
-                                "attributes": {
-                                    "readonly": true,
-                                    "placeholder": "Se calculará automáticamente"
-                                },
-                                "calculated": true,
-                                "calculationId": "plazo_vencimiento"
-                            },
-                            {
-                                "label": "Nombre del fondo",
-                                "type": "text"
-                            },
-                            {
-                                "label": "Tipo de estrategia de inversión",
-                                "type": "text"
-                            },
-                            {
-                                "label": "Gestor del fondo",
-                                "type": "text"
-                            },
-                            {
-                                "label": "Clasificación de riesgos",
-                                "type": "select",
-                                "options": []
-                            },
-                            {
-                                "label": "Grupo económico",
-                                "type": "select",
-                                "options": []
-                            },
-                            {
-                                "label": "ISIN",
-                                "type": "text",
-                                "attributes": {
-                                    "placeholder": "Ej: US0378331005"
-                                }
-                            },
-                            {
-                                "label": "Moneda",
-                                "type": "select",
-                                "options": [
-                                    "PEN",
-                                    "USD",
-                                    "EUR",
-                                    "JPY"
-                                ]
-                            },
-                            {
-                                "label": "Número de cuotas adquiridas",
-                                "type": "number",
-                                "attributes": {
-                                    "step": "0.0001"
-                                }
-                            },
-                            {
-                                "label": "Precio de valor cuota adquirido",
-                                "type": "number",
-                                "attributes": {
-                                    "step": "0.01"
-                                }
-                            },
-                            {
-                                "label": "Precio de valor cuota adquirido",
-                                "type": "number",
-                                "attributes": {
-                                    "step": "0.01"
-                                }
-                            },
-                            {
-                                "label": "Fecha de negociación",
-                                "type": "date"
-                            },
-                            {
-                                "label": "Fecha de vencimiento",
-                                "type": "date"
-                            },
-                            {
-                                "label": "Fecha de compra",
-                                "type": "date"
-                            },
-                            {
-                                "label": "Nombre del contacto",
-                                "type": "text"
-                            },
-                            {
-                                "label": "Correo electrónico",
-                                "type": "email",
-                                "attributes": {
-                                    "placeholder": "ejemplo@correo.com"
-                                }
-                            },
-                            {
-                                "label": "Activo custodiado",
-                                "type": "select",
-                                "options": [
-                                    "Si",
-                                    "No"
-                                ]
-                            },
-                            {
-                                "label": "Nombre del custodio",
-                                "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
-                            },
-                            {
-                                "label": "Tipo de custodia",
-                                "type": "select",
-                                "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
-                                ],
-                                "attributes": {
-                                    "step": "0.01"
-                                }
-                            },
-                            {
-                                "label": "Banco cuenta de cargo",
-                                "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "SCOT 000-4732923-MACROFONDO",
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
-                            }
-                        ],
                         "Fondo alternativo privado": [
                             {
                                 "label": "Código del instrumento",
@@ -9878,18 +8941,18 @@
                             {
                                 "label": "Unidad de negocio",
                                 "type": "select",
-                                "options": [
-                                    "MACROFONDO", "NO MACROFONDO"
-                                ]
+                                "options": [],
+                                "special": "business_unit"
                             },
-
                             {
-                                "label": "Plazo calificación",
-                                "type": "select",
-                                "options": [
-                                    "Corto",
-                                    "Largo"
-                                ]
+                                "label": "Plazo de vencimiento",
+                                "type": "text",
+                                "attributes": {
+                                    "readonly": true,
+                                    "placeholder": "Se calculará automáticamente"
+                                },
+                                "calculated": true,
+                                "calculationId": "plazo_vencimiento"
                             },
                             {
                                 "label": "Nombre del fondo",
@@ -9898,6 +8961,16 @@
                             {
                                 "label": "Nombre de la SAFI o General Partner",
                                 "type": "text"
+                            },
+                            {
+                                "label": "Clasificación de riesgos",
+                                "type": "select",
+                                "options": []
+                            },
+                            {
+                                "label": "Grupo económico",
+                                "type": "select",
+                                "options": []
                             },
                             {
                                 "label": "Moneda",
@@ -9951,45 +9024,31 @@
                                 ]
                             },
                             {
-                                "label": "Nombre del custodio",
+                                "label": "Banco cuenta de cargo",
                                 "type": "select",
-                                "options": [
-                                    "Scotiabank",
-                                    "JP Morgan",
-                                    "BBH",
-                                    "State Street"
-                                ]
+                                "options": [],
+                                "special": "bank_account"
+                            },
+                            {
+                                "label": "N° de Cuenta Bancaria",
+                                "type": "select",
+                                "options": [],
+                                "special": "account_number"
                             },
                             {
                                 "label": "Tipo de custodia",
                                 "type": "select",
                                 "options": [
-                                    "Local-ONP",
-                                    "Internacional-ONP",
-                                    "Internacional-FCR"
+                                    "Local",
+                                    "Internacional"
                                 ],
-                                "attributes": {
-                                    "step": "0.01"
-                                }
+                                "special": "custody_type"
                             },
                             {
-                                "label": "Banco cuenta de cargo",
+                                "label": "Nombre de custodia",
                                 "type": "select",
-                                "options": [
-                                    "SCOTIABANK PERU",
-                                    "INTERBANK",
-                                    "BCP",
-                                    "BBVA"
-                                ]
-                            },
-                            {
-                                "label": "N° de Cuenta Bancaria",
-                                "type": "select",
-                                "options": [
-                                    "SCOT 000-4732923-MACROFONDO",
-                                    "Ahorros MN 970-0700108",
-                                    "Ahorros ME-444-8798234"
-                                ]
+                                "options": [],
+                                "special": "custody_name"
                             },
                             {
                                 "label": "Información adicional: En caso se desee hacer una precisión adicional sobre el fondo ",
@@ -9997,16 +9056,13 @@
                                 "attributes": {
                                     "rows": 4,
                                     "placeholder": "Ingrese observaciones relevantes"
-                                },
-                                "class": ""
+                                }
                             }
                         ],
                         "Fondo mutuo": []
                     }
                 }
             }
-
-
         }
 
 
@@ -10549,14 +9605,9 @@
                 });
 
                 // 🎯 RESTAURAR EL LISTENER ORIGINAL + DOCUMENTOS
-                tipoInstrumentoSelect.onchange = function (e) {
+                tipoInstrumentoSelect.onchange = function () {
                     showFields(); // ✅ Llamada original del HTML
                     // 🎯 REGENERAR DOCUMENTOS DE TESORERÍA SI ESTÁ ACTIVA
-                    const tipoInstrumento = e.target.value;
-                    if(tipoInstrumento === 'Fondo privado'){
-                        documentRequirements['general'].push('Acta de Suscripción');
-                          setTimeout(() => generateDocumentFields(), 100); // Con delay para que termine showFields()
-                    }
                     if (currentArea === 'tesoreria') {
                         setTimeout(() => generateDocumentFields(), 100); // Con delay para que termine showFields()
                     }
@@ -10698,35 +9749,6 @@
                                 input.setAttribute(attr, fieldConfig.attributes[attr]);
                             });
                         }
-
-                        // ⬇️ AQUI agregamos la clase desde fieldConfig.clase
-                            const applyClasses = (el, clase) => {
-                            if (!clase) return;
-
-                            // string: "form-control mb-2"
-                            if (typeof clase === 'string') {
-                                clase.trim().split(/\s+/).forEach(c => c && el.classList.add(c));
-                                return;
-                            }
-
-                            // array: ["form-control", "mb-2"]
-                            if (Array.isArray(clase)) {
-                                clase.forEach(c => c && el.classList.add(c));
-                                return;
-                            }
-
-                            // objeto: { 'is-invalid': true, 'w-full': false }
-                            if (typeof clase === 'object') {
-                                Object.entries(clase).forEach(([c, on]) => {
-                                if (on) el.classList.add(c);
-                                });
-                            }
-                            };
-
-                            applyClasses(input, fieldConfig.clase);
-
-
-                        console.log('Creando campo:', fieldConfig.label, 'Tipo:', fieldConfig.type, 'Atributos:', fieldConfig.attributes || {});
 
                         // Generar código automático para campos autogenerados
                         if (fieldConfig.autogenerated) {
@@ -11911,21 +10933,7 @@
         // 💾 FUNCIÓN DE REGISTRO
         // ===================================================
 
-        async function registerInvestment() {
-
-            // Segunda confirmación
-            const step2 = await Swal.fire({
-            title: "Confirmación",
-            text: "¿Estás completamente seguro de registrar el instrumento?. Esta acción no se puede deshacer.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Sí, registrar",
-            cancelButtonText: "No",
-            confirmButtonColor: "#dc2626"
-            });
-
-
-
+        function registerInvestment() {
             const registerButton = document.getElementById('registerButton');
             const successMessage = document.getElementById('successMessage');
 
@@ -11942,7 +10950,7 @@
             registerButton.classList.remove('enabled');
 
             setTimeout(() => {
-                successMessage.textContent = '✅ Inversión financiera registrada correctamente. Código del instrumento: INV-6053';
+                successMessage.textContent = '✅ Inversión financiera registrada correctamente. Código del instrumento: INV-21742513';
                 successMessage.classList.remove('hidden');
 
                 registerButton.textContent = 'Registrar inversión';
@@ -11965,18 +10973,7 @@
             });
             checkFormCompletion();
             generateDocumentFields();
-                    function getAreaParam() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get("area");
-  }
-
-  const area = getAreaParam();
-  if (area) {
-    document.getElementById("area-badge").textContent = "Perfil: " + area;
-  }
         });
-
- 
 
     </script>
 </body>
