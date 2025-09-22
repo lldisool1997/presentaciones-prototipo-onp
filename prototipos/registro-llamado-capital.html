@@ -216,12 +216,12 @@
                 <div class="info-grid">
                     <div class="info-column">
                         <div class="info-item">
-                            <div class="info-label">Entidad:</div>
-                            <div class="info-value">Fondo Consolidado de Reservas Previsionales – FCR</div>
+                            <div class="info-label">Código del instrumento:</div>
+                            <div class="info-value">INV-6053</div>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Descripción:</div>
-                            <div class="info-value">Inversión Prueba</div>
+                            <div class="info-label">Nombre del Fondo:</div>
+                            <div class="info-value">Fondo Privado Intercorp</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Unidad de Negocio:</div>
@@ -274,7 +274,7 @@
       <form id="formLlamado" class="space-y-5" novalidate>
         <input type="hidden" id="inv_id"/>
 
-        <div class="grid md:grid-cols-2 gap-4">
+        <div class="grid md:grid-cols-3 gap-4">
           <div>
             <label class="block text-sm font-semibold mb-1">Fecha del llamado</label>
             <input id="fecha_llamado" type="date" required
@@ -285,6 +285,13 @@
             <input id="monto" type="text" inputmode="decimal" required
                    class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
                    placeholder="Ej. 1,310,067.70">
+          </div>
+            <div>
+            <label class="block text-sm font-semibold mb-1">Moneda</label>
+             <select id="entidad" class="w-1/2 rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
+                <option value="PEN" selected>PEN</option>
+                <option value="USD">USD</option>
+              </select>
           </div>
         </div>
 
@@ -801,7 +808,7 @@ if (missing.length) {
 $("#review").html(`
   <dl class="divide-y divide-gray-200 text-sm text-gray-700">
     <div class="py-2 flex justify-between">
-      <dt class="font-medium text-gray-600">Inversión:</dt>
+      <dt class="font-medium text-gray-600">Código del instrumento:</dt>
       <dd class="text-gray-900">${selectedInvestment.descripcion}</dd>
     </div>
     <div class="py-2 flex justify-between">

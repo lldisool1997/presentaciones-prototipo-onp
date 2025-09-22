@@ -171,8 +171,8 @@
       { concepto:"Llamado de Capital",                 dhLabel:"Saldo Positivo (+)",                side:"DEBE"  },
       { concepto:"Rescate de Capital",                 dhLabel:"Saldo Negativo (-)",                side:"HABER" },
       { concepto:"Devolución de capital",              dhLabel:"Saldo Negativo (-)",                side:"HABER" },
-      { concepto:"Distribución de dividendos",         dhLabel:"Ingreso (+)",                       side:"HABER" },
-      { concepto:"Perdida Distribucion de dividendos", dhLabel:"Ingreso (-)",                       side:"DEBE"  },
+      { concepto:"Distribución de dividendos",         dhLabel:"Ingreso (-)",                       side:"HABER" },
+      { concepto:"Perdida Distribucion de dividendos", dhLabel:"Ingreso (+)",                       side:"DEBE"  },
       { concepto:"Perdida por Diferencia de cambio",   dhLabel:"Diferencia por tipo de cambio (+)", side:"DEBE"  },
       { concepto:"Ganancia por Diferencia de cambio",  dhLabel:"Ingreso (+)",                       side:"HABER" }
     ],
@@ -181,8 +181,8 @@
       { concepto:"Llamado de Capital",                 dhLabel:"Saldo Positivo (+)",                side:"DEBE"  },
       { concepto:"Rescate de Capital",                 dhLabel:"Saldo Negativo (-)",                side:"HABER" },
       { concepto:"Devolución de capital",              dhLabel:"Saldo Negativo (-)",                side:"HABER" },
-      { concepto:"Distribución de dividendos",         dhLabel:"Ingreso (+)",                       side:"HABER" },
-      { concepto:"Perdida Distribucion de dividendos", dhLabel:"Ingreso (-)",                       side:"DEBE"  },
+      { concepto:"Distribución de dividendos",         dhLabel:"Ingreso (-)",                       side:"HABER" },
+      { concepto:"Perdida Distribucion de dividendos", dhLabel:"Ingreso (+)",                       side:"DEBE"  },
       { concepto:"Perdida por Diferencia de cambio",   dhLabel:"Diferencia por tipo de cambio (+)", side:"DEBE"  },
       { concepto:"Ganancia por Diferencia de cambio",  dhLabel:"Ingreso (+)",                       side:"HABER" }
     ],
@@ -191,8 +191,8 @@
       { concepto:"Llamado de Capital",                 dhLabel:"Saldo Positivo (+)",                side:"DEBE"  },
       { concepto:"Rescate de Capital (o Retrocesión)", dhLabel:"Saldo Negativo (-)",                side:"HABER" },
       { concepto:"Devolución de capital",              dhLabel:"Saldo Negativo (-)",                side:"HABER" },
-      { concepto:"Distribucion de dividendos (o dietas)", dhLabel:"Ingreso (+)",                    side:"HABER" },
-      { concepto:"Perdida Distribucion de dividendos", dhLabel:"Ingreso (-)",                       side:"DEBE"  },
+      { concepto:"Distribucion de dividendos (o dietas)", dhLabel:"Ingreso (-)",                    side:"HABER" },
+      { concepto:"Perdida Distribucion de dividendos", dhLabel:"Ingreso (+)",                       side:"DEBE"  },
       { concepto:"Ganancia por Diferencia de cambio",  dhLabel:"Diferencia por tipo de cambio (+)", side:"DEBE"  }
     ],
     "4":[
@@ -227,8 +227,8 @@
   function renderHeader(){
     $("#head").html(`
       <div class="bg-muted border rounded-xl p-3">
-        <div class="text-xs text-gray-500">Inversión</div>
-        <div class="font-semibold">${invId}</div>
+        <div class="text-xs text-gray-500">Código del instrumento</div>
+        <div class="font-semibold">INV-6053</div>
       </div>
       <div class="bg-muted border rounded-xl p-3">
         <div class="text-xs text-gray-500">Movimiento</div>
@@ -236,7 +236,7 @@
       </div>
       <div class="bg-muted border rounded-xl p-3">
         <div class="text-xs text-gray-500">Fecha / Monto</div>
-        <div class="font-semibold">${movFecha} · USD ${money(montoLlamado)}</div>
+        <div class="font-semibold">${movFecha} · PEN ${money(montoLlamado)}</div>
       </div>
     `);
     $("#head_banco").text(banco);
