@@ -95,7 +95,7 @@
               <th class="px-3 text-center">Nro Páginas</th>
               <th class="px-3 text-center">Nro Página Inicial</th>
               <th class="px-3 text-center">Nro Página Final</th>
-            <td class="px-3 py-2 text-center">Ver Detalle</td>
+            <td class="px-8 py-2 text-center">Ver Detalle</td>
             <td class="px-3 py-2 text-center">grabar</td>
             <td class="px-3 py-2 text-center">editar</td>
             <td class="px-3 py-2 text-center">retirar/eliminar</td>
@@ -283,12 +283,67 @@
         <td class="px-3 py-2 text-[12px] text-center">${d.paginas ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${d.pinicial ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${d.pfinal ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">ícono</td>
-        <td class="px-3 py-2 text-[12px] text-center">grabar</td>
-        <td class="px-3 py-2 text-[12px] text-center">editar</td>
-        <td class="px-3 py-2 text-[12px] text-center">retirar/eliminar</td>
-        <td class="px-3 py-2 text-[12px] text-center">histórico</td>
-        <td class="px-3 py-2 text-[12px] text-center">estado</td>
+ <td class="px-3 py-2 text-[12px] text-center flex gap-2">
+  <a href="#ver-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
+                          text-slate-600 hover:text-blue-700 hover:bg-blue-800
+                          focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+     title="Ver documento" aria-label="Ver documento">
+    <img src="svg/visor.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+  </a>
+  <a href="#descargar-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
+                                text-slate-600 hover:text-blue-700 hover:bg-blue-800
+                                focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+     title="Descargar documento" aria-label="Descargar documento">
+    <img src="svg/descargar.svg" alt="Descargar" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+  </a>
+</td>
+
+<td class="px-3 py-2 text-[12px] text-center">
+  <a href="#grabar-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
+                            text-slate-600 hover:text-blue-700 hover:bg-blue-800
+                            focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+     title="Grabar" aria-label="Grabar">
+    <img src="svg/grabar.svg" alt="Grabar" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+  </a>
+</td>
+
+<td class="px-3 py-2 text-[12px] text-center">
+  <a href="#editar-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
+                            text-slate-600 hover:text-blue-700 hover:bg-blue-800
+                            focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+     title="Editar" aria-label="Editar">
+    <img src="svg/editar.svg" alt="Editar" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+  </a>
+</td>
+
+<td class="px-3 py-2 text-[12px] text-center">
+  <a href="#eliminar-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
+                              text-slate-600 hover:text-blue-700 hover:bg-blue-800
+                              focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+     title="Retirar/Eliminar" aria-label="Retirar o eliminar">
+    <img src="svg/trash.svg" alt="Eliminar" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+  </a>
+</td>
+
+<td class="px-3 py-2 text-[12px] text-center">
+  <a href="#vista-previa" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
+                                text-slate-600 hover:text-blue-700 hover:bg-blue-800
+                                focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+     title="Vista previa" aria-label="Vista previa">
+    <img src="svg/visor.svg" alt="Vista previa" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+  </a>
+</td>
+
+<td class="px-3 py-2 text-[12px] text-center">
+  <a href="#historico" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
+                            text-slate-600 hover:text-blue-700 hover:bg-blue-800
+                            focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+     title="Histórico" aria-label="Histórico">
+    <img src="svg/historico.svg" alt="Histórico" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+  </a>
+</td>
+
+
         <td class="px-3 py-2 text-[12px] text-center">${d.uo ?? ''}</td>
       </tr>
     `).join('');
