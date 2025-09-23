@@ -24,7 +24,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body class="bg-gray-100 text-slate-800">
-  <main class="max-w-[1600px] mx-auto p-4 md:p-6">
+  <main class="max-w-full mx-auto p-4 md:p-6">
     <!-- Header -->
     <header class="bg-gradient-to-r from-brand1 to-brand2 text-white rounded-2xl rounded-b-none shadow-card p-6">
       <h1 class="text-2xl md:text-3xl font-semibold">Expediente Digital</h1>
@@ -75,11 +75,13 @@
       </div>
     </section>
 
-    <!-- Tabla -->
-    <section class="bg-white rounded-2xl shadow-card rounded-t-none">
-      <div class="overflow-x-auto rounded-2xl rounded-t-none p-2.5">
-        <table class="min-w-[1200px] w-full text-sm">
-          <thead class="bg-slate-800 text-white sticky top-0">
+        <!-- Filtros -->
+    <section class="bg-white shadow-card p-5">
+      <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4">
+        <div>
+               <div class="overflow-x-auto rounded-2xl rounded-t-none text-center justify-center flex">
+        <table class="text-sm ">
+          <thead class="bg-slate-800 text-white sticky top-0 text-[12px]">
             <tr>
               <th class="px-3 text-center">N° Item</th>
               <th class="px-3 text-center">Clase de Activo</th>
@@ -93,6 +95,12 @@
               <th class="px-3 text-center">Nro Páginas</th>
               <th class="px-3 text-center">Nro Página Inicial</th>
               <th class="px-3 text-center">Nro Página Final</th>
+            <td class="px-3 py-2 text-center">Ver Detalle</td>
+            <td class="px-3 py-2 text-center">grabar</td>
+            <td class="px-3 py-2 text-center">editar</td>
+            <td class="px-3 py-2 text-center">retirar/eliminar</td>
+            <td class="px-3 py-2 text-center">histórico</td>
+            <td class="px-3 py-2 text-center">estado</td>
               <th class="px-3 text-center">Unidad Orgánica</th>
             </tr>
           </thead>
@@ -101,6 +109,14 @@
           </tbody>
         </table>
       </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Tabla -->
+    <section class="bg-white rounded-2xl shadow-card rounded-t-none">
+
 
       <!-- Empty state -->
       <div id="emptyState" class="hidden p-10 text-center text-slate-500">
@@ -255,19 +271,25 @@
 
     const rows = list.map(d => `
       <tr class="hover:bg-blue-50 transition">
-        <td class="px-3 py-2 text-center">${d.bloqueado ? '🔒 ' : ''}${d.orden ?? ''}</td>
-        <td class="px-3 py-2 text-center">${d.clase ?? ''}</td>
-        <td class="px-3 py-2 text-center">${d.mercado ?? ''}</td>
-        <td class="px-3 py-2 text-center">${d.subcat ?? ''}</td>
-        <td class="px-3 py-2 text-center">${d.tipo ?? ''}</td>
-        <td class="px-3 py-2 text-center font-semibold text-slate-700">${d.codigo ?? ''}</td>
-        <td class="px-3 py-2 text-center">${d.asociado ?? ''}</td>
-        <td class="px-3 py-2 text-left">${d.etiqueta ?? ''}</td>
-        <td class="px-3 py-2 text-left">${d.nombre ?? ''}</td>
-        <td class="px-3 py-2 text-center">${d.paginas ?? ''}</td>
-        <td class="px-3 py-2 text-center">${d.pinicial ?? ''}</td>
-        <td class="px-3 py-2 text-center">${d.pfinal ?? ''}</td>
-        <td class="px-3 py-2 text-center">${d.uo ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.bloqueado ? '🔒 ' : ''}${d.orden ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.clase ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.mercado ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.subcat ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.tipo ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center font-semibold text-slate-700">${d.codigo ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.asociado ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-left">${d.etiqueta ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-left">${d.nombre ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.paginas ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.pinicial ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.pfinal ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">ícono</td>
+        <td class="px-3 py-2 text-[12px] text-center">grabar</td>
+        <td class="px-3 py-2 text-[12px] text-center">editar</td>
+        <td class="px-3 py-2 text-[12px] text-center">retirar/eliminar</td>
+        <td class="px-3 py-2 text-[12px] text-center">histórico</td>
+        <td class="px-3 py-2 text-[12px] text-center">estado</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.uo ?? ''}</td>
       </tr>
     `).join('');
     tbody.insertAdjacentHTML('beforeend', rows);
