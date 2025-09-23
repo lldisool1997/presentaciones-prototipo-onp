@@ -22,6 +22,7 @@
     }
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  
 </head>
 <body class="bg-white text-slate-800">
   <main class="max-w-full mx-auto p-4 md:p-6">
@@ -164,13 +165,121 @@
 </div>
     </section>
     
-  </main>
+    <!-- Modal Historial (Tailwind only) -->
+<div id="twModalHist" class="fixed inset-0 z-[100] hidden">
+  <!-- Backdrop -->
+  <div data-backdrop class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity"></div>
 
+  <!-- Panel -->
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+   <div class="w-full max-w-6xl bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl opacity-0 scale-95
+            transition-all duration-150 ease-out ring-1 ring-slate-200"
+     role="dialog" aria-modal="true" aria-labelledby="mh-title" aria-describedby="mh-desc">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-brand1 to-brand2 text-white px-5 py-3 flex items-center justify-between">
+        <div>
+          <h3 id="mh-title" class="text-base md:text-lg font-semibold">Historial</h3>
+          <p id="mh-meta" class="opacity-90 text-xs md:text-sm"></p>
+        </div>
+        <button type="button" class="close-btn inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60" aria-label="Cerrar">
+          <img src="svg/close.svg" alt="Cerrar" class="w-5 h-5">
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-4" id="mh-desc">
+         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm mb-3">
+            Datos iniciales de la creación del documento
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm mb-3">
+          <div><span class="font-semibold">Usuario Creación:</span> <span id="mhUsuario">—</span></div>
+          <div><span class="font-semibold">Fecha Creación:</span> <span id="mhFecha">—</span></div>
+          <div><span class="font-semibold">IP Creación:</span> <span id="mhIP">—</span></div>
+        </div>
+
+        <div class="overflow-x-auto rounded-lg ring-1 ring-slate-200">
+          <table class="min-w-[1200px] w-full text-xs">
+            <thead class="bg-slate-800 text-white">
+              <tr>
+                <th class="px-3 py-2 text-center uppercase">Fecha y Hora Mod.</th>
+                <th class="px-3 py-2 text-center uppercase">Usuario</th>
+                <th class="px-3 py-2 text-center uppercase">Nombre del Usuario</th>
+                <th class="px-3 py-2 text-center uppercase">IP</th>
+                <th class="px-3 py-2 text-center uppercase">Nombre del archivo</th>
+                <th class="px-3 py-2 text-center uppercase">N° páginas</th>
+                <th class="px-3 py-2 text-center uppercase">pág. inicial</th>
+                <th class="px-3 py-2 text-center uppercase">pág. final</th>
+                <th class="px-3 py-2 text-center uppercase">Nro. orden</th>
+                <th class="px-3 py-2 text-center uppercase">Ver Detalle</th>
+              </tr>
+            </thead>
+            <tbody id="mhTbody" class="[&>tr:nth-child(even)]:bg-slate-50"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-4 py-3 bg-slate-50 flex justify-end">
+        <button type="button" class="close-btn px-4 py-2 rounded-xl bg-slate-700 text-white hover:bg-slate-800">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal PDF (Tailwind only) -->
+<div id="twModalPDF" class="fixed inset-0 z-[110] hidden">
+  <!-- Backdrop -->
+  <div data-backdrop class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity"></div>
+
+  <!-- Panel centrado -->
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-[1400px] bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl
+                opacity-0 scale-95 transition-all duration-150 ease-out ring-1 ring-slate-200"
+         role="dialog" aria-modal="true" aria-labelledby="pdf-title">
+      
+      <!-- Barra -->
+      <header class="bg-gradient-to-r from-brand1 to-brand2 text-white px-5 py-3 flex items-center justify-between">
+        <h2 id="pdf-title" class="text-base md:text-lg font-semibold">Visor PDF</h2>
+        <div class="flex items-center gap-2">
+          <!--<a id="btnNuevaPestana"
+             class="inline-flex items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 px-3 py-1.5"
+             target="_blank" rel="noopener">
+            <img src="svg/visor.svg" class="w-4 h-4" alt=""> Abrir
+          </a>
+          <a id="btnDescargar"
+             class="inline-flex items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 px-3 py-1.5">
+            <img src="svg/descargar.svg" class="w-4 h-4" alt=""> Descargar
+          </a>-->
+          <button type="button"
+                  class="pdf-close inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60"
+                  aria-label="Cerrar">
+            <img src="svg/close.svg" alt="Cerrar" class="w-5 h-5">
+          </button>
+        </div>
+      </header>
+
+      <!-- Contenedor del PDF -->
+      <div class="h-[78vh]">
+        <div id="pdfContainer" class="w-full h-full">
+          <!-- PDFObject insertará aquí el visor nativo del navegador -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.12/pdfobject.min.js"></script>
 <script>
   /***********************
    *  CONFIG
    ***********************/
   const API_FILTERS_URL = '../recursos/investment-data.json'; // cambia si quieres
+
 
   // valores por defecto
 const DEFAULTS = {
@@ -179,6 +288,15 @@ const DEFAULTS = {
   sub:    'Fondos de inversión',
   tipo:   'Fondo privado'
 };
+
+// DEMO: reemplaza por tu API real si la tienes
+async function fetchHistorialDocumento({ codigo, nombre }) {
+  return [
+    { fecha:"27/06/2025, 9:53:36 a. m.", usuario:"CYACTAYO", ip:"172.16.8.94", serie:"NOTIFICACIÓN", tipo:"NOTIFICACIÓN", doc:nombre||"D23-CONSTANCIA ENVÍO ELECTRÓNICO.pdf", paginas:2, sistema:"VIC", principal:29, pfinal:30, orden:21 },
+    { fecha:"27/06/2025, 9:53:20 a. m.", usuario:"CYACTAYO", ip:"172.16.8.94", serie:"NOTIFICACIÓN", tipo:"NOTIFICACIÓN", doc:nombre||"D23-CONSTANCIA ENVÍO ELECTRÓNICO.pdf", paginas:2, sistema:"VIC", principal:30, pfinal:31, orden:22 },
+    { fecha:"26/06/2025, 4:03:02 p. m.", usuario:"JHUANCAR", ip:"172.16.34.132", serie:"NOTIFICACIÓN", tipo:"NOTIFICACIÓN", doc:"CONSTANCIA ENVÍO ELECTRÓNICO.pdf", paginas:2, sistema:"VIC", principal:32, pfinal:33, orden:23 }
+  ];
+}
 
 
   /***********************
@@ -302,18 +420,99 @@ function preselectFilters({clase, mercado, sub, tipo} = {}) {
   /***********************
    *  DATA DEMO
    ***********************/
-  async function fetchDocumentos(){
-    return [
-      {"bloqueado":true,"orden":1,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Informe de Riesgos","nombre":"informe-riesgos.pdf","paginas":8,"pinicial":1,"pfinal":8,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
-      {"bloqueado":false,"orden":2,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Informe Legal","nombre":"informe-legal.pdf","paginas":1,"pinicial":9,"pfinal":9,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
-      {"bloqueado":false,"orden":3,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Acta de Comité de Inversiones","nombre":"acta-de-comite-de-inversiones.pdf","paginas":2,"pinicial":10,"pfinal":11,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
-      {"bloqueado":true,"orden":4,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Acta de Suscripción","nombre":"acta-de-suscripcion.pdf","paginas":5,"pinicial":12,"pfinal":16,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
-      {"bloqueado":false,"orden":5,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Llamado de Capital","etiqueta":"Documento de notificación del llamado","nombre":"documento-notificacion.pdf","paginas":3,"pinicial":17,"pfinal":19,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
-      {"bloqueado":true,"orden":6,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Desagregado de Llamado de Capital","etiqueta":"Constancia de operación","nombre":"constancia-operacion.pdf","paginas":7,"pinicial":20,"pfinal":26,"uo":"OAD.TE","msj":"ÉXITO", "estado": "ÉXITO"},
-      {"bloqueado":true,"orden":6,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Distribución de Capital","etiqueta":"Documento de notificación de la distribución","nombre":"constancia-operacion.pdf","paginas":7,"pinicial":20,"pfinal":26,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
-      {"bloqueado":true,"orden":6,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Desagregado Distribución de Capital","etiqueta":"Constancia de operación","nombre":"documento-notificacion.pdf","paginas":7,"pinicial":20,"pfinal":26,"uo":"OAD.TE","msj":"ÉXITO", "estado": "ÉXITO"},
-    ];
-  }
+async function fetchDocumentos(){
+  return [
+    {
+      "bloqueado": true, "orden": 1, "clase": "Inversiones Alternativas", "mercado": "Local",
+      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
+      "asociado": "Instrumento", "etiqueta": "Informe de Riesgos", "nombre": "informe-riesgos.pdf",
+      "paginas": 8, "principal": 1, "pfinal": 8, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
+      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "historial": [
+        { "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-riesgos.pdf", "paginas":8, "sistema":"VIC", "principal":1,  "pfinal":8,  "orden":1 },
+        { "fecha":"27/06/2025, 9:53:20 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-riesgos.pdf", "paginas":8, "sistema":"VIC", "principal":1,  "pfinal":8,  "orden":1 }
+      ]
+    },
+    {
+      "bloqueado": false, "orden": 2, "clase": "Inversiones Alternativas", "mercado": "Local",
+      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
+      "asociado": "Instrumento", "etiqueta": "Informe Legal", "nombre": "informe-legal.pdf",
+      "paginas": 1, "principal": 9, "pfinal": 9, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
+      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "historial": [
+        { "fecha":"26/06/2025, 4:10:12 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes","ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-legal.pdf", "paginas":1, "sistema":"VIC", "principal":9,  "pfinal":9,  "orden":2 },
+        { "fecha":"27/06/2025, 9:55:10 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes","ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-legal.pdf", "paginas":1, "sistema":"VIC", "principal":9,  "pfinal":9,  "orden":2 }
+      ]
+    },
+    {
+      "bloqueado": false, "orden": 3, "clase": "Inversiones Alternativas", "mercado": "Local",
+      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
+      "asociado": "Instrumento", "etiqueta": "Acta de Comité de Inversiones", "nombre": "acta-de-comite-de-inversiones.pdf",
+      "paginas": 2, "principal": 10, "pfinal": 11, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
+      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "historial": [
+        { "fecha":"26/06/2025, 4:15:00 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-comite-de-inversiones.pdf", "paginas":2, "sistema":"VIC", "principal":10, "pfinal":11, "orden":3 },
+        { "fecha":"27/06/2025, 9:57:22 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-comite-de-inversiones.pdf", "paginas":2, "sistema":"VIC", "principal":10, "pfinal":11, "orden":3 }
+      ]
+    },
+    {
+      "bloqueado": true, "orden": 4, "clase": "Inversiones Alternativas", "mercado": "Local",
+      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
+      "asociado": "Instrumento", "etiqueta": "Acta de Suscripción", "nombre": "acta-de-suscripcion.pdf",
+      "paginas": 5, "principal": 12, "pfinal": 16, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
+      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "historial": [
+        { "fecha":"26/06/2025, 4:20:45 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-suscripcion.pdf", "paginas":5, "sistema":"VIC", "principal":12, "pfinal":16, "orden":4 },
+        { "fecha":"27/06/2025, 9:59:01 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-suscripcion.pdf", "paginas":5, "sistema":"VIC", "principal":12, "pfinal":16, "orden":4 }
+      ]
+    },
+    {
+      "bloqueado": false, "orden": 5, "clase": "Inversiones Alternativas", "mercado": "Local",
+      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
+      "asociado": "Llamado de Capital", "etiqueta": "Documento de notificación del llamado", "nombre": "documento-notificacion.pdf",
+      "paginas": 3, "principal": 17, "pfinal": 19, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
+      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "historial": [
+        { "fecha":"26/06/2025, 4:27:10 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":3, "sistema":"VIC", "principal":17, "pfinal":19, "orden":5 },
+        { "fecha":"27/06/2025, 10:02:40 a. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes","ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":3, "sistema":"VIC", "principal":17, "pfinal":19, "orden":5 }
+      ]
+    },
+    {
+      "bloqueado": true, "orden": 6, "clase": "Inversiones Alternativas", "mercado": "Local",
+      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
+      "asociado": "Desagregado de Llamado de Capital", "etiqueta": "Constancia de operación", "nombre": "constancia-operacion.pdf",
+      "paginas": 7, "principal": 20, "pfinal": 26, "uo": "OAD.TE", "msj": "ÉXITO", "estado": "ÉXITO",
+      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "historial": [
+        { "fecha":"26/06/2025, 4:35:18 p. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 },
+        { "fecha":"27/06/2025, 10:05:03 a. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 }
+      ]
+    },
+    {
+      "bloqueado": true, "orden": 7, "clase": "Inversiones Alternativas", "mercado": "Local",
+      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
+      "asociado": "Distribución de Capital", "etiqueta": "Documento de notificación de la distribución", "nombre": "constancia-operacion.pdf",
+      "paginas": 7, "principal": 20, "pfinal": 26, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
+      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "historial": [
+        { "fecha":"26/06/2025, 4:39:50 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 },
+        { "fecha":"27/06/2025, 10:06:18 a. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 }
+      ]
+    },
+    {
+      "bloqueado": true, "orden": 8, "clase": "Inversiones Alternativas", "mercado": "Local",
+      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
+      "asociado": "Desagregado Distribución de Capital", "etiqueta": "Constancia de operación", "nombre": "documento-notificacion.pdf",
+      "paginas": 7, "principal": 20, "pfinal": 26, "uo": "OAD.TE", "msj": "ÉXITO", "estado": "ÉXITO",
+      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "historial": [
+        { "fecha":"26/06/2025, 4:42:12 p. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 },
+        { "fecha":"27/06/2025, 10:07:41 a. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 }
+      ]
+    }
+  ];
+}
+
 
   /***********************
    *  RENDER TABLA
@@ -362,21 +561,30 @@ function preselectFilters({clase, mercado, sub, tipo} = {}) {
         <td class="px-3 py-2 text-[12px] text-left">${d.etiqueta ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-left">${d.nombre ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${d.paginas ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${d.pinicial ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.principal ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${d.pfinal ?? ''}</td>
  <td class="px-3 py-2 text-[12px] text-center">
-  <a href="#ver-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
-                          text-slate-600 hover:text-blue-700 hover:bg-blue-800
-                          focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-     title="Ver documento" aria-label="Ver documento">
-    <img src="svg/visor.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-  </a>
-  <a href="#descargar-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
-                                text-slate-600 hover:text-blue-700 hover:bg-blue-800
-                                focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-     title="Descargar documento" aria-label="Descargar documento">
-    <img src="svg/descargar.svg" alt="Descargar" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-  </a>
+<a href="#ver-pdf"
+   data-action="pdf"
+   data-title="${d.etiqueta || d.nombre || 'Documento PDF'}"
+   data-nombre="${d.nombre || ''}"
+   data-src="pdf/informe-riesgo.pdf"             
+   data-page="${d.principal || 1}"
+   class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+   title="Ver PDF" aria-label="Ver PDF">
+  <img src="svg/visor.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+</a>
+<a href="pdf/informe-riesgo.pdf"
+   data-action="download-pdf"
+   data-src="pdf/informe-riesgo.pdf"
+   data-filename="Informe-de-Riesgo.pdf"
+   class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
+          text-slate-600 hover:text-blue-700 hover:bg-blue-800
+          focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+   title="Descargar documento" aria-label="Descargar documento">
+  <img src="svg/descargar.svg" alt="Descargar" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+</a>
+
 </td>
 
 <td class="px-3 py-2 text-[12px] text-center">
@@ -407,12 +615,19 @@ function preselectFilters({clase, mercado, sub, tipo} = {}) {
 </td>
 
 <td class="px-3 py-2 text-[12px] text-center">
-  <a href="#vista-previa" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
-                                text-slate-600 hover:text-blue-700 hover:bg-blue-800
-                                focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-     title="Vista previa" aria-label="Vista previa">
-    <img src="svg/visor.svg" alt="Vista previa" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-  </a>
+  <a href="#"
+   data-action="historial"
+   data-cod="${d.codigo ?? ''}"
+   data-nombre="${d.nombre ?? ''}"
+   data-uo="${d.uo ?? ''}"
+   data-usuario-crea="${d.usuario ?? ''}" 
+   data-fecha-crea="${d.fecha ?? ''}"
+   data-ip-crea="${d.ip ?? ''}"
+   class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+   title="Histórico" aria-label="Histórico">
+  <img src="svg/historico.svg" alt="Histórico" class="w-5 h-5 object-contain">
+</a>
+
 </td>
 
    <td class="px-3 py-2 text-[12px] text-center">${d.estado ?? ''}</td>
@@ -559,6 +774,258 @@ function preselectFilters({clase, mercado, sub, tipo} = {}) {
     DOCUMENTOS = await fetchDocumentos();                    // data demo
     refreshView();                                           // primera carga con paginación
   })();
+
+  // ===== Modal helpers (Tailwind only) =====
+const twModal = document.getElementById('twModalHist');
+const twBackdrop = twModal.querySelector('[data-backdrop]');
+const twPanel = twModal.querySelector('[role="dialog"]');
+
+function openTwModal() {
+  twModal.classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+  requestAnimationFrame(() => {
+    twBackdrop.classList.add('opacity-100');
+    twPanel.classList.add('opacity-100','scale-100');
+  });
+
+  // focus trap + Escape
+  const focusable = twModal.querySelectorAll('a,button,select,textarea,input,[tabindex]:not([tabindex="-1"])');
+  const first = focusable[0], last = focusable[focusable.length - 1];
+  function trap(e){
+    if (e.key === 'Tab') {
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    if (e.key === 'Escape') closeTwModal();
+  }
+  twModal._trapHandler = trap;
+  twModal.addEventListener('keydown', trap);
+  setTimeout(() => (first || twPanel).focus(), 10);
+}
+
+function closeTwModal() {
+  twBackdrop.classList.remove('opacity-100');
+  twPanel.classList.remove('opacity-100','scale-100');
+  setTimeout(() => {
+    twModal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+    if (twModal._trapHandler) twModal.removeEventListener('keydown', twModal._trapHandler);
+  }, 150);
+}
+
+twModal.addEventListener('click', (e) => {
+  if (e.target === twBackdrop || e.target.closest('.close-btn')) closeTwModal();
+});
+
+// Hook: abre modal desde cualquier botón con data-action="historial"
+// Abrir modal usando el historial embebido en DOCUMENTOS
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-action="historial"]');
+  if (!btn) return;
+
+  const codigo = btn.getAttribute('data-cod') || '';
+  const nombre = btn.getAttribute('data-nombre') || '';
+  const uo     = btn.getAttribute('data-uo') || '';
+  const usuario     = btn.getAttribute('data-usuario-crea') || '';
+  const fecha     = btn.getAttribute('data-fecha-crea') || '';
+  const ip     = btn.getAttribute('data-ip-crea') || '';
+
+  // Busca el documento por código + nombre (primero en filtrados, si no en todos)
+  const ds  = datasetActual();
+  let doc   = ds.find(x => (x.codigo||'') === codigo && (x.nombre||'') === nombre);
+  if (!doc) doc = DOCUMENTOS.find(x => (x.codigo||'') === codigo && (x.nombre||'') === nombre);
+
+  // Cabecera/meta
+  document.getElementById('mh-title').textContent = `Historial — ${nombre || 'Documento'}`;
+  document.getElementById('mh-meta').textContent  = `Código: ${codigo} · UO: ${uo || '—'}`;
+
+  // Datos iniciales (si tienes esos campos en doc, úsalos; si no, relleno básico)
+  document.getElementById('mhUsuario').textContent = usuario || '—';
+  document.getElementById('mhFecha').textContent   = fecha   || '—';
+  document.getElementById('mhIP').textContent      = ip      || '—';
+
+  // Tabla desde doc.historial
+  const rows = Array.isArray(doc?.historial) ? doc.historial : [];
+  const tbody = document.getElementById('mhTbody');
+
+  if (!rows.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="12" class="px-3 py-6 text-center text-slate-500">Sin registros de historial.</td>
+      </tr>`;
+  } else {
+    tbody.innerHTML = rows.map(r => `
+      <tr class="hover:bg-blue-50 transition">
+        <td class="px-3 py-2 text-center">${r.fecha ?? ''}</td>
+        <td class="px-3 py-2 text-center">${r.usuario ?? ''}</td>
+        <td class="px-3 py-2 text-center">${r.nombreUsuario ?? ''}</td>
+        <td class="px-3 py-2 text-center">${r.ip ?? ''}</td>
+        <td class="px-3 py-2 text-left">${r.doc ?? ''}</td>
+        <td class="px-3 py-2 text-center">${r.paginas ?? ''}</td>
+        <td class="px-3 py-2 text-center">${r.principal ?? ''}</td>
+        <td class="px-3 py-2 text-center">${r.pfinal ?? ''}</td>
+        <td class="px-3 py-2 text-center">${r.orden ?? ''}</td>
+        <td class="px-3 py-2 text-center">
+         <a href="#ver-pdf"
+   data-action="pdf"
+   data-title="${r.doc }"
+   data-nombre="${r.doc || ''}"
+   data-src="pdf/informe-riesgo.pdf"             
+   data-page="${r.principal || 1}"
+   class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+   title="Ver PDF" aria-label="Ver PDF">
+  <img src="svg/visor.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+</a>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  openTwModal();
+});
+
+// ===== Modal PDF helpers (PDFObject + fallback nativo) =====
+const twPdfModal    = document.getElementById('twModalPDF');
+const twPdfBackdrop = twPdfModal.querySelector('[data-backdrop]');
+const twPdfPanel    = twPdfModal.querySelector('[role="dialog"]');
+// Puedes tener <div id="pdfContainer"> o el viejo <iframe id="pdfFrame">
+const pdfContainer  = document.getElementById('pdfContainer'); // recomendado
+const pdfFrame      = document.getElementById('pdfFrame');     // fallback
+
+function openTwPdfModal() {
+  twPdfModal.classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+  requestAnimationFrame(() => {
+    twPdfBackdrop.classList.add('opacity-100');
+    twPdfPanel.classList.add('opacity-100','scale-100');
+  });
+  // Esc
+  function trap(e){ if (e.key === 'Escape') closeTwPdfModal(); }
+  twPdfModal._trapHandler = trap;
+  document.addEventListener('keydown', trap);
+}
+
+function closeTwPdfModal() {
+  twPdfBackdrop.classList.remove('opacity-100');
+  twPdfPanel.classList.remove('opacity-100','scale-100');
+  setTimeout(() => {
+    twPdfModal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+    // limpiar viewer
+    if (pdfContainer) pdfContainer.innerHTML = '';
+    if (pdfFrame) pdfFrame.removeAttribute('src');
+    if (twPdfModal._trapHandler) document.removeEventListener('keydown', twPdfModal._trapHandler);
+  }, 150);
+}
+
+twPdfModal.addEventListener('click', (e) => {
+  if (e.target === twPdfBackdrop || e.target.closest('.pdf-close')) closeTwPdfModal();
+});
+
+// Abre visor usando PDFObject (y si no, visor nativo en <iframe>)
+function openPdfViewer(url, { title='Visor PDF', page=1 } = {}) {
+  document.getElementById('pdf-title').textContent = title;
+
+  const abs       = new URL(url, window.location.href).href;
+  const viewerUrl = `${abs}#page=${Number(page)||1}&zoom=page-width`;
+
+  if (window.PDFObject && pdfContainer) {
+    // Embebe usando visor nativo del navegador dentro del contenedor
+    PDFObject.embed(viewerUrl, '#pdfContainer', {
+      height: '80vh',
+      fallbackLink:
+        `<p class="p-4 text-sm text-slate-600">
+           No se pudo mostrar el PDF aquí.
+           <a href="${abs}" target="_blank" rel="noopener" class="text-blue-600 underline">Abrir en otra pestaña</a> o descarga desde la barra superior.
+         </p>`
+    });
+  } else if (pdfFrame) {
+    // Fallback: usa el <iframe id="pdfFrame">
+    pdfFrame.src = viewerUrl;
+  } else {
+    // Último recurso: abrir nueva pestaña
+    window.open(abs, '_blank', 'noopener');
+    return;
+  }
+
+  openTwPdfModal();
+}
+
+// Delegación: cualquier botón con data-action="pdf"
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="pdf"]');
+  if (!btn) return;
+  e.preventDefault();
+
+  let url = btn.getAttribute('data-src');
+  if (!url) {
+    const nombre = btn.getAttribute('data-nombre');
+    if (nombre) url = `pdf/${encodeURIComponent(nombre)}`;
+  }
+
+  const page  = Number(btn.getAttribute('data-page') || '1') || 1;
+  const title = btn.getAttribute('data-title') || 'Visor PDF';
+
+  if (!url) {
+    console.warn('openPdfViewer: no hay URL del PDF (data-src o data-nombre)');
+    return;
+  }
+  openPdfViewer(url, { title, page });
+});
+
+
+// Descarga un PDF SIN abrir pestaña
+async function downloadPdf(url, filename) {
+  const abs  = new URL(url, window.location.href).href;
+  const name = filename || abs.split('/').pop() || 'documento.pdf';
+
+  // 1) http/https → forzamos descarga con fetch + blob
+  if (/^https?:/.test(abs)) {
+    try {
+      const res = await fetch(abs, { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = objectUrl;
+      a.download = name;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+      return;
+    } catch (err) {
+      console.warn('downloadPdf (fetch fallo, usando fallback):', err);
+      // cae al fallback de abajo
+    }
+  }
+
+  // 2) file:// u otros → intentamos solo con <a download> (sin abrir nueva pestaña)
+  const a = document.createElement('a');
+  a.href = abs;
+  a.setAttribute('download', name);
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+
+// Delegación para cualquier botón con data-action="download-pdf"
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="download-pdf"]');
+  if (!btn) return;
+  e.preventDefault();
+  const url  = btn.getAttribute('data-src') || btn.getAttribute('href');
+  const name = btn.getAttribute('data-filename') || '';
+  if (!url) return;
+  downloadPdf(url, name);
+});
+
+
 </script>
 
 </body>
