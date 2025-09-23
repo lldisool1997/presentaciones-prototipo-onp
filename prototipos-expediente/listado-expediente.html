@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Expediente Digital · Documentos</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand1:'#005C97',
+            brand2:'#004a7c',
+            ink:'#2c3e50'
+          },
+          boxShadow: { card:'0 8px 32px rgba(0,0,0,.08)' }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body class="bg-gray-100 text-slate-800">
+  <main class="max-w-[1600px] mx-auto p-4 md:p-6">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-brand1 to-brand2 text-white rounded-2xl rounded-b-none shadow-card p-6">
+      <h1 class="text-2xl md:text-3xl font-semibold">Expediente Digital</h1>
+      <p class="opacity-90 text-sm md:text-base">Listado de documentos por inversión</p>
+    </header>
+
+    <!-- Filtros -->
+    <section class="bg-white shadow-card p-5">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div>
+          <label class="block text-sm font-semibold mb-1">Clase Activo</label>
+          <select id="fClase" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Mercado</label>
+          <select id="fMercado" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none" disabled>
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Subcategoría</label>
+          <select id="fSub" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none" disabled>
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Tipo Instrumento</label>
+          <select id="fTipo" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none" disabled>
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Código de Inversión</label>
+          <input id="fCodigo" type="text" placeholder="Ej: INV-0001"
+                 class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none"/>
+        </div>
+      </div>
+
+      <div class="mt-5 flex gap-3">
+        <button id="btnBuscar" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold uppercase tracking-wide shadow">
+          Buscar
+        </button>
+        <button id="btnLimpiar" class="px-5 py-2.5 rounded-xl bg-slate-500 hover:bg-slate-600 text-white font-bold uppercase tracking-wide shadow">
+          Limpiar
+        </button>
+      </div>
+    </section>
+
+    <!-- Tabla -->
+    <section class="bg-white rounded-2xl shadow-card rounded-t-none">
+      <div class="overflow-x-auto rounded-2xl rounded-t-none p-2.5">
+        <table class="min-w-[1200px] w-full text-sm">
+          <thead class="bg-slate-800 text-white sticky top-0">
+            <tr>
+              <th class="px-3 text-center">N° Item</th>
+              <th class="px-3 text-center">Clase de Activo</th>
+              <th class="px-3 text-center">Mercado</th>
+              <th class="px-3 text-center">Subcategoría</th>
+              <th class="px-3 text-center">Tipo de Instrumento</th>
+              <th class="px-3 text-center">Código de Inversión</th>
+              <th class="px-3 text-center">Asociado al</th>
+              <th class="px-3 text-left">Etiqueta del Documento</th>
+              <th class="px-3 text-left">Nombre del Documento</th>
+              <th class="px-3 text-center">Nro Páginas</th>
+              <th class="px-3 text-center">Nro Página Inicial</th>
+              <th class="px-3 text-center">Nro Página Final</th>
+              <th class="px-3 text-center">Msj.</th>
+            </tr>
+          </thead>
+          <tbody id="tablaBody" class="[&>tr:nth-child(even)]:bg-slate-50">
+            <!-- filas -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty state -->
+      <div id="emptyState" class="hidden p-10 text-center text-slate-500">
+        <div class="text-3xl mb-2">📄</div>
+        <p>No se encontraron resultados con los filtros actuales.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /***********************
+     *  CONFIG DE ENDPOINTS
+     ***********************/
+    const API_FILTERS_URL = '/assets/investment-data.json'; // <-- cambia por tu endpoint o archivo JSON
+    // Si luego quieres pedir documentos al backend, define también:
+    // const API_DOCS_URL = '/api/expediente/documentos';
+
+    /***********************
+     *  ESTADO
+     ***********************/
+    let DOCUMENTOS = [];
+    let investmentData = {}; // JSON en cascada: Clase -> Mercado -> Subcategoría -> Tipo
+
+    /***********************
+     *  HELPERS SELECTS
+     ***********************/
+    function fillSelect(select, values, includeTodos = true) {
+      select.innerHTML = '';
+      if (includeTodos) {
+        const optAll = document.createElement('option');
+        optAll.value = '';
+        optAll.textContent = 'Todos';
+        select.appendChild(optAll);
+      }
+      values.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        select.appendChild(opt);
+      });
+      select.disabled = values.length === 0;
+    }
+
+    /***********************
+     *  CARGA DE FILTROS (AJAX)
+     ***********************/
+  async function loadInvestmentData(AJAX_URL) {
+    try {
+        alert(AJAX_URL)
+      // Ej: loadInvestmentData('/api/investment-data') ó loadInvestmentData('/assets/investment-data.json')
+      const data = await $.ajax({
+        url: AJAX_URL,          // <-- tu ruta aquí
+        method: 'GET',
+        dataType: 'json',
+        cache: false,           // evita cacheo (puedes poner true si te conviene)
+        headers: { 'Accept': 'application/json' }
+      });
+
+      investmentData = data || {};
+    } catch (e) {
+      console.error(e.message);
+      // Fallback de ejemplo (ajústalo si deseas)
+      investmentData = {
+        "Renta Fija": {
+          "Local": { "Bonos": { "Depósitos": {}, "Bono": {} } },
+          "Internacional": { "Bonos": { "Bono": {} } }
+        },
+        "Alternativos": {
+          "Internacional": { "Fondos": { "Fondo Privado": {} } }
+        },
+        "Renta Variable": {
+          "Local": { "ETF": { "Acciones": {} } }
+        }
+      };
+    }
+    // Inicializa tu cascada después de cargar los datos
+    initCascadingFilters();
+  }
+    function initCascadingFilters() {
+      const fClase   = document.getElementById('fClase');
+      const fMercado = document.getElementById('fMercado');
+      const fSub     = document.getElementById('fSub');
+      const fTipo    = document.getElementById('fTipo');
+
+      // Cargar clases
+      const clases = Object.keys(investmentData);
+      fillSelect(fClase, clases);
+
+      // Eventos en cascada
+      fClase.onchange = () => {
+        const c = fClase.value;
+        const mercados = c ? Object.keys(investmentData[c] || {}) : [];
+        fillSelect(fMercado, mercados);
+        fillSelect(fSub, []);
+        fillSelect(fTipo, []);
+      };
+
+      fMercado.onchange = () => {
+        const c = fClase.value;
+        const m = fMercado.value;
+        const subs = (c && m) ? Object.keys((investmentData[c] || {})[m] || {}) : [];
+        fillSelect(fSub, subs);
+        fillSelect(fTipo, []);
+      };
+
+      fSub.onchange = () => {
+        const c = fClase.value;
+        const m = fMercado.value;
+        const s = fSub.value;
+        const tipos = (c && m && s) ? Object.keys(((investmentData[c] || {})[m] || {})[s] || {}) : [];
+        fillSelect(fTipo, tipos);
+      };
+    }
+
+    /***********************
+     *  DOCUMENTOS (DEMO)
+     ***********************/
+    async function fetchDocumentos(){
+      // Demo local. Si quieres server-side: construye query y haz fetch(API_DOCS_URL + '?' + qs)
+      return [
+        { bloqueado:true,  orden:1, clase:"Renta Fija",    mercado:"Local",         subcat:"Bonos",  tipo:"Depósitos",
+          codigo:"INV-001", asociado:"Instrumento", etiqueta:"Contrato", nombre:"contrato_001.pdf",
+          paginas:12, pinicial:1, pfinal:12, msj:"OK" },
+        { bloqueado:false, orden:2, clase:"Alternativos",  mercado:"Internacional",  subcat:"Fondos", tipo:"Fondo Privado",
+          codigo:"INV-045", asociado:"Llamado/Distribución", etiqueta:"Notificación", nombre:"notificacion_llamado.pdf",
+          paginas:3, pinicial:13, pfinal:15, msj:"Pendiente" },
+        { bloqueado:true,  orden:3, clase:"Renta Variable", mercado:"Local",         subcat:"ETF",    tipo:"Acciones",
+          codigo:"INV-100", asociado:"Desagregado Llamado", etiqueta:"Acta", nombre:"acta_desagregado.pdf",
+          paginas:5, pinicial:16, pfinal:20, msj:"OK" }
+      ];
+    }
+
+    /***********************
+     *  RENDER TABLA
+     ***********************/
+    function renderTabla(list){
+      const tbody = document.getElementById('tablaBody');
+      const empty = document.getElementById('emptyState');
+      tbody.innerHTML = '';
+
+      if(!list.length){
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      const rows = list.map(d => `
+        <tr class="hover:bg-blue-50 transition">
+          <td class="px-3 py-2 text-center">🔒 ${d.orden ?? ''}</td>
+          <td class="px-3 py-2 text-center">${d.clase ?? ''}</td>
+          <td class="px-3 py-2 text-center">${d.mercado ?? ''}</td>
+          <td class="px-3 py-2 text-center">${d.subcat ?? ''}</td>
+          <td class="px-3 py-2 text-center">${d.tipo ?? ''}</td>
+          <td class="px-3 py-2 text-center font-semibold text-slate-700">${d.codigo ?? ''}</td>
+          <td class="px-3 py-2 text-center">${d.asociado ?? ''}</td>
+          <td class="px-3 py-2 text-left">${d.etiqueta ?? ''}</td>
+          <td class="px-3 py-2 text-left">${d.nombre ?? ''}</td>
+          <td class="px-3 py-2 text-center">${d.paginas ?? ''}</td>
+          <td class="px-3 py-2 text-center">${d.pinicial ?? ''}</td>
+          <td class="px-3 py-2 text-center">${d.pfinal ?? ''}</td>
+          <td class="px-3 py-2 text-center">${d.msj ?? ''}</td>
+        </tr>
+      `).join('');
+      tbody.insertAdjacentHTML('beforeend', rows);
+    }
+
+    /***********************
+     *  BUSCAR / LIMPIAR
+     ***********************/
+    function aplicarFiltros(){
+      const fClase  = document.getElementById('fClase').value;
+      const fMerc   = document.getElementById('fMercado').value;
+      const fSub    = document.getElementById('fSub').value;
+      const fTipo   = document.getElementById('fTipo').value;
+      const fCodigo = document.getElementById('fCodigo').value.trim().toLowerCase();
+
+      const out = DOCUMENTOS.filter(d => {
+        if (fClase && d.clase !== fClase) return false;
+        if (fMerc && d.mercado !== fMerc) return false;
+        if (fSub && d.subcat !== fSub) return false;
+        if (fTipo && d.tipo !== fTipo) return false;
+        if (fCodigo && !(d.codigo||'').toLowerCase().includes(fCodigo)) return false;
+        return true;
+      });
+
+      renderTabla(out);
+    }
+
+    document.getElementById('btnBuscar').addEventListener('click', aplicarFiltros);
+    document.getElementById('btnLimpiar').addEventListener('click', () => {
+      document.getElementById('fClase').value = '';
+      fillSelect(document.getElementById('fMercado'), []); // limpia y deshabilita
+      fillSelect(document.getElementById('fSub'), []);
+      fillSelect(document.getElementById('fTipo'), []);
+      document.getElementById('fCodigo').value = '';
+      renderTabla(DOCUMENTOS);
+    });
+
+    /***********************
+     *  INIT
+     ***********************/
+    (async function init(){
+      await loadInvestmentData("../recursos/investment.json");      // <-- Carga filtros (AJAX)
+      DOCUMENTOS = await fetchDocumentos(); // <-- Carga documentos (demo/local)
+      renderTabla(DOCUMENTOS);
+    })();
+  </script>
+</body>
+</html>
