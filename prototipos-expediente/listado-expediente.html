@@ -93,7 +93,7 @@
               <th class="px-3 text-center">Nro Páginas</th>
               <th class="px-3 text-center">Nro Página Inicial</th>
               <th class="px-3 text-center">Nro Página Final</th>
-              <th class="px-3 text-center">Msj.</th>
+              <th class="px-3 text-center">Unidad Orgánica</th>
             </tr>
           </thead>
           <tbody id="tablaBody" class="[&>tr:nth-child(even)]:bg-slate-50">
@@ -107,206 +107,303 @@
         <div class="text-3xl mb-2">📄</div>
         <p>No se encontraron resultados con los filtros actuales.</p>
       </div>
+
+      <!-- Controles de paginación -->
+<div class="flex flex-col gap-3 px-4 pb-4">
+  <div class="flex items-center justify-between flex-wrap gap-3">
+    <!-- Items por página -->
+    <div class="flex items-center gap-2">
+      <label for="pageSize" class="text-sm text-slate-700">Items por página</label>
+      <select id="pageSize" class="rounded-xl border-2 border-gray-200 py-1.5 px-3 focus:border-brand1 focus:outline-none">
+        <option>5</option>
+        <option>10</option>
+        <option selected>15</option>
+        <option>20</option>
+        <option>50</option>
+      </select>
+    </div>
+
+    <!-- Paginación -->
+    <nav id="pagination" class="inline-flex select-none overflow-hidden rounded-xl border border-slate-200"></nav>
+  </div>
+</div>
     </section>
+    
   </main>
 
-  <script>
-    /***********************
-     *  CONFIG DE ENDPOINTS
-     ***********************/
-    const API_FILTERS_URL = '/assets/investment-data.json'; // <-- cambia por tu endpoint o archivo JSON
-    // Si luego quieres pedir documentos al backend, define también:
-    // const API_DOCS_URL = '/api/expediente/documentos';
+<script>
+  /***********************
+   *  CONFIG
+   ***********************/
+  const API_FILTERS_URL = '../recursos/investment-data.json'; // cambia si quieres
 
-    /***********************
-     *  ESTADO
-     ***********************/
-    let DOCUMENTOS = [];
-    let investmentData = {}; // JSON en cascada: Clase -> Mercado -> Subcategoría -> Tipo
+  
+  /***********************
+   *  ESTADO
+   ***********************/
+  let DOCUMENTOS = [];
+  let investmentData = {};
+  let FILTERED = null;                        // dataset filtrado (o null)
+  const STATE = { page: 1, size: 15 };        // paginación
+  const PAGE_SIZE_OPTIONS = [5, 10, 15, 20, 50];
 
-    /***********************
-     *  HELPERS SELECTS
-     ***********************/
-    function fillSelect(select, values, includeTodos = true) {
-      select.innerHTML = '';
-      if (includeTodos) {
-        const optAll = document.createElement('option');
-        optAll.value = '';
-        optAll.textContent = 'Todos';
-        select.appendChild(optAll);
-      }
-      values.forEach(v => {
-        const opt = document.createElement('option');
-        opt.value = v;
-        opt.textContent = v;
-        select.appendChild(opt);
-      });
-      select.disabled = values.length === 0;
+  /***********************
+   *  HELPERS
+   ***********************/
+  function fillSelect(select, values, includeTodos = true) {
+    select.innerHTML = '';
+    if (includeTodos) {
+      const optAll = document.createElement('option');
+      optAll.value = '';
+      optAll.textContent = 'Todos';
+      select.appendChild(optAll);
     }
+    (values || []).forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v;
+      opt.textContent = v;
+      select.appendChild(opt);
+    });
+    select.disabled = !(values && values.length);
+  }
 
-    /***********************
-     *  CARGA DE FILTROS (AJAX)
-     ***********************/
+  /***********************
+   *  CARGA DE FILTROS (AJAX)
+   ***********************/
   async function loadInvestmentData(AJAX_URL) {
     try {
-        alert(AJAX_URL)
-      // Ej: loadInvestmentData('/api/investment-data') ó loadInvestmentData('/assets/investment-data.json')
       const data = await $.ajax({
-        url: AJAX_URL,          // <-- tu ruta aquí
+        url: AJAX_URL,
         method: 'GET',
         dataType: 'json',
-        cache: false,           // evita cacheo (puedes poner true si te conviene)
+        cache: false,
         headers: { 'Accept': 'application/json' }
       });
-
       investmentData = data || {};
-    } catch (e) {
-      console.error(e.message);
-      // Fallback de ejemplo (ajústalo si deseas)
-      investmentData = {
-        "Renta Fija": {
-          "Local": { "Bonos": { "Depósitos": {}, "Bono": {} } },
-          "Internacional": { "Bonos": { "Bono": {} } }
-        },
-        "Alternativos": {
-          "Internacional": { "Fondos": { "Fondo Privado": {} } }
-        },
-        "Renta Variable": {
-          "Local": { "ETF": { "Acciones": {} } }
-        }
-      };
+    } catch (err) {
+      const parsed = err?.responseJSON ? err.responseJSON : (() => { try { return JSON.parse(err?.responseText||''); } catch { return null; } })();
+      console.group('AJAX error · loadInvestmentData');
+      console.error('URL:', AJAX_URL);
+      console.error('Status:', err?.status, err?.statusText);
+      console.error(parsed ? parsed : (err?.responseText || '').slice(0, 800));
+      console.groupEnd();
+
+      // Fallback mínimo para no romper cascada
+      investmentData = { "Inversiones Alternativas": { "Local": { "Fondos de inversión": { "Fondo Privado": {} } } } };
     }
-    // Inicializa tu cascada después de cargar los datos
     initCascadingFilters();
   }
-    function initCascadingFilters() {
-      const fClase   = document.getElementById('fClase');
-      const fMercado = document.getElementById('fMercado');
-      const fSub     = document.getElementById('fSub');
-      const fTipo    = document.getElementById('fTipo');
 
-      // Cargar clases
-      const clases = Object.keys(investmentData);
-      fillSelect(fClase, clases);
+  function initCascadingFilters() {
+    const fClase   = document.getElementById('fClase');
+    const fMercado = document.getElementById('fMercado');
+    const fSub     = document.getElementById('fSub');
+    const fTipo    = document.getElementById('fTipo');
 
-      // Eventos en cascada
-      fClase.onchange = () => {
-        const c = fClase.value;
-        const mercados = c ? Object.keys(investmentData[c] || {}) : [];
-        fillSelect(fMercado, mercados);
-        fillSelect(fSub, []);
-        fillSelect(fTipo, []);
-      };
+    fillSelect(fClase, Object.keys(investmentData));
 
-      fMercado.onchange = () => {
-        const c = fClase.value;
-        const m = fMercado.value;
-        const subs = (c && m) ? Object.keys((investmentData[c] || {})[m] || {}) : [];
-        fillSelect(fSub, subs);
-        fillSelect(fTipo, []);
-      };
+    fClase.onchange = () => {
+      const c = fClase.value;
+      fillSelect(fMercado, c ? Object.keys(investmentData[c] || {}) : []);
+      fillSelect(fSub, []);
+      fillSelect(fTipo, []);
+    };
 
-      fSub.onchange = () => {
-        const c = fClase.value;
-        const m = fMercado.value;
-        const s = fSub.value;
-        const tipos = (c && m && s) ? Object.keys(((investmentData[c] || {})[m] || {})[s] || {}) : [];
-        fillSelect(fTipo, tipos);
-      };
+    fMercado.onchange = () => {
+      const c = fClase.value, m = fMercado.value;
+      const subs = (c && m) ? Object.keys((investmentData[c] || {})[m] || {}) : [];
+      fillSelect(fSub, subs);
+      fillSelect(fTipo, []);
+    };
+
+    fSub.onchange = () => {
+      const c = fClase.value, m = fMercado.value, s = fSub.value;
+      const tipos = (c && m && s) ? Object.keys(((investmentData[c] || {})[m] || {})[s] || {}) : [];
+      fillSelect(fTipo, tipos);
+    };
+  }
+
+  /***********************
+   *  DATA DEMO
+   ***********************/
+  async function fetchDocumentos(){
+    return [
+      {"bloqueado":true,"orden":1,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Contrato de Suscripción","nombre":"D01-CONTRATO_SUSCRIPCION.pdf","paginas":8,"pinicial":1,"pfinal":8,"uo":"DIN","msj":"ÉXITO"},
+      {"bloqueado":false,"orden":2,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Llamado","etiqueta":"Notificación de Llamado","nombre":"D22-NOTIFICACION_LLAMADO.pdf","paginas":1,"pinicial":9,"pfinal":9,"uo":"DIN","msj":"ÉXITO"},
+      {"bloqueado":false,"orden":3,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Distribución","etiqueta":"Aviso de Distribución","nombre":"D23-AVISO_DISTRIBUCION.pdf","paginas":2,"pinicial":10,"pfinal":11,"uo":"DIN","msj":"ÉXITO"},
+      {"bloqueado":true,"orden":4,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Desagregado Llamado","etiqueta":"Cuadro Desagregado","nombre":"D24-CUADRO_DESAGREGADO_LLAMADO.pdf","paginas":5,"pinicial":12,"pfinal":16,"uo":"DIN","msj":"ÉXITO"},
+      {"bloqueado":false,"orden":5,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Desagregado Distribución","etiqueta":"Cuadro Desagregado","nombre":"D25-CUADRO_DESAGREGADO_DISTRIBUCION.pdf","paginas":3,"pinicial":17,"pfinal":19,"uo":"DIN","msj":"ÉXITO"},
+      {"bloqueado":true,"orden":6,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Reglamento de Participación","nombre":"D15-REGLAMENTO_PARTICIPACION.pdf","paginas":7,"pinicial":20,"pfinal":26,"uo":"DIN","msj":"ÉXITO"},
+      {"bloqueado":false,"orden":7,"clase":"Alternativos","mercado":"Local","subcat":"Fondos","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Llamado/Distribución","etiqueta":"Acta de Suscripción","nombre":"D26-ACTA_SUSCRIPCION.pdf","paginas":4,"pinicial":27,"pfinal":30,"uo":"DIN","msj":"PENDIENTE"},
+      {"bloqueado":false,"orden":8,"clase":"Alternativos","mercado":"Local","subcat":"Fondos","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Reporte Estado Cuenta","nombre":"D19-REPORTE_ESTADO_CUENTA.pdf","paginas":3,"pinicial":31,"pfinal":33,"uo":"DIN","msj":"ÉXITO"}
+    ];
+  }
+
+  /***********************
+   *  RENDER TABLA
+   ***********************/
+  function renderTabla(list){
+    const tbody = document.getElementById('tablaBody');
+    const empty = document.getElementById('emptyState');
+    tbody.innerHTML = '';
+
+    if(!list.length){
+      empty.classList.remove('hidden');
+      return;
+    }
+    empty.classList.add('hidden');
+
+    const rows = list.map(d => `
+      <tr class="hover:bg-blue-50 transition">
+        <td class="px-3 py-2 text-center">${d.bloqueado ? '🔒 ' : ''}${d.orden ?? ''}</td>
+        <td class="px-3 py-2 text-center">${d.clase ?? ''}</td>
+        <td class="px-3 py-2 text-center">${d.mercado ?? ''}</td>
+        <td class="px-3 py-2 text-center">${d.subcat ?? ''}</td>
+        <td class="px-3 py-2 text-center">${d.tipo ?? ''}</td>
+        <td class="px-3 py-2 text-center font-semibold text-slate-700">${d.codigo ?? ''}</td>
+        <td class="px-3 py-2 text-center">${d.asociado ?? ''}</td>
+        <td class="px-3 py-2 text-left">${d.etiqueta ?? ''}</td>
+        <td class="px-3 py-2 text-left">${d.nombre ?? ''}</td>
+        <td class="px-3 py-2 text-center">${d.paginas ?? ''}</td>
+        <td class="px-3 py-2 text-center">${d.pinicial ?? ''}</td>
+        <td class="px-3 py-2 text-center">${d.pfinal ?? ''}</td>
+        <td class="px-3 py-2 text-center">${d.uo ?? ''}</td>
+      </tr>
+    `).join('');
+    tbody.insertAdjacentHTML('beforeend', rows);
+  }
+
+  /***********************
+   *  PAGINACIÓN
+   ***********************/
+  function datasetActual(){ return FILTERED ?? DOCUMENTOS; }
+
+  function clampPage(totalPages){
+    if (STATE.page < 1) STATE.page = 1;
+    if (STATE.page > totalPages) STATE.page = totalPages || 1;
+  }
+
+  function pageSlice(ds){
+    const start = (STATE.page - 1) * STATE.size;
+    return ds.slice(start, start + STATE.size);
+  }
+
+  function renderPagination(totalItems){
+    const nav = document.getElementById('pagination');
+    nav.innerHTML = '';
+
+    const totalPages = Math.max(1, Math.ceil(totalItems / STATE.size));
+    clampPage(totalPages);
+
+    const btn = (label, page, {active=false, disabled=false}={}) => `
+      <button type="button" data-page="${page}"
+        class="px-3 py-1.5 ${active ? 'bg-slate-800 text-white' : 'bg-white text-slate-700'} ${disabled ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100'}">
+        ${label}
+      </button>`;
+
+    // «
+    nav.insertAdjacentHTML('beforeend', btn('«', STATE.page - 1, {disabled: STATE.page === 1}));
+
+    // números con ventana [curr-1, curr, curr+1] + extremos
+    const pages = [];
+    const push = p => { if (!pages.includes(p) && p>=1 && p<=totalPages) pages.push(p); };
+    push(1); push(STATE.page-1); push(STATE.page); push(STATE.page+1); push(totalPages);
+    pages.sort((a,b)=>a-b);
+
+    let last = 0;
+    for (const p of pages) {
+      if (p - last > 1) nav.insertAdjacentHTML('beforeend', `<span class="px-2 py-1.5 bg-white text-slate-400">…</span>`);
+      nav.insertAdjacentHTML('beforeend', btn(String(p), p, {active: p===STATE.page}));
+      last = p;
     }
 
-    /***********************
-     *  DOCUMENTOS (DEMO)
-     ***********************/
-    async function fetchDocumentos(){
-      // Demo local. Si quieres server-side: construye query y haz fetch(API_DOCS_URL + '?' + qs)
-      return [
-        { bloqueado:true,  orden:1, clase:"Renta Fija",    mercado:"Local",         subcat:"Bonos",  tipo:"Depósitos",
-          codigo:"INV-001", asociado:"Instrumento", etiqueta:"Contrato", nombre:"contrato_001.pdf",
-          paginas:12, pinicial:1, pfinal:12, msj:"OK" },
-        { bloqueado:false, orden:2, clase:"Alternativos",  mercado:"Internacional",  subcat:"Fondos", tipo:"Fondo Privado",
-          codigo:"INV-045", asociado:"Llamado/Distribución", etiqueta:"Notificación", nombre:"notificacion_llamado.pdf",
-          paginas:3, pinicial:13, pfinal:15, msj:"Pendiente" },
-        { bloqueado:true,  orden:3, clase:"Renta Variable", mercado:"Local",         subcat:"ETF",    tipo:"Acciones",
-          codigo:"INV-100", asociado:"Desagregado Llamado", etiqueta:"Acta", nombre:"acta_desagregado.pdf",
-          paginas:5, pinicial:16, pfinal:20, msj:"OK" }
-      ];
-    }
+    // »
+    nav.insertAdjacentHTML('beforeend', btn('»', STATE.page + 1, {disabled: STATE.page === totalPages}));
 
-    /***********************
-     *  RENDER TABLA
-     ***********************/
-    function renderTabla(list){
-      const tbody = document.getElementById('tablaBody');
-      const empty = document.getElementById('emptyState');
-      tbody.innerHTML = '';
+    // Delegación de eventos
+    nav.onclick = (e) => {
+      const b = e.target.closest('button[data-page]');
+      if (!b) return;
+      const next = Number(b.dataset.page);
+      if (Number.isNaN(next)) return;
+      if (next < 1 || next > totalPages) return;
+      STATE.page = next;
+      refreshView();
+    };
+  }
 
-      if(!list.length){
-        empty.classList.remove('hidden');
-        return;
-      }
-      empty.classList.add('hidden');
+  function refreshView(){
+    const ds = datasetActual();
+    const total = ds.length;
+    const totalPages = Math.max(1, Math.ceil(total / STATE.size));
+    clampPage(totalPages);
 
-      const rows = list.map(d => `
-        <tr class="hover:bg-blue-50 transition">
-          <td class="px-3 py-2 text-center">🔒 ${d.orden ?? ''}</td>
-          <td class="px-3 py-2 text-center">${d.clase ?? ''}</td>
-          <td class="px-3 py-2 text-center">${d.mercado ?? ''}</td>
-          <td class="px-3 py-2 text-center">${d.subcat ?? ''}</td>
-          <td class="px-3 py-2 text-center">${d.tipo ?? ''}</td>
-          <td class="px-3 py-2 text-center font-semibold text-slate-700">${d.codigo ?? ''}</td>
-          <td class="px-3 py-2 text-center">${d.asociado ?? ''}</td>
-          <td class="px-3 py-2 text-left">${d.etiqueta ?? ''}</td>
-          <td class="px-3 py-2 text-left">${d.nombre ?? ''}</td>
-          <td class="px-3 py-2 text-center">${d.paginas ?? ''}</td>
-          <td class="px-3 py-2 text-center">${d.pinicial ?? ''}</td>
-          <td class="px-3 py-2 text-center">${d.pfinal ?? ''}</td>
-          <td class="px-3 py-2 text-center">${d.msj ?? ''}</td>
-        </tr>
-      `).join('');
-      tbody.insertAdjacentHTML('beforeend', rows);
-    }
+    // si está fuera de rango después de un filtro, ajusta y corta
+    renderPagination(total);
+    renderTabla(pageSlice(ds));
 
-    /***********************
-     *  BUSCAR / LIMPIAR
-     ***********************/
-    function aplicarFiltros(){
-      const fClase  = document.getElementById('fClase').value;
-      const fMerc   = document.getElementById('fMercado').value;
-      const fSub    = document.getElementById('fSub').value;
-      const fTipo   = document.getElementById('fTipo').value;
-      const fCodigo = document.getElementById('fCodigo').value.trim().toLowerCase();
+    // empty state si no hay nada
+    document.getElementById('emptyState').classList.toggle('hidden', total > 0);
+  }
 
-      const out = DOCUMENTOS.filter(d => {
-        if (fClase && d.clase !== fClase) return false;
-        if (fMerc && d.mercado !== fMerc) return false;
-        if (fSub && d.subcat !== fSub) return false;
-        if (fTipo && d.tipo !== fTipo) return false;
-        if (fCodigo && !(d.codigo||'').toLowerCase().includes(fCodigo)) return false;
-        return true;
-      });
+  // Cambio de page size
+  document.getElementById('pageSize').addEventListener('change', (e) => {
+    const val = Number(e.target.value);
+    STATE.size = PAGE_SIZE_OPTIONS.includes(val) ? val : 15;
+    STATE.page = 1;
+    refreshView();
+  });
 
-      renderTabla(out);
-    }
+  /***********************
+   *  FILTROS
+   ***********************/
+  function aplicarFiltros(){
+    const fClase  = document.getElementById('fClase').value;
+    const fMerc   = document.getElementById('fMercado').value;
+    const fSub    = document.getElementById('fSub').value;
+    const fTipo   = document.getElementById('fTipo').value;
+    const fCodigo = document.getElementById('fCodigo').value.trim().toLowerCase();
 
-    document.getElementById('btnBuscar').addEventListener('click', aplicarFiltros);
-    document.getElementById('btnLimpiar').addEventListener('click', () => {
-      document.getElementById('fClase').value = '';
-      fillSelect(document.getElementById('fMercado'), []); // limpia y deshabilita
-      fillSelect(document.getElementById('fSub'), []);
-      fillSelect(document.getElementById('fTipo'), []);
-      document.getElementById('fCodigo').value = '';
-      renderTabla(DOCUMENTOS);
+    const out = DOCUMENTOS.filter(d => {
+      if (fClase && d.clase !== fClase) return false;
+      if (fMerc && d.mercado !== fMerc) return false;
+      if (fSub && d.subcat !== fSub) return false;
+      if (fTipo && d.tipo !== fTipo) return false;
+      if (fCodigo && !(d.codigo||'').toLowerCase().includes(fCodigo)) return false;
+      return true;
     });
 
-    /***********************
-     *  INIT
-     ***********************/
-    (async function init(){
-      await loadInvestmentData("../recursos/investment.json");      // <-- Carga filtros (AJAX)
-      DOCUMENTOS = await fetchDocumentos(); // <-- Carga documentos (demo/local)
-      renderTabla(DOCUMENTOS);
-    })();
-  </script>
+    FILTERED = out.length ? out : [];
+    STATE.page = 1;
+    refreshView();
+  }
+
+  document.getElementById('btnBuscar').addEventListener('click', aplicarFiltros);
+  document.getElementById('btnLimpiar').addEventListener('click', () => {
+    document.getElementById('fClase').value = '';
+    fillSelect(document.getElementById('fMercado'), []);
+    fillSelect(document.getElementById('fSub'), []);
+    fillSelect(document.getElementById('fTipo'), []);
+    document.getElementById('fCodigo').value = '';
+    FILTERED = null;
+    STATE.page = 1;
+    refreshView();
+  });
+
+  // Buscar con Enter
+  document.getElementById('fCodigo').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') aplicarFiltros();
+  });
+
+  /***********************
+   *  INIT
+   ***********************/
+  (async function init(){
+    await loadInvestmentData("../recursos/investment.json"); // filtros
+    DOCUMENTOS = await fetchDocumentos();                    // data demo
+    refreshView();                                           // primera carga con paginación
+  })();
+</script>
+
 </body>
 </html>
