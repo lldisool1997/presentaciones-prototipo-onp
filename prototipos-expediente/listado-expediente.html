@@ -22,7 +22,6 @@
     }
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  
 </head>
 <body class="bg-white text-slate-800">
   <main class="max-w-full mx-auto p-4 md:p-6">
@@ -75,241 +74,197 @@
         </button>
       </div>
     </section>
-      <section class="bg-white  pb-2 px-5">
+
+    <section class="bg-white pb-2 px-5">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="flex flex-row gap-2">
-          <!--<label class="block font-semibold mb-1 text-[16px]">Expediente: ${EXPEDIENTE}</label>-->
-                <div class="font-semibold">Leyenda:</div>
-                <div class="flex flex-row gap-2">
-                    <img src="svg/close-lock.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-                    Bloqueado
-                </div>
-                <div class="flex flex-row gap-2">
-                    <img src="svg/open-lock.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-                    Liberado
-                </div>
-            </div>
+        <div class="flex flex-row gap-4 items-center">
+          <div class="font-semibold">Leyenda:</div>
+          <div class="flex items-center gap-2">
+            <img src="svg/close-lock.svg" alt="Bloqueado" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+            Bloqueado
+          </div>
+          <div class="flex items-center gap-2">
+            <img src="svg/open-lock.svg" alt="Liberado" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+            Liberado
+          </div>
         </div>
       </div>
-
     </section>
-    <div id="loading-spinner" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-  <div class="h-16 w-16 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
-</div>
-        <!-- Filtros -->
-    <section class="bg-white  p-5">
-      <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4">
-        <div>
-               <div class="overflow-x-auto rounded-2xl rounded-t-none text-center justify-center flex">
-        <table class="text-sm ">
+
+    <!-- Tabla Nivel 1 (Padre) -->
+    <section class="bg-white p-5">
+      <div class="overflow-x-auto text-center justify-center flex w-full">
+        <table class="text-sm w-full">
+          <!-- THEAD Nivel 1 -->
           <thead class="bg-slate-800 text-white sticky top-0 text-[12px]">
             <tr>
-              <th class="px-8 text-center uppercase">N° Item</th>
+              <th class="px-3 text-center uppercase w-[70px]">Detalle</th>
               <th class="px-3 text-center uppercase">Clase de Activo</th>
               <th class="px-3 text-center uppercase">Mercado</th>
               <th class="px-3 text-center uppercase">Subcategoría</th>
               <th class="px-3 text-center uppercase">Tipo de Instrumento</th>
               <th class="px-3 text-center uppercase">Código de Inversión</th>
-              <th class="px-3 text-center uppercase">Fecha y Hora</th>
-              <th class="px-8 text-center uppercase">Actividad</th>
-              <th class="px-3 text-left uppercase">Etiqueta del Documento</th>
-              <th class="px-3 text-left uppercase">Nombre del Documento</th>
-              <th class=" text-center uppercase">Nro Pag</th>
-              <th class=" text-center uppercase">Nro Pag Ini.</th>
-              <th class=" text-center uppercase">Nro Pag Fin.</th>
-              <th class="px-8 text-center uppercase">Ver Detalle</th>
-              <th class="px-3 text-center uppercase">editar</th>
-              <th class="px-3 text-center uppercase">histórico</th>
-              <th class="px-3 text-center uppercase">Unidad Orgánica</th>
             </tr>
           </thead>
-          <tbody id="tablaBody" class="[&>tr:nth-child(even)]:bg-slate-50">
-            <!-- filas -->
+          <tbody id="tablaBodyPadre" class="[&>tr:nth-child(odd)]:bg-slate-50">
+            <!-- filas nivel 1 + slice detalle nivel 2 -->
           </tbody>
         </table>
       </div>
-        </div>
-      </div>
-
     </section>
 
-    <!-- Tabla -->
+    <!-- Empty state -->
     <section class="bg-white rounded-2xl rounded-t-none shadow-[0_12px_24px_-12px_rgba(0,0,0,0.25)]">
-
-
-
-      <!-- Empty state -->
       <div id="emptyState" class="hidden p-10 text-center text-slate-500">
         <div class="text-3xl mb-2">📄</div>
         <p>No se encontraron resultados con los filtros actuales.</p>
       </div>
 
       <!-- Controles de paginación -->
-<div class="flex flex-col gap-3 px-4 pb-4">
-  <div class="flex items-center justify-between flex-wrap gap-3">
-    <!-- Items por página -->
-    <div class="flex items-center gap-2">
-      <label for="pageSize" class="text-sm text-slate-700">Items por página</label>
-      <select id="pageSize" class="rounded-xl border-2 border-gray-200 py-1.5 px-3 focus:border-brand1 focus:outline-none">
-        <option>5</option>
-        <option>10</option>
-        <option selected>15</option>
-        <option>20</option>
-        <option>50</option>
-      </select>
-    </div>
+      <div class="flex flex-col gap-3 px-4 pb-4">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <!-- Items por página -->
+          <div class="flex items-center gap-2">
+            <label for="pageSize" class="text-sm text-slate-700">Items por página</label>
+            <select id="pageSize" class="rounded-xl border-2 border-gray-200 py-1.5 px-3 focus:border-brand1 focus:outline-none">
+              <option>5</option>
+              <option>10</option>
+              <option selected>15</option>
+              <option>20</option>
+              <option>50</option>
+            </select>
+          </div>
 
-    <!-- Paginación -->
-    <nav id="pagination" class="inline-flex select-none overflow-hidden rounded-xl border border-slate-200"></nav>
-  </div>
-</div>
+          <!-- Paginación -->
+          <nav id="pagination" class="inline-flex select-none overflow-hidden rounded-xl border border-slate-200"></nav>
+        </div>
+      </div>
     </section>
-    
+
     <!-- Modal Historial (Tailwind only) -->
-<div id="twModalHist" class="fixed inset-0 z-[100] hidden">
-  <!-- Backdrop -->
-  <div data-backdrop class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity"></div>
+    <div id="twModalHist" class="fixed inset-0 z-[100] hidden">
+      <!-- Backdrop -->
+      <div data-backdrop class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity"></div>
 
-  <!-- Panel -->
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-   <div class="w-full max-w-6xl bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl opacity-0 scale-95
+      <!-- Panel -->
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-6xl bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl opacity-0 scale-95
             transition-all duration-150 ease-out ring-1 ring-slate-200"
-     role="dialog" aria-modal="true" aria-labelledby="mh-title" aria-describedby="mh-desc">
-      <!-- Header -->
-      <div class="bg-gradient-to-r from-brand1 to-brand2 text-white px-5 py-3 flex items-center justify-between">
-        <div>
-          <h3 id="mh-title" class="text-base md:text-lg font-semibold">Historial</h3>
-          <p id="mh-meta" class="opacity-90 text-xs md:text-sm"></p>
-        </div>
-        <button type="button" class="close-btn inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60" aria-label="Cerrar">
-          <img src="svg/close.svg" alt="Cerrar" class="w-5 h-5">
-        </button>
-      </div>
+          role="dialog" aria-modal="true" aria-labelledby="mh-title" aria-describedby="mh-desc">
+          <!-- Header -->
+          <div class="bg-gradient-to-r from-brand1 to-brand2 text-white px-5 py-3 flex items-center justify-between">
+            <div>
+              <h3 id="mh-title" class="text-base md:text-lg font-semibold">Historial</h3>
+              <p id="mh-meta" class="opacity-90 text-xs md:text-sm"></p>
+            </div>
+            <button type="button" class="close-btn inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60" aria-label="Cerrar">
+              <img src="svg/close.svg" alt="Cerrar" class="w-5 h-5">
+            </button>
+          </div>
 
-      <!-- Body -->
-      <div class="p-4" id="mh-desc">
-         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm mb-3">
-            Datos iniciales de la creación del documento
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm mb-3">
-          <div><span class="font-semibold">Usuario Creación:</span> <span id="mhUsuario">—</span></div>
-          <div><span class="font-semibold">Fecha Creación:</span> <span id="mhFecha">—</span></div>
-          <div><span class="font-semibold">IP Creación:</span> <span id="mhIP">—</span></div>
-        </div>
+          <!-- Body -->
+          <div class="p-4" id="mh-desc">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm mb-3">
+              Datos iniciales de la creación del documento
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm mb-3">
+              <div><span class="font-semibold">Usuario Creación:</span> <span id="mhUsuario">—</span></div>
+              <div><span class="font-semibold">Fecha Creación:</span> <span id="mhFecha">—</span></div>
+              <div><span class="font-semibold">IP Creación:</span> <span id="mhIP">—</span></div>
+            </div>
 
-        <div class="overflow-x-auto rounded-lg ring-1 ring-slate-200">
-          <table class="min-w-[1200px] w-full text-xs">
-            <thead class="bg-slate-800 text-white">
-              <tr>
-                <th class="px-3 py-2 text-center uppercase">Fecha y Hora Mod.</th>
-                <th class="px-3 py-2 text-center uppercase">Usuario</th>
-                <th class="px-3 py-2 text-center uppercase">Nombre del Usuario</th>
-                <th class="px-3 py-2 text-center uppercase">IP</th>
-                <th class="px-3 py-2 text-center uppercase">Nombre del archivo</th>
-                <th class="px-3 py-2 text-center uppercase">N° páginas</th>
-                <th class="px-3 py-2 text-center uppercase">pág. inicial</th>
-                <th class="px-3 py-2 text-center uppercase">pág. final</th>
-                <th class="px-3 py-2 text-center uppercase">Nro. orden</th>
-                <th class="px-3 py-2 text-center uppercase">Ver Detalle</th>
-              </tr>
-            </thead>
-            <tbody id="mhTbody" class="[&>tr:nth-child(even)]:bg-slate-50"></tbody>
-          </table>
-        </div>
-      </div>
+            <div class="overflow-x-auto rounded-lg ring-1 ring-slate-200">
+              <table class="min-w-[1200px] w-full text-xs">
+                <thead class="bg-slate-800 text-white">
+                  <tr>
+                    <th class="px-3 py-2 text-center uppercase">Fecha y Hora Mod.</th>
+                    <th class="px-3 py-2 text-center uppercase">Usuario</th>
+                    <th class="px-3 py-2 text-center uppercase">Nombre del Usuario</th>
+                    <th class="px-3 py-2 text-center uppercase">IP</th>
+                    <th class="px-3 py-2 text-center uppercase">Nombre del archivo</th>
+                    <th class="px-3 py-2 text-center uppercase">N° páginas</th>
+                    <th class="px-3 py-2 text-center uppercase">pág. inicial</th>
+                    <th class="px-3 py-2 text-center uppercase">pág. final</th>
+                    <th class="px-3 py-2 text-center uppercase">Nro. orden</th>
+                    <th class="px-3 py-2 text-center uppercase">Ver Detalle</th>
+                  </tr>
+                </thead>
+                <tbody id="mhTbody" class="[&>tr:nth-child(even)]:bg-slate-50"></tbody>
+              </table>
+            </div>
+          </div>
 
-      <!-- Footer -->
-      <div class="px-4 py-3 bg-slate-50 flex justify-end">
-        <button type="button" class="close-btn px-4 py-2 rounded-xl bg-slate-700 text-white hover:bg-slate-800">
-          Cerrar
-        </button>
+          <!-- Footer -->
+          <div class="px-4 py-3 bg-slate-50 flex justify-end">
+            <button type="button" class="close-btn px-4 py-2 rounded-xl bg-slate-700 text-white hover:bg-slate-800">
+              Cerrar
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- Modal PDF (Tailwind only) -->
-<div id="twModalPDF" class="fixed inset-0 z-[110] hidden">
-  <!-- Backdrop -->
-  <div data-backdrop class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity"></div>
+    <!-- Modal PDF (Tailwind only) -->
+    <div id="twModalPDF" class="fixed inset-0 z-[110] hidden">
+      <!-- Backdrop -->
+      <div data-backdrop class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity"></div>
 
-  <!-- Panel centrado -->
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-[1400px] bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl
+      <!-- Panel centrado -->
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-[1400px] bg-white rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl
                 opacity-0 scale-95 transition-all duration-150 ease-out ring-1 ring-slate-200"
-         role="dialog" aria-modal="true" aria-labelledby="pdf-title">
-      
-      <!-- Barra -->
-      <header class="bg-gradient-to-r from-brand1 to-brand2 text-white px-5 py-3 flex items-center justify-between">
-        <h2 id="pdf-title" class="text-base md:text-lg font-semibold">Visor PDF</h2>
-        <div class="flex items-center gap-2">
-          <!--<a id="btnNuevaPestana"
-             class="inline-flex items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 px-3 py-1.5"
-             target="_blank" rel="noopener">
-            <img src="svg/visor.svg" class="w-4 h-4" alt=""> Abrir
-          </a>
-          <a id="btnDescargar"
-             class="inline-flex items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 px-3 py-1.5">
-            <img src="svg/descargar.svg" class="w-4 h-4" alt=""> Descargar
-          </a>-->
-          <button type="button"
-                  class="pdf-close inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60"
-                  aria-label="Cerrar">
-            <img src="svg/close.svg" alt="Cerrar" class="w-5 h-5">
-          </button>
-        </div>
-      </header>
+             role="dialog" aria-modal="true" aria-labelledby="pdf-title">
+          <!-- Barra -->
+          <header class="bg-gradient-to-r from-brand1 to-brand2 text-white px-5 py-3 flex items-center justify-between">
+            <h2 id="pdf-title" class="text-base md:text-lg font-semibold">Visor PDF</h2>
+            <div class="flex items-center gap-2">
+              <button type="button"
+                      class="pdf-close inline-flex items-center justify-center w-9 h-9 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60"
+                      aria-label="Cerrar">
+                <img src="svg/close.svg" alt="Cerrar" class="w-5 h-5">
+              </button>
+            </div>
+          </header>
 
-      <!-- Contenedor del PDF -->
-      <div class="h-[78vh]">
-        <div id="pdfContainer" class="w-full h-full">
-          <!-- PDFObject insertará aquí el visor nativo del navegador -->
+          <!-- Contenedor del PDF -->
+          <div class="h-[78vh]">
+            <div id="pdfContainer" class="w-full h-full"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-
-
   </main>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.12/pdfobject.min.js"></script>
-<script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.12/pdfobject.min.js"></script>
+  <script>
   /***********************
-   *  CONFIG
+   *  CONFIG (cascada filtros)
    ***********************/
-  const API_FILTERS_URL = '../recursos/investment-data.json'; // cambia si quieres
+  const FILTERS_URL = '../recursos/investment.json';
 
-
-  // valores por defecto
-const DEFAULTS = {
-  clase:  'Inversiones Alternativas',
-  mercado:'Local',
-  sub:    'Fondos de inversión',
-  tipo:   'Fondo privado'
-};
-
-// DEMO: reemplaza por tu API real si la tienes
-async function fetchHistorialDocumento({ codigo, nombre }) {
-  return [
-    { fecha:"27/06/2025, 9:53:36 a. m.", usuario:"CYACTAYO", ip:"172.16.8.94", serie:"NOTIFICACIÓN", tipo:"NOTIFICACIÓN", doc:nombre||"D23-CONSTANCIA ENVÍO ELECTRÓNICO.pdf", paginas:2, sistema:"VIC", principal:29, pfinal:30, orden:21 },
-    { fecha:"27/06/2025, 9:53:20 a. m.", usuario:"CYACTAYO", ip:"172.16.8.94", serie:"NOTIFICACIÓN", tipo:"NOTIFICACIÓN", doc:nombre||"D23-CONSTANCIA ENVÍO ELECTRÓNICO.pdf", paginas:2, sistema:"VIC", principal:30, pfinal:31, orden:22 },
-    { fecha:"26/06/2025, 4:03:02 p. m.", usuario:"JHUANCAR", ip:"172.16.34.132", serie:"NOTIFICACIÓN", tipo:"NOTIFICACIÓN", doc:"CONSTANCIA ENVÍO ELECTRÓNICO.pdf", paginas:2, sistema:"VIC", principal:32, pfinal:33, orden:23 }
-  ];
-}
-
+  const DEFAULTS = {
+    clase:  'Inversiones Alternativas',
+    mercado:'Local',
+    sub:    'Fondos de inversión',
+    tipo:   'Fondo privado'
+  };
 
   /***********************
    *  ESTADO
    ***********************/
-  let DOCUMENTOS = [];
+  let GROUPS = [];              // ← ahora el JSON ya viene agrupado (nivel 1)
   let investmentData = {};
-  let FILTERED = null;                        // dataset filtrado (o null)
-  const STATE = { page: 1, size: 15 };        // paginación
+  let FILTERED = null;          // dataset filtrado de grupos
+  const STATE = { page: 1, size: 15 };        // paginación por grupos
   const PAGE_SIZE_OPTIONS = [5, 10, 15, 20, 50];
 
+  //JSON AJAX XD
+  // URL del JSON externo (ajusta la ruta según tu proyecto)
+const GROUPS_URL = 'recursos/documents.json';
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
   /***********************
-   *  HELPERS
+   *  HELPERS: selects y preselect
    ***********************/
   function fillSelect(select, values, includeTodos = true) {
     select.innerHTML = '';
@@ -328,38 +283,28 @@ async function fetchHistorialDocumento({ codigo, nombre }) {
     select.disabled = !(values && values.length);
   }
 
-  // valores por defecto
+  function preselectFilters({clase, mercado, sub, tipo} = {}) {
+    const fClase   = document.getElementById('fClase');
+    const fMercado = document.getElementById('fMercado');
+    const fSub     = document.getElementById('fSub');
+    const fTipo    = document.getElementById('fTipo');
 
-// preseleccionar en cascada
-function preselectFilters({clase, mercado, sub, tipo} = {}) {
-  const fClase   = document.getElementById('fClase');
-  const fMercado = document.getElementById('fMercado');
-  const fSub     = document.getElementById('fSub');
-  const fTipo    = document.getElementById('fTipo');
-
-  // 1) Clase
-  if (clase && investmentData[clase]) {
-    fClase.value = clase;
-    fClase.dispatchEvent(new Event('change')); // llena mercados
+    if (clase && investmentData[clase]) {
+      fClase.value = clase;
+      fClase.dispatchEvent(new Event('change'));
+    }
+    if (mercado && fMercado.options.length) {
+      fMercado.value = mercado;
+      fMercado.dispatchEvent(new Event('change'));
+    }
+    if (sub && fSub.options.length) {
+      fSub.value = sub;
+      fSub.dispatchEvent(new Event('change'));
+    }
+    if (tipo && fTipo.options.length) {
+      fTipo.value = tipo;
+    }
   }
-
-  // 2) Mercado
-  if (mercado && fMercado.options.length) {
-    fMercado.value = mercado;
-    fMercado.dispatchEvent(new Event('change')); // llena subcategorías
-  }
-
-  // 3) Subcategoría
-  if (sub && fSub.options.length) {
-    fSub.value = sub;
-    fSub.dispatchEvent(new Event('change')); // llena tipos
-  }
-
-  // 4) Tipo
-  if (tipo && fTipo.options.length) {
-    fTipo.value = tipo;
-  }
-}
 
   /***********************
    *  CARGA DE FILTROS (AJAX)
@@ -418,226 +363,345 @@ function preselectFilters({clase, mercado, sub, tipo} = {}) {
   }
 
   /***********************
-   *  DATA DEMO
+   *  JSON DEMO (3 niveles: Grupo → Items → Historial)
+   *  Nivel 1 (grupo): { clase, mercado, subcat, tipo, codigo, items:[...] }
+   *  Nivel 2 (item):  { fecha, asociado, etiqueta, nombre, paginas, principal, pfinal, uo, bloqueado, usuario, ip, historial:[...] }
+   *  Nivel 3 (historial): array de movimientos del item.
    ***********************/
-async function fetchDocumentos(){
-  return [
-    {
-      "bloqueado": true, "orden": 1, "clase": "Inversiones Alternativas", "mercado": "Local",
-      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Registro de Inversiones Financieras", "etiqueta": "Informe de Riesgos", "nombre": "informe-riesgos.pdf",
-      "paginas": 8, "principal": 1, "pfinal": 8, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
-      "historial": [
-        { "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-riesgos.pdf", "paginas":8, "sistema":"VIC", "principal":1,  "pfinal":8,  "orden":1 },
-        { "fecha":"27/06/2025, 9:53:20 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-riesgos.pdf", "paginas":8, "sistema":"VIC", "principal":1,  "pfinal":8,  "orden":1 }
-      ]
-    },
-    {
-      "bloqueado": false, "orden": 2, "clase": "Inversiones Alternativas", "mercado": "Local",
-      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Registro de Inversiones Financieras", "etiqueta": "Informe Legal", "nombre": "informe-legal.pdf",
-      "paginas": 1, "principal": 9, "pfinal": 9, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
-      "historial": [
-        { "fecha":"26/06/2025, 4:10:12 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes","ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-legal.pdf", "paginas":1, "sistema":"VIC", "principal":9,  "pfinal":9,  "orden":2 },
-        { "fecha":"27/06/2025, 9:55:10 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes","ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-legal.pdf", "paginas":1, "sistema":"VIC", "principal":9,  "pfinal":9,  "orden":2 }
-      ]
-    },
-    {
-      "bloqueado": false, "orden": 3, "clase": "Inversiones Alternativas", "mercado": "Local",
-      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Registro de Inversiones Financieras", "etiqueta": "Acta de Comité de Inversiones", "nombre": "acta-de-comite-de-inversiones.pdf",
-      "paginas": 2, "principal": 10, "pfinal": 11, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
-      "historial": [
-        { "fecha":"26/06/2025, 4:15:00 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-comite-de-inversiones.pdf", "paginas":2, "sistema":"VIC", "principal":10, "pfinal":11, "orden":3 },
-        { "fecha":"27/06/2025, 9:57:22 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-comite-de-inversiones.pdf", "paginas":2, "sistema":"VIC", "principal":10, "pfinal":11, "orden":3 }
-      ]
-    },
-    {
-      "bloqueado": true, "orden": 4, "clase": "Inversiones Alternativas", "mercado": "Local",
-      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Registro de Inversiones Financieras", "etiqueta": "Acta de Suscripción", "nombre": "acta-de-suscripcion.pdf",
-      "paginas": 5, "principal": 12, "pfinal": 16, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
-      "historial": [
-        { "fecha":"26/06/2025, 4:20:45 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-suscripcion.pdf", "paginas":5, "sistema":"VIC", "principal":12, "pfinal":16, "orden":4 },
-        { "fecha":"27/06/2025, 9:59:01 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-suscripcion.pdf", "paginas":5, "sistema":"VIC", "principal":12, "pfinal":16, "orden":4 }
-      ]
-    },
-    {
-      "bloqueado": false, "orden": 5, "clase": "Inversiones Alternativas", "mercado": "Local",
-      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Registro de Llamado de Capital", "etiqueta": "Documento de notificación del llamado", "nombre": "documento-notificacion.pdf",
-      "paginas": 3, "principal": 17, "pfinal": 19, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
-      "historial": [
-        { "fecha":"26/06/2025, 4:27:10 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":3, "sistema":"VIC", "principal":17, "pfinal":19, "orden":5 },
-        { "fecha":"27/06/2025, 10:02:40 a. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes","ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":3, "sistema":"VIC", "principal":17, "pfinal":19, "orden":5 }
-      ]
-    },
-    {
-      "bloqueado": true, "orden": 6, "clase": "Inversiones Alternativas", "mercado": "Local",
-      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Registrar Operación", "etiqueta": "Constancia de operación", "nombre": "constancia-operacion.pdf",
-      "paginas": 7, "principal": 20, "pfinal": 26, "uo": "OAD.TE", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
-      "historial": [
-        { "fecha":"26/06/2025, 4:35:18 p. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 },
-        { "fecha":"27/06/2025, 10:05:03 a. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 }
-      ]
-    },
-    {
-      "bloqueado": true, "orden": 7, "clase": "Inversiones Alternativas", "mercado": "Local",
-      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Registro de Distribución de Capital", "etiqueta": "Documento de notificación de la distribución", "nombre": "documento-notificacion.pdf",
-      "paginas": 7, "principal": 20, "pfinal": 26, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
-      "historial": [
-        { "fecha":"26/06/2025, 4:39:50 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 },
-        { "fecha":"27/06/2025, 10:06:18 a. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 }
-      ]
-    },
-    {
-      "bloqueado": true, "orden": 8, "clase": "Inversiones Alternativas", "mercado": "Local",
-      "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Registrar Operación", "etiqueta": "Constancia de operación", "nombre": "documento-notificacion.pdf",
-      "paginas": 7, "principal": 20, "pfinal": 26, "uo": "OAD.TE", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
-      "historial": [
-        { "fecha":"26/06/2025, 4:42:12 p. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 },
-        { "fecha":"27/06/2025, 10:07:41 a. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 }
-      ]
-    }
-  ];
+  async function fetchGrupos(){
+    return [
+     { 
+        "clase": "Inversiones Alternativas",
+        "mercado": "Local",
+        "subcat": "Fondos de inversión",
+        "tipo": "Fondo Privado",
+        "codigo": "INV-6053",
+        "items": [
+          {
+            "bloqueado": true, "orden": 1,
+            "fecha":"22/09/2025, 4:03:02 p. m.",
+            "asociado": "Registro de Inversiones Financieras",
+            "etiqueta": "Informe de Riesgos",
+            "nombre": "informe-riesgo.pdf",
+            "paginas": 8, "principal": 1, "pfinal": 8,
+            "uo": "DIN.IF", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+            "historial": [
+              { "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "doc":"informe-riesgo.pdf", "paginas":8, "principal":1,  "pfinal":8,  "orden":1 },
+              { "fecha":"27/06/2025, 9:53:20 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "doc":"informe-riesgo.pdf", "paginas":8, "principal":1,  "pfinal":8,  "orden":1 }
+            ]
+          },
+          {
+            "bloqueado": false, "orden": 2,
+            "fecha":"22/09/2025, 4:03:02 p. m.",
+            "asociado": "Registro de Inversiones Financieras",
+            "etiqueta": "Informe Legal",
+            "nombre": "informe-legal.pdf",
+            "paginas": 1, "principal": 9, "pfinal": 9,
+            "uo": "DIN.IF", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+            "historial": [
+              { "fecha":"26/06/2025, 4:10:12 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "doc":"informe-legal.pdf", "paginas":1, "principal":9,  "pfinal":9,  "orden":2 },
+              { "fecha":"27/06/2025, 9:55:10 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "doc":"informe-legal.pdf", "paginas":1, "principal":9,  "pfinal":9,  "orden":2 }
+            ]
+          },
+          {
+            "bloqueado": false, "orden": 3,
+            "fecha":"22/09/2025, 4:03:02 p. m.",
+            "asociado": "Registro de Inversiones Financieras",
+            "etiqueta": "Acta de Comité de Inversiones",
+            "nombre": "acta-de-comite-de-inversiones.pdf",
+            "paginas": 2, "principal": 10, "pfinal": 11,
+            "uo": "DIN.IF", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+            "historial": [
+              { "fecha":"26/06/2025, 4:15:00 p. m.", "usuario":"JSIFUENTESR","nombreUsuario":"Josue Sifuentes","ip":"172.16.34.132","doc":"acta-de-comite-de-inversiones.pdf","paginas":2,"principal":10,"pfinal":11,"orden":3 },
+              { "fecha":"27/06/2025, 9:57:22 a. m.",  "usuario":"JSIFUENTESR","nombreUsuario":"Josue Sifuentes","ip":"172.16.8.94","doc":"acta-de-comite-de-inversiones.pdf","paginas":2,"principal":10,"pfinal":11,"orden":3 }
+            ]
+          },
+          {
+            "bloqueado": true, "orden": 4,
+            "fecha":"22/09/2025, 4:03:02 p. m.",
+            "asociado": "Registro de Inversiones Financieras",
+            "etiqueta": "Acta de Suscripción",
+            "nombre": "acta-de-suscripcion.pdf",
+            "paginas": 5, "principal": 12, "pfinal": 16,
+            "uo": "DIN.IF", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+            "historial": [
+              { "fecha":"26/06/2025, 4:20:45 p. m.", "usuario":"JSIFUENTESR","nombreUsuario":"Josue Sifuentes","ip":"172.16.34.132","doc":"acta-de-suscripcion.pdf","paginas":5,"principal":12,"pfinal":16,"orden":4 },
+              { "fecha":"27/06/2025, 9:59:01 a. m.",  "usuario":"JSIFUENTESR","nombreUsuario":"Josue Sifuentes","ip":"172.16.8.94","doc":"acta-de-suscripcion.pdf","paginas":5,"principal":12,"pfinal":16,"orden":4 }
+            ]
+          },
+          {
+            "bloqueado": false, "orden": 5,
+            "fecha":"22/09/2025, 4:03:02 p. m.",
+            "asociado": "Registro de Llamado de Capital",
+            "etiqueta": "Documento de notificación del llamado",
+            "nombre": "documento-notificacion.pdf",
+            "paginas": 3, "principal": 17, "pfinal": 19,
+            "uo": "DIN.IF", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+            "historial": [
+              { "fecha":"26/06/2025, 4:27:10 p. m.", "usuario":"JSIFUENTESR","nombreUsuario":"Josue Sifuentes","ip":"172.16.34.132","doc":"documento-notificacion.pdf","paginas":3,"principal":17,"pfinal":19,"orden":5 },
+              { "fecha":"27/06/2025, 10:02:40 a. m.","usuario":"JSIFUENTESR","nombreUsuario":"Josue Sifuentes","ip":"172.16.8.94","doc":"documento-notificacion.pdf","paginas":3,"principal":17,"pfinal":19,"orden":5 }
+            ]
+          },
+          {
+            "bloqueado": true, "orden": 6,
+            "fecha":"22/09/2025, 4:03:02 p. m.",
+            "asociado": "Registrar Operación",
+            "etiqueta": "Constancia de operación",
+            "nombre": "constancia-operacion.pdf",
+            "paginas": 7, "principal": 20, "pfinal": 26,
+            "uo": "OAD.TE", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+            "historial": [
+              { "fecha":"26/06/2025, 4:35:18 p. m.", "usuario":"EGUERRERO","nombreUsuario":"Evelyn Guerrero Paitan","ip":"172.16.34.132","doc":"constancia-operacion.pdf","paginas":7,"principal":20,"pfinal":26,"orden":6 },
+              { "fecha":"27/06/2025, 10:05:03 a. m.","usuario":"EGUERRERO","nombreUsuario":"Evelyn Guerrero Paitan","ip":"172.16.8.94","doc":"constancia-operacion.pdf","paginas":7,"principal":20,"pfinal":26,"orden":6 }
+            ]
+          },
+          {
+            "bloqueado": true, "orden": 7,
+            "fecha":"22/09/2025, 4:03:02 p. m.",
+            "asociado": "Registro de Distribución de Capital",
+            "etiqueta": "Documento de notificación de la distribución",
+            "nombre": "documento-notificacion.pdf",
+            "paginas": 7, "principal": 20, "pfinal": 26,
+            "uo": "DIN.IF", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+            "historial": [
+              { "fecha":"26/06/2025, 4:39:50 p. m.","usuario":"JSIFUENTESR","nombreUsuario":"Josue Sifuentes","ip":"172.16.34.132","doc":"constancia-operacion.pdf","paginas":7,"principal":20,"pfinal":26,"orden":6 },
+              { "fecha":"27/06/2025, 10:06:18 a. m.","usuario":"JSIFUENTESR","nombreUsuario":"Josue Sifuentes","ip":"172.16.8.94","doc":"constancia-operacion.pdf","paginas":7,"principal":20,"pfinal":26,"orden":6 }
+            ]
+          },
+          {
+            "bloqueado": true, "orden": 8,
+            "fecha":"22/09/2025, 4:03:02 p. m.",
+            "asociado": "Registrar Operación",
+            "etiqueta": "Constancia de operación",
+            "nombre": "documento-notificacion.pdf",
+            "paginas": 7, "principal": 20, "pfinal": 26,
+            "uo": "OAD.TE", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+            "historial": [
+              { "fecha":"26/06/2025, 4:42:12 p. m.", "usuario":"EGUERRERO","nombreUsuario":"Evelyn Guerrero Paitan","ip":"172.16.34.132","doc":"documento-notificacion.pdf","paginas":7,"principal":20,"pfinal":26,"orden":6 },
+              { "fecha":"27/06/2025, 10:07:41 a. m.","usuario":"EGUERRERO","nombreUsuario":"Evelyn Guerrero Paitan","ip":"172.16.8.94","doc":"documento-notificacion.pdf","paginas":7,"principal":20,"pfinal":26,"orden":6 }
+            ]
+          }
+        ]
+      }
+   
+    ];
+  }
+
+  function showTableLoading() {
+  const tbody = document.getElementById('tablaBodyPadre');
+  const skeleton = `
+    <tr>
+      <td colspan="6" class="p-0">
+        <div class="w-full">
+          ${Array.from({length: 3}).map(() => `
+            <div class="animate-pulse border-b border-slate-200">
+              <div class="grid grid-cols-6 gap-3 px-4 py-3">
+                <div class="h-6 rounded bg-slate-200"></div>
+                <div class="h-6 rounded bg-slate-200"></div>
+                <div class="h-6 rounded bg-slate-200"></div>
+                <div class="h-6 rounded bg-slate-200"></div>
+                <div class="h-6 rounded bg-slate-200"></div>
+                <div class="h-6 rounded bg-slate-200"></div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </td>
+    </tr>
+  `;
+  tbody.innerHTML = skeleton;
 }
 
+function clearTableLoading() {
+  // no-op: el render real reemplaza todo el tbody
+}
+
+// Carga por AJAX con fallback y cache-busting
+async function loadGruposAjax(url) {
+  showTableLoading();
+  try {
+    const data = await $.ajax({
+      url: url + (url.includes('?') ? '&' : '?') + '_=' + Date.now(), // cache-bust
+      method: 'GET',
+      dataType: 'json',
+      cache: false,
+      headers: { 'Accept': 'application/json' },
+      timeout: 15000
+    });
+
+    if (!Array.isArray(data)) {
+      console.warn('grupos.json no es un array; se devolverá []');
+      return [];
+    }
+    return data;
+  } catch (err) {
+    console.group('AJAX error · loadGruposAjax');
+    console.error('URL:', url);
+    console.error('Status:', err?.status, err?.statusText);
+    console.error(err?.responseText?.slice(0, 800) || err);
+    console.groupEnd();
+
+    // Muestra error en la tabla (bonito y sin romper)
+    const tbody = document.getElementById('tablaBodyPadre');
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" class="px-4 py-6 text-center">
+          <div class="inline-flex items-center gap-2 rounded-xl bg-red-50 text-red-700 border border-red-200 px-3 py-2">
+            <span>⚠️</span>
+            <span>No se pudo cargar el listado. Intenta nuevamente.</span>
+          </div>
+        </td>
+      </tr>`;
+    return [];
+  } finally {
+    clearTableLoading();
+  }
+}
 
   /***********************
-   *  RENDER TABLA
+   *  RENDER (Nivel 1 con slice → tabla Nivel 2)
    ***********************/
-  function renderTabla(list){
-    const tbody = document.getElementById('tablaBody');
+  function renderNivel1(groups){
+    const tbody = document.getElementById('tablaBodyPadre');
     const empty = document.getElementById('emptyState');
     tbody.innerHTML = '';
 
-    if(!list.length){
+    if(!groups.length){
       empty.classList.remove('hidden');
       return;
     }
     empty.classList.add('hidden');
 
-    const rows = list.map(d => `
-      <tr class="hover:bg-blue-50 transition">
-        <td class="px-3 py-2 text-[12px]">
-  <div class="flex items-center justify-center">
-    <!-- ícono -->
-    <a href="#ver-doc"
-       class="inline-flex h-8 w-8 items-center justify-center rounded-lg
-              text-slate-600 hover:text-blue-700
-              focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-       title="Ver documento" aria-label="Ver documento">
-      <img src="svg/lock.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-    </a>
+    const rows = groups.map(g => {
+      const rowPadre = `
+        <tr class="group-row hover:bg-blue-50 transition">
+          <td class="px-3 py-2 text-[12px] text-center">
+            <button class="btn-toggle-group inline-flex items-center justify-center w-8 h-8 rounded-lg border border-slate-300 hover:bg-slate-100"
+                    aria-expanded="false" title="Mostrar detalle">
+              <span class="text-base font-bold">＋</span>
+            </button>
+          </td>
+          <td class="px-3 py-2 text-[12px] text-center">${g.clase || ''}</td>
+          <td class="px-3 py-2 text-[12px] text-center">${g.mercado || ''}</td>
+          <td class="px-3 py-2 text-[12px] text-center">${g.subcat || ''}</td>
+          <td class="px-3 py-2 text-[12px] text-center">${g.tipo || ''}</td>
+          <td class="px-3 py-2 text-[12px] text-center font-semibold">${g.codigo || ''}</td>
+        </tr>`;
 
-    <!-- número (misma altura que el ícono) -->
-    <a href="#ver-doc"
-       class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg
-              text-slate-600 hover:text-blue-700 leading-none
-              focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-       title="Ver documento" aria-label="Ver documento">
-      <span class="tabular-nums">${d.orden ?? ''}</span>
-    </a>
-  </div>
-</td>
+      // Tabla Nivel 2 (detalle) — SOLO con las columnas solicitadas
+      const detalleHead = `
+        <thead class="bg-slate-700 text-white text-[12px]">
+          <tr>
+            <th class="px-3 text-center uppercase">Fecha y Hora</th>
+            <th class="px-8 text-center uppercase">Asociado a</th>
+            <th class="px-3 text-left uppercase">Etiqueta del Documento</th>
+            <th class="px-3 text-left uppercase">Nombre del Documento</th>
+            <th class="text-center uppercase">Nro Pag</th>
+            <th class="text-center uppercase">Nro Pag Ini.</th>
+            <th class="text-center uppercase">Nro Pag Fin.</th>
+            <th class="px-8 text-center uppercase">Ver Detalle</th>
+            <th class="px-3 text-center uppercase">editar</th>
+            <th class="px-3 text-center uppercase">histórico</th>
+            <th class="px-3 text-center uppercase">Unidad Orgánica</th>
+          </tr>
+        </thead>`;
 
-        <td class="px-3 py-2 text-[12px] text-center">${d.clase ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${d.mercado ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${d.subcat ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${d.tipo ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center font-semibold text-slate-700">${d.codigo ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${d.fecha ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${d.asociado ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-left">${d.etiqueta ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-left">${d.nombre ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${d.paginas ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${d.principal ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${d.pfinal ?? ''}</td>
- <td class="px-3 py-2 text-[12px] text-center">
-<a href="#ver-pdf"
-   data-action="pdf"
-   data-title="${d.etiqueta || d.nombre || 'Documento PDF'}"
-   data-nombre="${d.nombre || ''}"
-   data-src="pdf/informe-riesgo.pdf"             
-   data-page="${d.principal || 1}"
-   class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-   title="Ver PDF" aria-label="Ver PDF">
-  <img src="svg/visor.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-</a>
-<a href="pdf/informe-riesgo.pdf"
-   data-action="download-pdf"
-   data-src="pdf/informe-riesgo.pdf"
-   data-filename="Informe-de-Riesgo.pdf"
-   class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
-          text-slate-600 hover:text-blue-700 hover:bg-blue-800
-          focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-   title="Descargar documento" aria-label="Descargar documento">
-  <img src="svg/descargar.svg" alt="Descargar" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-</a>
+      const detalleBody = (g.items || []).map(d => `
+        <tr class="hover:bg-blue-50 transition">
+          <td class="px-3 py-2 text-[12px] text-center">${d.fecha ?? ''}</td>
+          <td class="px-3 py-2 text-[12px] text-center">${d.asociado ?? ''}</td>
+          <td class="px-3 py-2 text-[12px] text-left">${d.etiqueta ?? ''}</td>
+          <td class="px-3 py-2 text-[12px] text-left">${d.nombre ?? ''}</td>
+          <td class="px-3 py-2 text-[12px] text-center">${d.paginas ?? ''}</td>
+          <td class="px-3 py-2 text-[12px] text-center">${d.principal ?? ''}</td>
+          <td class="px-3 py-2 text-[12px] text-center">${d.pfinal ?? ''}</td>
 
-</td>
+          <td class="px-3 py-2 text-[12px] text-center">
+            <a href="#ver-pdf"
+               data-action="pdf"
+               data-title="${d.etiqueta || d.nombre || 'Documento PDF'}"
+               data-nombre="${d.nombre || ''}"
+               data-src="pdf/${encodeURIComponent(d.nombre || 'documento.pdf')}"
+               data-page="${d.principal || 1}"
+               class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+               title="Ver PDF" aria-label="Ver PDF">
+              <img src="svg/visor.svg" class="w-5 h-5" alt="">
+            </a>
+            <a href="pdf/${encodeURIComponent(d.nombre || 'documento.pdf')}"
+               data-action="download-pdf"
+               data-src="pdf/${encodeURIComponent(d.nombre || 'documento.pdf')}"
+               data-filename="${(d.etiqueta||'Documento')}.pdf"
+               class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+               title="Descargar" aria-label="Descargar">
+              <img src="svg/descargar.svg" class="w-5 h-5" alt="">
+            </a>
+          </td>
 
+          <td class="px-3 py-2 text-[12px] text-center">
+            <a href="#editar-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60" title="Editar" aria-label="Editar">
+              <img src="svg/editar.svg" class="w-5 h-5" alt="">
+            </a>
+          </td>
 
-<td class="px-3 py-2 text-[12px] text-center">
-  <a href="#editar-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
-                            text-slate-600 hover:text-blue-700 hover:bg-blue-800
-                            focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-     title="Editar" aria-label="Editar">
-    <img src="svg/editar.svg" alt="Editar" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-  </a>
-</td>
+          <td class="px-3 py-2 text-[12px] text-center">
+            <a href="#"
+               data-action="historial"
+               data-cod="${g.codigo ?? ''}"
+               data-nombre="${d.nombre ?? ''}"
+               data-uo="${d.uo ?? ''}"
+               data-usuario-crea="${d.usuario ?? ''}"
+               data-fecha-crea="${d.fecha ?? ''}"
+               data-ip-crea="${d.ip ?? ''}"
+               class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+               title="Histórico" aria-label="Histórico">
+              <img src="svg/historico.svg" class="w-5 h-5" alt="">
+            </a>
+          </td>
 
-
-<td class="px-3 py-2 text-[12px] text-center">
-  <a href="#"
-   data-action="historial"
-   data-cod="${d.codigo ?? ''}"
-   data-nombre="${d.nombre ?? ''}"
-   data-uo="${d.uo ?? ''}"
-   data-usuario-crea="${d.usuario ?? ''}" 
-   data-fecha-crea="${d.fecha ?? ''}"
-   data-ip-crea="${d.ip ?? ''}"
-   class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-   title="Histórico" aria-label="Histórico">
-  <img src="svg/historico.svg" alt="Histórico" class="w-5 h-5 object-contain">
-</a>
-
-</td>
-
-        <td class="px-3 py-2 text-[12px] text-center">
+          <td class="px-3 py-2 text-[12px] text-center">
             <div class="p-1 border border-blue-400 bg-blue-200 rounded-lg">
-                <b class="text-blue-900">${d.uo ?? ''}</b>
+              <b class="text-blue-900">${d.uo ?? ''}</b>
             </div>
-            </td>
-      </tr>
-    `).join('');
+          </td>
+        </tr>
+      `).join('');
+
+      const rowDetalle = `
+        <tr class="group-detail hidden bg-gray-100">
+          <td colspan="6" class="px-3 pt-0 pb-4">
+            <div class="mt-2 rounded-sm ring-1 ring-slate-200 shadow-sm overflow-hidden">
+
+              <div class="overflow-x-auto">
+                <table class="min-w-[1200px] w-full text-sm">
+                  ${detalleHead}
+                  <tbody class="[&>tr:nth-child(even)]:bg-slate-50">
+                    ${detalleBody}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </td>
+        </tr>`;
+
+      return rowPadre + rowDetalle;
+    }).join('');
+
     tbody.insertAdjacentHTML('beforeend', rows);
   }
 
   /***********************
-   *  PAGINACIÓN
+   *  PAGINACIÓN (POR GRUPOS)
    ***********************/
-  function datasetActual(){ return FILTERED ?? DOCUMENTOS; }
+  function datasetActual(){ return FILTERED ?? GROUPS; }
 
   function clampPage(totalPages){
     if (STATE.page < 1) STATE.page = 1;
     if (STATE.page > totalPages) STATE.page = totalPages || 1;
   }
 
-  function pageSlice(ds){
+  function pageSliceGroups(groups){
     const start = (STATE.page - 1) * STATE.size;
-    return ds.slice(start, start + STATE.size);
+    return groups.slice(start, start + STATE.size);
   }
 
   function renderPagination(totalItems){
@@ -656,7 +720,7 @@ async function fetchDocumentos(){
     // «
     nav.insertAdjacentHTML('beforeend', btn('«', STATE.page - 1, {disabled: STATE.page === 1}));
 
-    // números con ventana [curr-1, curr, curr+1] + extremos
+    // números con ventana
     const pages = [];
     const push = p => { if (!pages.includes(p) && p>=1 && p<=totalPages) pages.push(p); };
     push(1); push(STATE.page-1); push(STATE.page); push(STATE.page+1); push(totalPages);
@@ -672,7 +736,7 @@ async function fetchDocumentos(){
     // »
     nav.insertAdjacentHTML('beforeend', btn('»', STATE.page + 1, {disabled: STATE.page === totalPages}));
 
-    // Delegación de eventos
+    // Delegación
     nav.onclick = (e) => {
       const b = e.target.closest('button[data-page]');
       if (!b) return;
@@ -685,16 +749,16 @@ async function fetchDocumentos(){
   }
 
   function refreshView(){
-    const ds = datasetActual();
-    const total = ds.length;
+    const groups = datasetActual();
+    const total = groups.length;
+
     const totalPages = Math.max(1, Math.ceil(total / STATE.size));
     clampPage(totalPages);
 
-    // si está fuera de rango después de un filtro, ajusta y corta
     renderPagination(total);
-    renderTabla(pageSlice(ds));
+    renderNivel1(pageSliceGroups(groups));
 
-    // empty state si no hay nada
+    // empty state
     document.getElementById('emptyState').classList.toggle('hidden', total > 0);
   }
 
@@ -707,33 +771,53 @@ async function fetchDocumentos(){
   });
 
   /***********************
-   *  FILTROS
+   *  FILTROS (aplican a NIVEL 1)
    ***********************/
-  function aplicarFiltros(){
-    $('#loading-spinner').removeClass('hidden');
-    const fClase  = document.getElementById('fClase').value;
-    const fMerc   = document.getElementById('fMercado').value;
-    const fSub    = document.getElementById('fSub').value;
-    const fTipo   = document.getElementById('fTipo').value;
-    const fCodigo = document.getElementById('fCodigo').value.trim().toLowerCase();
+  async function aplicarFiltros(){
+  const fClase  = document.getElementById('fClase').value;
+  const fMerc   = document.getElementById('fMercado').value;
+  const fSub    = document.getElementById('fSub').value;
+  const fTipo   = document.getElementById('fTipo').value;
+  const fCodigo = document.getElementById('fCodigo').value.trim().toUpperCase();
 
-    const out = DOCUMENTOS.filter(d => {
-      if (fClase && d.clase !== fClase) return false;
-      if (fMerc && d.mercado !== fMerc) return false;
-      if (fSub && d.subcat !== fSub) return false;
-      if (fTipo && d.tipo !== fTipo) return false;
-      if (fCodigo && !(d.codigo||'').toLowerCase().includes(fCodigo)) return false;
+  // mostrar skeleton inmediatamente
+  showTableLoading();
+
+  try {
+    // finta 1500ms + carga del JSON
+    const [data] = await Promise.all([
+      $.ajax({
+        url: GROUPS_URL + '?_=' + Date.now(),
+        method: 'GET',
+        dataType: 'json',
+        cache: false
+      }),
+      sleep(1500)
+    ]);
+
+    let groups = Array.isArray(data) ? data : [];
+
+    // filtrar con find / filter en el front
+    groups = groups.filter(g => {
+      if (fClase  && g.clase   !== fClase) return false;
+      if (fMerc   && g.mercado !== fMerc)  return false;
+      if (fSub    && g.subcat  !== fSub)   return false;
+      if (fTipo   && g.tipo    !== fTipo)  return false;
+      if (fCodigo && !(g.codigo||'').toUpperCase().includes(fCodigo)) return false;
       return true;
     });
 
-    FILTERED = out.length ? out : [];
+
+
+    GROUPS   = groups;
+    FILTERED = null;
     STATE.page = 1;
-    
-     setTimeout(function(){
-            $('#loading-spinner').addClass('hidden');
-        refreshView();
-        }, 1000);
+    refreshView();
+  } catch(err){
+    console.error('Error al cargar JSON:', err);
   }
+}
+
 
   document.getElementById('btnBuscar').addEventListener('click', aplicarFiltros);
   document.getElementById('btnLimpiar').addEventListener('click', () => {
@@ -756,266 +840,265 @@ async function fetchDocumentos(){
    *  INIT
    ***********************/
   (async function init(){
-    await loadInvestmentData("../recursos/investment.json"); // filtros
-     preselectFilters(DEFAULTS);                               // ← preselecciona
-    DOCUMENTOS = await fetchDocumentos();                    // data demo
-    refreshView();                                           // primera carga con paginación
+    await loadInvestmentData(FILTERS_URL); // filtros en cascada
+    //preselectFilters(DEFAULTS);
+      // ← CARGA JSON EXTERNO CON LOADING
+  GROUPS = await loadGruposAjax(GROUPS_URL);
+
+  refreshView(); // render inicial (paginado por grupos)
   })();
 
-  // ===== Modal helpers (Tailwind only) =====
-const twModal = document.getElementById('twModalHist');
-const twBackdrop = twModal.querySelector('[data-backdrop]');
-const twPanel = twModal.querySelector('[role="dialog"]');
+  /***********************
+   *  Toggle (+)/(–) por fila de NIVEL 1
+   ***********************/
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-toggle-group');
+    if (!btn) return;
 
-function openTwModal() {
-  twModal.classList.remove('hidden');
-  document.body.classList.add('overflow-hidden');
-  requestAnimationFrame(() => {
-    twBackdrop.classList.add('opacity-100');
-    twPanel.classList.add('opacity-100','scale-100');
+    const tr = btn.closest('tr');
+    const detailRow = tr?.nextElementSibling;
+    if (!detailRow || !detailRow.classList.contains('group-detail')) return;
+
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!isOpen));
+    btn.title = isOpen ? 'Mostrar detalle' : 'Ocultar detalle';
+    btn.querySelector('span').textContent = isOpen ? '＋' : '－';
+    detailRow.classList.toggle('hidden', isOpen);
   });
 
-  // focus trap + Escape
-  const focusable = twModal.querySelectorAll('a,button,select,textarea,input,[tabindex]:not([tabindex="-1"])');
-  const first = focusable[0], last = focusable[focusable.length - 1];
-  function trap(e){
-    if (e.key === 'Tab') {
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    }
-    if (e.key === 'Escape') closeTwModal();
-  }
-  twModal._trapHandler = trap;
-  twModal.addEventListener('keydown', trap);
-  setTimeout(() => (first || twPanel).focus(), 10);
-}
+  /***********************
+   *  Modal Historial
+   ***********************/
+  const twModal = document.getElementById('twModalHist');
+  const twBackdrop = twModal.querySelector('[data-backdrop]');
+  const twPanel = twModal.querySelector('[role="dialog"]');
 
-function closeTwModal() {
-  twBackdrop.classList.remove('opacity-100');
-  twPanel.classList.remove('opacity-100','scale-100');
-  setTimeout(() => {
-    twModal.classList.add('hidden');
-    document.body.classList.remove('overflow-hidden');
-    if (twModal._trapHandler) twModal.removeEventListener('keydown', twModal._trapHandler);
-  }, 150);
-}
-
-twModal.addEventListener('click', (e) => {
-  if (e.target === twBackdrop || e.target.closest('.close-btn')) closeTwModal();
-});
-
-// Hook: abre modal desde cualquier botón con data-action="historial"
-// Abrir modal usando el historial embebido en DOCUMENTOS
-document.addEventListener('click', async (e) => {
-  const btn = e.target.closest('[data-action="historial"]');
-  if (!btn) return;
-
-  const codigo = btn.getAttribute('data-cod') || '';
-  const nombre = btn.getAttribute('data-nombre') || '';
-  const uo     = btn.getAttribute('data-uo') || '';
-  const usuario     = btn.getAttribute('data-usuario-crea') || '';
-  const fecha     = btn.getAttribute('data-fecha-crea') || '';
-  const ip     = btn.getAttribute('data-ip-crea') || '';
-
-  // Busca el documento por código + nombre (primero en filtrados, si no en todos)
-  const ds  = datasetActual();
-  let doc   = ds.find(x => (x.codigo||'') === codigo && (x.nombre||'') === nombre);
-  if (!doc) doc = DOCUMENTOS.find(x => (x.codigo||'') === codigo && (x.nombre||'') === nombre);
-
-  // Cabecera/meta
-  document.getElementById('mh-title').textContent = `Historial — ${nombre || 'Documento'}`;
-  document.getElementById('mh-meta').textContent  = `Código: ${codigo} · UO: ${uo || '—'}`;
-
-  // Datos iniciales (si tienes esos campos en doc, úsalos; si no, relleno básico)
-  document.getElementById('mhUsuario').textContent = usuario || '—';
-  document.getElementById('mhFecha').textContent   = fecha   || '—';
-  document.getElementById('mhIP').textContent      = ip      || '—';
-
-  // Tabla desde doc.historial
-  const rows = Array.isArray(doc?.historial) ? doc.historial : [];
-  const tbody = document.getElementById('mhTbody');
-
-  if (!rows.length) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="12" class="px-3 py-6 text-center text-slate-500">Sin registros de historial.</td>
-      </tr>`;
-  } else {
-    tbody.innerHTML = rows.map(r => `
-      <tr class="hover:bg-blue-50 transition">
-        <td class="px-3 py-2 text-center">${r.fecha ?? ''}</td>
-        <td class="px-3 py-2 text-center">${r.usuario ?? ''}</td>
-        <td class="px-3 py-2 text-center">${r.nombreUsuario ?? ''}</td>
-        <td class="px-3 py-2 text-center">${r.ip ?? ''}</td>
-        <td class="px-3 py-2 text-left">${r.doc ?? ''}</td>
-        <td class="px-3 py-2 text-center">${r.paginas ?? ''}</td>
-        <td class="px-3 py-2 text-center">${r.principal ?? ''}</td>
-        <td class="px-3 py-2 text-center">${r.pfinal ?? ''}</td>
-        <td class="px-3 py-2 text-center">${r.orden ?? ''}</td>
-        <td class="px-3 py-2 text-center">
-         <a href="#ver-pdf"
-   data-action="pdf"
-   data-title="${r.doc }"
-   data-nombre="${r.doc || ''}"
-   data-src="pdf/informe-riesgo.pdf"             
-   data-page="${r.principal || 1}"
-   class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-   title="Ver PDF" aria-label="Ver PDF">
-  <img src="svg/visor.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-</a>
-        </td>
-      </tr>
-    `).join('');
-  }
-
-  openTwModal();
-});
-
-// ===== Modal PDF helpers (PDFObject + fallback nativo) =====
-const twPdfModal    = document.getElementById('twModalPDF');
-const twPdfBackdrop = twPdfModal.querySelector('[data-backdrop]');
-const twPdfPanel    = twPdfModal.querySelector('[role="dialog"]');
-// Puedes tener <div id="pdfContainer"> o el viejo <iframe id="pdfFrame">
-const pdfContainer  = document.getElementById('pdfContainer'); // recomendado
-const pdfFrame      = document.getElementById('pdfFrame');     // fallback
-
-function openTwPdfModal() {
-  twPdfModal.classList.remove('hidden');
-  document.body.classList.add('overflow-hidden');
-  requestAnimationFrame(() => {
-    twPdfBackdrop.classList.add('opacity-100');
-    twPdfPanel.classList.add('opacity-100','scale-100');
-  });
-  // Esc
-  function trap(e){ if (e.key === 'Escape') closeTwPdfModal(); }
-  twPdfModal._trapHandler = trap;
-  document.addEventListener('keydown', trap);
-}
-
-function closeTwPdfModal() {
-  twPdfBackdrop.classList.remove('opacity-100');
-  twPdfPanel.classList.remove('opacity-100','scale-100');
-  setTimeout(() => {
-    twPdfModal.classList.add('hidden');
-    document.body.classList.remove('overflow-hidden');
-    // limpiar viewer
-    if (pdfContainer) pdfContainer.innerHTML = '';
-    if (pdfFrame) pdfFrame.removeAttribute('src');
-    if (twPdfModal._trapHandler) document.removeEventListener('keydown', twPdfModal._trapHandler);
-  }, 150);
-}
-
-twPdfModal.addEventListener('click', (e) => {
-  if (e.target === twPdfBackdrop || e.target.closest('.pdf-close')) closeTwPdfModal();
-});
-
-// Abre visor usando PDFObject (y si no, visor nativo en <iframe>)
-function openPdfViewer(url, { title='Visor PDF', page=1 } = {}) {
-  document.getElementById('pdf-title').textContent = title;
-
-  const abs       = new URL(url, window.location.href).href;
-  const viewerUrl = `${abs}#page=${Number(page)||1}&zoom=page-width`;
-
-  if (window.PDFObject && pdfContainer) {
-    // Embebe usando visor nativo del navegador dentro del contenedor
-    PDFObject.embed(viewerUrl, '#pdfContainer', {
-      height: '80vh',
-      fallbackLink:
-        `<p class="p-4 text-sm text-slate-600">
-           No se pudo mostrar el PDF aquí.
-           <a href="${abs}" target="_blank" rel="noopener" class="text-blue-600 underline">Abrir en otra pestaña</a> o descarga desde la barra superior.
-         </p>`
+  function openTwModal() {
+    twModal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+    requestAnimationFrame(() => {
+      twBackdrop.classList.add('opacity-100');
+      twPanel.classList.add('opacity-100','scale-100');
     });
-  } else if (pdfFrame) {
-    // Fallback: usa el <iframe id="pdfFrame">
-    pdfFrame.src = viewerUrl;
-  } else {
-    // Último recurso: abrir nueva pestaña
-    window.open(abs, '_blank', 'noopener');
-    return;
-  }
 
-  openTwPdfModal();
-}
-
-// Delegación: cualquier botón con data-action="pdf"
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-action="pdf"]');
-  if (!btn) return;
-  e.preventDefault();
-
-  let url = btn.getAttribute('data-src');
-  if (!url) {
-    const nombre = btn.getAttribute('data-nombre');
-    if (nombre) url = `pdf/${encodeURIComponent(nombre)}`;
-  }
-
-  const page  = Number(btn.getAttribute('data-page') || '1') || 1;
-  const title = btn.getAttribute('data-title') || 'Visor PDF';
-
-  if (!url) {
-    console.warn('openPdfViewer: no hay URL del PDF (data-src o data-nombre)');
-    return;
-  }
-  openPdfViewer(url, { title, page });
-});
-
-
-// Descarga un PDF SIN abrir pestaña
-async function downloadPdf(url, filename) {
-  const abs  = new URL(url, window.location.href).href;
-  const name = filename || abs.split('/').pop() || 'documento.pdf';
-
-  // 1) http/https → forzamos descarga con fetch + blob
-  if (/^https?:/.test(abs)) {
-    try {
-      const res = await fetch(abs, { cache: 'no-store' });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const blob = await res.blob();
-      const objectUrl = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = objectUrl;
-      a.download = name;
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
-      return;
-    } catch (err) {
-      console.warn('downloadPdf (fetch fallo, usando fallback):', err);
-      // cae al fallback de abajo
+    // focus trap + Escape
+    const focusable = twModal.querySelectorAll('a,button,select,textarea,input,[tabindex]:not([tabindex="-1"])');
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    function trap(e){
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+      if (e.key === 'Escape') closeTwModal();
     }
+    twModal._trapHandler = trap;
+    twModal.addEventListener('keydown', trap);
+    setTimeout(() => (first || twPanel).focus(), 10);
   }
 
-  // 2) file:// u otros → intentamos solo con <a download> (sin abrir nueva pestaña)
-  const a = document.createElement('a');
-  a.href = abs;
-  a.setAttribute('download', name);
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-}
+  function closeTwModal() {
+    twBackdrop.classList.remove('opacity-100');
+    twPanel.classList.remove('opacity-100','scale-100');
+    setTimeout(() => {
+      twModal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+      if (twModal._trapHandler) twModal.removeEventListener('keydown', twModal._trapHandler);
+    }, 150);
+  }
 
+  twModal.addEventListener('click', (e) => {
+    if (e.target === twBackdrop || e.target.closest('.close-btn')) closeTwModal();
+  });
 
-// Delegación para cualquier botón con data-action="download-pdf"
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-action="download-pdf"]');
-  if (!btn) return;
-  e.preventDefault();
-  const url  = btn.getAttribute('data-src') || btn.getAttribute('href');
-  const name = btn.getAttribute('data-filename') || '';
-  if (!url) return;
-  downloadPdf(url, name);
-});
+  // Abrir modal historial (lee historial del item en Nivel 2)
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-action="historial"]');
+    if (!btn) return;
 
+    const codigo = btn.getAttribute('data-cod') || '';
+    const nombre = btn.getAttribute('data-nombre') || '';
+    const uo     = btn.getAttribute('data-uo') || '';
+    const usuario= btn.getAttribute('data-usuario-crea') || '';
+    const fecha  = btn.getAttribute('data-fecha-crea') || '';
+    const ip     = btn.getAttribute('data-ip-crea') || '';
 
+    // Busca grupo y item
+    const groups = datasetActual();
+    const grupo = groups.find(g => g.codigo === codigo);
+    const item  = grupo?.items?.find(x => (x.nombre||'') === nombre);
 
+    // Cabecera/meta
+    document.getElementById('mh-title').textContent = `Historial — ${nombre || 'Documento'}`;
+    document.getElementById('mh-meta').textContent  = `Código: ${codigo} · UO: ${uo || '—'}`;
 
-</script>
+    // Datos iniciales
+    document.getElementById('mhUsuario').textContent = usuario || '—';
+    document.getElementById('mhFecha').textContent   = fecha   || '—';
+    document.getElementById('mhIP').textContent      = ip      || '—';
 
+    // Cuerpo tabla
+    const rows = Array.isArray(item?.historial) ? item.historial : [];
+    const tbody = document.getElementById('mhTbody');
+
+    if (!rows.length) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="12" class="px-3 py-6 text-center text-slate-500">Sin registros de historial.</td>
+        </tr>`;
+    } else {
+      tbody.innerHTML = rows.map(r => `
+        <tr class="hover:bg-blue-50 transition">
+          <td class="px-3 py-2 text-center">${r.fecha ?? ''}</td>
+          <td class="px-3 py-2 text-center">${r.usuario ?? ''}</td>
+          <td class="px-3 py-2 text-center">${r.nombreUsuario ?? ''}</td>
+          <td class="px-3 py-2 text-center">${r.ip ?? ''}</td>
+          <td class="px-3 py-2 text-left">${r.doc ?? ''}</td>
+          <td class="px-3 py-2 text-center">${r.paginas ?? ''}</td>
+          <td class="px-3 py-2 text-center">${r.principal ?? ''}</td>
+          <td class="px-3 py-2 text-center">${r.pfinal ?? ''}</td>
+          <td class="px-3 py-2 text-center">${r.orden ?? ''}</td>
+          <td class="px-3 py-2 text-center">
+            <a href="#ver-pdf"
+               data-action="pdf"
+               data-title="${r.doc }"
+               data-nombre="${r.doc || ''}"
+               data-src="pdf/${encodeURIComponent(r.doc || 'documento.pdf')}"
+               data-page="${r.principal || 1}"
+               class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
+               title="Ver PDF" aria-label="Ver PDF">
+              <img src="svg/visor.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
+            </a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    openTwModal();
+  });
+
+  /***********************
+   *  Modal PDF + Descarga
+   ***********************/
+  const twPdfModal    = document.getElementById('twModalPDF');
+  const twPdfBackdrop = twPdfModal.querySelector('[data-backdrop]');
+  const twPdfPanel    = twPdfModal.querySelector('[role="dialog"]');
+  const pdfContainer  = document.getElementById('pdfContainer');
+
+  function openTwPdfModal() {
+    twPdfModal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+    requestAnimationFrame(() => {
+      twPdfBackdrop.classList.add('opacity-100');
+      twPdfPanel.classList.add('opacity-100','scale-100');
+    });
+    function trap(e){ if (e.key === 'Escape') closeTwPdfModal(); }
+    twPdfModal._trapHandler = trap;
+    document.addEventListener('keydown', trap);
+  }
+
+  function closeTwPdfModal() {
+    twPdfBackdrop.classList.remove('opacity-100');
+    twPdfPanel.classList.remove('opacity-100','scale-100');
+    setTimeout(() => {
+      twPdfModal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+      if (pdfContainer) pdfContainer.innerHTML = '';
+      if (twPdfModal._trapHandler) document.removeEventListener('keydown', twPdfModal._trapHandler);
+    }, 150);
+  }
+
+  twPdfModal.addEventListener('click', (e) => {
+    if (e.target === twPdfBackdrop || e.target.closest('.pdf-close')) closeTwPdfModal();
+  });
+
+  function openPdfViewer(url, { title='Visor PDF', page=1 } = {}) {
+    document.getElementById('pdf-title').textContent = title;
+
+    const abs       = new URL(url, window.location.href).href;
+    const viewerUrl = `${abs}#page=${Number(page)||1}&zoom=page-width`;
+
+    if (window.PDFObject && pdfContainer) {
+      PDFObject.embed(viewerUrl, '#pdfContainer', {
+        height: '80vh',
+        fallbackLink:
+          `<p class="p-4 text-sm text-slate-600">
+             No se pudo mostrar el PDF aquí.
+             <a href="${abs}" target="_blank" rel="noopener" class="text-blue-600 underline">Abrir en otra pestaña</a> o descarga desde la barra superior.
+           </p>`
+      });
+    } else {
+      window.open(abs, '_blank', 'noopener');
+      return;
+    }
+    openTwPdfModal();
+  }
+
+  // Delegación PDF
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action="pdf"]');
+    if (!btn) return;
+    e.preventDefault();
+
+    let url = btn.getAttribute('data-src');
+    if (!url) {
+      const nombre = btn.getAttribute('data-nombre');
+      if (nombre) url = `pdf/${encodeURIComponent(nombre)}`;
+    }
+
+    const page  = Number(btn.getAttribute('data-page') || '1') || 1;
+    const title = btn.getAttribute('data-title') || 'Visor PDF';
+
+    if (!url) {
+      console.warn('openPdfViewer: no hay URL del PDF (data-src o data-nombre)');
+      return;
+    }
+    openPdfViewer(url, { title, page });
+  });
+
+  // Descarga directa
+  async function downloadPdf(url, filename) {
+    const abs  = new URL(url, window.location.href).href;
+    const name = filename || abs.split('/').pop() || 'documento.pdf';
+
+    if (/^https?:/.test(abs)) {
+      try {
+        const res = await fetch(abs, { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const blob = await res.blob();
+        const objectUrl = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = name;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+        return;
+      } catch (err) {
+        console.warn('downloadPdf (fetch fallo, usando fallback):', err);
+      }
+    }
+    const a = document.createElement('a');
+    a.href = abs;
+    a.setAttribute('download', name);
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action="download-pdf"]');
+    if (!btn) return;
+    e.preventDefault();
+    const url  = btn.getAttribute('data-src') || btn.getAttribute('href');
+    const name = btn.getAttribute('data-filename') || '';
+    if (!url) return;
+    downloadPdf(url, name);
+  });
+  </script>
 </body>
 </html>
