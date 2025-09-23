@@ -27,7 +27,7 @@
 <body class="bg-white text-slate-800">
   <main class="max-w-full mx-auto p-4 md:p-6">
     <!-- Header -->
-    <header class="bg-gradient-to-r from-brand1 to-brand2 text-white rounded-2xl rounded-b-none p-6">
+    <header class="bg-gradient-to-r from-brand1 to-brand2 text-white rounded-2xl rounded-b-none p-6 text-center">
       <h1 class="text-2xl md:text-3xl font-semibold">Expediente Digital</h1>
       <p class="opacity-90 text-sm md:text-base">Listado de documentos</p>
     </header>
@@ -77,9 +77,8 @@
     </section>
       <section class="bg-white  pb-2 px-5">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div>
-          <label class="block font-semibold mb-1 text-[16px]">Expediente: ${EXPEDIENTE}</label>
-            <div class="flex flex-row gap-3">
+        <div class="flex flex-row gap-2">
+          <!--<label class="block font-semibold mb-1 text-[16px]">Expediente: ${EXPEDIENTE}</label>-->
                 <div class="font-semibold">Leyenda:</div>
                 <div class="flex flex-row gap-2">
                     <img src="svg/close-lock.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
@@ -94,6 +93,9 @@
       </div>
 
     </section>
+    <div id="loading-spinner" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="h-16 w-16 animate-spin rounded-full border-4 border-solid border-white border-t-transparent"></div>
+</div>
         <!-- Filtros -->
     <section class="bg-white  p-5">
       <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4">
@@ -108,18 +110,16 @@
               <th class="px-3 text-center uppercase">Subcategoría</th>
               <th class="px-3 text-center uppercase">Tipo de Instrumento</th>
               <th class="px-3 text-center uppercase">Código de Inversión</th>
-              <th class="px-3 text-center uppercase">Asociado al</th>
+              <th class="px-3 text-center uppercase">Fecha y Hora</th>
+              <th class="px-8 text-center uppercase">Actividad</th>
               <th class="px-3 text-left uppercase">Etiqueta del Documento</th>
               <th class="px-3 text-left uppercase">Nombre del Documento</th>
-              <th class="px-3 text-center uppercase">Nro Páginas</th>
-              <th class="px-3 text-center uppercase">Nro Página Inicial</th>
-              <th class="px-3 text-center uppercase">Nro Página Final</th>
+              <th class=" text-center uppercase">Nro Pag</th>
+              <th class=" text-center uppercase">Nro Pag Ini.</th>
+              <th class=" text-center uppercase">Nro Pag Fin.</th>
               <th class="px-8 text-center uppercase">Ver Detalle</th>
-              <th class="px-3 text-center uppercase">grabar</th>
               <th class="px-3 text-center uppercase">editar</th>
-              <th class="px-3 text-center uppercase">retirar<br>/eliminar</th>
               <th class="px-3 text-center uppercase">histórico</th>
-              <th class="px-3 text-center uppercase">estado</th>
               <th class="px-3 text-center uppercase">Unidad Orgánica</th>
             </tr>
           </thead>
@@ -425,9 +425,9 @@ async function fetchDocumentos(){
     {
       "bloqueado": true, "orden": 1, "clase": "Inversiones Alternativas", "mercado": "Local",
       "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Instrumento", "etiqueta": "Informe de Riesgos", "nombre": "informe-riesgos.pdf",
+      "asociado": "Registro de Inversiones Financieras", "etiqueta": "Informe de Riesgos", "nombre": "informe-riesgos.pdf",
       "paginas": 8, "principal": 1, "pfinal": 8, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
       "historial": [
         { "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-riesgos.pdf", "paginas":8, "sistema":"VIC", "principal":1,  "pfinal":8,  "orden":1 },
         { "fecha":"27/06/2025, 9:53:20 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-riesgos.pdf", "paginas":8, "sistema":"VIC", "principal":1,  "pfinal":8,  "orden":1 }
@@ -436,9 +436,9 @@ async function fetchDocumentos(){
     {
       "bloqueado": false, "orden": 2, "clase": "Inversiones Alternativas", "mercado": "Local",
       "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Instrumento", "etiqueta": "Informe Legal", "nombre": "informe-legal.pdf",
+      "asociado": "Registro de Inversiones Financieras", "etiqueta": "Informe Legal", "nombre": "informe-legal.pdf",
       "paginas": 1, "principal": 9, "pfinal": 9, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
       "historial": [
         { "fecha":"26/06/2025, 4:10:12 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes","ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-legal.pdf", "paginas":1, "sistema":"VIC", "principal":9,  "pfinal":9,  "orden":2 },
         { "fecha":"27/06/2025, 9:55:10 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes","ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"informe-legal.pdf", "paginas":1, "sistema":"VIC", "principal":9,  "pfinal":9,  "orden":2 }
@@ -447,9 +447,9 @@ async function fetchDocumentos(){
     {
       "bloqueado": false, "orden": 3, "clase": "Inversiones Alternativas", "mercado": "Local",
       "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Instrumento", "etiqueta": "Acta de Comité de Inversiones", "nombre": "acta-de-comite-de-inversiones.pdf",
+      "asociado": "Registro de Inversiones Financieras", "etiqueta": "Acta de Comité de Inversiones", "nombre": "acta-de-comite-de-inversiones.pdf",
       "paginas": 2, "principal": 10, "pfinal": 11, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
       "historial": [
         { "fecha":"26/06/2025, 4:15:00 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-comite-de-inversiones.pdf", "paginas":2, "sistema":"VIC", "principal":10, "pfinal":11, "orden":3 },
         { "fecha":"27/06/2025, 9:57:22 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-comite-de-inversiones.pdf", "paginas":2, "sistema":"VIC", "principal":10, "pfinal":11, "orden":3 }
@@ -458,9 +458,9 @@ async function fetchDocumentos(){
     {
       "bloqueado": true, "orden": 4, "clase": "Inversiones Alternativas", "mercado": "Local",
       "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Instrumento", "etiqueta": "Acta de Suscripción", "nombre": "acta-de-suscripcion.pdf",
+      "asociado": "Registro de Inversiones Financieras", "etiqueta": "Acta de Suscripción", "nombre": "acta-de-suscripcion.pdf",
       "paginas": 5, "principal": 12, "pfinal": 16, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
       "historial": [
         { "fecha":"26/06/2025, 4:20:45 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-suscripcion.pdf", "paginas":5, "sistema":"VIC", "principal":12, "pfinal":16, "orden":4 },
         { "fecha":"27/06/2025, 9:59:01 a. m.",  "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"acta-de-suscripcion.pdf", "paginas":5, "sistema":"VIC", "principal":12, "pfinal":16, "orden":4 }
@@ -469,9 +469,9 @@ async function fetchDocumentos(){
     {
       "bloqueado": false, "orden": 5, "clase": "Inversiones Alternativas", "mercado": "Local",
       "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Llamado de Capital", "etiqueta": "Documento de notificación del llamado", "nombre": "documento-notificacion.pdf",
+      "asociado": "Registro de Llamado de Capital", "etiqueta": "Documento de notificación del llamado", "nombre": "documento-notificacion.pdf",
       "paginas": 3, "principal": 17, "pfinal": 19, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
       "historial": [
         { "fecha":"26/06/2025, 4:27:10 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":3, "sistema":"VIC", "principal":17, "pfinal":19, "orden":5 },
         { "fecha":"27/06/2025, 10:02:40 a. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes","ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":3, "sistema":"VIC", "principal":17, "pfinal":19, "orden":5 }
@@ -480,9 +480,9 @@ async function fetchDocumentos(){
     {
       "bloqueado": true, "orden": 6, "clase": "Inversiones Alternativas", "mercado": "Local",
       "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Desagregado de Llamado de Capital", "etiqueta": "Constancia de operación", "nombre": "constancia-operacion.pdf",
+      "asociado": "Registrar Operación", "etiqueta": "Constancia de operación", "nombre": "constancia-operacion.pdf",
       "paginas": 7, "principal": 20, "pfinal": 26, "uo": "OAD.TE", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
       "historial": [
         { "fecha":"26/06/2025, 4:35:18 p. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 },
         { "fecha":"27/06/2025, 10:05:03 a. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 }
@@ -491,9 +491,9 @@ async function fetchDocumentos(){
     {
       "bloqueado": true, "orden": 7, "clase": "Inversiones Alternativas", "mercado": "Local",
       "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Distribución de Capital", "etiqueta": "Documento de notificación de la distribución", "nombre": "constancia-operacion.pdf",
+      "asociado": "Registro de Distribución de Capital", "etiqueta": "Documento de notificación de la distribución", "nombre": "documento-notificacion.pdf",
       "paginas": 7, "principal": 20, "pfinal": 26, "uo": "DIN.IF", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
       "historial": [
         { "fecha":"26/06/2025, 4:39:50 p. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 },
         { "fecha":"27/06/2025, 10:06:18 a. m.", "usuario":"JSIFUENTESR", "nombreUsuario":"Josue Sifuentes", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"constancia-operacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 }
@@ -502,9 +502,9 @@ async function fetchDocumentos(){
     {
       "bloqueado": true, "orden": 8, "clase": "Inversiones Alternativas", "mercado": "Local",
       "subcat": "Fondos de inversión", "tipo": "Fondo Privado", "codigo": "INV-6053",
-      "asociado": "Desagregado Distribución de Capital", "etiqueta": "Constancia de operación", "nombre": "documento-notificacion.pdf",
+      "asociado": "Registrar Operación", "etiqueta": "Constancia de operación", "nombre": "documento-notificacion.pdf",
       "paginas": 7, "principal": 20, "pfinal": 26, "uo": "OAD.TE", "msj": "ÉXITO", "estado": "ÉXITO",
-      "fecha":"26/06/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
+      "fecha":"22/09/2025, 4:03:02 p. m.", "usuario":"JHUANCAR", "ip":"172.16.34.132",
       "historial": [
         { "fecha":"26/06/2025, 4:42:12 p. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.34.132", "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 },
         { "fecha":"27/06/2025, 10:07:41 a. m.", "usuario":"EGUERRERO", "nombreUsuario":"Evelyn Guerrero Paitan", "ip":"172.16.8.94",   "serie":"NOTIFICACIÓN", "tipo":"NOTIFICACIÓN", "doc":"documento-notificacion.pdf", "paginas":7, "sistema":"VIC", "principal":20, "pfinal":26, "orden":6 }
@@ -557,6 +557,7 @@ async function fetchDocumentos(){
         <td class="px-3 py-2 text-[12px] text-center">${d.subcat ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${d.tipo ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center font-semibold text-slate-700">${d.codigo ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.fecha ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${d.asociado ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-left">${d.etiqueta ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-left">${d.nombre ?? ''}</td>
@@ -587,14 +588,6 @@ async function fetchDocumentos(){
 
 </td>
 
-<td class="px-3 py-2 text-[12px] text-center">
-  <a href="#grabar-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
-                            text-slate-600 hover:text-blue-700 hover:bg-blue-800
-                            focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-     title="Grabar" aria-label="Grabar">
-    <img src="svg/grabar.svg" alt="Grabar" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-  </a>
-</td>
 
 <td class="px-3 py-2 text-[12px] text-center">
   <a href="#editar-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
@@ -605,14 +598,6 @@ async function fetchDocumentos(){
   </a>
 </td>
 
-<td class="px-3 py-2 text-[12px] text-center">
-  <a href="#eliminar-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
-                              text-slate-600 hover:text-blue-700 hover:bg-blue-800
-                              focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-     title="Retirar/Eliminar" aria-label="Retirar o eliminar">
-    <img src="svg/trash.svg" alt="Eliminar" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-  </a>
-</td>
 
 <td class="px-3 py-2 text-[12px] text-center">
   <a href="#"
@@ -629,9 +614,6 @@ async function fetchDocumentos(){
 </a>
 
 </td>
-
-   <td class="px-3 py-2 text-[12px] text-center">${d.estado ?? ''}</td>
-
 
         <td class="px-3 py-2 text-[12px] text-center">
             <div class="p-1 border border-blue-400 bg-blue-200 rounded-lg">
@@ -728,6 +710,7 @@ async function fetchDocumentos(){
    *  FILTROS
    ***********************/
   function aplicarFiltros(){
+    $('#loading-spinner').removeClass('hidden');
     const fClase  = document.getElementById('fClase').value;
     const fMerc   = document.getElementById('fMercado').value;
     const fSub    = document.getElementById('fSub').value;
@@ -745,7 +728,11 @@ async function fetchDocumentos(){
 
     FILTERED = out.length ? out : [];
     STATE.page = 1;
-    refreshView();
+    
+     setTimeout(function(){
+            $('#loading-spinner').addClass('hidden');
+        refreshView();
+        }, 1000);
   }
 
   document.getElementById('btnBuscar').addEventListener('click', aplicarFiltros);
@@ -1024,6 +1011,8 @@ document.addEventListener('click', (e) => {
   if (!url) return;
   downloadPdf(url, name);
 });
+
+
 
 
 </script>
