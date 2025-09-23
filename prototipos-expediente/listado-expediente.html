@@ -60,7 +60,7 @@
         </div>
         <div>
           <label class="block text-sm font-semibold mb-1">Código de Inversión</label>
-          <input id="fCodigo" type="text" placeholder="Ej: INV-0001"
+          <input id="fCodigo" value="INV-6053" type="text" placeholder="Ej: INV-0001"
                  class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none"/>
         </div>
       </div>
@@ -74,12 +74,12 @@
         </button>
       </div>
     </section>
-      <section class="bg-white  p-5">
+      <section class="bg-white  pb-2 px-5">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <div>
           <label class="block font-semibold mb-1 text-[16px]">Expediente: ${EXPEDIENTE}</label>
             <div class="flex flex-row gap-3">
-                <div><b>Leyenda</b></div>
+                <div class="font-semibold">Leyenda:</div>
                 <div class="flex flex-row gap-2">
                     <img src="svg/close-lock.svg" alt="Ver" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
                     Bloqueado
@@ -101,25 +101,25 @@
         <table class="text-sm ">
           <thead class="bg-slate-800 text-white sticky top-0 text-[12px]">
             <tr>
-              <th class="px-8 text-center">N° Item</th>
-              <th class="px-3 text-center">Clase de Activo</th>
-              <th class="px-3 text-center">Mercado</th>
-              <th class="px-3 text-center">Subcategoría</th>
-              <th class="px-3 text-center">Tipo de Instrumento</th>
-              <th class="px-3 text-center">Código de Inversión</th>
-              <th class="px-3 text-center">Asociado al</th>
-              <th class="px-3 text-left">Etiqueta del Documento</th>
-              <th class="px-3 text-left">Nombre del Documento</th>
-              <th class="px-3 text-center">Nro Páginas</th>
-              <th class="px-3 text-center">Nro Página Inicial</th>
-              <th class="px-3 text-center">Nro Página Final</th>
-            <td class="px-8 py-2 text-center">Ver Detalle</td>
-            <td class="px-3 py-2 text-center">grabar</td>
-            <td class="px-3 py-2 text-center">editar</td>
-            <td class="px-3 py-2 text-center">retirar/eliminar</td>
-            <td class="px-3 py-2 text-center">histórico</td>
-            <td class="px-3 py-2 text-center">estado</td>
-              <th class="px-3 text-center">Unidad Orgánica</th>
+              <th class="px-8 text-center uppercase">N° Item</th>
+              <th class="px-3 text-center uppercase">Clase de Activo</th>
+              <th class="px-3 text-center uppercase">Mercado</th>
+              <th class="px-3 text-center uppercase">Subcategoría</th>
+              <th class="px-3 text-center uppercase">Tipo de Instrumento</th>
+              <th class="px-3 text-center uppercase">Código de Inversión</th>
+              <th class="px-3 text-center uppercase">Asociado al</th>
+              <th class="px-3 text-left uppercase">Etiqueta del Documento</th>
+              <th class="px-3 text-left uppercase">Nombre del Documento</th>
+              <th class="px-3 text-center uppercase">Nro Páginas</th>
+              <th class="px-3 text-center uppercase">Nro Página Inicial</th>
+              <th class="px-3 text-center uppercase">Nro Página Final</th>
+              <th class="px-8 text-center uppercase">Ver Detalle</th>
+              <th class="px-3 text-center uppercase">grabar</th>
+              <th class="px-3 text-center uppercase">editar</th>
+              <th class="px-3 text-center uppercase">retirar<br>/eliminar</th>
+              <th class="px-3 text-center uppercase">histórico</th>
+              <th class="px-3 text-center uppercase">estado</th>
+              <th class="px-3 text-center uppercase">Unidad Orgánica</th>
             </tr>
           </thead>
           <tbody id="tablaBody" class="[&>tr:nth-child(even)]:bg-slate-50">
@@ -172,7 +172,15 @@
    ***********************/
   const API_FILTERS_URL = '../recursos/investment-data.json'; // cambia si quieres
 
-  
+  // valores por defecto
+const DEFAULTS = {
+  clase:  'Inversiones Alternativas',
+  mercado:'Local',
+  sub:    'Fondos de inversión',
+  tipo:   'Fondo privado'
+};
+
+
   /***********************
    *  ESTADO
    ***********************/
@@ -201,6 +209,39 @@
     });
     select.disabled = !(values && values.length);
   }
+
+  // valores por defecto
+
+// preseleccionar en cascada
+function preselectFilters({clase, mercado, sub, tipo} = {}) {
+  const fClase   = document.getElementById('fClase');
+  const fMercado = document.getElementById('fMercado');
+  const fSub     = document.getElementById('fSub');
+  const fTipo    = document.getElementById('fTipo');
+
+  // 1) Clase
+  if (clase && investmentData[clase]) {
+    fClase.value = clase;
+    fClase.dispatchEvent(new Event('change')); // llena mercados
+  }
+
+  // 2) Mercado
+  if (mercado && fMercado.options.length) {
+    fMercado.value = mercado;
+    fMercado.dispatchEvent(new Event('change')); // llena subcategorías
+  }
+
+  // 3) Subcategoría
+  if (sub && fSub.options.length) {
+    fSub.value = sub;
+    fSub.dispatchEvent(new Event('change')); // llena tipos
+  }
+
+  // 4) Tipo
+  if (tipo && fTipo.options.length) {
+    fTipo.value = tipo;
+  }
+}
 
   /***********************
    *  CARGA DE FILTROS (AJAX)
@@ -263,14 +304,14 @@
    ***********************/
   async function fetchDocumentos(){
     return [
-      {"bloqueado":true,"orden":1,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Contrato de Suscripción","nombre":"D01-CONTRATO_SUSCRIPCION.pdf","paginas":8,"pinicial":1,"pfinal":8,"uo":"DIN","msj":"ÉXITO"},
-      {"bloqueado":false,"orden":2,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Llamado","etiqueta":"Notificación de Llamado","nombre":"D22-NOTIFICACION_LLAMADO.pdf","paginas":1,"pinicial":9,"pfinal":9,"uo":"DIN","msj":"ÉXITO"},
-      {"bloqueado":false,"orden":3,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Distribución","etiqueta":"Aviso de Distribución","nombre":"D23-AVISO_DISTRIBUCION.pdf","paginas":2,"pinicial":10,"pfinal":11,"uo":"DIN","msj":"ÉXITO"},
-      {"bloqueado":true,"orden":4,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Desagregado Llamado","etiqueta":"Cuadro Desagregado","nombre":"D24-CUADRO_DESAGREGADO_LLAMADO.pdf","paginas":5,"pinicial":12,"pfinal":16,"uo":"DIN","msj":"ÉXITO"},
-      {"bloqueado":false,"orden":5,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Desagregado Distribución","etiqueta":"Cuadro Desagregado","nombre":"D25-CUADRO_DESAGREGADO_DISTRIBUCION.pdf","paginas":3,"pinicial":17,"pfinal":19,"uo":"DIN","msj":"ÉXITO"},
-      {"bloqueado":true,"orden":6,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Reglamento de Participación","nombre":"D15-REGLAMENTO_PARTICIPACION.pdf","paginas":7,"pinicial":20,"pfinal":26,"uo":"DIN","msj":"ÉXITO"},
-      {"bloqueado":false,"orden":7,"clase":"Alternativos","mercado":"Local","subcat":"Fondos","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Llamado/Distribución","etiqueta":"Acta de Suscripción","nombre":"D26-ACTA_SUSCRIPCION.pdf","paginas":4,"pinicial":27,"pfinal":30,"uo":"DIN","msj":"PENDIENTE"},
-      {"bloqueado":false,"orden":8,"clase":"Alternativos","mercado":"Local","subcat":"Fondos","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Reporte Estado Cuenta","nombre":"D19-REPORTE_ESTADO_CUENTA.pdf","paginas":3,"pinicial":31,"pfinal":33,"uo":"DIN","msj":"ÉXITO"}
+      {"bloqueado":true,"orden":1,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Informe de Riesgos","nombre":"informe-riesgos.pdf","paginas":8,"pinicial":1,"pfinal":8,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
+      {"bloqueado":false,"orden":2,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Informe Legal","nombre":"informe-legal.pdf","paginas":1,"pinicial":9,"pfinal":9,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
+      {"bloqueado":false,"orden":3,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Acta de Comité de Inversiones","nombre":"acta-de-comite-de-inversiones.pdf","paginas":2,"pinicial":10,"pfinal":11,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
+      {"bloqueado":true,"orden":4,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Instrumento","etiqueta":"Acta de Suscripción","nombre":"acta-de-suscripcion.pdf","paginas":5,"pinicial":12,"pfinal":16,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
+      {"bloqueado":false,"orden":5,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Llamado de Capital","etiqueta":"Documento de notificación del llamado","nombre":"documento-notificacion.pdf","paginas":3,"pinicial":17,"pfinal":19,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
+      {"bloqueado":true,"orden":6,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Desagregado de Llamado de Capital","etiqueta":"Constancia de operación","nombre":"constancia-operacion.pdf","paginas":7,"pinicial":20,"pfinal":26,"uo":"OAD.TE","msj":"ÉXITO", "estado": "ÉXITO"},
+      {"bloqueado":true,"orden":6,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Distribución de Capital","etiqueta":"Documento de notificación de la distribución","nombre":"constancia-operacion.pdf","paginas":7,"pinicial":20,"pfinal":26,"uo":"DIN.IF","msj":"ÉXITO", "estado": "ÉXITO"},
+      {"bloqueado":true,"orden":6,"clase":"Inversiones Alternativas","mercado":"Local","subcat":"Fondos de inversión","tipo":"Fondo Privado","codigo":"INV-6053","asociado":"Desagregado Distribución de Capital","etiqueta":"Constancia de operación","nombre":"documento-notificacion.pdf","paginas":7,"pinicial":20,"pfinal":26,"uo":"OAD.TE","msj":"ÉXITO", "estado": "ÉXITO"},
     ];
   }
 
@@ -374,14 +415,7 @@
   </a>
 </td>
 
-<td class="px-3 py-2 text-[12px] text-center">
-  <a href="#historico" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg
-                            text-slate-600 hover:text-blue-700 hover:bg-blue-800
-                            focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-     title="Histórico" aria-label="Histórico">
-    <img src="svg/historico.svg" alt="Histórico" class="w-5 h-5 object-contain" loading="lazy" decoding="async">
-  </a>
-</td>
+   <td class="px-3 py-2 text-[12px] text-center">${d.estado ?? ''}</td>
 
 
         <td class="px-3 py-2 text-[12px] text-center">
@@ -521,6 +555,7 @@
    ***********************/
   (async function init(){
     await loadInvestmentData("../recursos/investment.json"); // filtros
+     preselectFilters(DEFAULTS);                               // ← preselecciona
     DOCUMENTOS = await fetchDocumentos();                    // data demo
     refreshView();                                           // primera carga con paginación
   })();
