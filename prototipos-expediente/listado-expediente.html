@@ -110,12 +110,12 @@
           <!-- THEAD Nivel 1 -->
           <thead class="bg-slate-800 text-white sticky top-0 text-[12px]">
             <tr>
-              <th class="px-3 py-2 text-center uppercase w-[70px]">Detalle</th>
               <th class="px-3 py-2 text-center uppercase">Clase de Activo</th>
               <th class="px-3 py-2 text-center uppercase">Mercado</th>
               <th class="px-3 py-2 text-center uppercase">Subcategoría</th>
               <th class="px-3 py-2 text-center uppercase">Tipo de Instrumento</th>
               <th class="px-3 py-2 text-center uppercase">Código de Inversión</th>
+               <th class="px-3 py-2 text-center uppercase w-[70px]">Acciones</th>
             </tr>
           </thead>
           <tbody id="tablaBodyPadre" class="[&>tr:nth-child(odd)]:bg-slate-50">
@@ -573,138 +573,138 @@ async function loadGruposAjax(url) {
   /***********************
    *  RENDER (Nivel 1 con slice → tabla Nivel 2)
    ***********************/
-  function renderNivel1(groups){
-    const tbody = document.getElementById('tablaBodyPadre');
-    const empty = document.getElementById('emptyState');
-    tbody.innerHTML = '';
+function renderNivel1(groups){
+  const tbody = document.getElementById('tablaBodyPadre');
+  const empty = document.getElementById('emptyState');
+  tbody.innerHTML = '';
 
-    if(!groups.length){
-      empty.classList.remove('hidden');
-      return;
-    }
-    empty.classList.add('hidden');
+  if(!groups.length){
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
 
-    const rows = groups.map(g => {
-      const rowPadre = `
-        <tr class="group-row hover:bg-blue-50 transition">
-          <td class="px-3 py-2 text-[12px] text-center">
-            <button class="btn-toggle-group inline-flex items-center justify-center w-8 h-8 rounded-lg border border-slate-300 hover:bg-slate-100"
-                    aria-expanded="false" title="Mostrar detalle">
-              <span class="text-base font-bold">＋</span>
+  const rows = groups.map((g, idx) => {
+    const rowPadre = `
+      <tr class="group-row hover:bg-blue-50 transition" data-group-idx="${idx}">
+        <td class="px-3 py-2 text-[12px] text-center">${g.clase || ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${g.mercado || ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${g.subcat || ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${g.tipo || ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center font-semibold">${g.codigo || ''}</td>
+                <td class="px-3 py-2 text-[12px] text-center">
+          <div class="flex flex-row gap-1 ">
+            <button class="btn-toggle-items inline-flex items-center justify-center px-2 py-1 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-[11px] font-semibold text-blue-700"
+                    aria-expanded="false" title="Mostrar Documentos">
+              Documento Sustentatorio
             </button>
-          </td>
-          <td class="px-3 py-2 text-[12px] text-center">${g.clase || ''}</td>
-          <td class="px-3 py-2 text-[12px] text-center">${g.mercado || ''}</td>
-          <td class="px-3 py-2 text-[12px] text-center">${g.subcat || ''}</td>
-          <td class="px-3 py-2 text-[12px] text-center">${g.tipo || ''}</td>
-          <td class="px-3 py-2 text-[12px] text-center font-semibold">${g.codigo || ''}</td>
-        </tr>`;
+            <button class="btn-toggle-acciones inline-flex items-center justify-center px-2 py-1 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-[11px] font-semibold text-green-700"
+                    aria-expanded="false" title="Mostrar Acciones">
+              Historial de Actividades
+            </button>
+          </div>
+        </td>
+      </tr>`;
 
-      // Tabla Nivel 2 (detalle) — SOLO con las columnas solicitadas
-      const detalleHead = `
-        <thead class="bg-slate-700 text-white text-[12px]">
-          <tr>
-            <th class="px-3 py-2  text-center uppercase">Fecha y Hora</th>
-            <th class="px-8 py-2  text-center uppercase">Acción</th>
-            <th class="px-3 py-2  text-left uppercase">Etiqueta del Documento</th>
-            <th class="px-3 py-2  text-left uppercase">Nombre del Documento</th>
-            <th class="text-center py-2  uppercase">Nro Pag</th>
-            <th class="text-center py-2  uppercase">Nro Pag Ini.</th>
-            <th class="text-center py-2  uppercase">Nro Pag Fin.</th>
-            <th class="px-8 py-2  text-center uppercase">Ver Detalle</th>
-            <th class="px-3 py-2  text-center uppercase">editar</th>
-            <th class="px-3 py-2  text-center uppercase">histórico</th>
-            <th class="px-3 py-2  text-center uppercase">Unidad Orgánica</th>
-          </tr>
-        </thead>`;
-
-      const detalleBody = (g.items || []).map(d => `
-        <tr class="hover:bg-blue-50 transition">
-          <td class="px-3 py-2 text-[12px] text-center">${d.fecha ?? ''}</td>
-          <td class="px-3 py-2 text-[12px] text-center">${d.asociado ?? ''}</td>
-          <td class="px-3 py-2 text-[12px] text-left">${d.etiqueta ?? ''}</td>
-          <td class="px-3 py-2 text-[12px] text-left">${d.nombre ?? ''}</td>
-          <td class="px-3 py-2 text-[12px] text-center">${d.paginas ?? ''}</td>
-          <td class="px-3 py-2 text-[12px] text-center">${d.principal ?? ''}</td>
-          <td class="px-3 py-2 text-[12px] text-center">${d.pfinal ?? ''}</td>
-
-          <td class="px-3 py-2 text-[12px] text-center">
-            <a href="#ver-pdf"
-               data-action="pdf"
-               data-title="${d.etiqueta || d.nombre || 'Documento PDF'}"
-               data-nombre="${d.nombre || ''}"
-               data-src="pdf/${encodeURIComponent(d.nombre || 'documento.pdf')}"
-               data-page="${d.principal || 1}"
-               class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-               title="Ver PDF" aria-label="Ver PDF">
-              <img src="svg/visor.svg" class="w-5 h-5" alt="">
-            </a>
-            <a href="pdf/${encodeURIComponent(d.nombre || 'documento.pdf')}"
-               data-action="download-pdf"
-               data-src="pdf/${encodeURIComponent(d.nombre || 'documento.pdf')}"
-               data-filename="${(d.etiqueta||'Documento')}.pdf"
-               class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-               title="Descargar" aria-label="Descargar">
-              <img src="svg/descargar.svg" class="w-5 h-5" alt="">
-            </a>
-          </td>
-
-          <td class="px-3 py-2 text-[12px] text-center">
-            <a href="#editar-doc" class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60" title="Editar" aria-label="Editar">
-              <img src="svg/editar.svg" class="w-5 h-5" alt="">
-            </a>
-          </td>
-
-          <td class="px-3 py-2 text-[12px] text-center">
-            <a href="#"
-               data-action="historial"
-               data-cod="${g.codigo ?? ''}"
-               data-nombre="${d.nombre ?? ''}"
-               data-uo="${d.uo ?? ''}"
-               data-usuario-crea="${d.usuario ?? ''}"
-               data-fecha-crea="${d.fecha ?? ''}"
-               data-ip-crea="${d.ip ?? ''}"
-               class="inline-flex bg-blue-700 items-center justify-center p-1.5 rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/60"
-               title="Histórico" aria-label="Histórico">
-              <img src="svg/historico.svg" class="w-5 h-5" alt="">
-            </a>
-          </td>
-
-          <td class="px-3 py-2 text-[12px] text-center">
-            <div class="p-1 border border-blue-400 bg-blue-200 rounded-lg">
-              <b class="text-blue-900">${d.uo ?? ''}</b>
-            </div>
-          </td>
+    // tabla de items (documentos)
+    const detalleHeadItems = `
+      <thead class="bg-slate-700 text-white text-[12px]">
+        <tr>
+          <th class="px-3 py-2 text-center uppercase">Fecha y Hora</th>
+          <th class="px-8 py-2 text-center uppercase">Acción</th>
+          <th class="px-3 py-2 text-left uppercase">Etiqueta del Documento</th>
+          <th class="px-3 py-2 text-left uppercase">Nombre del Documento</th>
+          <th class="text-center py-2 uppercase">Nro Pag</th>
+          <th class="text-center py-2 uppercase">Nro Pag Ini.</th>
+          <th class="text-center py-2 uppercase">Nro Pag Fin.</th>
+          <th class="px-8 py-2 text-center uppercase">Ver Detalle</th>
+          <th class="px-3 py-2 text-center uppercase">editar</th>
+          <th class="px-3 py-2 text-center uppercase">histórico</th>
+          <th class="px-3 py-2 text-center uppercase">Unidad Orgánica</th>
         </tr>
-      `).join('');
+      </thead>`;
 
-      const rowDetalle = `
-<tr class="group-detail bg-gray-100" aria-hidden="true">
-  <td colspan="6" class="px-3 pt-0 ">
-    <!-- cerrado por defecto; NO tiene la clase .open -->
+    const detalleBodyItems = (g.items || []).map(d => `
+      <tr class="hover:bg-blue-50 transition">
+        <td class="px-3 py-2 text-[12px] text-center">${d.fecha ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.asociado ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-left">${d.etiqueta ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-left">${d.nombre ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.paginas ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.principal ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${d.pfinal ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">…</td>
+        <td class="px-3 py-2 text-[12px] text-center">…</td>
+        <td class="px-3 py-2 text-[12px] text-center">…</td>
+        <td class="px-3 py-2 text-[12px] text-center"><b>${d.uo ?? ''}</b></td>
+      </tr>
+    `).join('');
+
+    const rowDetalleItems = `
+<tr class="detail-items bg-gray-100" aria-hidden="true">
+  <td colspan="6" class="px-3 pt-0">
     <div class="collapsible">
       <div class="rounded-sm ring-1 ring-slate-200 shadow-sm overflow-hidden p-2">
         <div class="overflow-x-auto">
           <table class="min-w-[1200px] w-full text-sm">
-            ${detalleHead}
+            ${detalleHeadItems}
             <tbody class="[&>tr:nth-child(even)]:bg-slate-50">
-              ${detalleBody}
+              ${detalleBodyItems}
             </tbody>
           </table>
         </div>
       </div>
     </div>
   </td>
-</tr>
+</tr>`;
 
-`;
+    // tabla de acciones
+    const accionesHead = `
+      <thead class="bg-slate-700 text-white text-[12px]">
+        <tr>
+          <th class="px-3 py-2 text-center uppercase">Fecha</th>
+          <th class="px-3 py-2 text-center uppercase">Acción</th>
+          <th class="px-3 py-2 text-center uppercase">Usuario</th>
+          <th class="px-3 py-2 text-center uppercase">Nombre Usuario</th>
+          <th class="px-3 py-2 text-center uppercase">IP</th>
+          <th class="px-3 py-2 text-center uppercase">Unidad Orgánica</th>
+        </tr>
+      </thead>`;
 
-      return rowPadre + rowDetalle;
-    }).join('');
+    const accionesBody = (g.acciones || []).map(a => `
+      <tr class="hover:bg-blue-50 transition">
+        <td class="px-3 py-2 text-[12px] text-center">${a.fecha ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${a.accion ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${a.usuario ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${a.nombreUsuario ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${a.ip ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${a.uo ?? ''}</td>
+      </tr>
+    `).join('');
 
-    tbody.insertAdjacentHTML('beforeend', rows);
-  }
+    const rowDetalleAcciones = `
+<tr class="detail-acciones bg-gray-100" aria-hidden="true">
+  <td colspan="6" class="px-3 pt-0">
+    <div class="collapsible">
+      <div class="rounded-sm ring-1 ring-slate-200 shadow-sm overflow-hidden p-2">
+        <div class="overflow-x-auto">
+          <table class="min-w-[900px] w-full text-sm">
+            ${accionesHead}
+            <tbody class="[&>tr:nth-child(even)]:bg-slate-50">
+              ${accionesBody}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </td>
+</tr>`;
 
+    return rowPadre + rowDetalleItems + rowDetalleAcciones;
+  }).join('');
+
+  tbody.insertAdjacentHTML('beforeend', rows);
+}
   /***********************
    *  PAGINACIÓN (POR GRUPOS)
    ***********************/
@@ -867,23 +867,42 @@ async function loadGruposAjax(url) {
   /***********************
    *  Toggle (+)/(–) por fila de NIVEL 1
    ***********************/
+// Reemplaza el toggle existente por este (maneja Items y Acciones)
+// manejador de eventos
 document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.btn-toggle-group');
-  if (!btn) return;
+  const row = e.target.closest('tr.group-row');
+  if (!row) return;
 
-  const tr = btn.closest('tr');
-  const detailRow = tr?.nextElementSibling;
-  if (!detailRow) return;
+  const btnItems = e.target.closest('.btn-toggle-items');
+  const btnAcc   = e.target.closest('.btn-toggle-acciones');
 
-  const box = detailRow.querySelector('.collapsible');
-  const willOpen = !box.classList.contains('open');
+  const detailItems = row.nextElementSibling;                 // <tr class="detail-items">
+  const detailAcc   = row.nextElementSibling?.nextElementSibling; // <tr class="detail-acciones">
 
-  box.classList.toggle('open', willOpen);
-  detailRow.setAttribute('aria-hidden', String(!willOpen));
+  const setOpen = (trDetail, btn, open, colorClass) => {
+    if (!trDetail || !btn) return;
+    const box = trDetail.querySelector('.collapsible');
+    box.classList.toggle('open', open);
+    trDetail.setAttribute('aria-hidden', String(!open));
+    btn.setAttribute('aria-expanded', String(open));
+    btn.classList.toggle(colorClass, open);
+  };
 
-  const icon = btn.querySelector('span');
-  if (icon) icon.textContent = willOpen ? '－' : '＋';
+  if (btnItems) {
+    const willOpen = !(detailItems?.querySelector('.collapsible')?.classList.contains('open'));
+    setOpen(detailItems, btnItems, willOpen, 'bg-blue-200');
+    // cerrar Acciones si se abre Items
+    if (willOpen) setOpen(detailAcc, row.querySelector('.btn-toggle-acciones'), false, 'bg-green-200');
+  }
+
+  if (btnAcc) {
+    const willOpen = !(detailAcc?.querySelector('.collapsible')?.classList.contains('open'));
+    setOpen(detailAcc, btnAcc, willOpen, 'bg-green-200');
+    // cerrar Items si se abre Acciones
+    if (willOpen) setOpen(detailItems, row.querySelector('.btn-toggle-items'), false, 'bg-blue-200');
+  }
 });
+
 
 
   /***********************
