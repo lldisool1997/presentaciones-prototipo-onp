@@ -17,7 +17,7 @@
         "principal": 1,
         "pfinal": 8,
         "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
+        "usuario": "JSIFUENTESR",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:03:02 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "informe-riesgo.pdf", "paginas": 8, "principal": 1, "pfinal": 8, "orden": 1 },
@@ -35,7 +35,7 @@
         "principal": 9,
         "pfinal": 9,
         "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
+        "usuario": "JSIFUENTESR",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:10:12 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "informe-legal.pdf", "paginas": 1, "principal": 9, "pfinal": 9, "orden": 2 },
@@ -53,7 +53,7 @@
         "principal": 10,
         "pfinal": 11,
         "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
+        "usuario": "JSIFUENTESR",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:15:00 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "acta-de-comite-de-inversiones.pdf", "paginas": 2, "principal": 10, "pfinal": 11, "orden": 3 },
@@ -71,7 +71,7 @@
         "principal": 12,
         "pfinal": 16,
         "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
+        "usuario": "JSIFUENTESR",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:20:45 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "acta-de-suscripcion.pdf", "paginas": 5, "principal": 12, "pfinal": 16, "orden": 4 },
@@ -89,7 +89,7 @@
         "principal": 17,
         "pfinal": 19,
         "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
+        "usuario": "JSIFUENTESR",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:27:10 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "documento-notificacion.pdf", "paginas": 3, "principal": 17, "pfinal": 19, "orden": 5 },
@@ -107,7 +107,7 @@
         "principal": 20,
         "pfinal": 26,
         "uo": "OAD.TE",
-        "usuario": "JHUANCAR",
+        "usuario": "EGUERRERO",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:35:18 p. m.", "usuario": "EGUERRERO", "nombreUsuario": "Evelyn Guerrero Paitan", "ip": "172.16.34.132", "doc": "constancia-operacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 },
@@ -125,7 +125,7 @@
         "principal": 20,
         "pfinal": 26,
         "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
+        "usuario": "JSIFUENTESR",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:39:50 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "constancia-operacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 },
@@ -143,7 +143,7 @@
         "principal": 20,
         "pfinal": 26,
         "uo": "OAD.TE",
-        "usuario": "JHUANCAR",
+        "usuario": "EGUERRERO",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:42:12 p. m.", "usuario": "EGUERRERO", "nombreUsuario": "Evelyn Guerrero Paitan", "ip": "172.16.34.132", "doc": "documento-notificacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 },
@@ -153,11 +153,11 @@
     ]
   },
     {
-    "clase": "Inversiones Alternativas",
+    "clase": "Renta Fija",
     "mercado": "Local",
-    "subcat": "Fondos de inversión",
-    "tipo": "Fondo privado",
-    "codigo": "INV-6054",
+    "subcat": "Gobierno",
+    "tipo": "Bono Soberano",
+    "codigo": "INV-1001",
     "items": [
       {
         "bloqueado": true,
@@ -170,7 +170,7 @@
         "principal": 1,
         "pfinal": 8,
         "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
+        "usuario": "JSIFUENTESR",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:03:02 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "informe-riesgo.pdf", "paginas": 8, "principal": 1, "pfinal": 8, "orden": 1 },
@@ -188,7 +188,7 @@
         "principal": 9,
         "pfinal": 9,
         "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
+        "usuario": "JSIFUENTESR",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:10:12 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "informe-legal.pdf", "paginas": 1, "principal": 9, "pfinal": 9, "orden": 2 },
@@ -206,7 +206,7 @@
         "principal": 10,
         "pfinal": 11,
         "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
+        "usuario": "JSIFUENTESR",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:15:00 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "acta-de-comite-de-inversiones.pdf", "paginas": 2, "principal": 10, "pfinal": 11, "orden": 3 },
@@ -217,50 +217,32 @@
         "bloqueado": true,
         "orden": 4,
         "fecha": "22/09/2025, 4:03:02 p. m.",
-        "asociado": "Registro de Inversiones Financieras",
-        "etiqueta": "Acta de Suscripción",
-        "nombre": "acta-de-suscripcion.pdf",
-        "paginas": 5,
-        "principal": 12,
-        "pfinal": 16,
-        "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
-        "ip": "172.16.34.132",
-        "historial": [
-          { "fecha": "26/06/2025, 4:20:45 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "acta-de-suscripcion.pdf", "paginas": 5, "principal": 12, "pfinal": 16, "orden": 4 },
-          { "fecha": "27/06/2025, 9:59:01 a. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.8.94", "doc": "acta-de-suscripcion.pdf", "paginas": 5, "principal": 12, "pfinal": 16, "orden": 4 }
-        ]
-      },
-      {
-        "bloqueado": false,
-        "orden": 5,
-        "fecha": "22/09/2025, 4:03:02 p. m.",
-        "asociado": "Registro de Llamado de Capital",
-        "etiqueta": "Documento de notificación del llamado",
-        "nombre": "documento-notificacion.pdf",
-        "paginas": 3,
-        "principal": 17,
-        "pfinal": 19,
-        "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
-        "ip": "172.16.34.132",
-        "historial": [
-          { "fecha": "26/06/2025, 4:27:10 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "documento-notificacion.pdf", "paginas": 3, "principal": 17, "pfinal": 19, "orden": 5 },
-          { "fecha": "27/06/2025, 10:02:40 a. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.8.94", "doc": "documento-notificacion.pdf", "paginas": 3, "principal": 17, "pfinal": 19, "orden": 5 }
-        ]
-      },
-      {
-        "bloqueado": true,
-        "orden": 6,
-        "fecha": "22/09/2025, 4:03:02 p. m.",
-        "asociado": "Registrar Operación",
-        "etiqueta": "Constancia de operación",
-        "nombre": "constancia-operacion.pdf",
+        "asociado": "Aprobar Inversión",
+        "etiqueta": "Confirmación de compra",
+        "nombre": "Confirmacion-compra.pdf",
         "paginas": 7,
         "principal": 20,
         "pfinal": 26,
         "uo": "OAD.TE",
-        "usuario": "JHUANCAR",
+        "usuario": "EGUERRERO",
+        "ip": "172.16.34.132",
+        "historial": [
+          { "fecha": "26/06/2025, 4:35:18 p. m.", "usuario": "EGUERRERO", "nombreUsuario": "Evelyn Guerrero Paitan", "ip": "172.16.34.132", "doc": "constancia-operacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 },
+          { "fecha": "27/06/2025, 10:05:03 a. m.", "usuario": "EGUERRERO", "nombreUsuario": "Evelyn Guerrero Paitan", "ip": "172.16.8.94", "doc": "constancia-operacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 }
+        ]
+      },
+            {
+        "bloqueado": true,
+        "orden": 5,
+        "fecha": "22/09/2025, 4:03:02 p. m.",
+        "asociado": "Aprobar Inversión",
+        "etiqueta": "Constancia de Confirmación de Venta de Entidad Financiera",
+        "nombre": "Constancia-confirmacion-venta.pdf",
+        "paginas": 7,
+        "principal": 20,
+        "pfinal": 26,
+        "uo": "OAD.TE",
+        "usuario": "EGUERRERO",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:35:18 p. m.", "usuario": "EGUERRERO", "nombreUsuario": "Evelyn Guerrero Paitan", "ip": "172.16.34.132", "doc": "constancia-operacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 },
@@ -269,16 +251,16 @@
       },
       {
         "bloqueado": true,
-        "orden": 7,
+        "orden": 6,
         "fecha": "22/09/2025, 4:03:02 p. m.",
-        "asociado": "Registro de Distribución de Capital",
-        "etiqueta": "Documento de notificación de la distribución",
-        "nombre": "documento-notificacion.pdf",
+        "asociado": "Cancelación de Cupón",
+        "etiqueta": "Sustento (Archivo)",
+        "nombre": "Sustento-cupon-1.pdf",
         "paginas": 7,
         "principal": 20,
         "pfinal": 26,
-        "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
+        "uo": "OAD.TE",
+        "usuario": "EGUERRERO",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:39:50 p. m.", "usuario": "JSIFUENTESR", "nombreUsuario": "Josue Sifuentes", "ip": "172.16.34.132", "doc": "constancia-operacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 },
@@ -287,16 +269,52 @@
       },
       {
         "bloqueado": true,
-        "orden": 8,
+        "orden": 7,
         "fecha": "22/09/2025, 4:03:02 p. m.",
-        "asociado": "Registrar Operación",
-        "etiqueta": "Constancia de operación",
-        "nombre": "documento-notificacion.pdf",
+        "asociado": "Cancelación de Cupón",
+        "etiqueta": "Sustento (Archivo)",
+        "nombre": "Sustento-cupon-2.pdf",
         "paginas": 7,
         "principal": 20,
         "pfinal": 26,
         "uo": "OAD.TE",
-        "usuario": "JHUANCAR",
+        "usuario": "EGUERRERO",
+        "ip": "172.16.34.132",
+        "historial": [
+          { "fecha": "26/06/2025, 4:42:12 p. m.", "usuario": "EGUERRERO", "nombreUsuario": "Evelyn Guerrero Paitan", "ip": "172.16.34.132", "doc": "documento-notificacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 },
+          { "fecha": "27/06/2025, 10:07:41 a. m.", "usuario": "EGUERRERO", "nombreUsuario": "Evelyn Guerrero Paitan", "ip": "172.16.8.94", "doc": "documento-notificacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 }
+        ]
+      },
+       {
+        "bloqueado": true,
+        "orden": 8,
+        "fecha": "22/09/2025, 4:03:02 p. m.",
+        "asociado": "Cancelación de Cupón",
+        "etiqueta": "Sustento (Archivo)",
+        "nombre": "Sustento-cupon-3.pdf",
+        "paginas": 7,
+        "principal": 20,
+        "pfinal": 26,
+        "uo": "OAD.TE",
+        "usuario": "EGUERRERO",
+        "ip": "172.16.34.132",
+        "historial": [
+          { "fecha": "26/06/2025, 4:42:12 p. m.", "usuario": "EGUERRERO", "nombreUsuario": "Evelyn Guerrero Paitan", "ip": "172.16.34.132", "doc": "documento-notificacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 },
+          { "fecha": "27/06/2025, 10:07:41 a. m.", "usuario": "EGUERRERO", "nombreUsuario": "Evelyn Guerrero Paitan", "ip": "172.16.8.94", "doc": "documento-notificacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 }
+        ]
+      },
+       {
+        "bloqueado": true,
+        "orden": 9,
+        "fecha": "22/09/2025, 4:03:02 p. m.",
+        "asociado": "Cancelación de Cupón",
+        "etiqueta": "Sustento (Archivo)",
+        "nombre": "Sustento-cupon-4.pdf",
+        "paginas": 7,
+        "principal": 20,
+        "pfinal": 26,
+        "uo": "OAD.TE",
+        "usuario": "EGUERRERO",
         "ip": "172.16.34.132",
         "historial": [
           { "fecha": "26/06/2025, 4:42:12 p. m.", "usuario": "EGUERRERO", "nombreUsuario": "Evelyn Guerrero Paitan", "ip": "172.16.34.132", "doc": "documento-notificacion.pdf", "paginas": 7, "principal": 20, "pfinal": 26, "orden": 6 },
