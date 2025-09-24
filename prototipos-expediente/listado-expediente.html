@@ -21,6 +21,18 @@
       }
     }
   </script>
+  <style>
+  .collapsible{
+    max-height: 0;            /* cerrado por defecto */
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height .3s ease, opacity .2s ease;
+  }
+  .collapsible.open{
+    max-height: 2000px;       /* algo suficientemente grande */
+    opacity: 1;
+  }
+  </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body class="bg-white text-slate-800">
@@ -60,7 +72,7 @@
         </div>
         <div>
           <label class="block text-sm font-semibold mb-1">Código de Inversión</label>
-          <input id="fCodigo" value="INV-6053" type="text" placeholder="Ej: INV-0001"
+          <input id="fCodigo" type="text" placeholder="Ej: INV-0001"
                  class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none"/>
         </div>
       </div>
@@ -593,7 +605,7 @@ async function loadGruposAjax(url) {
         <thead class="bg-slate-700 text-white text-[12px]">
           <tr>
             <th class="px-3 text-center uppercase">Fecha y Hora</th>
-            <th class="px-8 text-center uppercase">Asociado a</th>
+            <th class="px-8 text-center uppercase">Acción</th>
             <th class="px-3 text-left uppercase">Etiqueta del Documento</th>
             <th class="px-3 text-left uppercase">Nombre del Documento</th>
             <th class="text-center uppercase">Nro Pag</th>
@@ -667,21 +679,25 @@ async function loadGruposAjax(url) {
       `).join('');
 
       const rowDetalle = `
-        <tr class="group-detail hidden bg-gray-100">
-          <td colspan="6" class="px-3 pt-0 pb-4">
-            <div class="mt-2 rounded-sm ring-1 ring-slate-200 shadow-sm overflow-hidden">
+<tr class="group-detail bg-gray-100" aria-hidden="true">
+  <td colspan="6" class="px-3 pt-0 ">
+    <!-- cerrado por defecto; NO tiene la clase .open -->
+    <div class="collapsible">
+      <div class="rounded-sm ring-1 ring-slate-200 shadow-sm overflow-hidden p-2">
+        <div class="overflow-x-auto">
+          <table class="min-w-[1200px] w-full text-sm">
+            ${detalleHead}
+            <tbody class="[&>tr:nth-child(even)]:bg-slate-50">
+              ${detalleBody}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </td>
+</tr>
 
-              <div class="overflow-x-auto">
-                <table class="min-w-[1200px] w-full text-sm">
-                  ${detalleHead}
-                  <tbody class="[&>tr:nth-child(even)]:bg-slate-50">
-                    ${detalleBody}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </td>
-        </tr>`;
+`;
 
       return rowPadre + rowDetalle;
     }).join('');
@@ -828,7 +844,7 @@ async function loadGruposAjax(url) {
     document.getElementById('fCodigo').value = '';
     FILTERED = null;
     STATE.page = 1;
-    refreshView();
+    aplicarFiltros();
   });
 
   // Buscar con Enter
@@ -851,20 +867,24 @@ async function loadGruposAjax(url) {
   /***********************
    *  Toggle (+)/(–) por fila de NIVEL 1
    ***********************/
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.btn-toggle-group');
-    if (!btn) return;
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-toggle-group');
+  if (!btn) return;
 
-    const tr = btn.closest('tr');
-    const detailRow = tr?.nextElementSibling;
-    if (!detailRow || !detailRow.classList.contains('group-detail')) return;
+  const tr = btn.closest('tr');
+  const detailRow = tr?.nextElementSibling;
+  if (!detailRow) return;
 
-    const isOpen = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', String(!isOpen));
-    btn.title = isOpen ? 'Mostrar detalle' : 'Ocultar detalle';
-    btn.querySelector('span').textContent = isOpen ? '＋' : '－';
-    detailRow.classList.toggle('hidden', isOpen);
-  });
+  const box = detailRow.querySelector('.collapsible');
+  const willOpen = !box.classList.contains('open');
+
+  box.classList.toggle('open', willOpen);
+  detailRow.setAttribute('aria-hidden', String(!willOpen));
+
+  const icon = btn.querySelector('span');
+  if (icon) icon.textContent = willOpen ? '－' : '＋';
+});
+
 
   /***********************
    *  Modal Historial
