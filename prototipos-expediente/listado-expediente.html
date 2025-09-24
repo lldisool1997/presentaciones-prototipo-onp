@@ -34,6 +34,21 @@
   }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
+<script>
+  toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    newestOnTop: true,
+    preventDuplicates: true,
+    positionClass: "toast-top-right",
+    timeOut: 3000,
+    extendedTimeOut: 1500,
+    showDuration: 200,
+    hideDuration: 200
+  };
+</script>
 </head>
 <body class="bg-white text-slate-800">
   <main class="max-w-full mx-auto p-4 md:p-6">
@@ -246,6 +261,63 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal Agregar Documento -->
+<div id="twModalAddDoc" class="fixed inset-0 z-[120] hidden">
+  <div data-backdrop class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-xl bg-white rounded-2xl overflow-hidden shadow-2xl opacity-0 scale-95 transition-all duration-150 ease-out ring-1 ring-slate-200"
+         role="dialog" aria-modal="true" aria-labelledby="adddoc-title">
+      <header class="bg-gradient-to-r from-brand1 to-brand2 text-white px-5 py-3 flex items-center justify-between">
+        <h3 id="adddoc-title" class="text-base md:text-lg font-semibold">Agregar Documento</h3>
+        <button type="button" class="adddoc-close inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/10">
+          <img src="svg/close.svg" class="w-5 h-5" alt="Cerrar">
+        </button>
+      </header>
+
+      <form id="addDocForm" class="p-4 grid gap-4 text-sm">
+        <input type="hidden" id="addDocGroupIndex" />
+
+        <div>
+          <label class="block font-semibold mb-1">Acción</label>
+          <select id="addDocAccion" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none" required>
+            <option value="">Seleccione…</option>
+            <option>Registro de Inversiones Financieras</option>
+            <option>Aprobar Inversión</option>
+            <option>Registrar Operación</option>
+            <option>Registro de Llamado de Capital</option>
+            <option>Registro de Distribución de Capital</option>
+            <option>Cancelación de Cupón</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1">Numeración (Orden)</label>
+          <input id="addDocOrden" type="number" min="1" step="1" placeholder="Ej: 9"
+            class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none" required />
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1">Documento (PDF)</label>
+          <div class="flex items-center gap-3">
+            <input id="addDocFile" type="file" accept="application/pdf" class="hidden" />
+            <button type="button" id="btnPickFile"
+              class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border-2 border-dashed border-slate-300 hover:bg-slate-50">
+              <img src="svg/upload.svg" class="w-5 h-5" alt="Subir"> Subir archivo
+            </button>
+            <span id="addDocFileName" class="text-slate-600 text-xs">Ningún archivo seleccionado</span>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" class="adddoc-close px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300">Cancelar</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
   </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.12/pdfobject.min.js"></script>
@@ -604,6 +676,9 @@ function renderNivel1(groups){
                     aria-expanded="false" title="Mostrar Acciones">
               Historial de Actividades
             </button>
+              <button class="btn-add-doc inline-flex items-center justify-center px-2 py-1 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-[11px] font-semibold text-slate-700"
+          title="Agregar Documento" data-group-idx="${idx}">Agregar Documento
+  </button>
           </div>
         </td>
       </tr>`;
@@ -725,7 +800,11 @@ function renderNivel1(groups){
         <td class="px-3 py-2 text-[12px] text-center">${a.usuario ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${a.nombreUsuario ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${a.ip ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${a.uo ?? ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">
+            <div class=" w-1/3 p-1 border border-blue-400 bg-blue-200 rounded-lg">
+              <b class="text-blue-900">${a.uo ?? ''}</b>
+            </div>
+          </td>
       </tr>
     `).join('');
 
@@ -1185,6 +1264,163 @@ document.addEventListener('click', (e) => {
     if (!url) return;
     downloadPdf(url, name);
   });
+
+  // === Config mínimos para auditoría ===
+const USUARIO_ACTUAL = { user: 'JSIFUENTESR', nombre: 'Josue Sifuentes' };
+
+// Heurística UO por acción (ajústala si cambian reglas)
+const MAP_UO_POR_ACCION = {
+  'Aprobar Inversión': 'OAD.TE',
+  'Registrar Operación': 'OAD.TE',
+  'Cancelación de Cupón': 'OAD.TE',
+  'Registro de Inversiones Financieras': 'DIN.IF',
+  'Registro de Llamado de Capital': 'DIN.IF',
+  'Registro de Distribución de Capital': 'DIN.IF'
+};
+
+// Etiqueta por acción (puedes cambiar estas etiquetas por las que uses en UI)
+const MAP_ETIQUETA_POR_ACCION = {
+  'Registro de Inversiones Financieras': 'Documento Sustentatorio',
+  'Aprobar Inversión': 'Confirmación de compra',
+  'Registrar Operación': 'Constancia de operación',
+  'Registro de Llamado de Capital': 'Documento de notificación del llamado',
+  'Registro de Distribución de Capital': 'Documento de notificación de la distribución',
+  'Cancelación de Cupón': 'Sustento (Archivo)'
+};
+
+// Helpers fecha local
+function nowPE() {
+  return new Date().toLocaleString('es-PE', { hour12: true });
+}
+
+// Abrir/Cerrar modal Agregar
+const addModal = document.getElementById('twModalAddDoc');
+const addBackdrop = addModal.querySelector('[data-backdrop]');
+const addPanel = addModal.querySelector('[role="dialog"]');
+const addForm = document.getElementById('addDocForm');
+
+function openAddModal(groupIdx){
+  document.getElementById('addDocGroupIndex').value = String(groupIdx);
+  addModal.classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+  requestAnimationFrame(()=> {
+    addBackdrop.classList.add('opacity-100');
+    addPanel.classList.add('opacity-100','scale-100');
+  });
+}
+
+function closeAddModal(){
+  addBackdrop.classList.remove('opacity-100');
+  addPanel.classList.remove('opacity-100','scale-100');
+  setTimeout(() => {
+    addModal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+    addForm.reset();
+    document.getElementById('addDocFileName').textContent = 'Ningún archivo seleccionado';
+  }, 120);
+}
+
+// Delegación: abrir modal desde botón por fila
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-add-doc');
+  if (!btn) return;
+  const idx = Number(btn.dataset.groupIdx ?? '-1');
+  if (idx < 0) return;
+  openAddModal(idx);
+});
+
+// Cerrar modal
+addModal.addEventListener('click', (e) => {
+  if (e.target === addBackdrop || e.target.closest('.adddoc-close')) closeAddModal();
+});
+
+// File picker con icono
+document.getElementById('btnPickFile').addEventListener('click', () => {
+  document.getElementById('addDocFile').click();
+});
+document.getElementById('addDocFile').addEventListener('change', (e) => {
+  const f = e.target.files?.[0];
+  document.getElementById('addDocFileName').textContent = f ? f.name : 'Ningún archivo seleccionado';
+});
+
+// Construir y agregar Item + Acción
+function agregarDocumentoAlGrupo(groupIdx, { accion, orden, fileName }){
+  const groups = datasetActual(); // misma fuente que tu render
+  const g = groups[groupIdx];
+  if (!g) return;
+
+  const fecha = nowPE();
+  const uo = MAP_UO_POR_ACCION[accion] || '';
+  const etiqueta = MAP_ETIQUETA_POR_ACCION[accion] || 'Documento';
+
+  // Item nuevo (nivel 2)
+  const nuevoItem = {
+    bloqueado: false,
+    orden: Number(orden) || (Array.isArray(g.items) ? g.items.length + 1 : 1),
+    fecha,
+    asociado: accion,
+    etiqueta,
+    nombre: fileName || 'documento.pdf',
+    paginas: '',
+    principal: '',
+    pfinal: '',
+    uo,
+    usuario: USUARIO_ACTUAL.user,
+    ip: '',
+    historial: [
+      {
+        fecha,
+        usuario: USUARIO_ACTUAL.user,
+        nombreUsuario: USUARIO_ACTUAL.nombre,
+        ip: '',
+        doc: fileName || 'documento.pdf',
+        paginas: '',
+        principal: '',
+        pfinal: '',
+        orden: Number(orden) || ''
+      }
+    ]
+  };
+
+  // Acción (nivel del grupo)
+  const nuevaAccion = {
+    fecha,
+    accion,
+    usuario: USUARIO_ACTUAL.user,
+    nombreUsuario: USUARIO_ACTUAL.nombre,
+    ip: '',
+    uo
+  };
+
+  // Mutar estado
+  if (!Array.isArray(g.items)) g.items = [];
+  g.items.push(nuevoItem);
+
+  if (!Array.isArray(g.acciones)) g.acciones = [];
+  g.acciones.push(nuevaAccion);
+}
+
+// Submit del formulario
+addForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const groupIdx = Number(document.getElementById('addDocGroupIndex').value || '-1');
+const accion   = document.getElementById('addDocAccion').value.trim();
+const orden    = document.getElementById('addDocOrden').value;
+const file     = document.getElementById('addDocFile').files?.[0];
+
+if (!accion) { toastr.error('Seleccione una acción.', 'Falta acción'); return; }
+if (!orden)  { toastr.error('Ingrese la numeración (orden).', 'Falta numeración'); return; }
+if (!file)   { toastr.error('Seleccione un PDF.', 'Falta documento'); return; }
+  agregarDocumentoAlGrupo(groupIdx, {
+    accion,
+    orden,
+    fileName: file.name
+  });
+  toastr.success('Documento y acción agregados correctamente.', '¡Listo!');
+
+  closeAddModal();
+  refreshView();  // re-render tabla con el item y con la acción nueva
+});
   </script>
 </body>
 </html>

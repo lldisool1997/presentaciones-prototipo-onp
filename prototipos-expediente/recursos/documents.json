@@ -5,6 +5,7 @@
     "subcat": "Fondos de inversión",
     "tipo": "Fondo privado",
     "codigo": "INV-6053",
+    "orden": 1,
     "items": [
       {
         "bloqueado": true,
@@ -384,6 +385,7 @@
     "subcat": "Fondos de inversión",
     "tipo": "Fondo privado",
     "codigo": "INV-6055",
+        "orden": 2,
     "items": [
       {
         "bloqueado": true,
@@ -763,6 +765,7 @@
     "subcat": "Gobierno",
     "tipo": "Bono Soberano",
     "codigo": "INV-1001",
+    "orden": 3,
     "items": [
       {
         "bloqueado": true,
