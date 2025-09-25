@@ -5,6 +5,9 @@
     "subcat": "Fondos de inversión",
     "tipo": "Fondo privado",
     "codigo": "INV-6053",
+    "emisor": "",
+    "nombre": "Emisor",
+    "descripcion": "Nombre del Fondo",
     "orden": 1,
     "items": [
       {
@@ -560,6 +563,8 @@
     "tipo": "Fondo privado",
     "codigo": "INV-6040",
     "orden": 2,
+    "nombre": "Nombre del Fondo",
+    "descripcion": "Fondo privado Intercorp",
     "items": [
       {
         "bloqueado": true,
@@ -1114,6 +1119,8 @@
     "tipo": "Bono Soberano",
     "codigo": "INV-1001",
     "orden": 3,
+    "emisor": "",
+    "descripcion": "REPUBLICA DEL PERÚ",
     "items": [
       {
         "bloqueado": true,
@@ -1273,7 +1280,7 @@
           }
         ],
         "tipo_doc_sus": "Principal",
-        "numeracion_doc": null
+        "numeracion_doc": 1
       },
       {
         "bloqueado": true,
@@ -1313,7 +1320,7 @@
           }
         ],
         "tipo_doc_sus": "Principal",
-        "numeracion_doc": 5
+        "numeracion_doc": 2
       },
       {
         "bloqueado": true,
@@ -1353,7 +1360,7 @@
           }
         ],
         "tipo_doc_sus": "Principal",
-        "numeracion_doc": 6
+        "numeracion_doc": 3
       },
       {
         "bloqueado": true,
@@ -1393,7 +1400,7 @@
           }
         ],
         "tipo_doc_sus": "Principal",
-        "numeracion_doc": 7
+        "numeracion_doc": 4
       },
       {
         "bloqueado": true,
@@ -1433,7 +1440,7 @@
           }
         ],
         "tipo_doc_sus": "Principal",
-        "numeracion_doc": 8
+        "numeracion_doc": 5
       },
       {
         "bloqueado": true,
@@ -1473,7 +1480,7 @@
           }
         ],
         "tipo_doc_sus": "Principal",
-        "numeracion_doc": 9
+        "numeracion_doc": 6
       }
     ],
     "acciones": [

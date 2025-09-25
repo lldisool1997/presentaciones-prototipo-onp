@@ -307,10 +307,17 @@
       </header>
 
       <form id="addDocForm" class="p-4 grid gap-4 text-sm">
+
         <input type="hidden" id="addDocGroupIndex" />
+                  <div>
+          <label class="block font-semibold mb-1">Clase de activo</label>
+          <div>
+            Inversiones Alternativas
+          </div>
+        </div>
 
         <div>
-          <label class="block font-semibold mb-1">Acción</label>
+          <label class="block font-semibold mb-1">Actividad</label>
           <select id="addDocAccion" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none" required>
             <option value="">Seleccione…</option>
             <option>Registro de Inversiones Financieras</option>
@@ -340,6 +347,14 @@
     <option value="10">10</option>
   </select>
 </div>
+
+        <div>
+          <label class="block font-semibold mb-1">Etiqueta</label>
+         <input type="text" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none" required>
+        </div>
+
+
+
 
 
         <div>
@@ -720,7 +735,7 @@ function renderNivel1(groups){
           <div class="flex flex-row gap-1 ">
             <button class="btn-toggle-items inline-flex items-center justify-center px-2 py-1 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-[11px] font-semibold text-blue-700"
                     aria-expanded="false" title="Mostrar Documentos">
-              Documento Sustentatorio
+              Documentos Sustentatorios
             </button>
             <button class="btn-toggle-acciones inline-flex items-center justify-center px-2 py-1 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-[11px] font-semibold text-green-700"
                     aria-expanded="false" title="Mostrar Acciones">
@@ -739,7 +754,7 @@ function renderNivel1(groups){
         <tr>
           <th class="px-3 py-2 text-center uppercase">N° Item</th>
           <th class="px-3 py-2 text-center uppercase">Fecha y Hora</th>
-          <th class="px-8 py-2 text-center uppercase">Acción</th>
+          <th class="px-8 py-2 text-center uppercase">Actividad</th>
           <th class="px-8 py-2 text-center uppercase">#</th>
           <th class="px-3 py-2 text-left uppercase">Etiqueta del Documento</th>
           <th class="px-3 py-2 text-left uppercase">Nombre del Documento</th>
@@ -833,7 +848,7 @@ function renderNivel1(groups){
     <div class="collapsible">
       <div class="rounded-sm ring-1 ring-slate-200 shadow-sm overflow-hidden p-2">
         <div class="overflow-x-auto">
-          <table class="min-w-[1200px] w-full text-sm">
+          <table class="min-w-[1200px] w-full text-sm tbl-documentos">
             ${detalleHeadItems}
             <tbody class="[&>tr:nth-child(even)]:bg-slate-50">
               ${detalleBodyItems}
@@ -851,7 +866,7 @@ function renderNivel1(groups){
         <tr>
           <th class="px-3 py-2 text-center uppercase">N° Item</th>
           <th class="px-3 py-2 text-center uppercase">Fecha</th>
-          <th class="px-3 py-2 text-center uppercase">Acción</th>
+          <th class="px-3 py-2 text-center uppercase">Actividad</th>
           <th class="px-3 py-2 text-center uppercase">Usuario</th>
           <th class="px-3 py-2 text-center uppercase">Nombre Usuario</th>
           <th class="px-3 py-2 text-center uppercase">IP</th>
@@ -1494,7 +1509,7 @@ if (!file)   { toastr.error('Seleccione un PDF.', 'Falta documento'); return; }
 });
 
 function initDataTablesAcciones() {
-  document.querySelectorAll('.tbl-acciones').forEach((tbl, i) => {
+  document.querySelectorAll('.tbl-acciones, .tbl-documentos').forEach((tbl, i) => {
     // Evita inicializar dos veces la misma tabla
     if (!$.fn.DataTable.isDataTable(tbl)) {
       new DataTable(tbl, {
