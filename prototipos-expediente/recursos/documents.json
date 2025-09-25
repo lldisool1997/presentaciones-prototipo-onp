@@ -805,17 +805,35 @@
         "url": "menu-notificacion-demo.html?id_notificacion=2",
         "detalles": [
           {
-            "usuario": "4",
-            "nombreUsuario": "4",
-            "uo": "4",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "14/07/2025, 4:05:00 p. m.",
-        "accion": "Recepción notificación de registro de instrumento",
+        "accion": "Recepción de notificación de registro de instrumento",
         "usuario": "4",
         "nombreUsuario": "4",
         "ip": "172.16.34.132",
@@ -824,14 +842,35 @@
         "url": "menu-notificacion-demo.html?id_notificacion=2",
         "detalles": [
           {
-            "usuario": "4",
-            "nombreUsuario": "4",
-            "uo": "4",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "14/07/2025, 4:05:00 p. m."
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "14/07/2025, 4:05:00 p. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "14/07/2025, 4:05:00 p. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "14/07/2025, 4:05:00 p. m."
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "21/07/2025, 8:00:00 a. m.",
@@ -846,41 +885,67 @@
       {
         "fecha": "21/07/2025, 8:05:00 a. m.",
         "accion": "Envío de notificación de llamado de capital",
-        "usuario": "4",
-        "nombreUsuario": "4",
+        "usuario": "3",
+        "nombreUsuario": "3",
         "ip": "172.16.34.132",
         "uo": "4",
         "orden": 5,
         "url": "menu-notificacion-demo.html?id_notificacion=10",
         "detalles": [
           {
-            "usuario": "4",
-            "nombreUsuario": "4",
-            "uo": "4",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 3
       },
       {
         "fecha": "21/07/2025, 8:05:00 a. m.",
-        "accion": "Recepción notificación de llamado de capital",
-        "usuario": "4",
-        "nombreUsuario": "4",
+        "accion": "Recepción de notificación de llamado de capital",
+        "usuario": "3",
+        "nombreUsuario": "3",
         "ip": "172.16.34.132",
         "uo": "4",
         "orden": 6,
         "url": "menu-notificacion-demo.html?id_notificacion=10",
         "detalles": [
           {
-            "usuario": "4",
-            "nombreUsuario": "4",
-            "uo": "4",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 8:05:00 a. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 8:05:00 a. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "21/07/2025, 8:05:00 a. m."
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 3
       },
       {
         "fecha": "21/07/2025, 8:30:00 a. m.",
@@ -905,41 +970,80 @@
       {
         "fecha": "21/07/2025, 9:05:00 a. m.",
         "accion": "Envío de notificación de la instrucción",
-        "usuario": "2",
-        "nombreUsuario": "2",
+        "usuario": "4",
+        "nombreUsuario": "4",
         "ip": "172.16.34.132",
         "uo": "2",
         "orden": 9,
         "url": "menu-notificacion-demo.html?id_notificacion=1",
         "detalles": [
           {
-            "usuario": "2",
-            "nombreUsuario": "2",
-            "uo": "2",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "21/07/2025, 9:05:00 a. m.",
-        "accion": "Recepción notificación de la instrucción",
-        "usuario": "2",
-        "nombreUsuario": "2",
+        "accion": "Recepción de notificación de la instrucción",
+        "usuario": "4",
+        "nombreUsuario": "4",
         "ip": "172.16.34.132",
         "uo": "2",
         "orden": 10,
         "url": "menu-notificacion-demo.html?id_notificacion=1",
         "detalles": [
           {
-            "usuario": "2",
-            "nombreUsuario": "2",
-            "uo": "2",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 9:05:00 a. m."
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 9:05:00 a. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 9:05:00 a. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "21/07/2025, 9:05:00 a. m."
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "21/07/2025, 2:00:00 p. m.",
@@ -953,18 +1057,24 @@
       },
       {
         "fecha": "21/07/2025, 2:05:00 p. m.",
-        "accion": "Envío de notificación",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de operación (llamado)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 12,
-        "url": "menu-notificacion-demo.html?id_notificacion=6",
+        "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6",
         "detalles": [
           {
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "uo": "DIN.IF",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
             "estado": "Enviado"
           },
           {
@@ -972,24 +1082,37 @@
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "21/07/2025, 2:05:00 p. m.",
-        "accion": "Recepción notificación de operación (llamado)",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de operación (llamado)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 13,
-        "url": "menu-notificacion-demo.html?id_notificacion=6",
+        "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6",
         "detalles": [
           {
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "uo": "DIN.IF",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 2:05:00 p. m."
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
             "estado": "Leído",
             "horaLectura": "21/07/2025, 2:05:00 p. m."
           },
@@ -999,9 +1122,16 @@
             "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "21/07/2025, 2:05:00 p. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 2:05:00 p. m."
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 8:30:00 a. m.",
@@ -1015,17 +1145,23 @@
       },
       {
         "fecha": "18/08/2025, 9:00:00 a. m.",
-        "accion": "Envío de notificación",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de instrucción (distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 15,
         "url": "menu-notificacion-demo.html?id_notificacion=4",
         "detalles": [
           {
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
             "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Enviado"
           },
@@ -1034,23 +1170,36 @@
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 9:00:00 a. m.",
-        "accion": "Recepción notificación de instrucción (distribución)",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de instrucción (distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 16,
         "url": "menu-notificacion-demo.html?id_notificacion=4",
         "detalles": [
           {
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 9:00:00 a. m."
+          },
+          {
             "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
             "horaLectura": "18/08/2025, 9:00:00 a. m."
@@ -1061,9 +1210,16 @@
             "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "18/08/2025, 9:00:00 a. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 9:00:00 a. m."
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 9:30:00 a. m.",
@@ -1077,42 +1233,81 @@
       },
       {
         "fecha": "18/08/2025, 10:00:00 a. m.",
-        "accion": "Envío de notificación",
-        "usuario": "1",
-        "nombreUsuario": "1",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de instrucción (desagregado distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 18,
-        "url": "menu-notificacion-demo.html?id_notificacion=7",
+        "url": "menu-notificacion-demo.html?id_notificacion=7&user=DIN",
         "detalles": [
           {
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "uo": "DIN.IF",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 10:00:00 a. m.",
-        "accion": "Recepción notificación de instrucción (desagregado distribución)",
-        "usuario": "1",
-        "nombreUsuario": "1",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de instrucción (desagregado distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 19,
-        "url": "menu-notificacion-demo.html?id_notificacion=7",
+        "url": "menu-notificacion-demo.html?id_notificacion=7&user=DIN",
         "detalles": [
           {
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "uo": "DIN.IF",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 10:00:00 a. m."
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 10:00:00 a. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 10:00:00 a. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "18/08/2025, 10:00:00 a. m."
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 10:30:00 a. m.",
@@ -1126,42 +1321,81 @@
       },
       {
         "fecha": "18/08/2025, 11:00:00 a. m.",
-        "accion": "Envío de notificación",
-        "usuario": "1",
-        "nombreUsuario": "1",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de instrucción (distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 21,
         "url": "menu-notificacion-demo.html?id_notificacion=9",
         "detalles": [
           {
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 11:00:00 a. m.",
-        "accion": "Recepción notificación de instrucción (distribución)",
-        "usuario": "1",
-        "nombreUsuario": "1",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de instrucción (distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 22,
         "url": "menu-notificacion-demo.html?id_notificacion=9",
         "detalles": [
           {
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 11:00:00 a. m."
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 11:00:00 a. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 11:00:00 a. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "18/08/2025, 11:00:00 a. m."
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 2:30:00 p. m.",
@@ -1175,13 +1409,13 @@
       },
       {
         "fecha": "18/08/2025, 3:00:00 p. m.",
-        "accion": "Envío de notificación",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de operación (distribución)",
+        "usuario": "3",
+        "nombreUsuario": "3",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 24,
-        "url": "menu-notificacion-demo.html?id_notificacion=8",
+        "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN",
         "detalles": [
           {
             "usuario": "JSIFUENTESR",
@@ -1194,19 +1428,25 @@
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 3
       },
       {
         "fecha": "18/08/2025, 3:00:00 p. m.",
-        "accion": "Recepción notificación de operación (distribución)",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de operación (distribución)",
+        "usuario": "3",
+        "nombreUsuario": "3",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 25,
-        "url": "menu-notificacion-demo.html?id_notificacion=8",
+        "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN",
         "detalles": [
           {
             "usuario": "JSIFUENTESR",
@@ -1221,9 +1461,16 @@
             "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "18/08/2025, 3:00:00 p. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 3:00:00 p. m."
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 3
       }
     ]
   },
@@ -1571,17 +1818,23 @@
       },
       {
         "fecha": "14/07/2025, 4:05:00 p. m.",
-        "accion": "Envío de notificación",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de registro de instrumento",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 2,
         "url": "menu-notificacion-demo.html?id_notificacion=2",
         "detalles": [
           {
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
             "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Enviado"
           },
@@ -1590,23 +1843,36 @@
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "14/07/2025, 4:05:00 p. m.",
-        "accion": "Recepción notificación de registro de instrumento",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de registro de instrumento",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 3,
         "url": "menu-notificacion-demo.html?id_notificacion=2",
         "detalles": [
           {
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "14/07/2025, 4:05:00 p. m."
+          },
+          {
             "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
             "horaLectura": "14/07/2025, 4:05:00 p. m."
@@ -1617,9 +1883,16 @@
             "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "14/07/2025, 4:05:00 p. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "14/07/2025, 4:05:00 p. m."
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "21/07/2025, 8:00:00 a. m.",
@@ -1633,17 +1906,23 @@
       },
       {
         "fecha": "21/07/2025, 8:05:00 a. m.",
-        "accion": "Envío de notificación",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de instrucción (llamado)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 5,
         "url": "menu-notificacion-demo.html?id_notificacion=10",
         "detalles": [
           {
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
             "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Enviado"
           },
@@ -1652,23 +1931,36 @@
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "21/07/2025, 8:05:00 a. m.",
-        "accion": "Recepción notificación de instrucción (llamado)",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de instrucción (llamado)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 6,
         "url": "menu-notificacion-demo.html?id_notificacion=10",
         "detalles": [
           {
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 8:05:00 a. m."
+          },
+          {
             "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
             "horaLectura": "21/07/2025, 8:05:00 a. m."
@@ -1679,9 +1971,16 @@
             "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "21/07/2025, 8:05:00 a. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 8:05:00 a. m."
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "21/07/2025, 8:30:00 a. m.",
@@ -1705,42 +2004,81 @@
       },
       {
         "fecha": "21/07/2025, 9:05:00 a. m.",
-        "accion": "Envío de notificación",
-        "usuario": "1",
-        "nombreUsuario": "1",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de instrucción (llamado)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 9,
         "url": "menu-notificacion-demo.html?id_notificacion=1",
         "detalles": [
           {
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "21/07/2025, 9:05:00 a. m.",
-        "accion": "Recepción notificación de instrucción (llamado)",
-        "usuario": "1",
-        "nombreUsuario": "1",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de instrucción (llamado)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 10,
         "url": "menu-notificacion-demo.html?id_notificacion=1",
         "detalles": [
           {
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 9:05:00 a. m."
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 9:05:00 a. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 9:05:00 a. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "21/07/2025, 9:05:00 a. m."
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "21/07/2025, 2:00:00 p. m.",
@@ -1754,18 +2092,24 @@
       },
       {
         "fecha": "21/07/2025, 2:05:00 p. m.",
-        "accion": "Envío de notificación",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de operación (llamado)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 12,
-        "url": "menu-notificacion-demo.html?id_notificacion=6",
+        "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6",
         "detalles": [
           {
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "uo": "DIN.IF",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
             "estado": "Enviado"
           },
           {
@@ -1773,24 +2117,37 @@
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "21/07/2025, 2:05:00 p. m.",
-        "accion": "Recepción notificación de operación (llamado)",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de operación (llamado)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 13,
-        "url": "menu-notificacion-demo.html?id_notificacion=6",
+        "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6",
         "detalles": [
           {
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "uo": "DIN.IF",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 2:05:00 p. m."
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
             "estado": "Leído",
             "horaLectura": "21/07/2025, 2:05:00 p. m."
           },
@@ -1800,9 +2157,16 @@
             "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "21/07/2025, 2:05:00 p. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 2:05:00 p. m."
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 8:30:00 a. m.",
@@ -1816,17 +2180,23 @@
       },
       {
         "fecha": "18/08/2025, 9:00:00 a. m.",
-        "accion": "Envío de notificación",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de instrucción (distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 15,
         "url": "menu-notificacion-demo.html?id_notificacion=4",
         "detalles": [
           {
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
             "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Enviado"
           },
@@ -1835,23 +2205,36 @@
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 9:00:00 a. m.",
-        "accion": "Recepción notificación de instrucción (distribución)",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de instrucción (distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 16,
         "url": "menu-notificacion-demo.html?id_notificacion=4",
         "detalles": [
           {
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 9:00:00 a. m."
+          },
+          {
             "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
             "horaLectura": "18/08/2025, 9:00:00 a. m."
@@ -1862,9 +2245,16 @@
             "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "18/08/2025, 9:00:00 a. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 9:00:00 a. m."
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 9:30:00 a. m.",
@@ -1878,42 +2268,81 @@
       },
       {
         "fecha": "18/08/2025, 10:00:00 a. m.",
-        "accion": "Envío de notificación",
-        "usuario": "1",
-        "nombreUsuario": "1",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de instrucción (desagregado distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 18,
-        "url": "menu-notificacion-demo.html?id_notificacion=7",
+        "url": "menu-notificacion-demo.html?id_notificacion=7&user=DIN",
         "detalles": [
           {
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "uo": "DIN.IF",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 10:00:00 a. m.",
-        "accion": "Recepción notificación de instrucción (desagregado distribución)",
-        "usuario": "1",
-        "nombreUsuario": "1",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de instrucción (desagregado distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 19,
-        "url": "menu-notificacion-demo.html?id_notificacion=7",
+        "url": "menu-notificacion-demo.html?id_notificacion=7&user=DIN",
         "detalles": [
           {
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "uo": "DIN.IF",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 10:00:00 a. m."
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 10:00:00 a. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 10:00:00 a. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "18/08/2025, 10:00:00 a. m."
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 10:30:00 a. m.",
@@ -1927,42 +2356,81 @@
       },
       {
         "fecha": "18/08/2025, 11:00:00 a. m.",
-        "accion": "Envío de notificación",
-        "usuario": "1",
-        "nombreUsuario": "1",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de instrucción (distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 21,
         "url": "menu-notificacion-demo.html?id_notificacion=9",
         "detalles": [
           {
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 11:00:00 a. m.",
-        "accion": "Recepción notificación de instrucción (distribución)",
-        "usuario": "1",
-        "nombreUsuario": "1",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de instrucción (distribución)",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
         "orden": 22,
         "url": "menu-notificacion-demo.html?id_notificacion=9",
         "detalles": [
           {
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "usuario": "RRIVERAT",
+            "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 11:00:00 a. m."
+          },
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 11:00:00 a. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 11:00:00 a. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "18/08/2025, 11:00:00 a. m."
           }
         ],
-        "cantidadPersonas": 1
+        "cantidadPersonas": 4
       },
       {
         "fecha": "18/08/2025, 2:30:00 p. m.",
@@ -1976,13 +2444,13 @@
       },
       {
         "fecha": "18/08/2025, 3:00:00 p. m.",
-        "accion": "Envío de notificación",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Envío de notificación de operación (distribución)",
+        "usuario": "3",
+        "nombreUsuario": "3",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 24,
-        "url": "menu-notificacion-demo.html?id_notificacion=8",
+        "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN",
         "detalles": [
           {
             "usuario": "JSIFUENTESR",
@@ -1995,19 +2463,25 @@
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Enviado"
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 3
       },
       {
         "fecha": "18/08/2025, 3:00:00 p. m.",
-        "accion": "Recepción notificación de operación (distribución)",
-        "usuario": "2",
-        "nombreUsuario": "2",
-        "ip": "",
-        "uo": "",
+        "accion": "Recepción de notificación de operación (distribución)",
+        "usuario": "3",
+        "nombreUsuario": "3",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
         "orden": 25,
-        "url": "menu-notificacion-demo.html?id_notificacion=8",
+        "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN",
         "detalles": [
           {
             "usuario": "JSIFUENTESR",
@@ -2022,9 +2496,16 @@
             "uo": "OGR.RO",
             "estado": "Leído",
             "horaLectura": "18/08/2025, 3:00:00 p. m."
+          },
+          {
+            "usuario": "CDUCHE",
+            "nombreUsuario": "Cristian Duche",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 3:00:00 p. m."
           }
         ],
-        "cantidadPersonas": 2
+        "cantidadPersonas": 3
       }
     ]
   }
