@@ -416,6 +416,47 @@
   </div>
 </div>
 
+<!-- Modal Detalle Notificación -->
+<div id="twModalNotif" class="fixed inset-0 z-[115] hidden">
+  <div data-backdrop class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-4xl bg-white rounded-2xl overflow-hidden shadow-2xl opacity-0 scale-95 transition-all duration-150 ease-out ring-1 ring-slate-200"
+         role="dialog" aria-modal="true" aria-labelledby="ntf-title">
+      <header class="bg-gradient-to-r from-brand1 to-brand2 text-white px-5 py-3 flex items-center justify-between">
+        <div>
+          <h3 id="ntf-title" class="text-base md:text-lg font-semibold">Detalle de notificación</h3>
+          <p id="ntf-meta" class="opacity-90 text-xs md:text-sm"></p>
+        </div>
+        <button type="button" class="ntf-close inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/10">
+          <img src="svg/close.svg" class="w-5 h-5" alt="Cerrar">
+        </button>
+      </header>
+
+      <div class="p-4">
+        <div class="overflow-x-auto rounded-lg ring-1 ring-slate-200">
+          <table class="min-w-[900px] w-full text-xs">
+            <thead class="bg-slate-800 text-white">
+              <tr>
+                <th class="px-3 py-2 text-center uppercase">Usuario</th>
+                <th class="px-3 py-2 text-center uppercase">Nombre</th>
+                <th class="px-3 py-2 text-center uppercase">UO</th>
+                <th class="px-3 py-2 text-center uppercase">Estado</th>
+                <th class="px-3 py-2 text-center uppercase">Hora lectura</th>
+              </tr>
+            </thead>
+            <tbody id="ntfTbody" class="[&>tr:nth-child(even)]:bg-slate-50"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="px-4 py-3 bg-slate-50 flex justify-end">
+        <button type="button" class="ntf-close px-4 py-2 rounded-xl bg-slate-700 text-white hover:bg-slate-800">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.12/pdfobject.min.js"></script>
@@ -898,33 +939,52 @@ function renderNivel1(groups){
 
     // tabla de acciones
     const accionesHead = `
-      <thead class="bg-slate-700 text-white text-[12px]">
-        <tr>
-          <th class="px-3 py-2 text-center uppercase">N° Item</th>
-          <th class="px-3 py-2 text-center uppercase">Fecha</th>
-          <th class="px-3 py-2 text-center uppercase">Actividad</th>
-          <th class="px-3 py-2 text-center uppercase">Usuario</th>
-          <th class="px-3 py-2 text-center uppercase">Nombre Usuario</th>
-          <th class="px-3 py-2 text-center uppercase">IP</th>
-          <th class="px-3 py-2 text-center uppercase">Unidad Orgánica</th>
-        </tr>
-      </thead>`;
+  <thead class="bg-slate-700 text-white text-[12px]">
+    <tr>
+      <th class="px-3 py-2 text-center uppercase">N° Item</th>
+      <th class="px-3 py-2 text-center uppercase">Fecha</th>
+      <th class="px-3 py-2 text-center uppercase">Actividad</th>
+      <th class="px-3 py-2 text-center uppercase">Usuario</th>
+      <th class="px-3 py-2 text-center uppercase">Nombre Usuario</th>
+      <th class="px-3 py-2 text-center uppercase">IP</th>
+      <th class="px-3 py-2 text-center uppercase">Unidad Orgánica</th>
+      <th class="px-3 py-2 text-center uppercase">Detalle</th>
+    </tr>
+  </thead>`;
 
-    const accionesBody = (g.acciones || []).map(a => `
-      <tr class="hover:bg-blue-50 transition">
-        <td class="px-3 py-2 text-[12px] text-center">${a.orden ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${a.fecha ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${a.accion ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${a.usuario ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${a.nombreUsuario ?? ''}</td>
-        <td class="px-3 py-2 text-[12px] text-center">${a.ip ?? ''}</td>
-       <td class="px-3 py-2 text-[12px] text-center">
-  <div class="inline-block p-1 border border-blue-400 bg-blue-200 rounded-lg w-[80px]">
-    <b class="text-blue-900">${a.uo ?? ''}</b>
-  </div>
-</td>
-      </tr>
-    `).join('');
+const accionesBody = (g.acciones || []).map((a, ai) => {
+  const hasDetalles = Array.isArray(a.detalles) && a.detalles.length > 0;
+  return `
+    <tr class="hover:bg-blue-50 transition">
+      <td class="px-3 py-2 text-[12px] text-center">${a.orden ?? ''}</td>
+      <td class="px-3 py-2 text-[12px] text-center">${a.fecha ?? ''}</td>
+      <td class="px-3 py-2 text-[12px] text-center">${a.accion ?? ''}</td>
+      <td class="px-3 py-2 text-[12px] text-center">${a.usuario ?? ''}</td>
+      <td class="px-3 py-2 text-[12px] text-center">${a.nombreUsuario ?? ''}</td>
+      <td class="px-3 py-2 text-[12px] text-center">${a.ip ?? ''}</td>
+      <td class="px-3 py-2 text-[12px] text-center">
+        <div class="inline-block p-1 border border-blue-400 bg-blue-200 rounded-lg w-[80px]">
+          <b class="text-blue-900">${a.uo ?? ''}</b>
+        </div>
+      </td>
+      <td class="px-3 py-2 text-[12px] text-center">
+        ${
+          hasDetalles
+          ? `<a href="#detalle-notif"
+                data-action="notif"
+                data-cod="${g.codigo ?? ''}"
+                data-action-idx="${ai}"
+                class="inline-flex bg-green-700 items-center justify-center p-1.5 rounded-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500/60"
+                title="Ver detalle" aria-label="Detalle notificación">
+               <img src="svg/historico.svg" class="w-5 h-5" alt="">
+             </a>`
+          : '—'
+        }
+      </td>
+    </tr>
+  `;
+}).join('');
+
 
     const rowDetalleAcciones = `
 <tr class="detail-acciones bg-gray-100" aria-hidden="true">
@@ -1683,6 +1743,75 @@ function initDataTablesAcciones(root = document) {
     }
   });
 }
+
+/***********************
+ *  Modal Detalle Notificación
+ ***********************/
+const ntfModal     = document.getElementById('twModalNotif');
+const ntfBackdrop  = ntfModal.querySelector('[data-backdrop]');
+const ntfPanel     = ntfModal.querySelector('[role="dialog"]');
+const ntfTbody     = document.getElementById('ntfTbody');
+
+function openNotifModal() {
+  ntfModal.classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+  requestAnimationFrame(() => {
+    ntfBackdrop.classList.add('opacity-100');
+    ntfPanel.classList.add('opacity-100','scale-100');
+  });
+}
+
+function closeNotifModal() {
+  ntfBackdrop.classList.remove('opacity-100');
+  ntfPanel.classList.remove('opacity-100','scale-100');
+  setTimeout(() => {
+    ntfModal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+  }, 150);
+}
+
+ntfModal.addEventListener('click', (e) => {
+  if (e.target === ntfBackdrop || e.target.closest('.ntf-close')) closeNotifModal();
+});
+
+// Delegación: botón "Detalle" en Acciones
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="notif"]');
+  if (!btn) return;
+  e.preventDefault();
+
+  const codigo = btn.getAttribute('data-cod');
+  const aidx   = Number(btn.getAttribute('data-action-idx'));
+
+  const grupos = datasetActual();
+  const grupo  = grupos.find(g => g.codigo === codigo);
+  const accion = grupo?.acciones?.[aidx];
+  const rows   = Array.isArray(accion?.detalles) ? accion.detalles : [];
+
+  if (!accion || !rows.length) {
+    toastr.warning('No hay detalles para esta notificación');
+    return;
+  }
+
+  // Cabecera
+  document.getElementById('ntf-title').textContent = `Detalle — ${accion.accion || 'Notificación'}`;
+  document.getElementById('ntf-meta').textContent  =
+    `Fecha: ${accion.fecha || '—'} · Cantidad: ${accion.cantidadPersonas ?? rows.length}`;
+
+  // Cuerpo
+  ntfTbody.innerHTML = rows.map(r => `
+    <tr class="hover:bg-blue-50 transition">
+      <td class="px-3 py-2 text-center">${r.usuario ?? ''}</td>
+      <td class="px-3 py-2 text-center">${r.nombreUsuario ?? ''}</td>
+      <td class="px-3 py-2 text-center">${r.uo ?? ''}</td>
+      <td class="px-3 py-2 text-center">${r.estado ?? ''}</td>
+      <td class="px-3 py-2 text-center">${r.horaLectura ?? ''}</td>
+    </tr>
+  `).join('');
+
+  openNotifModal();
+});
+
 
   </script>
 </body>
