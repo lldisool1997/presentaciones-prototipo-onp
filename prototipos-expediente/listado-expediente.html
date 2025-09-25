@@ -1432,44 +1432,31 @@ const addForm = document.getElementById('addDocForm');
 
 function openAddModal(groupIdx) {
   const modal = document.getElementById('twModalAddDoc');
-  if (!modal) return;
-  const q = (sel) => modal.querySelector(sel);
+  const q = (s) => modal.querySelector(s);
 
-  const fldGroup     = q('#addDocGroupIndex');
-  const selAccion    = q('#addDocAccion');
-  const selOrden     = q('#addDocOrden');
-  const wrapNum      = q('#addNumeracionWrap'); // puede ser null si no pusiste el wrapper
-  const inpEtiqueta  = q('#addEtiqueta');
+  q('#addDocGroupIndex').value = String(groupIdx);
 
-  if (!fldGroup || !selAccion || !selOrden || !inpEtiqueta) {
-    console.error('Faltan elementos del modal (revisa IDs).');
-    return;
-  }
-
-  // set group
-  fldGroup.value = String(groupIdx);
-
-  // rellenar actividades desde los items del grupo (opcional)
+  // actividades únicas del grupo (desde tus items)
   const g = datasetActual()[groupIdx] || {};
   const acts = [...new Set((g.items || []).map(d => d.asociado))];
-  if (acts.length) {
-    selAccion.innerHTML = '<option value="">Seleccione…</option>';
-    acts.forEach(a => {
-      const opt = document.createElement('option');
-      opt.value = a;
-      opt.textContent = a;
-      selAccion.appendChild(opt);
-    });
-  }
 
-  // reset
-  selAccion.value = '';
-  selOrden.value = '';
+  const selAccion = q('#addDocAccion');
+  selAccion.innerHTML = '<option value="">Seleccione…</option>';
+  acts.forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a;
+    opt.textContent = a;
+    selAccion.appendChild(opt);
+  });
+
+  // reset numeración/etiqueta
+  const selOrden = q('#addDocOrden');
+  selOrden.innerHTML = '<option value="">Seleccione…</option>';
   selOrden.disabled = true;
-  if (wrapNum) wrapNum.classList.remove('hidden'); // muéstralo (si existe)
-  inpEtiqueta.value = '';
+  selOrden.required = false; // se activará si hay valores
+  q('#addEtiqueta').value = '';
 
-  // abrir modal
+  // abrir modal (tu animación)
   modal.classList.remove('hidden');
   document.body.classList.add('overflow-hidden');
   const addBackdrop = modal.querySelector('[data-backdrop]');
@@ -1480,50 +1467,57 @@ function openAddModal(groupIdx) {
   });
 }
 
-
 document.getElementById('addDocAccion').addEventListener('change', (e) => {
   const modal = document.getElementById('twModalAddDoc');
-  const q = (sel) => modal.querySelector(sel);
+  const q = (s) => modal.querySelector(s);
 
   const groupIdx = Number(q('#addDocGroupIndex').value);
   const g = datasetActual()[groupIdx] || {};
   const actividad = e.target.value;
 
-  const selOrden    = q('#addDocOrden');
-  const wrapNum     = q('#addNumeracionWrap');
+  const selOrden = q('#addDocOrden');
   const inpEtiqueta = q('#addEtiqueta');
 
-  if (!actividad) {
-    selOrden.disabled = true;
-    if (wrapNum) wrapNum.classList.remove('hidden');
-    inpEtiqueta.value = '';
-    return;
-  }
+  // reset básicos
+  selOrden.innerHTML = '<option value="">Seleccione…</option>';
+  selOrden.disabled = true;
+  selOrden.required = false;
+  inpEtiqueta.value = '';
 
-  const items = (g.items || []).filter(d => d.asociado === actividad);
-  const tieneNumeracion = items.some(d => d.numeracion_doc); // flag por existencia previa
+  if (!actividad) return;
 
-  if (tieneNumeracion) {
-    selOrden.disabled = false;
-    selOrden.innerHTML = '<option value="">Seleccione…</option>';
-    const usados = items.map(d => Number(d.numeracion_doc)).filter(Boolean);
-    for (let i = 1; i <= 10; i++) {
+  // numeraciones YA USADAS en ESA actividad
+  const usados = Array.from(new Set(
+    (g.items || [])
+      .filter(x => x.asociado === actividad)
+      .map(x => Number(x.numeracion_doc))
+      .filter(n => Number.isFinite(n) && n > 0)
+  )).sort((a,b)=>a-b);
+
+  if (usados.length) {
+    for (const n of usados) {
       const opt = document.createElement('option');
-      opt.value = i;
-      opt.textContent = i;
-      if (usados.includes(i)) opt.disabled = true;
+      opt.value = String(n);
+      opt.textContent = String(n);
       selOrden.appendChild(opt);
     }
-    if (wrapNum) wrapNum.classList.remove('hidden');
+    selOrden.disabled = false;
+    selOrden.required = true; // obligatorio si hay opciones válidas
   } else {
+    // No hay numeraciones para esta actividad → lo deshabilitamos
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = 'No hay numeraciones para esta actividad';
+    opt.disabled = true;
+    selOrden.appendChild(opt);
     selOrden.disabled = true;
-    if (wrapNum) wrapNum.classList.add('hidden'); // opcional: ocultar si no aplica
+    selOrden.required = false;
   }
 
-  // prellenar etiqueta con la última usada en esa actividad (si quieres)
-  inpEtiqueta.value = items.length ? (items[items.length - 1].etiqueta || '') : '';
+  // opcional: prellenar etiqueta con la última usada en esa actividad
+  const itemsAct = (g.items || []).filter(x => x.asociado === actividad);
+  if (itemsAct.length) inpEtiqueta.value = itemsAct[itemsAct.length - 1].etiqueta || '';
 });
-
 
 
 function closeAddModal(){
