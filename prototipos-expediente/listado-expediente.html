@@ -309,12 +309,45 @@
       <form id="addDocForm" class="p-4 grid gap-4 text-sm">
 
         <input type="hidden" id="addDocGroupIndex" />
-                  <div>
-          <label class="block font-semibold mb-1">Clase de activo</label>
-          <div>
-            Inversiones Alternativas
-          </div>
-        </div>
+        <div class="grid grid-cols-3 gap-4 p-2.5 border border-[#1478db] rounded-lg">
+  <div>
+    <label class="block mb-1" for="clase-activo-modal">Clase de activo</label>
+    <div class="font-semibold" id="clase-activo-modal">
+      Inversiones Alternativas
+    </div>
+  </div>
+  <div>
+    <label class="block mb-1" for="mercado-modal">Mercado</label>
+    <div class="font-semibold" id="mercado-modal">
+      Inversiones Alternativas
+    </div>
+  </div>
+  <div>
+    <label class="block mb-1" for="subcategoria-modal">Subcategoría</label>
+    <div class="font-semibold" id="subcategoria-modal">
+      Inversiones Alternativas
+    </div>
+  </div>
+  <div>
+    <label class="block mb-1" for="tipo-instrumento-modal">Tipo de Instrumento</label>
+    <div class="font-semibold" id="tipo-instrumento-modal">
+      Inversiones Alternativas
+    </div>
+  </div>
+  <div>
+    <label class="block mb-1" for="nombre-modal">Nombre/Descripción</label>
+    <div class="font-semibold" id="nombre-modal">
+      Nombre Desc
+    </div>
+  </div>
+  <div>
+    <label class="block mb-1" for="codigo-inversion-modal">Código de Inversión</label>
+    <div class="font-semibold" id="codigo-inversion-modal">
+      Nombre Desc
+    </div>
+  </div>
+</div>
+
 
         <div>
           <label class="block font-semibold mb-1">Actividad</label>
@@ -971,20 +1004,28 @@ function renderNivel1(groups){
     };
   }
 
-  function refreshView(){
-    const groups = datasetActual();
-    const total = groups.length;
+// 2) Tu flujo
+function refreshView() {
+  const groups = datasetActual();
+  const total = groups.length;
+  const totalPages = Math.max(1, Math.ceil(total / STATE.size));
+  clampPage(totalPages);
 
-    const totalPages = Math.max(1, Math.ceil(total / STATE.size));
-    clampPage(totalPages);
+  // target donde pintas las filas (ajústalo si tu render escribe en otro contenedor)
+  const root = document.getElementById('tablaBodyPadre') || document;
 
-    renderPagination(total);
-    renderNivel1(pageSliceGroups(groups));
+  // a) destruye DTs ANTES de re-renderizar
+  destroyTablesIn(root);
 
-    // empty state
-    document.getElementById('emptyState').classList.toggle('hidden', total > 0);
-  }
+  renderPagination(total);
+  renderNivel1(pageSliceGroups(groups)); // aquí re-escribes el DOM de las tablas hijas
 
+  // b) re-inicializa DTs DESPUÉS del render
+  initDataTablesAcciones(root);
+
+  // empty state
+  document.getElementById('emptyState').classList.toggle('hidden', total > 0);
+}
   // Cambio de page size
   document.getElementById('pageSize').addEventListener('change', (e) => {
     const val = Number(e.target.value);
@@ -1381,15 +1422,26 @@ const addBackdrop = addModal.querySelector('[data-backdrop]');
 const addPanel = addModal.querySelector('[role="dialog"]');
 const addForm = document.getElementById('addDocForm');
 
-function openAddModal(groupIdx){
+function openAddModal(groupIdx, data) {
   document.getElementById('addDocGroupIndex').value = String(groupIdx);
+
+  // setear los campos del modal
+  document.getElementById('clase-activo-modal').textContent = data.clase || '';
+  document.getElementById('mercado-modal').textContent = data.mercado || '';
+  document.getElementById('subcategoria-modal').textContent = data.subcat || '';
+  document.getElementById('tipo-instrumento-modal').textContent = data.tipo || '';
+  document.getElementById('nombre-modal').textContent = data.nombreDescripcion || '';
+  document.getElementById('codigo-inversion-modal').textContent = data.codigo || '';
+
+  // abrir el modal con animación
   addModal.classList.remove('hidden');
   document.body.classList.add('overflow-hidden');
-  requestAnimationFrame(()=> {
+  requestAnimationFrame(() => {
     addBackdrop.classList.add('opacity-100');
-    addPanel.classList.add('opacity-100','scale-100');
+    addPanel.classList.add('opacity-100', 'scale-100');
   });
 }
+
 
 function closeAddModal(){
   addBackdrop.classList.remove('opacity-100');
@@ -1408,7 +1460,7 @@ document.addEventListener('click', (e) => {
   if (!btn) return;
   const idx = Number(btn.dataset.groupIdx ?? '-1');
   if (idx < 0) return;
-  openAddModal(idx);
+  openAddModal(idx, GROUPS[idx]);
 });
 
 // Cerrar modal
@@ -1507,44 +1559,53 @@ if (!file)   { toastr.error('Seleccione un PDF.', 'Falta documento'); return; }
   refreshView();  // re-render tabla con el item y con la acción nueva
 });
 
-function initDataTablesAcciones() {
-  document.querySelectorAll('.tbl-acciones, .tbl-documentos').forEach((tbl) => {
-    if (!$.fn.DataTable.isDataTable(tbl)) {
-      const idx = tbl.dataset.id || tbl.getAttribute('data-id') || ''; // si tu tabla tiene ese id, úsalo
-      // si no lo tiene, puedes pasar idx desde tu template al render de la tabla
+// 1) Helpers
+function destroyTablesIn(root = document) {
+  root.querySelectorAll('.tbl-acciones, .tbl-documentos').forEach((tbl) => {
+    if ($.fn.DataTable.isDataTable(tbl)) {
+      $(tbl).DataTable().destroy(); // limpia instancia y eventos
+    }
+  });
+}
 
-      const api = new DataTable(tbl, {
+function initDataTablesAcciones(root = document) {
+  root.querySelectorAll('.tbl-acciones, .tbl-documentos').forEach((tbl) => {
+    if (!$.fn.DataTable.isDataTable(tbl)) {
+      new DataTable(tbl, {
         pageLength: 10,
         order: [[0, 'asc']],
         language: { url: 'https://cdn.datatables.net/plug-ins/2.1.5/i18n/es-ES.json' },
-        initComplete: function () {
+        retrieve: true, // si ya existiera, reusa
+        initComplete() {
           const wrapper = this.api().table().container();
           const filterDiv = wrapper.querySelector('.dt-search') || wrapper.querySelector('.dataTables_filter');
-          if (!filterDiv || !idx) return;
+          if (!filterDiv) return;
 
+          // botón pegado al buscador con tu atributo
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn-add-doc px-3 py-1 rounded text-white bg-blue-600';
+          btn.textContent = 'Agregar Documento';
+
+          // IMPORTANTE: usa el mismo idx que renderizaste para esta tabla
+          // si tu tabla tiene <table ... data-id="${idx}">
+          const idx = tbl.getAttribute('data-id') || '';
+          btn.setAttribute('data-group-idx', idx);
+
+          // estilo en línea para alinear
           filterDiv.style.display = 'flex';
           filterDiv.style.alignItems = 'center';
           filterDiv.style.gap = '8px';
 
-          // botón con el atributo data-group-idx = ${idx}
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.textContent = 'Agregar Documento';
-          btn.className = 'btn-add-doc px-3 py-1 rounded text-white bg-blue-600';
-          btn.setAttribute('data-group-idx', idx);  // 👈 este es el atributo clave
-          btn.addEventListener('click', () => {
-            console.log('Click en tabla con group-idx =', idx, 'filas:', this.api().rows().count());
-            // lógica específica para ese group-idx
-          });
-
-          filterDiv.appendChild(btn);
+          // evita duplicados
+          if (!filterDiv.querySelector('.btn-add-doc')) {
+            filterDiv.appendChild(btn);
+          }
         }
       });
     }
   });
 }
-
-
 
   </script>
 </body>
