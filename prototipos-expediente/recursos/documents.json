@@ -1,1124 +1,11 @@
 [
-  {
-    "clase": "Inversiones Alternativas",
-    "mercado": "Local",
-    "subcat": "Fondos de inversión",
-    "tipo": "Fondo privado",
-    "codigo": "INV-6053",
-    "emisor": "",
-    "nombre": "Emisor",
-    "descripcion": "Nombre del Fondo",
-    "orden": 1,
-    "items": [
-      {
-        "bloqueado": true,
-        "orden": 1,
-        "fecha": "14/07/2025, 4:03:02 p. m.",
-        "asociado": "Registro de Inversiones Financieras",
-        "etiqueta": "Informe de Riesgos",
-        "nombre": "informe-riesgo.pdf",
-        "paginas": 8,
-        "principal": 1,
-        "pfinal": 8,
-        "uo": "DIN.IF",
-        "usuario": "JSIFUENTESR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "informe-riesgo.pdf",
-            "paginas": 8,
-            "principal": 1,
-            "pfinal": 8,
-            "orden": 1
-          },
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "informe-riesgo.pdf",
-            "paginas": 8,
-            "principal": 1,
-            "pfinal": 8,
-            "orden": 1
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": null
-      },
-      {
-        "bloqueado": false,
-        "orden": 2,
-        "fecha": "14/07/2025, 4:03:02 p. m.",
-        "asociado": "Registro de Inversiones Financieras",
-        "etiqueta": "Informe Legal",
-        "nombre": "informe-legal.pdf",
-        "paginas": 1,
-        "principal": 9,
-        "pfinal": 9,
-        "uo": "DIN.IF",
-        "usuario": "JSIFUENTESR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "informe-legal.pdf",
-            "paginas": 1,
-            "principal": 9,
-            "pfinal": 9,
-            "orden": 2
-          },
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "informe-legal.pdf",
-            "paginas": 1,
-            "principal": 9,
-            "pfinal": 9,
-            "orden": 2
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": null
-      },
-      {
-        "bloqueado": false,
-        "orden": 3,
-        "fecha": "14/07/2025, 4:03:02 p. m.",
-        "asociado": "Registro de Inversiones Financieras",
-        "etiqueta": "Acta de Comité de Inversiones",
-        "nombre": "acta-de-comite-de-inversiones.pdf",
-        "paginas": 2,
-        "principal": 10,
-        "pfinal": 11,
-        "uo": "DIN.IF",
-        "usuario": "JSIFUENTESR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "acta-de-comite-de-inversiones.pdf",
-            "paginas": 2,
-            "principal": 10,
-            "pfinal": 11,
-            "orden": 3
-          },
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "acta-de-comite-de-inversiones.pdf",
-            "paginas": 2,
-            "principal": 10,
-            "pfinal": 11,
-            "orden": 3
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": null
-      },
-      {
-        "bloqueado": true,
-        "orden": 4,
-        "fecha": "14/07/2025, 4:03:02 p. m.",
-        "asociado": "Registro de Inversiones Financieras",
-        "etiqueta": "Acta de Suscripción",
-        "nombre": "acta-de-suscripcion.pdf",
-        "paginas": 5,
-        "principal": 12,
-        "pfinal": 16,
-        "uo": "DIN.IF",
-        "usuario": "JSIFUENTESR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "acta-de-suscripcion.pdf",
-            "paginas": 5,
-            "principal": 12,
-            "pfinal": 16,
-            "orden": 4
-          },
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "acta-de-suscripcion.pdf",
-            "paginas": 5,
-            "principal": 12,
-            "pfinal": 16,
-            "orden": 4
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": null
-      },
-      {
-        "bloqueado": false,
-        "orden": 5,
-        "fecha": "21/07/2025, 8:00:00 a. m.",
-        "asociado": "Registro de Llamado de Capital",
-        "etiqueta": "Documento de notificación del llamado",
-        "nombre": "documento-notificacion.pdf",
-        "paginas": 3,
-        "principal": 17,
-        "pfinal": 19,
-        "uo": "DIN.IF",
-        "usuario": "JSIFUENTESR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "21/07/2025, 8:00:00 a. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "documento-notificacion.pdf",
-            "paginas": 3,
-            "principal": 17,
-            "pfinal": 19,
-            "orden": 5
-          },
-          {
-            "fecha": "21/07/2025, 8:00:00 a. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "documento-notificacion.pdf",
-            "paginas": 3,
-            "principal": 17,
-            "pfinal": 19,
-            "orden": 5
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": 1
-      },
-      {
-        "bloqueado": true,
-        "orden": 6,
-        "fecha": "21/07/2025, 2:00:00 p. m.",
-        "asociado": "Registrar Operación",
-        "etiqueta": "Constancia de operación",
-        "nombre": "constancia-operacion.pdf",
-        "paginas": 7,
-        "principal": 20,
-        "pfinal": 26,
-        "uo": "OAD.TE",
-        "usuario": "EGUERRERO",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "21/07/2025, 2:00:00 p. m.",
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitan",
-            "ip": "172.16.34.132",
-            "doc": "constancia-operacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          },
-          {
-            "fecha": "21/07/2025, 2:00:00 p. m.",
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitan",
-            "ip": "172.16.8.94",
-            "doc": "constancia-operacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": 1
-      },
-      {
-        "bloqueado": true,
-        "orden": 7,
-        "fecha": "18/08/2025, 8:30:00 a. m.",
-        "asociado": "Registro de Distribución de Capital",
-        "etiqueta": "Documento de notificación de la distribución",
-        "nombre": "documento-notificacion.pdf",
-        "paginas": 7,
-        "principal": 20,
-        "pfinal": 26,
-        "uo": "DIN.IF",
-        "usuario": "JSIFUENTESR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "18/08/2025, 8:30:00 a. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "constancia-operacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          },
-          {
-            "fecha": "18/08/2025, 8:30:00 a. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "constancia-operacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": 2
-      },
-      {
-        "bloqueado": true,
-        "orden": 8,
-        "fecha": "18/08/2025, 2:30:00 p. m.",
-        "asociado": "Registrar Operación",
-        "etiqueta": "Constancia de operación",
-        "nombre": "documento-notificacion.pdf",
-        "paginas": 7,
-        "principal": 20,
-        "pfinal": 26,
-        "uo": "OAD.TE",
-        "usuario": "EGUERRERO",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "18/08/2025, 2:30:00 p. m.",
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitan",
-            "ip": "172.16.34.132",
-            "doc": "documento-notificacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          },
-          {
-            "fecha": "18/08/2025, 2:30:00 p. m.",
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitan",
-            "ip": "172.16.8.94",
-            "doc": "documento-notificacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": 2
-      }
-    ],
-    "acciones": [
     {
-      "fecha": "14/07/2025, 4:03:00 p. m.",
-      "accion": "Registrar Instrumento",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 1,
-      "url": "registro-instrumento.html?area=DIN"
-    },
-    {
-      "fecha": "14/07/2025, 4:05:00 p. m.",
-      "accion": "Ver notificación de registro de instrumento",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 2,
-      "url": "menu-notificacion-demo.html?id_notificacion=2"
-    },
-    {
-      "fecha": "14/07/2025, 4:05:00 p. m.",
-      "accion": "Ver notificación de registro de instrumento",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 3,
-      "url": "menu-notificacion-demo.html?id_notificacion=2"
-    },
-
-    {
-      "fecha": "21/07/2025, 8:00:00 a. m.",
-      "accion": "Registra y aprueba un llamado de Capital",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 4,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=aprobar"
-    },
-    {
-      "fecha": "21/07/2025, 8:05:00 a. m.",
-      "accion": "Ver notificación de instrucción (llamado)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 5,
-      "url": "menu-notificacion-demo.html?id_notificacion=10"
-    },
-    {
-      "fecha": "21/07/2025, 8:05:00 a. m.",
-      "accion": "Ver notificación de instrucción (llamado)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 6,
-      "url": "menu-notificacion-demo.html?id_notificacion=10"
-    },
-    {
-      "fecha": "21/07/2025, 8:30:00 a. m.",
-      "accion": "Registrar desagregado (llamado)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 7,
-      "url": "listado-llamado-capital-dist.html?area=OGR&accion=llamado&subaccion=registrar-desagregado"
-    },
-    {
-      "fecha": "21/07/2025, 9:00:00 a. m.",
-      "accion": "Instruir a tesorería (llamado)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 8,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=llamado&subaccion=notificar-backoffice"
-    },
-    {
-      "fecha": "21/07/2025, 9:05:00 a. m.",
-      "accion": "Ver notificación de instrucción (llamado)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 9,
-      "url": "menu-notificacion-demo.html?id_notificacion=1"
-    },
-    {
-      "fecha": "21/07/2025, 2:00:00 p. m.",
-      "accion": "Ejecutar Operación (llamado)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 10,
-      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=llamado&subaccion=realizar-operacion"
-    },
-    {
-      "fecha": "21/07/2025, 2:05:00 p. m.",
-      "accion": "Ver notificación de operación (llamado)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 11,
-      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
-    },
-    {
-      "fecha": "21/07/2025, 2:05:00 p. m.",
-      "accion": "Ver notificación de operación (llamado)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 12,
-      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
-    },
-
-    {
-      "fecha": "18/08/2025, 8:30:00 a. m.",
-      "accion": "Registra y aprueba una distribución de Capital",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 13,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=X"
-    },
-    {
-      "fecha": "18/08/2025, 9:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 14,
-      "url": "menu-notificacion-demo.html?id_notificacion=4"
-    },
-    {
-      "fecha": "18/08/2025, 9:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 15,
-      "url": "menu-notificacion-demo.html?id_notificacion=4"
-    },
-    {
-      "fecha": "18/08/2025, 9:30:00 a. m.",
-      "accion": "Registrar desagregado (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 16,
-      "url": "listado-llamado-capital-dist.html?area=OGR&accion=distribucion&subaccion=registrar-desagregado"
-    },
-    {
-      "fecha": "18/08/2025, 10:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (desagregado distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 17,
-      "url": "menu-notificacion-demo.html?id_notificacion=7&user=DIN"
-    },
-    {
-      "fecha": "18/08/2025, 10:30:00 a. m.",
-      "accion": "Instruir a tesorería (distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 18,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=notificar-backoffice"
-    },
-    {
-      "fecha": "18/08/2025, 11:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 19,
-      "url": "menu-notificacion-demo.html?id_notificacion=9"
-    },
-    {
-      "fecha": "18/08/2025, 2:30:00 p. m.",
-      "accion": "Ejecutar Operación (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 20,
-      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=distribucion&subaccion=realizar-operacion"
-    },
-    {
-      "fecha": "18/08/2025, 3:00:00 p. m.",
-      "accion": "Ver notificación de operación (distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 21,
-      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
-    },
-    {
-      "fecha": "18/08/2025, 3:00:00 p. m.",
-      "accion": "Ver notificación de operación (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 22,
-      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
-    }
-  ]
-  },
-  {
-    "clase": "Inversiones Alternativas",
-    "mercado": "Local",
-    "subcat": "Fondos de inversión",
-    "tipo": "Fondo privado",
-    "codigo": "INV-6040",
-    "orden": 2,
-    "nombre": "Nombre del Fondo",
-    "descripcion": "Fondo privado Intercorp",
-    "items": [
-      {
-        "bloqueado": true,
-        "orden": 1,
-        "fecha": "14/07/2025, 4:03:02 p. m.",
-        "asociado": "Registro de Inversiones Financieras",
-        "etiqueta": "Informe de Riesgos",
-        "nombre": "informe-riesgo.pdf",
-        "paginas": 8,
-        "principal": 1,
-        "pfinal": 8,
-        "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "informe-riesgo.pdf",
-            "paginas": 8,
-            "principal": 1,
-            "pfinal": 8,
-            "orden": 1
-          },
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "informe-riesgo.pdf",
-            "paginas": 8,
-            "principal": 1,
-            "pfinal": 8,
-            "orden": 1
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": null
-      },
-      {
-        "bloqueado": false,
-        "orden": 2,
-        "fecha": "14/07/2025, 4:03:02 p. m.",
-        "asociado": "Registro de Inversiones Financieras",
-        "etiqueta": "Informe Legal",
-        "nombre": "informe-legal.pdf",
-        "paginas": 1,
-        "principal": 9,
-        "pfinal": 9,
-        "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "informe-legal.pdf",
-            "paginas": 1,
-            "principal": 9,
-            "pfinal": 9,
-            "orden": 2
-          },
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "informe-legal.pdf",
-            "paginas": 1,
-            "principal": 9,
-            "pfinal": 9,
-            "orden": 2
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": null
-      },
-      {
-        "bloqueado": false,
-        "orden": 3,
-        "fecha": "14/07/2025, 4:03:02 p. m.",
-        "asociado": "Registro de Inversiones Financieras",
-        "etiqueta": "Acta de Comité de Inversiones",
-        "nombre": "acta-de-comite-de-inversiones.pdf",
-        "paginas": 2,
-        "principal": 10,
-        "pfinal": 11,
-        "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "acta-de-comite-de-inversiones.pdf",
-            "paginas": 2,
-            "principal": 10,
-            "pfinal": 11,
-            "orden": 3
-          },
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "acta-de-comite-de-inversiones.pdf",
-            "paginas": 2,
-            "principal": 10,
-            "pfinal": 11,
-            "orden": 3
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": null
-      },
-      {
-        "bloqueado": true,
-        "orden": 4,
-        "fecha": "14/07/2025, 4:03:02 p. m.",
-        "asociado": "Registro de Inversiones Financieras",
-        "etiqueta": "Acta de Suscripción",
-        "nombre": "acta-de-suscripcion.pdf",
-        "paginas": 5,
-        "principal": 12,
-        "pfinal": 16,
-        "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "acta-de-suscripcion.pdf",
-            "paginas": 5,
-            "principal": 12,
-            "pfinal": 16,
-            "orden": 4
-          },
-          {
-            "fecha": "14/07/2025, 4:03:02 p. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "acta-de-suscripcion.pdf",
-            "paginas": 5,
-            "principal": 12,
-            "pfinal": 16,
-            "orden": 4
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": null
-      },
-      {
-        "bloqueado": false,
-        "orden": 5,
-        "fecha": "21/07/2025, 8:00:00 a. m.",
-        "asociado": "Registro de Llamado de Capital",
-        "etiqueta": "Documento de notificación del llamado",
-        "nombre": "documento-notificacion.pdf",
-        "paginas": 3,
-        "principal": 17,
-        "pfinal": 19,
-        "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "21/07/2025, 8:00:00 a. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "documento-notificacion.pdf",
-            "paginas": 3,
-            "principal": 17,
-            "pfinal": 19,
-            "orden": 5
-          },
-          {
-            "fecha": "21/07/2025, 8:00:00 a. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "documento-notificacion.pdf",
-            "paginas": 3,
-            "principal": 17,
-            "pfinal": 19,
-            "orden": 5
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": 1
-      },
-      {
-        "bloqueado": true,
-        "orden": 6,
-        "fecha": "21/07/2025, 2:00:00 p. m.",
-        "asociado": "Registrar Operación",
-        "etiqueta": "Constancia de operación",
-        "nombre": "constancia-operacion.pdf",
-        "paginas": 7,
-        "principal": 20,
-        "pfinal": 26,
-        "uo": "OAD.TE",
-        "usuario": "JHUANCAR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "21/07/2025, 2:00:00 p. m.",
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitan",
-            "ip": "172.16.34.132",
-            "doc": "constancia-operacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          },
-          {
-            "fecha": "21/07/2025, 2:00:00 p. m.",
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitan",
-            "ip": "172.16.8.94",
-            "doc": "constancia-operacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": 1
-      },
-      {
-        "bloqueado": true,
-        "orden": 7,
-        "fecha": "18/08/2025, 8:30:00 a. m.",
-        "asociado": "Registro de Distribución de Capital",
-        "etiqueta": "Documento de notificación de la distribución",
-        "nombre": "documento-notificacion.pdf",
-        "paginas": 7,
-        "principal": 20,
-        "pfinal": 26,
-        "uo": "DIN.IF",
-        "usuario": "JHUANCAR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "18/08/2025, 8:30:00 a. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.34.132",
-            "doc": "constancia-operacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          },
-          {
-            "fecha": "18/08/2025, 8:30:00 a. m.",
-            "usuario": "JSIFUENTESR",
-            "nombreUsuario": "Josue Sifuentes",
-            "ip": "172.16.8.94",
-            "doc": "constancia-operacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": 2
-      },
-      {
-        "bloqueado": true,
-        "orden": 8,
-        "fecha": "18/08/2025, 2:30:00 p. m.",
-        "asociado": "Registrar Operación",
-        "etiqueta": "Constancia de operación",
-        "nombre": "documento-notificacion.pdf",
-        "paginas": 7,
-        "principal": 20,
-        "pfinal": 26,
-        "uo": "OAD.TE",
-        "usuario": "JHUANCAR",
-        "ip": "172.16.34.132",
-        "historial": [
-          {
-            "fecha": "18/08/2025, 2:30:00 p. m.",
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitan",
-            "ip": "172.16.34.132",
-            "doc": "documento-notificacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          },
-          {
-            "fecha": "18/08/2025, 2:30:00 p. m.",
-            "usuario": "EGUERRERO",
-            "nombreUsuario": "Evelyn Guerrero Paitan",
-            "ip": "172.16.8.94",
-            "doc": "documento-notificacion.pdf",
-            "paginas": 7,
-            "principal": 20,
-            "pfinal": 26,
-            "orden": 6
-          }
-        ],
-        "tipo_doc_sus": "Principal",
-        "numeracion_doc": 2
-      }
-    ],
-    "acciones": [
-    {
-      "fecha": "14/07/2025, 4:03:00 p. m.",
-      "accion": "Registrar Instrumento",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 1,
-      "url": "registro-instrumento.html?area=DIN"
-    },
-    {
-      "fecha": "14/07/2025, 4:05:00 p. m.",
-      "accion": "Ver notificación de registro de instrumento",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 2,
-      "url": "menu-notificacion-demo.html?id_notificacion=2"
-    },
-    {
-      "fecha": "14/07/2025, 4:05:00 p. m.",
-      "accion": "Ver notificación de registro de instrumento",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 3,
-      "url": "menu-notificacion-demo.html?id_notificacion=2"
-    },
-
-    {
-      "fecha": "21/07/2025, 8:00:00 a. m.",
-      "accion": "Registra y aprueba un llamado de Capital",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 4,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=aprobar"
-    },
-    {
-      "fecha": "21/07/2025, 8:05:00 a. m.",
-      "accion": "Ver notificación de instrucción (llamado)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 5,
-      "url": "menu-notificacion-demo.html?id_notificacion=10"
-    },
-    {
-      "fecha": "21/07/2025, 8:05:00 a. m.",
-      "accion": "Ver notificación de instrucción (llamado)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 6,
-      "url": "menu-notificacion-demo.html?id_notificacion=10"
-    },
-    {
-      "fecha": "21/07/2025, 8:30:00 a. m.",
-      "accion": "Registrar desagregado (llamado)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 7,
-      "url": "listado-llamado-capital-dist.html?area=OGR&accion=llamado&subaccion=registrar-desagregado"
-    },
-    {
-      "fecha": "21/07/2025, 9:00:00 a. m.",
-      "accion": "Instruir a tesorería (llamado)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 8,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=llamado&subaccion=notificar-backoffice"
-    },
-    {
-      "fecha": "21/07/2025, 9:05:00 a. m.",
-      "accion": "Ver notificación de instrucción (llamado)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 9,
-      "url": "menu-notificacion-demo.html?id_notificacion=1"
-    },
-    {
-      "fecha": "21/07/2025, 2:00:00 p. m.",
-      "accion": "Ejecutar Operación (llamado)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 10,
-      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=llamado&subaccion=realizar-operacion"
-    },
-    {
-      "fecha": "21/07/2025, 2:05:00 p. m.",
-      "accion": "Ver notificación de operación (llamado)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 11,
-      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
-    },
-    {
-      "fecha": "21/07/2025, 2:05:00 p. m.",
-      "accion": "Ver notificación de operación (llamado)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 12,
-      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
-    },
-
-    {
-      "fecha": "18/08/2025, 8:30:00 a. m.",
-      "accion": "Registra y aprueba una distribución de Capital",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 13,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=X"
-    },
-    {
-      "fecha": "18/08/2025, 9:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 14,
-      "url": "menu-notificacion-demo.html?id_notificacion=4"
-    },
-    {
-      "fecha": "18/08/2025, 9:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 15,
-      "url": "menu-notificacion-demo.html?id_notificacion=4"
-    },
-    {
-      "fecha": "18/08/2025, 9:30:00 a. m.",
-      "accion": "Registrar desagregado (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 16,
-      "url": "listado-llamado-capital-dist.html?area=OGR&accion=distribucion&subaccion=registrar-desagregado"
-    },
-    {
-      "fecha": "18/08/2025, 10:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (desagregado distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 17,
-      "url": "menu-notificacion-demo.html?id_notificacion=7&user=DIN"
-    },
-    {
-      "fecha": "18/08/2025, 10:30:00 a. m.",
-      "accion": "Instruir a tesorería (distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 18,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=notificar-backoffice"
-    },
-    {
-      "fecha": "18/08/2025, 11:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 19,
-      "url": "menu-notificacion-demo.html?id_notificacion=9"
-    },
-    {
-      "fecha": "18/08/2025, 2:30:00 p. m.",
-      "accion": "Ejecutar Operación (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 20,
-      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=distribucion&subaccion=realizar-operacion"
-    },
-    {
-      "fecha": "18/08/2025, 3:00:00 p. m.",
-      "accion": "Ver notificación de operación (distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 21,
-      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
-    },
-    {
-      "fecha": "18/08/2025, 3:00:00 p. m.",
-      "accion": "Ver notificación de operación (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RF",
-      "orden": 22,
-      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
-    }
-  ]
-  },
-  {
     "clase": "Renta Fija",
     "mercado": "Local",
     "subcat": "Gobierno",
     "tipo": "Bono Soberano",
     "codigo": "INV-1001",
-    "orden": 3,
+    "orden": 1,
     "emisor": "",
     "descripcion": "REPUBLICA DEL PERÚ",
     "items": [
@@ -1566,5 +453,1129 @@
         "orden": 9
       }
     ]
+  },
+
+  {
+    "clase": "Inversiones Alternativas",
+    "mercado": "Local",
+    "subcat": "Fondos de inversión",
+    "tipo": "Fondo privado",
+    "codigo": "INV-6040",
+    "orden": 2,
+    "nombre": "Nombre del Fondo",
+    "descripcion": "Fondo privado Intercorp",
+    "items": [
+      {
+        "bloqueado": true,
+        "orden": 1,
+        "fecha": "14/07/2025, 4:03:02 p. m.",
+        "asociado": "Registro de Inversiones Financieras",
+        "etiqueta": "Informe de Riesgos",
+        "nombre": "informe-riesgo.pdf",
+        "paginas": 8,
+        "principal": 1,
+        "pfinal": 8,
+        "uo": "DIN.IF",
+        "usuario": "JHUANCAR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "informe-riesgo.pdf",
+            "paginas": 8,
+            "principal": 1,
+            "pfinal": 8,
+            "orden": 1
+          },
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "informe-riesgo.pdf",
+            "paginas": 8,
+            "principal": 1,
+            "pfinal": 8,
+            "orden": 1
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": null
+      },
+      {
+        "bloqueado": false,
+        "orden": 2,
+        "fecha": "14/07/2025, 4:03:02 p. m.",
+        "asociado": "Registro de Inversiones Financieras",
+        "etiqueta": "Informe Legal",
+        "nombre": "informe-legal.pdf",
+        "paginas": 1,
+        "principal": 9,
+        "pfinal": 9,
+        "uo": "DIN.IF",
+        "usuario": "JHUANCAR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "informe-legal.pdf",
+            "paginas": 1,
+            "principal": 9,
+            "pfinal": 9,
+            "orden": 2
+          },
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "informe-legal.pdf",
+            "paginas": 1,
+            "principal": 9,
+            "pfinal": 9,
+            "orden": 2
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": null
+      },
+      {
+        "bloqueado": false,
+        "orden": 3,
+        "fecha": "14/07/2025, 4:03:02 p. m.",
+        "asociado": "Registro de Inversiones Financieras",
+        "etiqueta": "Acta de Comité de Inversiones",
+        "nombre": "acta-de-comite-de-inversiones.pdf",
+        "paginas": 2,
+        "principal": 10,
+        "pfinal": 11,
+        "uo": "DIN.IF",
+        "usuario": "JHUANCAR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "acta-de-comite-de-inversiones.pdf",
+            "paginas": 2,
+            "principal": 10,
+            "pfinal": 11,
+            "orden": 3
+          },
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "acta-de-comite-de-inversiones.pdf",
+            "paginas": 2,
+            "principal": 10,
+            "pfinal": 11,
+            "orden": 3
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": null
+      },
+      {
+        "bloqueado": true,
+        "orden": 4,
+        "fecha": "14/07/2025, 4:03:02 p. m.",
+        "asociado": "Registro de Inversiones Financieras",
+        "etiqueta": "Acta de Suscripción",
+        "nombre": "acta-de-suscripcion.pdf",
+        "paginas": 5,
+        "principal": 12,
+        "pfinal": 16,
+        "uo": "DIN.IF",
+        "usuario": "JHUANCAR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "acta-de-suscripcion.pdf",
+            "paginas": 5,
+            "principal": 12,
+            "pfinal": 16,
+            "orden": 4
+          },
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "acta-de-suscripcion.pdf",
+            "paginas": 5,
+            "principal": 12,
+            "pfinal": 16,
+            "orden": 4
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": null
+      },
+      {
+        "bloqueado": false,
+        "orden": 5,
+        "fecha": "21/07/2025, 8:00:00 a. m.",
+        "asociado": "Registro de Llamado de Capital",
+        "etiqueta": "Documento de notificación del llamado",
+        "nombre": "documento-notificacion.pdf",
+        "paginas": 3,
+        "principal": 17,
+        "pfinal": 19,
+        "uo": "DIN.IF",
+        "usuario": "JHUANCAR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "21/07/2025, 8:00:00 a. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "documento-notificacion.pdf",
+            "paginas": 3,
+            "principal": 17,
+            "pfinal": 19,
+            "orden": 5
+          },
+          {
+            "fecha": "21/07/2025, 8:00:00 a. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "documento-notificacion.pdf",
+            "paginas": 3,
+            "principal": 17,
+            "pfinal": 19,
+            "orden": 5
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": 1
+      },
+      {
+        "bloqueado": true,
+        "orden": 6,
+        "fecha": "21/07/2025, 2:00:00 p. m.",
+        "asociado": "Registrar Operación",
+        "etiqueta": "Constancia de operación",
+        "nombre": "constancia-operacion.pdf",
+        "paginas": 7,
+        "principal": 20,
+        "pfinal": 26,
+        "uo": "OAD.TE",
+        "usuario": "JHUANCAR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "21/07/2025, 2:00:00 p. m.",
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitan",
+            "ip": "172.16.34.132",
+            "doc": "constancia-operacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          },
+          {
+            "fecha": "21/07/2025, 2:00:00 p. m.",
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitan",
+            "ip": "172.16.8.94",
+            "doc": "constancia-operacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": 1
+      },
+      {
+        "bloqueado": true,
+        "orden": 7,
+        "fecha": "18/08/2025, 8:30:00 a. m.",
+        "asociado": "Registro de Distribución de Capital",
+        "etiqueta": "Documento de notificación de la distribución",
+        "nombre": "documento-notificacion.pdf",
+        "paginas": 7,
+        "principal": 20,
+        "pfinal": 26,
+        "uo": "DIN.IF",
+        "usuario": "JHUANCAR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "18/08/2025, 8:30:00 a. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "constancia-operacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          },
+          {
+            "fecha": "18/08/2025, 8:30:00 a. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "constancia-operacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": 2
+      },
+      {
+        "bloqueado": true,
+        "orden": 8,
+        "fecha": "18/08/2025, 2:30:00 p. m.",
+        "asociado": "Registrar Operación",
+        "etiqueta": "Constancia de operación",
+        "nombre": "documento-notificacion.pdf",
+        "paginas": 7,
+        "principal": 20,
+        "pfinal": 26,
+        "uo": "OAD.TE",
+        "usuario": "JHUANCAR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "18/08/2025, 2:30:00 p. m.",
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitan",
+            "ip": "172.16.34.132",
+            "doc": "documento-notificacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          },
+          {
+            "fecha": "18/08/2025, 2:30:00 p. m.",
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitan",
+            "ip": "172.16.8.94",
+            "doc": "documento-notificacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": 2
+      }
+    ],
+    "acciones": [
+    {
+      "fecha": "14/07/2025, 4:03:00 p. m.",
+      "accion": "Regitro de Instrumento Financiero",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 1,
+      "url": "registro-instrumento.html?area=DIN"
+    },
+    {
+      "fecha": "14/07/2025, 4:05:00 p. m.",
+      "accion": "Envío de notificación de registro de instrumento",
+      "usuario": "4",
+      "nombreUsuario": "4",
+      "ip": "172.16.34.132",
+      "uo": "4",
+      "orden": 2,
+      "url": "menu-notificacion-demo.html?id_notificacion=2"
+    },
+    {
+      "fecha": "14/07/2025, 4:05:00 p. m.",
+      "accion": "Ver notificación de registro de instrumento",
+      "usuario": "4",
+      "nombreUsuario": "4",
+      "ip": "172.16.34.132",
+      "uo": "4",
+      "orden": 3,
+      "url": "menu-notificacion-demo.html?id_notificacion=2"
+    },
+
+    {
+      "fecha": "21/07/2025, 8:00:00 a. m.",
+      "accion": "Registro y aprobación de llamado de Capital",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 4,
+      "url": "listado-llamado-capital-dist.html?area=DIN&accion=aprobar"
+    },
+    {
+      "fecha": "21/07/2025, 8:05:00 a. m.",
+      "accion": "Envío de notificación de llamado de capital",
+      "usuario": "4",
+      "nombreUsuario": "4",
+      "ip": "172.16.34.132",
+      "uo": "4",
+      "orden": 5,
+      "url": "menu-notificacion-demo.html?id_notificacion=10"
+    },
+    {
+      "fecha": "21/07/2025, 8:05:00 a. m.",
+      "accion": "Ver notificación de llamado de capital",
+      "usuario": "4",
+      "nombreUsuario": "4",
+      "ip": "172.16.34.132",
+      "uo": "4",
+      "orden": 6,
+      "url": "menu-notificacion-demo.html?id_notificacion=10"
+    },
+    {
+      "fecha": "21/07/2025, 8:30:00 a. m.",
+      "accion": "Registro de desagregado del llamado",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 7,
+      "url": "listado-llamado-capital-dist.html?area=OGR&accion=llamado&subaccion=registrar-desagregado"
+    },
+    {
+      "fecha": "21/07/2025, 9:00:00 a. m.",
+      "accion": "Instruir a tesorería",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 8,
+      "url": "listado-llamado-capital-dist.html?area=DIN&accion=llamado&subaccion=notificar-backoffice"
+    },
+    {
+      "fecha": "21/07/2025, 9:05:00 a. m.",
+      "accion": "Envío de notificación de la instrucción",
+      "usuario": "2",
+      "nombreUsuario": "2",
+      "ip": "172.16.34.132",
+      "uo": "2",
+      "orden": 9,
+      "url": "menu-notificacion-demo.html?id_notificacion=1"
+    },
+        {
+      "fecha": "21/07/2025, 9:05:00 a. m.",
+      "accion": "Ver notificación de la instrucción",
+      "usuario": "2",
+      "nombreUsuario": "2",
+      "ip": "172.16.34.132",
+      "uo": "2",
+      "orden": 10,
+      "url": "menu-notificacion-demo.html?id_notificacion=1"
+    },
+    {
+      "fecha": "21/07/2025, 2:00:00 p. m.",
+      "accion": "Ejecutar Operación",
+      "usuario": "EGUERRERO",
+      "nombreUsuario": "Evelyn Guerrero Paitán",
+      "ip": "172.16.34.132",
+      "uo": "OAD.TE",
+      "orden": 11,
+      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=llamado&subaccion=realizar-operacion"
+    },
+    {
+      "fecha": "21/07/2025, 2:05:00 p. m.",
+      "accion": "Ver notificación de operación (llamado)",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 12,
+      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
+    },
+    {
+      "fecha": "21/07/2025, 2:05:00 p. m.",
+      "accion": "Ver notificación de operación (llamado)",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 12,
+      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
+    },
+
+    {
+      "fecha": "18/08/2025, 8:30:00 a. m.",
+      "accion": "Registra y aprueba una distribución de Capital",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 13,
+      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=X"
+    },
+    {
+      "fecha": "18/08/2025, 9:00:00 a. m.",
+      "accion": "Ver notificación de instrucción (distribución)",
+      "usuario": "EGUERRERO",
+      "nombreUsuario": "Evelyn Guerrero Paitán",
+      "ip": "172.16.34.132",
+      "uo": "OAD.TE",
+      "orden": 14,
+      "url": "menu-notificacion-demo.html?id_notificacion=4"
+    },
+    {
+      "fecha": "18/08/2025, 9:00:00 a. m.",
+      "accion": "Ver notificación de instrucción (distribución)",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 15,
+      "url": "menu-notificacion-demo.html?id_notificacion=4"
+    },
+    {
+      "fecha": "18/08/2025, 9:30:00 a. m.",
+      "accion": "Registrar desagregado (distribución)",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 16,
+      "url": "listado-llamado-capital-dist.html?area=OGR&accion=distribucion&subaccion=registrar-desagregado"
+    },
+    {
+      "fecha": "18/08/2025, 10:00:00 a. m.",
+      "accion": "Ver notificación de instrucción (desagregado distribución)",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 17,
+      "url": "menu-notificacion-demo.html?id_notificacion=7&user=DIN"
+    },
+    {
+      "fecha": "18/08/2025, 10:30:00 a. m.",
+      "accion": "Instruir a tesorería (distribución)",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 18,
+      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=notificar-backoffice"
+    },
+    {
+      "fecha": "18/08/2025, 11:00:00 a. m.",
+      "accion": "Ver notificación de instrucción (distribución)",
+      "usuario": "EGUERRERO",
+      "nombreUsuario": "Evelyn Guerrero Paitán",
+      "ip": "172.16.34.132",
+      "uo": "OAD.TE",
+      "orden": 19,
+      "url": "menu-notificacion-demo.html?id_notificacion=9"
+    },
+    {
+      "fecha": "18/08/2025, 2:30:00 p. m.",
+      "accion": "Ejecutar Operación (distribución)",
+      "usuario": "EGUERRERO",
+      "nombreUsuario": "Evelyn Guerrero Paitán",
+      "ip": "172.16.34.132",
+      "uo": "OAD.TE",
+      "orden": 20,
+      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=distribucion&subaccion=realizar-operacion"
+    },
+    {
+      "fecha": "18/08/2025, 3:00:00 p. m.",
+      "accion": "Ver notificación de operación (distribución)",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 21,
+      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
+    },
+    {
+      "fecha": "18/08/2025, 3:00:00 p. m.",
+      "accion": "Ver notificación de operación (distribución)",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 22,
+      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
+    }
+  ]
+  },
+  {
+    "clase": "Inversiones Alternativas",
+    "mercado": "Local",
+    "subcat": "Fondos de inversión",
+    "tipo": "Fondo privado",
+    "codigo": "INV-6053",
+    "emisor": "",
+    "nombre": "Emisor",
+    "descripcion": "Nombre del Fondo",
+    "orden": 3,
+    "items": [
+      {
+        "bloqueado": true,
+        "orden": 1,
+        "fecha": "14/07/2025, 4:03:02 p. m.",
+        "asociado": "Registro de Inversiones Financieras",
+        "etiqueta": "Informe de Riesgos",
+        "nombre": "informe-riesgo.pdf",
+        "paginas": 8,
+        "principal": 1,
+        "pfinal": 8,
+        "uo": "DIN.IF",
+        "usuario": "JSIFUENTESR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "informe-riesgo.pdf",
+            "paginas": 8,
+            "principal": 1,
+            "pfinal": 8,
+            "orden": 1
+          },
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "informe-riesgo.pdf",
+            "paginas": 8,
+            "principal": 1,
+            "pfinal": 8,
+            "orden": 1
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": null
+      },
+      {
+        "bloqueado": false,
+        "orden": 2,
+        "fecha": "14/07/2025, 4:03:02 p. m.",
+        "asociado": "Registro de Inversiones Financieras",
+        "etiqueta": "Informe Legal",
+        "nombre": "informe-legal.pdf",
+        "paginas": 1,
+        "principal": 9,
+        "pfinal": 9,
+        "uo": "DIN.IF",
+        "usuario": "JSIFUENTESR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "informe-legal.pdf",
+            "paginas": 1,
+            "principal": 9,
+            "pfinal": 9,
+            "orden": 2
+          },
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "informe-legal.pdf",
+            "paginas": 1,
+            "principal": 9,
+            "pfinal": 9,
+            "orden": 2
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": null
+      },
+      {
+        "bloqueado": false,
+        "orden": 3,
+        "fecha": "14/07/2025, 4:03:02 p. m.",
+        "asociado": "Registro de Inversiones Financieras",
+        "etiqueta": "Acta de Comité de Inversiones",
+        "nombre": "acta-de-comite-de-inversiones.pdf",
+        "paginas": 2,
+        "principal": 10,
+        "pfinal": 11,
+        "uo": "DIN.IF",
+        "usuario": "JSIFUENTESR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "acta-de-comite-de-inversiones.pdf",
+            "paginas": 2,
+            "principal": 10,
+            "pfinal": 11,
+            "orden": 3
+          },
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "acta-de-comite-de-inversiones.pdf",
+            "paginas": 2,
+            "principal": 10,
+            "pfinal": 11,
+            "orden": 3
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": null
+      },
+      {
+        "bloqueado": true,
+        "orden": 4,
+        "fecha": "14/07/2025, 4:03:02 p. m.",
+        "asociado": "Registro de Inversiones Financieras",
+        "etiqueta": "Acta de Suscripción",
+        "nombre": "acta-de-suscripcion.pdf",
+        "paginas": 5,
+        "principal": 12,
+        "pfinal": 16,
+        "uo": "DIN.IF",
+        "usuario": "JSIFUENTESR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "acta-de-suscripcion.pdf",
+            "paginas": 5,
+            "principal": 12,
+            "pfinal": 16,
+            "orden": 4
+          },
+          {
+            "fecha": "14/07/2025, 4:03:02 p. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "acta-de-suscripcion.pdf",
+            "paginas": 5,
+            "principal": 12,
+            "pfinal": 16,
+            "orden": 4
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": null
+      },
+      {
+        "bloqueado": false,
+        "orden": 5,
+        "fecha": "21/07/2025, 8:00:00 a. m.",
+        "asociado": "Registro de Llamado de Capital",
+        "etiqueta": "Documento de notificación del llamado",
+        "nombre": "documento-notificacion.pdf",
+        "paginas": 3,
+        "principal": 17,
+        "pfinal": 19,
+        "uo": "DIN.IF",
+        "usuario": "JSIFUENTESR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "21/07/2025, 8:00:00 a. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "documento-notificacion.pdf",
+            "paginas": 3,
+            "principal": 17,
+            "pfinal": 19,
+            "orden": 5
+          },
+          {
+            "fecha": "21/07/2025, 8:00:00 a. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "documento-notificacion.pdf",
+            "paginas": 3,
+            "principal": 17,
+            "pfinal": 19,
+            "orden": 5
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": 1
+      },
+      {
+        "bloqueado": true,
+        "orden": 6,
+        "fecha": "21/07/2025, 2:00:00 p. m.",
+        "asociado": "Registrar Operación",
+        "etiqueta": "Constancia de operación",
+        "nombre": "constancia-operacion.pdf",
+        "paginas": 7,
+        "principal": 20,
+        "pfinal": 26,
+        "uo": "OAD.TE",
+        "usuario": "EGUERRERO",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "21/07/2025, 2:00:00 p. m.",
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitan",
+            "ip": "172.16.34.132",
+            "doc": "constancia-operacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          },
+          {
+            "fecha": "21/07/2025, 2:00:00 p. m.",
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitan",
+            "ip": "172.16.8.94",
+            "doc": "constancia-operacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": 1
+      },
+      {
+        "bloqueado": true,
+        "orden": 7,
+        "fecha": "18/08/2025, 8:30:00 a. m.",
+        "asociado": "Registro de Distribución de Capital",
+        "etiqueta": "Documento de notificación de la distribución",
+        "nombre": "documento-notificacion.pdf",
+        "paginas": 7,
+        "principal": 20,
+        "pfinal": 26,
+        "uo": "DIN.IF",
+        "usuario": "JSIFUENTESR",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "18/08/2025, 8:30:00 a. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.34.132",
+            "doc": "constancia-operacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          },
+          {
+            "fecha": "18/08/2025, 8:30:00 a. m.",
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "ip": "172.16.8.94",
+            "doc": "constancia-operacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": 2
+      },
+      {
+        "bloqueado": true,
+        "orden": 8,
+        "fecha": "18/08/2025, 2:30:00 p. m.",
+        "asociado": "Registrar Operación",
+        "etiqueta": "Constancia de operación",
+        "nombre": "documento-notificacion.pdf",
+        "paginas": 7,
+        "principal": 20,
+        "pfinal": 26,
+        "uo": "OAD.TE",
+        "usuario": "EGUERRERO",
+        "ip": "172.16.34.132",
+        "historial": [
+          {
+            "fecha": "18/08/2025, 2:30:00 p. m.",
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitan",
+            "ip": "172.16.34.132",
+            "doc": "documento-notificacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          },
+          {
+            "fecha": "18/08/2025, 2:30:00 p. m.",
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitan",
+            "ip": "172.16.8.94",
+            "doc": "documento-notificacion.pdf",
+            "paginas": 7,
+            "principal": 20,
+            "pfinal": 26,
+            "orden": 6
+          }
+        ],
+        "tipo_doc_sus": "Principal",
+        "numeracion_doc": 2
+      }
+    ],
+    "acciones": [
+    {
+      "fecha": "14/07/2025, 4:03:00 p. m.",
+      "accion": "Registrar de Instrumento Financiero",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 1,
+      "url": "registro-instrumento.html?area=DIN"
+    },
+    {
+      "fecha": "14/07/2025, 4:05:00 p. m.",
+      "accion": "Ver notificación de registro de instrumento",
+      "usuario": "EGUERRERO",
+      "nombreUsuario": "Evelyn Guerrero Paitán",
+      "ip": "172.16.34.132",
+      "uo": "OAD.TE",
+      "orden": 2,
+      "url": "menu-notificacion-demo.html?id_notificacion=2"
+    },
+    {
+      "fecha": "14/07/2025, 4:05:00 p. m.",
+      "accion": "Ver notificación de registro de instrumento",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 3,
+      "url": "menu-notificacion-demo.html?id_notificacion=2"
+    },
+
+    {
+      "fecha": "21/07/2025, 8:00:00 a. m.",
+      "accion": "Registra y aprueba un llamado de Capital",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 4,
+      "url": "listado-llamado-capital-dist.html?area=DIN&accion=aprobar"
+    },
+    {
+      "fecha": "21/07/2025, 8:05:00 a. m.",
+      "accion": "Ver notificación de instrucción (llamado)",
+      "usuario": "EGUERRERO",
+      "nombreUsuario": "Evelyn Guerrero Paitán",
+      "ip": "172.16.34.132",
+      "uo": "OAD.TE",
+      "orden": 5,
+      "url": "menu-notificacion-demo.html?id_notificacion=10"
+    },
+    {
+      "fecha": "21/07/2025, 8:05:00 a. m.",
+      "accion": "Ver notificación de instrucción (llamado)",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 6,
+      "url": "menu-notificacion-demo.html?id_notificacion=10"
+    },
+    {
+      "fecha": "21/07/2025, 8:30:00 a. m.",
+      "accion": "Registrar desagregado (llamado)",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 7,
+      "url": "listado-llamado-capital-dist.html?area=OGR&accion=llamado&subaccion=registrar-desagregado"
+    },
+    {
+      "fecha": "21/07/2025, 9:00:00 a. m.",
+      "accion": "Instruir a tesorería (llamado)",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 8,
+      "url": "listado-llamado-capital-dist.html?area=DIN&accion=llamado&subaccion=notificar-backoffice"
+    },
+    {
+      "fecha": "21/07/2025, 9:05:00 a. m.",
+      "accion": "Ver notificación de instrucción (llamado)",
+      "usuario": "EGUERRERO",
+      "nombreUsuario": "Evelyn Guerrero Paitán",
+      "ip": "172.16.34.132",
+      "uo": "OAD.TE",
+      "orden": 9,
+      "url": "menu-notificacion-demo.html?id_notificacion=1"
+    },
+    {
+      "fecha": "21/07/2025, 2:00:00 p. m.",
+      "accion": "Ejecutar Operación (llamado)",
+      "usuario": "EGUERRERO",
+      "nombreUsuario": "Evelyn Guerrero Paitán",
+      "ip": "172.16.34.132",
+      "uo": "OAD.TE",
+      "orden": 10,
+      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=llamado&subaccion=realizar-operacion"
+    },
+    {
+      "fecha": "21/07/2025, 2:05:00 p. m.",
+      "accion": "Ver notificación de operación (llamado)",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 11,
+      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
+    },
+    {
+      "fecha": "21/07/2025, 2:05:00 p. m.",
+      "accion": "Ver notificación de operación (llamado)",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 12,
+      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
+    },
+
+    {
+      "fecha": "18/08/2025, 8:30:00 a. m.",
+      "accion": "Registra y aprueba una distribución de Capital",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 13,
+      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=X"
+    },
+    {
+      "fecha": "18/08/2025, 9:00:00 a. m.",
+      "accion": "Ver notificación de instrucción (distribución)",
+      "usuario": "EGUERRERO",
+      "nombreUsuario": "Evelyn Guerrero Paitán",
+      "ip": "172.16.34.132",
+      "uo": "OAD.TE",
+      "orden": 14,
+      "url": "menu-notificacion-demo.html?id_notificacion=4"
+    },
+    {
+      "fecha": "18/08/2025, 9:00:00 a. m.",
+      "accion": "Ver notificación de instrucción (distribución)",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 15,
+      "url": "menu-notificacion-demo.html?id_notificacion=4"
+    },
+    {
+      "fecha": "18/08/2025, 9:30:00 a. m.",
+      "accion": "Registrar desagregado (distribución)",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 16,
+      "url": "listado-llamado-capital-dist.html?area=OGR&accion=distribucion&subaccion=registrar-desagregado"
+    },
+    {
+      "fecha": "18/08/2025, 10:00:00 a. m.",
+      "accion": "Ver notificación de instrucción (desagregado distribución)",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 17,
+      "url": "menu-notificacion-demo.html?id_notificacion=7&user=DIN"
+    },
+    {
+      "fecha": "18/08/2025, 10:30:00 a. m.",
+      "accion": "Instruir a tesorería (distribución)",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 18,
+      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=notificar-backoffice"
+    },
+    {
+      "fecha": "18/08/2025, 11:00:00 a. m.",
+      "accion": "Ver notificación de instrucción (distribución)",
+      "usuario": "EGUERRERO",
+      "nombreUsuario": "Evelyn Guerrero Paitán",
+      "ip": "172.16.34.132",
+      "uo": "OAD.TE",
+      "orden": 19,
+      "url": "menu-notificacion-demo.html?id_notificacion=9"
+    },
+    {
+      "fecha": "18/08/2025, 2:30:00 p. m.",
+      "accion": "Ejecutar Operación (distribución)",
+      "usuario": "EGUERRERO",
+      "nombreUsuario": "Evelyn Guerrero Paitán",
+      "ip": "172.16.34.132",
+      "uo": "OAD.TE",
+      "orden": 20,
+      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=distribucion&subaccion=realizar-operacion"
+    },
+    {
+      "fecha": "18/08/2025, 3:00:00 p. m.",
+      "accion": "Ver notificación de operación (distribución)",
+      "usuario": "JSIFUENTESR",
+      "nombreUsuario": "Josue Sifuentes",
+      "ip": "172.16.34.132",
+      "uo": "DIN.IF",
+      "orden": 21,
+      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
+    },
+    {
+      "fecha": "18/08/2025, 3:00:00 p. m.",
+      "accion": "Ver notificación de operación (distribución)",
+      "usuario": "FHENRIQUEZ",
+      "nombreUsuario": "Frank Enriquez",
+      "ip": "172.16.34.132",
+      "uo": "OGR.RO",
+      "orden": 22,
+      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
+    }
+  ]
   }
 ]
