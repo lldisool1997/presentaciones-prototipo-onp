@@ -941,7 +941,7 @@ function renderNivel1(groups){
   <thead class="bg-slate-700 text-white text-[12px]">
     <tr>
       <th class="px-3 py-2 text-center uppercase">N° Item</th>
-      <th class="px-3 py-2 text-center uppercase">Fecha</th>
+      <th class="px-3 py-2 text-center uppercase">Fecha y hora</th>
       <th class="px-3 py-2 text-center uppercase">Actividad</th>
       <th class="px-3 py-2 text-center uppercase">Usuario</th>
       <th class="px-3 py-2 text-center uppercase">Nombre Usuario</th>
@@ -1499,6 +1499,14 @@ function openAddModal(groupIdx) {
   const g = datasetActual()[groupIdx] || {};
   const acts = [...new Set((g.items || []).map(d => d.asociado))];
 
+  console.log(g)
+  $('#clase-activo-modal').html(g.clase)
+  $('#mercado-modal').html(g.mercado)
+  $('#subcategoria-modal').html(g.subcat)
+  $('#tipo-instrumento-modal').html(g.tipo)
+  $('#nombre-modal').html(g.descripcion)
+  $('#codigo-inversion-modal').html(g.codigo)
+
   const selAccion = q('#addDocAccion');
   selAccion.innerHTML = '<option value="">Seleccione…</option>';
   acts.forEach(a => {
@@ -1533,6 +1541,8 @@ document.getElementById('addDocAccion').addEventListener('change', (e) => {
   const groupIdx = Number(q('#addDocGroupIndex').value);
   const g = datasetActual()[groupIdx] || {};
   const actividad = e.target.value;
+
+  console.log(g)
 
   const selOrden = q('#addDocOrden');
   const inpEtiqueta = q('#addEtiqueta');
@@ -1709,7 +1719,7 @@ function initDataTablesAcciones(root = document) {
     if (!$.fn.DataTable.isDataTable(tbl)) {
       new DataTable(tbl, {
         pageLength: 10,
-        order: [[0, 'asc']],
+        order: [],
         language: { url: 'https://cdn.datatables.net/plug-ins/2.1.5/i18n/es-ES.json' },
         retrieve: true, // si ya existiera, reusa
         initComplete() {
@@ -1811,7 +1821,7 @@ document.addEventListener('click', (e) => {
     // Recepción (o fallback): incluye "Hora lectura"
     ntfThead.innerHTML = `
       <tr>
-        <th class="px-3 py-2 text-center uppercase">Hora lectura</th>
+        <th class="px-3 py-2 text-center uppercase">Fecha y Hora lectura</th>
         <th class="px-3 py-2 text-center uppercase">Usuario</th>
         <th class="px-3 py-2 text-center uppercase">Nombre</th>
         <th class="px-3 py-2 text-center uppercase">IP</th>
@@ -1824,7 +1834,7 @@ document.addEventListener('click', (e) => {
   // Título y meta
   document.getElementById('ntf-title').textContent = `Detalle — ${accion.accion || 'Notificación'}`;
   document.getElementById('ntf-meta').textContent  =
-    `Fecha: ${accion.fecha || '—'} · Cantidad: ${rows.length}`;
+    `Fecha y hora: ${accion.fecha || '—'} · Cantidad: ${rows.length}`;
 
   // Filas dinámicas
   ntfTbody.innerHTML = rows.map(r => {
