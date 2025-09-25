@@ -808,25 +808,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -846,28 +850,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "14/07/2025, 4:05:00 p. m."
+            "horaLectura": "14/07/2025, 4:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "14/07/2025, 4:05:00 p. m."
+            "horaLectura": "14/07/2025, 4:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "14/07/2025, 4:05:00 p. m."
+            "horaLectura": "14/07/2025, 4:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "14/07/2025, 4:05:00 p. m."
+            "horaLectura": "14/07/2025, 4:05:00 p. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -896,19 +904,22 @@
             "usuario": "JSIFUENTESR",
             "nombreUsuario": "Josue Sifuentes",
             "uo": "DIN.IF",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 3
@@ -928,21 +939,24 @@
             "nombreUsuario": "Josue Sifuentes",
             "uo": "DIN.IF",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 8:05:00 a. m."
+            "horaLectura": "21/07/2025, 8:05:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 8:05:00 a. m."
+            "horaLectura": "21/07/2025, 8:05:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 8:05:00 a. m."
+            "horaLectura": "21/07/2025, 8:05:00 a. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 3
@@ -981,25 +995,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1019,28 +1037,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 9:05:00 a. m."
+            "horaLectura": "21/07/2025, 9:05:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 9:05:00 a. m."
+            "horaLectura": "21/07/2025, 9:05:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 9:05:00 a. m."
+            "horaLectura": "21/07/2025, 9:05:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 9:05:00 a. m."
+            "horaLectura": "21/07/2025, 9:05:00 a. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1069,25 +1091,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1107,28 +1133,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 2:05:00 p. m."
+            "horaLectura": "21/07/2025, 2:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 2:05:00 p. m."
+            "horaLectura": "21/07/2025, 2:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 2:05:00 p. m."
+            "horaLectura": "21/07/2025, 2:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 2:05:00 p. m."
+            "horaLectura": "21/07/2025, 2:05:00 p. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1157,25 +1187,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1195,28 +1229,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 9:00:00 a. m."
+            "horaLectura": "18/08/2025, 9:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 9:00:00 a. m."
+            "horaLectura": "18/08/2025, 9:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 9:00:00 a. m."
+            "horaLectura": "18/08/2025, 9:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 9:00:00 a. m."
+            "horaLectura": "18/08/2025, 9:00:00 a. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1245,25 +1283,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1283,28 +1325,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 10:00:00 a. m."
+            "horaLectura": "18/08/2025, 10:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 10:00:00 a. m."
+            "horaLectura": "18/08/2025, 10:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 10:00:00 a. m."
+            "horaLectura": "18/08/2025, 10:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 10:00:00 a. m."
+            "horaLectura": "18/08/2025, 10:00:00 a. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1333,25 +1379,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1371,28 +1421,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 11:00:00 a. m."
+            "horaLectura": "18/08/2025, 11:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 11:00:00 a. m."
+            "horaLectura": "18/08/2025, 11:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 11:00:00 a. m."
+            "horaLectura": "18/08/2025, 11:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 11:00:00 a. m."
+            "horaLectura": "18/08/2025, 11:00:00 a. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1421,19 +1475,22 @@
             "usuario": "JSIFUENTESR",
             "nombreUsuario": "Josue Sifuentes",
             "uo": "DIN.IF",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 3
@@ -1453,21 +1510,24 @@
             "nombreUsuario": "Josue Sifuentes",
             "uo": "DIN.IF",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 3:00:00 p. m."
+            "horaLectura": "18/08/2025, 3:00:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 3:00:00 p. m."
+            "horaLectura": "18/08/2025, 3:00:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 3:00:00 p. m."
+            "horaLectura": "18/08/2025, 3:00:00 p. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 3
@@ -1830,25 +1890,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1868,28 +1932,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "14/07/2025, 4:05:00 p. m."
+            "horaLectura": "14/07/2025, 4:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "14/07/2025, 4:05:00 p. m."
+            "horaLectura": "14/07/2025, 4:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "14/07/2025, 4:05:00 p. m."
+            "horaLectura": "14/07/2025, 4:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "14/07/2025, 4:05:00 p. m."
+            "horaLectura": "14/07/2025, 4:05:00 p. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1918,25 +1986,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -1956,28 +2028,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 8:05:00 a. m."
+            "horaLectura": "21/07/2025, 8:05:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 8:05:00 a. m."
+            "horaLectura": "21/07/2025, 8:05:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 8:05:00 a. m."
+            "horaLectura": "21/07/2025, 8:05:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 8:05:00 a. m."
+            "horaLectura": "21/07/2025, 8:05:00 a. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -2016,25 +2092,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -2054,28 +2134,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 9:05:00 a. m."
+            "horaLectura": "21/07/2025, 9:05:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 9:05:00 a. m."
+            "horaLectura": "21/07/2025, 9:05:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 9:05:00 a. m."
+            "horaLectura": "21/07/2025, 9:05:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 9:05:00 a. m."
+            "horaLectura": "21/07/2025, 9:05:00 a. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -2104,25 +2188,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -2142,28 +2230,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 2:05:00 p. m."
+            "horaLectura": "21/07/2025, 2:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 2:05:00 p. m."
+            "horaLectura": "21/07/2025, 2:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 2:05:00 p. m."
+            "horaLectura": "21/07/2025, 2:05:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "21/07/2025, 2:05:00 p. m."
+            "horaLectura": "21/07/2025, 2:05:00 p. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -2192,25 +2284,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -2230,28 +2326,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 9:00:00 a. m."
+            "horaLectura": "18/08/2025, 9:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 9:00:00 a. m."
+            "horaLectura": "18/08/2025, 9:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 9:00:00 a. m."
+            "horaLectura": "18/08/2025, 9:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 9:00:00 a. m."
+            "horaLectura": "18/08/2025, 9:00:00 a. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -2280,25 +2380,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -2318,28 +2422,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 10:00:00 a. m."
+            "horaLectura": "18/08/2025, 10:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 10:00:00 a. m."
+            "horaLectura": "18/08/2025, 10:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 10:00:00 a. m."
+            "horaLectura": "18/08/2025, 10:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 10:00:00 a. m."
+            "horaLectura": "18/08/2025, 10:00:00 a. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -2368,25 +2476,29 @@
             "usuario": "RRIVERAT",
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -2406,28 +2518,32 @@
             "nombreUsuario": "Rosemary Rivera",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 11:00:00 a. m."
+            "horaLectura": "18/08/2025, 11:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "EGUERRERO",
             "nombreUsuario": "Evelyn Guerrero",
             "uo": "OAD.TE",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 11:00:00 a. m."
+            "horaLectura": "18/08/2025, 11:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 11:00:00 a. m."
+            "horaLectura": "18/08/2025, 11:00:00 a. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 11:00:00 a. m."
+            "horaLectura": "18/08/2025, 11:00:00 a. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 4
@@ -2456,19 +2572,22 @@
             "usuario": "JSIFUENTESR",
             "nombreUsuario": "Josue Sifuentes",
             "uo": "DIN.IF",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
-            "estado": "Enviado"
+            "estado": "Enviado",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 3
@@ -2488,21 +2607,24 @@
             "nombreUsuario": "Josue Sifuentes",
             "uo": "DIN.IF",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 3:00:00 p. m."
+            "horaLectura": "18/08/2025, 3:00:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "FHENRIQUEZ",
             "nombreUsuario": "Frank Enriquez",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 3:00:00 p. m."
+            "horaLectura": "18/08/2025, 3:00:00 p. m.",
+            "ip": "172.16.34.132"
           },
           {
             "usuario": "CDUCHE",
             "nombreUsuario": "Cristian Duche",
             "uo": "OGR.RO",
             "estado": "Leído",
-            "horaLectura": "18/08/2025, 3:00:00 p. m."
+            "horaLectura": "18/08/2025, 3:00:00 p. m.",
+            "ip": "172.16.34.132"
           }
         ],
         "cantidadPersonas": 3

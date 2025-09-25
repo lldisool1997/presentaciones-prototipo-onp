@@ -1811,10 +1811,12 @@ document.addEventListener('click', (e) => {
     // Recepción (o fallback): incluye "Hora lectura"
     ntfThead.innerHTML = `
       <tr>
+        <th class="px-3 py-2 text-center uppercase">Hora lectura</th>
         <th class="px-3 py-2 text-center uppercase">Usuario</th>
         <th class="px-3 py-2 text-center uppercase">Nombre</th>
+        <th class="px-3 py-2 text-center uppercase">IP</th>
         <th class="px-3 py-2 text-center uppercase">UO</th>
-        <th class="px-3 py-2 text-center uppercase">Hora lectura</th>
+
       </tr>
     `;
   }
@@ -1839,10 +1841,12 @@ document.addEventListener('click', (e) => {
       // Con "Hora lectura"
       return `
         <tr class="hover:bg-blue-50 transition">
+            <td class="px-3 py-2 text-center">${r.horaLectura ?? ''}</td>
           <td class="px-3 py-2 text-center">${r.usuario ?? ''}</td>
           <td class="px-3 py-2 text-center">${r.nombreUsuario ?? ''}</td>
+          <td class="px-3 py-2 text-center">${r.ip ?? ''}</td>
           <td class="px-3 py-2 text-center">${r.uo ?? ''}</td>
-          <td class="px-3 py-2 text-center">${r.horaLectura ?? ''}</td>
+
         </tr>
       `;
     }
