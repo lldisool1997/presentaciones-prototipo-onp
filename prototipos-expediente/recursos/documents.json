@@ -1,5 +1,5 @@
 [
-    {
+  {
     "clase": "Renta Fija",
     "mercado": "Local",
     "subcat": "Gobierno",
@@ -453,7 +453,6 @@
       }
     ]
   },
-
   {
     "clase": "Inversiones Alternativas",
     "mercado": "Local",
@@ -785,239 +784,448 @@
       }
     ],
     "acciones": [
-    {
-      "fecha": "14/07/2025, 4:03:00 p. m.",
-      "accion": "Regitro de Instrumento Financiero",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 1,
-      "url": "registro-instrumento.html?area=DIN"
-    },
-    {
-      "fecha": "14/07/2025, 4:05:00 p. m.",
-      "accion": "Envío de notificación de registro de instrumento",
-      "usuario": "4",
-      "nombreUsuario": "4",
-      "ip": "172.16.34.132",
-      "uo": "4",
-      "orden": 2,
-      "url": "menu-notificacion-demo.html?id_notificacion=2"
-    },
-    {
-      "fecha": "14/07/2025, 4:05:00 p. m.",
-      "accion": "Ver notificación de registro de instrumento",
-      "usuario": "4",
-      "nombreUsuario": "4",
-      "ip": "172.16.34.132",
-      "uo": "4",
-      "orden": 3,
-      "url": "menu-notificacion-demo.html?id_notificacion=2"
-    },
-
-    {
-      "fecha": "21/07/2025, 8:00:00 a. m.",
-      "accion": "Registro y aprobación de llamado de Capital",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 4,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=aprobar"
-    },
-    {
-      "fecha": "21/07/2025, 8:05:00 a. m.",
-      "accion": "Envío de notificación de llamado de capital",
-      "usuario": "4",
-      "nombreUsuario": "4",
-      "ip": "172.16.34.132",
-      "uo": "4",
-      "orden": 5,
-      "url": "menu-notificacion-demo.html?id_notificacion=10"
-    },
-    {
-      "fecha": "21/07/2025, 8:05:00 a. m.",
-      "accion": "Ver notificación de llamado de capital",
-      "usuario": "4",
-      "nombreUsuario": "4",
-      "ip": "172.16.34.132",
-      "uo": "4",
-      "orden": 6,
-      "url": "menu-notificacion-demo.html?id_notificacion=10"
-    },
-    {
-      "fecha": "21/07/2025, 8:30:00 a. m.",
-      "accion": "Registro de desagregado del llamado",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 7,
-      "url": "listado-llamado-capital-dist.html?area=OGR&accion=llamado&subaccion=registrar-desagregado"
-    },
-    {
-      "fecha": "21/07/2025, 9:00:00 a. m.",
-      "accion": "Instruir a tesorería",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 8,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=llamado&subaccion=notificar-backoffice"
-    },
-    {
-      "fecha": "21/07/2025, 9:05:00 a. m.",
-      "accion": "Envío de notificación de la instrucción",
-      "usuario": "2",
-      "nombreUsuario": "2",
-      "ip": "172.16.34.132",
-      "uo": "2",
-      "orden": 9,
-      "url": "menu-notificacion-demo.html?id_notificacion=1"
-    },
-        {
-      "fecha": "21/07/2025, 9:05:00 a. m.",
-      "accion": "Ver notificación de la instrucción",
-      "usuario": "2",
-      "nombreUsuario": "2",
-      "ip": "172.16.34.132",
-      "uo": "2",
-      "orden": 10,
-      "url": "menu-notificacion-demo.html?id_notificacion=1"
-    },
-    {
-      "fecha": "21/07/2025, 2:00:00 p. m.",
-      "accion": "Ejecutar Operación",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 11,
-      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=llamado&subaccion=realizar-operacion"
-    },
-    {
-      "fecha": "21/07/2025, 2:05:00 p. m.",
-      "accion": "Ver notificación de operación (llamado)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 12,
-      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
-    },
-    {
-      "fecha": "21/07/2025, 2:05:00 p. m.",
-      "accion": "Ver notificación de operación (llamado)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 12,
-      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
-    },
-
-    {
-      "fecha": "18/08/2025, 8:30:00 a. m.",
-      "accion": "Registra y aprueba una distribución de Capital",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 13,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=X"
-    },
-    {
-      "fecha": "18/08/2025, 9:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 14,
-      "url": "menu-notificacion-demo.html?id_notificacion=4"
-    },
-    {
-      "fecha": "18/08/2025, 9:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 15,
-      "url": "menu-notificacion-demo.html?id_notificacion=4"
-    },
-    {
-      "fecha": "18/08/2025, 9:30:00 a. m.",
-      "accion": "Registrar desagregado (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 16,
-      "url": "listado-llamado-capital-dist.html?area=OGR&accion=distribucion&subaccion=registrar-desagregado"
-    },
-    {
-      "fecha": "18/08/2025, 10:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (desagregado distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 17,
-      "url": "menu-notificacion-demo.html?id_notificacion=7&user=DIN"
-    },
-    {
-      "fecha": "18/08/2025, 10:30:00 a. m.",
-      "accion": "Instruir a tesorería (distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 18,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=notificar-backoffice"
-    },
-    {
-      "fecha": "18/08/2025, 11:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 19,
-      "url": "menu-notificacion-demo.html?id_notificacion=9"
-    },
-    {
-      "fecha": "18/08/2025, 2:30:00 p. m.",
-      "accion": "Ejecutar Operación (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 20,
-      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=distribucion&subaccion=realizar-operacion"
-    },
-    {
-      "fecha": "18/08/2025, 3:00:00 p. m.",
-      "accion": "Ver notificación de operación (distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 21,
-      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
-    },
-    {
-      "fecha": "18/08/2025, 3:00:00 p. m.",
-      "accion": "Ver notificación de operación (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 22,
-      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
-    }
-  ]
+      {
+        "fecha": "14/07/2025, 4:03:00 p. m.",
+        "accion": "Regitro de Instrumento Financiero",
+        "usuario": "JSIFUENTESR",
+        "nombreUsuario": "Josue Sifuentes",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
+        "orden": 1,
+        "url": "registro-instrumento.html?area=DIN"
+      },
+      {
+        "fecha": "14/07/2025, 4:05:00 p. m.",
+        "accion": "Envío de notificación de registro de instrumento",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "4",
+        "orden": 2,
+        "url": "menu-notificacion-demo.html?id_notificacion=2",
+        "detalles": [
+          {
+            "usuario": "4",
+            "nombreUsuario": "4",
+            "uo": "4",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "14/07/2025, 4:05:00 p. m.",
+        "accion": "Recepción notificación de registro de instrumento",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "4",
+        "orden": 3,
+        "url": "menu-notificacion-demo.html?id_notificacion=2",
+        "detalles": [
+          {
+            "usuario": "4",
+            "nombreUsuario": "4",
+            "uo": "4",
+            "estado": "Leído",
+            "horaLectura": "14/07/2025, 4:05:00 p. m."
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "21/07/2025, 8:00:00 a. m.",
+        "accion": "Registro y aprobación de llamado de Capital",
+        "usuario": "JSIFUENTESR",
+        "nombreUsuario": "Josue Sifuentes",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
+        "orden": 4,
+        "url": "listado-llamado-capital-dist.html?area=DIN&accion=aprobar"
+      },
+      {
+        "fecha": "21/07/2025, 8:05:00 a. m.",
+        "accion": "Envío de notificación de llamado de capital",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "4",
+        "orden": 5,
+        "url": "menu-notificacion-demo.html?id_notificacion=10",
+        "detalles": [
+          {
+            "usuario": "4",
+            "nombreUsuario": "4",
+            "uo": "4",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "21/07/2025, 8:05:00 a. m.",
+        "accion": "Recepción notificación de llamado de capital",
+        "usuario": "4",
+        "nombreUsuario": "4",
+        "ip": "172.16.34.132",
+        "uo": "4",
+        "orden": 6,
+        "url": "menu-notificacion-demo.html?id_notificacion=10",
+        "detalles": [
+          {
+            "usuario": "4",
+            "nombreUsuario": "4",
+            "uo": "4",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 8:05:00 a. m."
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "21/07/2025, 8:30:00 a. m.",
+        "accion": "Registro de desagregado del llamado",
+        "usuario": "FHENRIQUEZ",
+        "nombreUsuario": "Frank Enriquez",
+        "ip": "172.16.34.132",
+        "uo": "OGR.RO",
+        "orden": 7,
+        "url": "listado-llamado-capital-dist.html?area=OGR&accion=llamado&subaccion=registrar-desagregado"
+      },
+      {
+        "fecha": "21/07/2025, 9:00:00 a. m.",
+        "accion": "Instruir a tesorería",
+        "usuario": "JSIFUENTESR",
+        "nombreUsuario": "Josue Sifuentes",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
+        "orden": 8,
+        "url": "listado-llamado-capital-dist.html?area=DIN&accion=llamado&subaccion=notificar-backoffice"
+      },
+      {
+        "fecha": "21/07/2025, 9:05:00 a. m.",
+        "accion": "Envío de notificación de la instrucción",
+        "usuario": "2",
+        "nombreUsuario": "2",
+        "ip": "172.16.34.132",
+        "uo": "2",
+        "orden": 9,
+        "url": "menu-notificacion-demo.html?id_notificacion=1",
+        "detalles": [
+          {
+            "usuario": "2",
+            "nombreUsuario": "2",
+            "uo": "2",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "21/07/2025, 9:05:00 a. m.",
+        "accion": "Recepción notificación de la instrucción",
+        "usuario": "2",
+        "nombreUsuario": "2",
+        "ip": "172.16.34.132",
+        "uo": "2",
+        "orden": 10,
+        "url": "menu-notificacion-demo.html?id_notificacion=1",
+        "detalles": [
+          {
+            "usuario": "2",
+            "nombreUsuario": "2",
+            "uo": "2",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 9:05:00 a. m."
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "21/07/2025, 2:00:00 p. m.",
+        "accion": "Ejecutar Operación",
+        "usuario": "EGUERRERO",
+        "nombreUsuario": "Evelyn Guerrero Paitán",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
+        "orden": 11,
+        "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=llamado&subaccion=realizar-operacion"
+      },
+      {
+        "fecha": "21/07/2025, 2:05:00 p. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 12,
+        "url": "menu-notificacion-demo.html?id_notificacion=6",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "21/07/2025, 2:05:00 p. m.",
+        "accion": "Recepción notificación de operación (llamado)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 13,
+        "url": "menu-notificacion-demo.html?id_notificacion=6",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 2:05:00 p. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 2:05:00 p. m."
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "18/08/2025, 8:30:00 a. m.",
+        "accion": "Registra y aprueba una distribución de Capital",
+        "usuario": "JSIFUENTESR",
+        "nombreUsuario": "Josue Sifuentes",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
+        "orden": 14,
+        "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=X"
+      },
+      {
+        "fecha": "18/08/2025, 9:00:00 a. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 15,
+        "url": "menu-notificacion-demo.html?id_notificacion=4",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "18/08/2025, 9:00:00 a. m.",
+        "accion": "Recepción notificación de instrucción (distribución)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 16,
+        "url": "menu-notificacion-demo.html?id_notificacion=4",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 9:00:00 a. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 9:00:00 a. m."
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "18/08/2025, 9:30:00 a. m.",
+        "accion": "Registrar desagregado (distribución)",
+        "usuario": "FHENRIQUEZ",
+        "nombreUsuario": "Frank Enriquez",
+        "ip": "172.16.34.132",
+        "uo": "OGR.RO",
+        "orden": 17,
+        "url": "listado-llamado-capital-dist.html?area=OGR&accion=distribucion&subaccion=registrar-desagregado"
+      },
+      {
+        "fecha": "18/08/2025, 10:00:00 a. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 18,
+        "url": "menu-notificacion-demo.html?id_notificacion=7",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "18/08/2025, 10:00:00 a. m.",
+        "accion": "Recepción notificación de instrucción (desagregado distribución)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 19,
+        "url": "menu-notificacion-demo.html?id_notificacion=7",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 10:00:00 a. m."
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "18/08/2025, 10:30:00 a. m.",
+        "accion": "Instruir a tesorería (distribución)",
+        "usuario": "JSIFUENTESR",
+        "nombreUsuario": "Josue Sifuentes",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
+        "orden": 20,
+        "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=notificar-backoffice"
+      },
+      {
+        "fecha": "18/08/2025, 11:00:00 a. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 21,
+        "url": "menu-notificacion-demo.html?id_notificacion=9",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "18/08/2025, 11:00:00 a. m.",
+        "accion": "Recepción notificación de instrucción (distribución)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 22,
+        "url": "menu-notificacion-demo.html?id_notificacion=9",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 11:00:00 a. m."
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "18/08/2025, 2:30:00 p. m.",
+        "accion": "Ejecutar Operación (distribución)",
+        "usuario": "EGUERRERO",
+        "nombreUsuario": "Evelyn Guerrero Paitán",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
+        "orden": 23,
+        "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=distribucion&subaccion=realizar-operacion"
+      },
+      {
+        "fecha": "18/08/2025, 3:00:00 p. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 24,
+        "url": "menu-notificacion-demo.html?id_notificacion=8",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "18/08/2025, 3:00:00 p. m.",
+        "accion": "Recepción notificación de operación (distribución)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 25,
+        "url": "menu-notificacion-demo.html?id_notificacion=8",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 3:00:00 p. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 3:00:00 p. m."
+          }
+        ],
+        "cantidadPersonas": 2
+      }
+    ]
   },
   {
     "clase": "Inversiones Alternativas",
@@ -1351,228 +1559,473 @@
       }
     ],
     "acciones": [
-    {
-      "fecha": "14/07/2025, 4:03:00 p. m.",
-      "accion": "Registrar de Instrumento Financiero",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 1,
-      "url": "registro-instrumento.html?area=DIN"
-    },
-    {
-      "fecha": "14/07/2025, 4:05:00 p. m.",
-      "accion": "Ver notificación de registro de instrumento",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 2,
-      "url": "menu-notificacion-demo.html?id_notificacion=2"
-    },
-    {
-      "fecha": "14/07/2025, 4:05:00 p. m.",
-      "accion": "Ver notificación de registro de instrumento",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 3,
-      "url": "menu-notificacion-demo.html?id_notificacion=2"
-    },
-
-    {
-      "fecha": "21/07/2025, 8:00:00 a. m.",
-      "accion": "Registra y aprueba un llamado de Capital",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 4,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=aprobar"
-    },
-    {
-      "fecha": "21/07/2025, 8:05:00 a. m.",
-      "accion": "Ver notificación de instrucción (llamado)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 5,
-      "url": "menu-notificacion-demo.html?id_notificacion=10"
-    },
-    {
-      "fecha": "21/07/2025, 8:05:00 a. m.",
-      "accion": "Ver notificación de instrucción (llamado)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 6,
-      "url": "menu-notificacion-demo.html?id_notificacion=10"
-    },
-    {
-      "fecha": "21/07/2025, 8:30:00 a. m.",
-      "accion": "Registrar desagregado (llamado)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 7,
-      "url": "listado-llamado-capital-dist.html?area=OGR&accion=llamado&subaccion=registrar-desagregado"
-    },
-    {
-      "fecha": "21/07/2025, 9:00:00 a. m.",
-      "accion": "Instruir a tesorería (llamado)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 8,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=llamado&subaccion=notificar-backoffice"
-    },
-    {
-      "fecha": "21/07/2025, 9:05:00 a. m.",
-      "accion": "Ver notificación de instrucción (llamado)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 9,
-      "url": "menu-notificacion-demo.html?id_notificacion=1"
-    },
-    {
-      "fecha": "21/07/2025, 2:00:00 p. m.",
-      "accion": "Ejecutar Operación (llamado)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 10,
-      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=llamado&subaccion=realizar-operacion"
-    },
-    {
-      "fecha": "21/07/2025, 2:05:00 p. m.",
-      "accion": "Ver notificación de operación (llamado)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 11,
-      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
-    },
-    {
-      "fecha": "21/07/2025, 2:05:00 p. m.",
-      "accion": "Ver notificación de operación (llamado)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 12,
-      "url": "menu-notificacion-demo.html?user=DIN&id_notificacion=6"
-    },
-
-    {
-      "fecha": "18/08/2025, 8:30:00 a. m.",
-      "accion": "Registra y aprueba una distribución de Capital",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 13,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=X"
-    },
-    {
-      "fecha": "18/08/2025, 9:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 14,
-      "url": "menu-notificacion-demo.html?id_notificacion=4"
-    },
-    {
-      "fecha": "18/08/2025, 9:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 15,
-      "url": "menu-notificacion-demo.html?id_notificacion=4"
-    },
-    {
-      "fecha": "18/08/2025, 9:30:00 a. m.",
-      "accion": "Registrar desagregado (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 16,
-      "url": "listado-llamado-capital-dist.html?area=OGR&accion=distribucion&subaccion=registrar-desagregado"
-    },
-    {
-      "fecha": "18/08/2025, 10:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (desagregado distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 17,
-      "url": "menu-notificacion-demo.html?id_notificacion=7&user=DIN"
-    },
-    {
-      "fecha": "18/08/2025, 10:30:00 a. m.",
-      "accion": "Instruir a tesorería (distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 18,
-      "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=notificar-backoffice"
-    },
-    {
-      "fecha": "18/08/2025, 11:00:00 a. m.",
-      "accion": "Ver notificación de instrucción (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 19,
-      "url": "menu-notificacion-demo.html?id_notificacion=9"
-    },
-    {
-      "fecha": "18/08/2025, 2:30:00 p. m.",
-      "accion": "Ejecutar Operación (distribución)",
-      "usuario": "EGUERRERO",
-      "nombreUsuario": "Evelyn Guerrero Paitán",
-      "ip": "172.16.34.132",
-      "uo": "OAD.TE",
-      "orden": 20,
-      "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=distribucion&subaccion=realizar-operacion"
-    },
-    {
-      "fecha": "18/08/2025, 3:00:00 p. m.",
-      "accion": "Ver notificación de operación (distribución)",
-      "usuario": "JSIFUENTESR",
-      "nombreUsuario": "Josue Sifuentes",
-      "ip": "172.16.34.132",
-      "uo": "DIN.IF",
-      "orden": 21,
-      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
-    },
-    {
-      "fecha": "18/08/2025, 3:00:00 p. m.",
-      "accion": "Ver notificación de operación (distribución)",
-      "usuario": "FHENRIQUEZ",
-      "nombreUsuario": "Frank Enriquez",
-      "ip": "172.16.34.132",
-      "uo": "OGR.RO",
-      "orden": 22,
-      "url": "menu-notificacion-demo.html?id_notificacion=8&user=DIN"
-    }
-  ]
+      {
+        "fecha": "14/07/2025, 4:03:00 p. m.",
+        "accion": "Registrar de Instrumento Financiero",
+        "usuario": "JSIFUENTESR",
+        "nombreUsuario": "Josue Sifuentes",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
+        "orden": 1,
+        "url": "registro-instrumento.html?area=DIN"
+      },
+      {
+        "fecha": "14/07/2025, 4:05:00 p. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 2,
+        "url": "menu-notificacion-demo.html?id_notificacion=2",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "14/07/2025, 4:05:00 p. m.",
+        "accion": "Recepción notificación de registro de instrumento",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 3,
+        "url": "menu-notificacion-demo.html?id_notificacion=2",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "14/07/2025, 4:05:00 p. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "14/07/2025, 4:05:00 p. m."
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "21/07/2025, 8:00:00 a. m.",
+        "accion": "Registra y aprueba un llamado de Capital",
+        "usuario": "JSIFUENTESR",
+        "nombreUsuario": "Josue Sifuentes",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
+        "orden": 4,
+        "url": "listado-llamado-capital-dist.html?area=DIN&accion=aprobar"
+      },
+      {
+        "fecha": "21/07/2025, 8:05:00 a. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 5,
+        "url": "menu-notificacion-demo.html?id_notificacion=10",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "21/07/2025, 8:05:00 a. m.",
+        "accion": "Recepción notificación de instrucción (llamado)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 6,
+        "url": "menu-notificacion-demo.html?id_notificacion=10",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 8:05:00 a. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 8:05:00 a. m."
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "21/07/2025, 8:30:00 a. m.",
+        "accion": "Registrar desagregado (llamado)",
+        "usuario": "FHENRIQUEZ",
+        "nombreUsuario": "Frank Enriquez",
+        "ip": "172.16.34.132",
+        "uo": "OGR.RO",
+        "orden": 7,
+        "url": "listado-llamado-capital-dist.html?area=OGR&accion=llamado&subaccion=registrar-desagregado"
+      },
+      {
+        "fecha": "21/07/2025, 9:00:00 a. m.",
+        "accion": "Instruir a tesorería (llamado)",
+        "usuario": "JSIFUENTESR",
+        "nombreUsuario": "Josue Sifuentes",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
+        "orden": 8,
+        "url": "listado-llamado-capital-dist.html?area=DIN&accion=llamado&subaccion=notificar-backoffice"
+      },
+      {
+        "fecha": "21/07/2025, 9:05:00 a. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 9,
+        "url": "menu-notificacion-demo.html?id_notificacion=1",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "21/07/2025, 9:05:00 a. m.",
+        "accion": "Recepción notificación de instrucción (llamado)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 10,
+        "url": "menu-notificacion-demo.html?id_notificacion=1",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 9:05:00 a. m."
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "21/07/2025, 2:00:00 p. m.",
+        "accion": "Ejecutar Operación (llamado)",
+        "usuario": "EGUERRERO",
+        "nombreUsuario": "Evelyn Guerrero Paitán",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
+        "orden": 11,
+        "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=llamado&subaccion=realizar-operacion"
+      },
+      {
+        "fecha": "21/07/2025, 2:05:00 p. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 12,
+        "url": "menu-notificacion-demo.html?id_notificacion=6",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "21/07/2025, 2:05:00 p. m.",
+        "accion": "Recepción notificación de operación (llamado)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 13,
+        "url": "menu-notificacion-demo.html?id_notificacion=6",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 2:05:00 p. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "21/07/2025, 2:05:00 p. m."
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "18/08/2025, 8:30:00 a. m.",
+        "accion": "Registra y aprueba una distribución de Capital",
+        "usuario": "JSIFUENTESR",
+        "nombreUsuario": "Josue Sifuentes",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
+        "orden": 14,
+        "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=X"
+      },
+      {
+        "fecha": "18/08/2025, 9:00:00 a. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 15,
+        "url": "menu-notificacion-demo.html?id_notificacion=4",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "18/08/2025, 9:00:00 a. m.",
+        "accion": "Recepción notificación de instrucción (distribución)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 16,
+        "url": "menu-notificacion-demo.html?id_notificacion=4",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 9:00:00 a. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 9:00:00 a. m."
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "18/08/2025, 9:30:00 a. m.",
+        "accion": "Registrar desagregado (distribución)",
+        "usuario": "FHENRIQUEZ",
+        "nombreUsuario": "Frank Enriquez",
+        "ip": "172.16.34.132",
+        "uo": "OGR.RO",
+        "orden": 17,
+        "url": "listado-llamado-capital-dist.html?area=OGR&accion=distribucion&subaccion=registrar-desagregado"
+      },
+      {
+        "fecha": "18/08/2025, 10:00:00 a. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 18,
+        "url": "menu-notificacion-demo.html?id_notificacion=7",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "18/08/2025, 10:00:00 a. m.",
+        "accion": "Recepción notificación de instrucción (desagregado distribución)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 19,
+        "url": "menu-notificacion-demo.html?id_notificacion=7",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 10:00:00 a. m."
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "18/08/2025, 10:30:00 a. m.",
+        "accion": "Instruir a tesorería (distribución)",
+        "usuario": "JSIFUENTESR",
+        "nombreUsuario": "Josue Sifuentes",
+        "ip": "172.16.34.132",
+        "uo": "DIN.IF",
+        "orden": 20,
+        "url": "listado-llamado-capital-dist.html?area=DIN&accion=distribucion&subaccion=notificar-backoffice"
+      },
+      {
+        "fecha": "18/08/2025, 11:00:00 a. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 21,
+        "url": "menu-notificacion-demo.html?id_notificacion=9",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "18/08/2025, 11:00:00 a. m.",
+        "accion": "Recepción notificación de instrucción (distribución)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 22,
+        "url": "menu-notificacion-demo.html?id_notificacion=9",
+        "detalles": [
+          {
+            "usuario": "EGUERRERO",
+            "nombreUsuario": "Evelyn Guerrero Paitán",
+            "uo": "OAD.TE",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 11:00:00 a. m."
+          }
+        ],
+        "cantidadPersonas": 1
+      },
+      {
+        "fecha": "18/08/2025, 2:30:00 p. m.",
+        "accion": "Ejecutar Operación (distribución)",
+        "usuario": "EGUERRERO",
+        "nombreUsuario": "Evelyn Guerrero Paitán",
+        "ip": "172.16.34.132",
+        "uo": "OAD.TE",
+        "orden": 23,
+        "url": "listado-llamado-capital-dist.html?area=Tesoreria&accion=distribucion&subaccion=realizar-operacion"
+      },
+      {
+        "fecha": "18/08/2025, 3:00:00 p. m.",
+        "accion": "Envío de notificación",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 24,
+        "url": "menu-notificacion-demo.html?id_notificacion=8",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Enviado"
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Enviado"
+          }
+        ],
+        "cantidadPersonas": 2
+      },
+      {
+        "fecha": "18/08/2025, 3:00:00 p. m.",
+        "accion": "Recepción notificación de operación (distribución)",
+        "usuario": "Sistema",
+        "nombreUsuario": "Servicio de Notificaciones",
+        "ip": "",
+        "uo": "",
+        "orden": 25,
+        "url": "menu-notificacion-demo.html?id_notificacion=8",
+        "detalles": [
+          {
+            "usuario": "JSIFUENTESR",
+            "nombreUsuario": "Josue Sifuentes",
+            "uo": "DIN.IF",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 3:00:00 p. m."
+          },
+          {
+            "usuario": "FHENRIQUEZ",
+            "nombreUsuario": "Frank Enriquez",
+            "uo": "OGR.RO",
+            "estado": "Leído",
+            "horaLectura": "18/08/2025, 3:00:00 p. m."
+          }
+        ],
+        "cantidadPersonas": 2
+      }
+    ]
   }
 ]
