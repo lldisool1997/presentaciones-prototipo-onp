@@ -6,7 +6,6 @@
     "tipo": "Bono Soberano",
     "codigo": "INV-1001",
     "orden": 1,
-    "emisor": "",
     "descripcion": "REPUBLICA DEL PERÚ",
     "items": [
       {
@@ -462,7 +461,6 @@
     "tipo": "Fondo privado",
     "codigo": "INV-6040",
     "orden": 2,
-    "nombre": "Nombre del Fondo",
     "descripcion": "Fondo privado Intercorp",
     "items": [
       {
@@ -1028,8 +1026,7 @@
     "tipo": "Fondo privado",
     "codigo": "INV-6053",
     "emisor": "",
-    "nombre": "Emisor",
-    "descripcion": "Nombre del Fondo",
+    "descripcion": "Fondo privado Intercorp",
     "orden": 3,
     "items": [
       {

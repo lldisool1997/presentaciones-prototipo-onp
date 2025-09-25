@@ -70,7 +70,7 @@
 
     <!-- Filtros -->
     <section class="bg-white p-5">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
         <div>
           <label class="block text-sm font-semibold mb-1">Clase Activo</label>
           <select id="fClase" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none">
@@ -94,6 +94,10 @@
           <select id="fTipo" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none" disabled>
             <option value="">Todos</option>
           </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Nombre/Descripcion</label>
+          <input id="fDesc" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none">
         </div>
         <div>
           <label class="block text-sm font-semibold mb-1">Código de Inversión</label>
@@ -140,6 +144,7 @@
               <th class="px-3 py-2 text-center uppercase">Mercado</th>
               <th class="px-3 py-2 text-center uppercase">Subcategoría</th>
               <th class="px-3 py-2 text-center uppercase">Tipo de Instrumento</th>
+              <th class="px-3 py-2 text-center uppercase">Nombre/Descripción</th>
               <th class="px-3 py-2 text-center uppercase">Código de Inversión</th>
                <th class="px-3 py-2 text-center uppercase w-[70px]">Acciones</th>
             </tr>
@@ -362,7 +367,7 @@
           </select>
         </div>
 
-        <div>
+        <div id="addNumeracionWrap">
   <label class="block font-semibold mb-1">Numeración (Orden)</label>
   <select id="addDocOrden"
           class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none"
@@ -383,7 +388,7 @@
 
         <div>
           <label class="block font-semibold mb-1">Etiqueta</label>
-         <input type="text" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none" required>
+         <input id="addEtiqueta" type="text" class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none" required>
         </div>
 
 
@@ -669,7 +674,7 @@ function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
   const tbody = document.getElementById('tablaBodyPadre');
   const skeleton = `
     <tr>
-      <td colspan="6" class="p-0">
+      <td colspan="8" class="p-0">
         <div class="w-full">
           ${Array.from({length: 3}).map(() => `
             <div class="animate-pulse border-b border-slate-200">
@@ -763,6 +768,7 @@ function renderNivel1(groups){
         <td class="px-3 py-2 text-[12px] text-center">${g.mercado || ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${g.subcat || ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${g.tipo || ''}</td>
+        <td class="px-3 py-2 text-[12px] text-center">${g.descripcion || ''}</td>
         <td class="px-3 py-2 text-[12px] text-center font-semibold">${g.codigo || ''}</td>
                 <td class="px-3 py-2 text-[12px] text-center">
           <div class="flex flex-row gap-1 ">
@@ -874,7 +880,7 @@ function renderNivel1(groups){
 
     const rowDetalleItems = `
 <tr class="detail-items bg-gray-100" aria-hidden="true">
-  <td colspan="7" class="px-3 pt-0">
+  <td colspan="8" class="px-3 pt-0">
     <div class="collapsible">
       <div class="rounded-sm ring-1 ring-slate-200 shadow-sm overflow-hidden p-2">
         <div class="overflow-x-auto">
@@ -922,7 +928,7 @@ function renderNivel1(groups){
 
     const rowDetalleAcciones = `
 <tr class="detail-acciones bg-gray-100" aria-hidden="true">
-  <td colspan="7" class="px-3 pt-0">
+  <td colspan="8" class="px-3 pt-0">
     <div class="collapsible">
       <div class="rounded-sm ring-1 ring-slate-200 shadow-sm overflow-hidden p-2">
         <div class="overflow-x-auto ">
@@ -1043,6 +1049,7 @@ function refreshView() {
   const fSub    = document.getElementById('fSub').value;
   const fTipo   = document.getElementById('fTipo').value;
   const fCodigo = document.getElementById('fCodigo').value.trim().toUpperCase();
+  const fDesc = document.getElementById('fDesc').value.trim().toUpperCase();
 
   // mostrar skeleton inmediatamente
   showTableLoading();
@@ -1067,6 +1074,7 @@ function refreshView() {
       if (fMerc   && g.mercado !== fMerc)  return false;
       if (fSub    && g.subcat  !== fSub)   return false;
       if (fTipo   && g.tipo    !== fTipo)  return false;
+      if (fDesc   && !(g.descripcion||'').toUpperCase().includes(fDesc))  return false;
       if (fCodigo && !(g.codigo||'').toUpperCase().includes(fCodigo)) return false;
       return true;
     });
@@ -1422,25 +1430,100 @@ const addBackdrop = addModal.querySelector('[data-backdrop]');
 const addPanel = addModal.querySelector('[role="dialog"]');
 const addForm = document.getElementById('addDocForm');
 
-function openAddModal(groupIdx, data) {
-  document.getElementById('addDocGroupIndex').value = String(groupIdx);
+function openAddModal(groupIdx) {
+  const modal = document.getElementById('twModalAddDoc');
+  if (!modal) return;
+  const q = (sel) => modal.querySelector(sel);
 
-  // setear los campos del modal
-  document.getElementById('clase-activo-modal').textContent = data.clase || '';
-  document.getElementById('mercado-modal').textContent = data.mercado || '';
-  document.getElementById('subcategoria-modal').textContent = data.subcat || '';
-  document.getElementById('tipo-instrumento-modal').textContent = data.tipo || '';
-  document.getElementById('nombre-modal').textContent = data.nombreDescripcion || '';
-  document.getElementById('codigo-inversion-modal').textContent = data.codigo || '';
+  const fldGroup     = q('#addDocGroupIndex');
+  const selAccion    = q('#addDocAccion');
+  const selOrden     = q('#addDocOrden');
+  const wrapNum      = q('#addNumeracionWrap'); // puede ser null si no pusiste el wrapper
+  const inpEtiqueta  = q('#addEtiqueta');
 
-  // abrir el modal con animación
-  addModal.classList.remove('hidden');
+  if (!fldGroup || !selAccion || !selOrden || !inpEtiqueta) {
+    console.error('Faltan elementos del modal (revisa IDs).');
+    return;
+  }
+
+  // set group
+  fldGroup.value = String(groupIdx);
+
+  // rellenar actividades desde los items del grupo (opcional)
+  const g = datasetActual()[groupIdx] || {};
+  const acts = [...new Set((g.items || []).map(d => d.asociado))];
+  if (acts.length) {
+    selAccion.innerHTML = '<option value="">Seleccione…</option>';
+    acts.forEach(a => {
+      const opt = document.createElement('option');
+      opt.value = a;
+      opt.textContent = a;
+      selAccion.appendChild(opt);
+    });
+  }
+
+  // reset
+  selAccion.value = '';
+  selOrden.value = '';
+  selOrden.disabled = true;
+  if (wrapNum) wrapNum.classList.remove('hidden'); // muéstralo (si existe)
+  inpEtiqueta.value = '';
+
+  // abrir modal
+  modal.classList.remove('hidden');
   document.body.classList.add('overflow-hidden');
+  const addBackdrop = modal.querySelector('[data-backdrop]');
+  const addPanel = modal.querySelector('[role="dialog"]');
   requestAnimationFrame(() => {
-    addBackdrop.classList.add('opacity-100');
-    addPanel.classList.add('opacity-100', 'scale-100');
+    addBackdrop?.classList.add('opacity-100');
+    addPanel?.classList.add('opacity-100','scale-100');
   });
 }
+
+
+document.getElementById('addDocAccion').addEventListener('change', (e) => {
+  const modal = document.getElementById('twModalAddDoc');
+  const q = (sel) => modal.querySelector(sel);
+
+  const groupIdx = Number(q('#addDocGroupIndex').value);
+  const g = datasetActual()[groupIdx] || {};
+  const actividad = e.target.value;
+
+  const selOrden    = q('#addDocOrden');
+  const wrapNum     = q('#addNumeracionWrap');
+  const inpEtiqueta = q('#addEtiqueta');
+
+  if (!actividad) {
+    selOrden.disabled = true;
+    if (wrapNum) wrapNum.classList.remove('hidden');
+    inpEtiqueta.value = '';
+    return;
+  }
+
+  const items = (g.items || []).filter(d => d.asociado === actividad);
+  const tieneNumeracion = items.some(d => d.numeracion_doc); // flag por existencia previa
+
+  if (tieneNumeracion) {
+    selOrden.disabled = false;
+    selOrden.innerHTML = '<option value="">Seleccione…</option>';
+    const usados = items.map(d => Number(d.numeracion_doc)).filter(Boolean);
+    for (let i = 1; i <= 10; i++) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = i;
+      if (usados.includes(i)) opt.disabled = true;
+      selOrden.appendChild(opt);
+    }
+    if (wrapNum) wrapNum.classList.remove('hidden');
+  } else {
+    selOrden.disabled = true;
+    if (wrapNum) wrapNum.classList.add('hidden'); // opcional: ocultar si no aplica
+  }
+
+  // prellenar etiqueta con la última usada en esa actividad (si quieres)
+  inpEtiqueta.value = items.length ? (items[items.length - 1].etiqueta || '') : '';
+});
+
 
 
 function closeAddModal(){
@@ -1546,7 +1629,7 @@ const orden    = document.getElementById('addDocOrden').value;
 const file     = document.getElementById('addDocFile').files?.[0];
 
 if (!accion) { toastr.error('Seleccione una acción.', 'Falta acción'); return; }
-if (!orden)  { toastr.error('Ingrese la numeración (orden).', 'Falta numeración'); return; }
+//if (!orden)  { toastr.error('Ingrese la numeración (orden).', 'Falta numeración'); return; }
 if (!file)   { toastr.error('Seleccione un PDF.', 'Falta documento'); return; }
   agregarDocumentoAlGrupo(groupIdx, {
     accion,
