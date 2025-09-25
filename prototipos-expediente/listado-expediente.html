@@ -36,6 +36,16 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.1/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.1/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <script>
   toastr.options = {
     closeButton: true,
@@ -292,10 +302,24 @@
         </div>
 
         <div>
-          <label class="block font-semibold mb-1">Numeración (Orden)</label>
-          <input id="addDocOrden" type="number" min="1" step="1" placeholder="Ej: 9"
-            class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none" required />
-        </div>
+  <label class="block font-semibold mb-1">Numeración (Orden)</label>
+  <select id="addDocOrden"
+          class="w-full rounded-xl border-2 border-gray-200 p-2.5 focus:border-brand1 focus:outline-none"
+          required>
+    <option value="">Seleccione…</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+    <option value="10">10</option>
+  </select>
+</div>
+
 
         <div>
           <label class="block font-semibold mb-1">Documento (PDF)</label>
@@ -660,7 +684,12 @@ function renderNivel1(groups){
   const rows = groups.map((g, idx) => {
     const rowPadre = `
       <tr class="group-row hover:bg-blue-50 transition" data-group-idx="${idx}">
-        <td class="px-3 py-2 text-[12px] text-center">${g.orden || ''}</td>
+                <td class="px-3 py-2 text-[12px] text-center">
+          <div class="flex items-center justify-center gap-2">
+            <img src="svg/open-lock.svg" alt="Orden" class="w-4 h-4">
+            <span>${g.orden || ''}</span>
+          </div>
+        </td>
         <td class="px-3 py-2 text-[12px] text-center">${g.clase || ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${g.mercado || ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${g.subcat || ''}</td>
@@ -687,8 +716,10 @@ function renderNivel1(groups){
     const detalleHeadItems = `
       <thead class="bg-slate-700 text-white text-[12px]">
         <tr>
+          <th class="px-3 py-2 text-center uppercase">N° Item</th>
           <th class="px-3 py-2 text-center uppercase">Fecha y Hora</th>
           <th class="px-8 py-2 text-center uppercase">Acción</th>
+          <th class="px-8 py-2 text-center uppercase">#</th>
           <th class="px-3 py-2 text-left uppercase">Etiqueta del Documento</th>
           <th class="px-3 py-2 text-left uppercase">Nombre del Documento</th>
           <th class="text-center py-2 uppercase">Nro Pag</th>
@@ -703,8 +734,21 @@ function renderNivel1(groups){
 
       const detalleBodyItems = (g.items || []).map(d => `
         <tr class="hover:bg-blue-50 transition">
+                   <td class="px-3 py-2 text-[12px] text-center">
+  <div class="flex items-center justify-center gap-2">
+    <img src="svg/open-lock.svg" alt="Orden" class="w-4 h-4">
+    <span class="
+      ${d.tipo_doc_sus === 'Principal' 
+        ? 'bg-blue-600 text-white rounded-full px-2 py-0.5' 
+        : ''}">
+      ${d.orden || ''}
+    </span>
+  </div>
+</td>
+
           <td class="px-3 py-2 text-[12px] text-center">${d.fecha ?? ''}</td>
           <td class="px-3 py-2 text-[12px] text-center">${d.asociado ?? ''}</td>
+          <td class="px-3 py-2 text-[12px] text-center">${d.numeracion_doc ?? ''}</td>
           <td class="px-3 py-2 text-[12px] text-left">${d.etiqueta ?? ''}</td>
           <td class="px-3 py-2 text-[12px] text-left">${d.nombre ?? ''}</td>
           <td class="px-3 py-2 text-[12px] text-center">${d.paginas ?? ''}</td>
@@ -784,6 +828,7 @@ function renderNivel1(groups){
     const accionesHead = `
       <thead class="bg-slate-700 text-white text-[12px]">
         <tr>
+          <th class="px-3 py-2 text-center uppercase">N° Item</th>
           <th class="px-3 py-2 text-center uppercase">Fecha</th>
           <th class="px-3 py-2 text-center uppercase">Acción</th>
           <th class="px-3 py-2 text-center uppercase">Usuario</th>
@@ -795,6 +840,7 @@ function renderNivel1(groups){
 
     const accionesBody = (g.acciones || []).map(a => `
       <tr class="hover:bg-blue-50 transition">
+        <td class="px-3 py-2 text-[12px] text-center">${a.orden ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${a.fecha ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${a.accion ?? ''}</td>
         <td class="px-3 py-2 text-[12px] text-center">${a.usuario ?? ''}</td>
@@ -813,8 +859,8 @@ function renderNivel1(groups){
   <td colspan="7" class="px-3 pt-0">
     <div class="collapsible">
       <div class="rounded-sm ring-1 ring-slate-200 shadow-sm overflow-hidden p-2">
-        <div class="overflow-x-auto">
-          <table class="min-w-[900px] w-full text-sm">
+        <div class="overflow-x-auto ">
+          <table class="min-w-[900px] w-full text-sm tbl-acciones">
             ${accionesHead}
             <tbody class="[&>tr:nth-child(even)]:bg-slate-50">
               ${accionesBody}
@@ -988,6 +1034,7 @@ function renderNivel1(groups){
   GROUPS = await loadGruposAjax(GROUPS_URL);
 
   refreshView(); // render inicial (paginado por grupos)
+  initDataTablesAcciones();
   })();
 
   /***********************
@@ -1356,17 +1403,19 @@ function agregarDocumentoAlGrupo(groupIdx, { accion, orden, fileName }){
   // Item nuevo (nivel 2)
   const nuevoItem = {
     bloqueado: false,
-    orden: Number(orden) || (Array.isArray(g.items) ? g.items.length + 1 : 1),
+    orden: (Array.isArray(g.items) ? g.items.length + 1 : 1),
     fecha,
     asociado: accion,
     etiqueta,
     nombre: fileName || 'documento.pdf',
-    paginas: '',
-    principal: '',
-    pfinal: '',
+    paginas: 7,
+    principal: 2,
+    pfinal: 10,
     uo,
     usuario: USUARIO_ACTUAL.user,
     ip: '',
+    tipo_doc_sus: "Adicionales",
+    numeracion_doc: orden,
     historial: [
       {
         fecha,
@@ -1385,10 +1434,11 @@ function agregarDocumentoAlGrupo(groupIdx, { accion, orden, fileName }){
   // Acción (nivel del grupo)
   const nuevaAccion = {
     fecha,
-    accion,
+    accion: "Agrega un nuevo documento adicional",
     usuario: USUARIO_ACTUAL.user,
     nombreUsuario: USUARIO_ACTUAL.nombre,
     ip: '',
+    orden: g.acciones.length + 1,
     uo
   };
 
@@ -1421,6 +1471,23 @@ if (!file)   { toastr.error('Seleccione un PDF.', 'Falta documento'); return; }
   closeAddModal();
   refreshView();  // re-render tabla con el item y con la acción nueva
 });
+
+function initDataTablesAcciones() {
+  document.querySelectorAll('.tbl-acciones').forEach((tbl, i) => {
+    // Evita inicializar dos veces la misma tabla
+    if (!$.fn.DataTable.isDataTable(tbl)) {
+      new DataTable(tbl, {
+        pageLength: 10,
+        order: [[0,'asc']], // ordena por N° Item
+        language: {
+          url: 'https://cdn.datatables.net/plug-ins/2.1.5/i18n/es-ES.json'
+        }
+      });
+    }
+  });
+}
+
+
   </script>
 </body>
 </html>
