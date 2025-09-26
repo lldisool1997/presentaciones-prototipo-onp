@@ -153,3 +153,14 @@ document.addEventListener('DOMContentLoaded', () => {
     w.print();
   });
 });
+
+
+   function getAreaParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("area");
+  }
+
+  const area = getAreaParam();
+  if (area) {
+    document.getElementById("area-badge").textContent = "Perfil: " + area;
+  }

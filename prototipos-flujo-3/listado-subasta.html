@@ -561,7 +561,7 @@
                          <button class="btn btn-action btn-llamado-registro" onclick="irARegistrodeFondeo('${inv.invPrincipal}')">
               Transferir Fondos
             </button>
-              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroLlamado('${inv.invPrincipal}')">
+              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDeCarta('${inv.invPrincipal}')">
               Generar Carta
             </button>
               <button class="btn btn-action btn-llamado-registro" onclick="irARegistroLlamado('${inv.invPrincipal}')">
@@ -854,6 +854,14 @@ function irARegistrodeFondeo(inversionId){
     }
   }
 
+    function irARegistroDeCarta(inversionId){
+    if(inversionId){
+      window.location.href = `generar-carta-aprobacion.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "generar-carta-aprobacion.html";
+    }
+  }
+
     function irARegistroDistribucion(inversionId){
     if(inversionId){
       window.location.href = `registro-distribucion-capital.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
@@ -919,6 +927,7 @@ function irARegistrodeFondeo(inversionId){
 window.irABackOffice = irABackOffice;
   window.irARegistroLlamado = irARegistroLlamado;
   window.irARegistrodeFondeo = irARegistrodeFondeo;
+  window.irARegistroDeCarta = irARegistroDeCarta;
 
   // =============== FILTROS (manteniendo los tuyos) ===============
   function filtrar(base){
