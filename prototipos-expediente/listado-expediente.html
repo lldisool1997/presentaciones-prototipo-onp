@@ -1724,6 +1724,27 @@ function initDataTablesAcciones(root = document) {
         retrieve: true, // si ya existiera, reusa
         initComplete() {
           const wrapper = this.api().table().container();
+
+          // 👉 después del selector "Mostrar N registros"
+          const lengthDiv = wrapper.querySelector('.dt-length') || wrapper.querySelector('.dataTables_length');
+          if (lengthDiv && !lengthDiv.querySelector('.tbl-title')) {
+            const spanTitulo = document.createElement('span');
+            spanTitulo.className = 'tbl-title ml-3 font-bold text-gray-600 text-lg'; 
+            // ↑ text-lg = grande, text-xl = aún más grande
+
+            // depende de la clase de la tabla
+            if (tbl.classList.contains('tbl-documentos')) {
+              spanTitulo.textContent = 'Documentos Sustentatorios';
+            } else if (tbl.classList.contains('tbl-acciones')) {
+              spanTitulo.textContent = 'Historial de Actividades';
+            }
+
+            lengthDiv.appendChild(spanTitulo);
+          }
+
+          // 👉 solo aplica botón si es .tbl-documentos
+          if (!tbl.classList.contains('tbl-documentos')) return;
+
           const filterDiv = wrapper.querySelector('.dt-search') || wrapper.querySelector('.dataTables_filter');
           if (!filterDiv) return;
 
@@ -1733,8 +1754,7 @@ function initDataTablesAcciones(root = document) {
           btn.className = 'btn-add-doc px-3 py-1 rounded text-white bg-blue-600';
           btn.textContent = 'Agregar Documento';
 
-          // IMPORTANTE: usa el mismo idx que renderizaste para esta tabla
-          // si tu tabla tiene <table ... data-id="${idx}">
+          // usa el mismo idx que renderizaste para esta tabla
           const idx = tbl.getAttribute('data-id') || '';
           btn.setAttribute('data-group-idx', idx);
 
