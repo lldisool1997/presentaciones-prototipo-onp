@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generar Carta</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- TinyMCE self-hosted -->
+  <script src="https://cdn.jsdelivr.net/npm/tinymce@7.4.1/tinymce.min.js"></script>
+
+  <!-- Exportadores -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.3.1/html-docx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+  <!-- App -->
+  <script src="js/generar-carta-aprobacion.js" defer></script>
+
+  <style>
+    .a4{width:210mm;min-height:297mm;margin:0 auto;background:#fff;padding:20mm;box-sizing:border-box}
+    .doc-footer{margin-top:28px;border-top:1px solid #e5e7eb;padding-top:12px;color:#475569;font-size:12px}
+    @media print{.no-print{display:none!important}.a4{box-shadow:none}}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <main class="max-w-6xl mx-auto px-6 py-6 space-y-6">
+    <!-- BANDA DE CAMPOS -->
+    <section class="bg-white border rounded-2xl shadow-sm p-5 space-y-4">
+      <div class="grid md:grid-cols-3 gap-4">
+        <div>
+          <label class="text-xs text-slate-500">Texto (plantilla)</label>
+          <select id="selTexto" class="w-full rounded-xl border px-3 py-2">
+            <option value="TPL_TRANSFER">RECIBIR VIA BCRP DE UN BANCO/APERTURA 1 o VARIOS</option>
+            <option value="TPL_DP">DEPÓSITO A PLAZO</option>
+            <option value="TPL_REPO">REPO/TRANSFERENCIA</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs text-slate-500">Atención</label>
+          <input id="txtAtencion" class="w-full rounded-xl border px-3 py-2"
+                 value="SR. CÉSAR AUGUSTO REÁTEGUI GARCÍA">
+        </div>
+        <div>
+          <label class="text-xs text-slate-500">Carta Referencia</label>
+          <input id="txtReferencia" class="w-full rounded-xl border px-3 py-2"
+                 value="SUBGERENTE DE BANCA INSTITUCIONAL">
+        </div>
+
+        <div class="md:col-span-3">
+          <label class="text-xs text-slate-500">Asunto</label>
+          <input id="txtAsunto" class="w-full rounded-xl border px-3 py-2"
+                 value="Solicitud de operación de transferencia y apertura">
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Firma 1</label>
+          <input id="txtFirma1" class="w-full rounded-xl border px-3 py-2"
+                 value="LEON NIETO, PEDRO HUN">
+        </div>
+        <div>
+          <label class="text-xs text-slate-500">Firma 2</label>
+          <input id="txtFirma2" class="w-full rounded-xl border px-3 py-2"
+                 value="GARAY SÁNCHEZ, CARLO">
+        </div>
+        <div>
+          <label class="text-xs text-slate-500">Proveedor</label>
+          <input id="txtProveedor" class="w-full rounded-xl border px-3 py-2" value="">
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Elaborado</label>
+          <input id="txtElaborado" class="w-full rounded-xl border px-3 py-2"
+                 value="BEDREGAL JULCA, ELIZABETH">
+        </div>
+        <div>
+          <label class="text-xs text-slate-500">Autorizado</label>
+          <input id="txtAutorizado" class="w-full rounded-xl border px-3 py-2"
+                 value="ALCALÁ BENITES, JORGE">
+        </div>
+        <div>
+          <label class="text-xs text-slate-500">Número Digital</label>
+          <input id="txtNumDigital" class="w-full rounded-xl border px-3 py-2" value="0042985">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-2">
+        <label class="flex items-center gap-2">
+          <input id="chkLogo" type="checkbox" class="rounded border-slate-300 text-indigo-600" checked>
+          <span class="text-sm">Imprimir Logo</span>
+        </label>
+        <!-- Opciones -->
+        <div class="flex items-center gap-2">
+          <button id="btnAplicar"   class="px-3 py-2 rounded-lg border hover:bg-slate-50">Aplicar</button>
+          <button id="btnPreview"  class="px-3 py-2 rounded-lg border hover:bg-slate-50">Vista previa</button>
+          <button id="btnGenerar"  class="px-3 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">Generar</button>
+          <button id="btnPDF"      class="px-3 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700">PDF</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDITORES -->
+    <section class="grid grid-cols-1 gap-6">
+      <div class="bg-white border rounded-2xl shadow-sm p-5">
+        <h3 class="font-semibold mb-3">Texto</h3>
+        <textarea id="editorBody"></textarea>
+      </div>
+
+      <div class="bg-white border rounded-2xl shadow-sm p-5">
+        <h3 class="font-semibold mb-3">Pie de Página</h3>
+        <textarea id="editorFooter"></textarea>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL de Vista Previa -->
+  <div id="previewModal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+    <div class="absolute inset-0 bg-black/60" id="modalBackdrop"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-screen-lg w-full">
+        <div class="flex items-center justify-between px-4 py-3 border-b">
+          <h4 class="font-semibold">Vista previa (A4)</h4>
+          <button id="btnCloseModal" class="rounded-lg px-2 py-1 hover:bg-slate-100">✕</button>
+        </div>
+        <div class="max-h-[80vh] overflow-auto p-4">
+          <div id="preview" class="a4 bg-white shadow"></div>
+        </div>
+        <div class="flex justify-end gap-2 px-4 py-3 border-t">
+          <button id="btnPrint" class="px-3 py-2 rounded-lg border hover:bg-slate-50">Imprimir</button>
+          <button id="btnCloseModal2" class="px-3 py-2 rounded-lg bg-slate-900 text-white hover:bg-black">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
