@@ -1400,23 +1400,9 @@
             "uo": "OAD.TE",
             "estado": "Enviado",
             "ip": "172.16.34.132"
-          },
-          {
-            "usuario": "FHENRIQUEZ",
-            "nombreUsuario": "Frank Enriquez",
-            "uo": "OGR.RO",
-            "estado": "Enviado",
-            "ip": "172.16.34.132"
-          },
-          {
-            "usuario": "CDUCHE",
-            "nombreUsuario": "Cristian Duche",
-            "uo": "OGR.RO",
-            "estado": "Enviado",
-            "ip": "172.16.34.132"
           }
         ],
-        "cantidadPersonas": 4
+        "cantidadPersonas": 2
       },
       {
         "fecha": "18/08/2025, 11:00:00 a. m.",
@@ -2494,23 +2480,9 @@
             "uo": "OAD.TE",
             "estado": "Enviado",
             "ip": "172.16.34.132"
-          },
-          {
-            "usuario": "FHENRIQUEZ",
-            "nombreUsuario": "Frank Enriquez",
-            "uo": "OGR.RO",
-            "estado": "Enviado",
-            "ip": "172.16.34.132"
-          },
-          {
-            "usuario": "CDUCHE",
-            "nombreUsuario": "Cristian Duche",
-            "uo": "OGR.RO",
-            "estado": "Enviado",
-            "ip": "172.16.34.132"
           }
         ],
-        "cantidadPersonas": 4
+        "cantidadPersonas": 2
       },
       {
         "fecha": "18/08/2025, 11:00:00 a. m.",
@@ -2540,7 +2512,7 @@
           }
           
         ],
-        "cantidadPersonas": 4
+        "cantidadPersonas": 2
       },
       {
         "fecha": "18/08/2025, 2:30:00 p. m.",
