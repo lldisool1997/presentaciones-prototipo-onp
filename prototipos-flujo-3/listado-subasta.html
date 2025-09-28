@@ -543,7 +543,7 @@
                                 inv.estado === "APROBADO" && getAreaParam() === "Tesoreria"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
-            <button class="btn btn-action btn-llamado-registro" onclick="irARegistroLlamado('${inv.invPrincipal}')">
+            <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDeCartaRecepcion('${inv.invPrincipal}')">
               Generar carta de Recepción
             </button>
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDistribucion('${inv.invPrincipal}')">
@@ -561,7 +561,7 @@
                          <button class="btn btn-action btn-llamado-registro" onclick="irARegistrodeFondeo('${inv.invPrincipal}')">
               Transferir Fondos
             </button>
-              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDeCarta('${inv.invPrincipal}')">
+              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDeCartaAprobacion('${inv.invPrincipal}')">
               Generar Carta
             </button>
               <button class="btn btn-action btn-llamado-registro" onclick="irARegistroLlamado('${inv.invPrincipal}')">
@@ -854,11 +854,20 @@ function irARegistrodeFondeo(inversionId){
     }
   }
 
-    function irARegistroDeCarta(inversionId){
+    function irARegistroDeCartaAprobacion(inversionId){
     if(inversionId){
-      window.location.href = `generar-carta-aprobacion.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `generar-carta-aprobacion.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
       window.location.href = "generar-carta-aprobacion.html";
+    }
+  }
+
+  
+ function irARegistroDeCartaRecepcion(inversionId){
+    if(inversionId){
+      window.location.href = `generar-carta-recepcion.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "generar-carta-recepcion.html";
     }
   }
 
@@ -927,7 +936,8 @@ function irARegistrodeFondeo(inversionId){
 window.irABackOffice = irABackOffice;
   window.irARegistroLlamado = irARegistroLlamado;
   window.irARegistrodeFondeo = irARegistrodeFondeo;
-  window.irARegistroDeCarta = irARegistroDeCarta;
+  window.irARegistroDeCartaAprobacion = irARegistroDeCartaAprobacion;
+  window.irARegistroDeCartaRecepcion = irARegistroDeCartaRecepcion;
 
   // =============== FILTROS (manteniendo los tuyos) ===============
   function filtrar(base){

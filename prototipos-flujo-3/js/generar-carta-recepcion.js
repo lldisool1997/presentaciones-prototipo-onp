@@ -100,11 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Botones
   $('#btnAplicar').on('click', refreshPreview);
   $('#btnPreview').on('click', openPreview);
-  $('#btnGenerar').on('click', () => { generar(); refreshPreview(); toast('Carta generada (demo).'); });
+  $('#btnGenerar').on('click', () => { refreshPreview(); toast('Carta generada (demo).'); });
 
-  function generar(){
-    $('#txtNumDigital').val("0042985")
-  }
   $('#btnWord').on('click', () => {
     const html = buildFullHTML();
     const blob = window.htmlDocx.asBlob(html);
@@ -114,9 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#btnPDF').on('click', () => {
     const container = document.createElement('div');
     container.innerHTML = `<div class="a4">${buildInner()}</div>`;
+    const idCarta = $('#txtNumDigital').val()
     html2pdf().from(container).set({
       margin: 10,
-      filename: 'carta.pdf',
+      filename: 'carta-'+idCarta+'.pdf',
       html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     }).save();

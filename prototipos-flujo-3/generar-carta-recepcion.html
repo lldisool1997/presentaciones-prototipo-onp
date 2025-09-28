@@ -19,7 +19,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
   <!-- App -->
-  <script src="js/generar-carta-aprobacion.js" defer></script>
+  <script src="js/generar-carta-recepcion.js" defer></script>
 
   <style>
     .a4{width:210mm;min-height:297mm;margin:0 auto;background:#fff;padding:20mm;box-sizing:border-box}
@@ -74,6 +74,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 25px;
+            margin-bottom: 30px;
             background: white;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -196,100 +197,11 @@
                 <div class="header rounded-2xl rounded-b-none">
                 <h1>Generación de cartas</h1>
             </div>
-    <!-- Inversión seleccionada -->
-    <section class="bg-white border border-y-0 border-line shadow-card px-5 pt-3 pb-5">
-         <div class="section-header">1. Información del Instrumento</div>
-                <div class="info-grid">
-                    <div class="info-column">
-                        <div class="info-item">
-                            <div class="info-label">Código del instrumento:</div>
-                            <div class="info-value">INV-6053</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Nombre de la SAFI o General Partner:</div>
-                            <div class="info-value">SAFI</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Capital comprometido:</div>
-                            <div class="info-value">10,000,000.00</div>
-                        </div>
-                         <div class="info-item">
-                            <div class="info-label">Correo de la persona de contacto (SAFI/GP):</div>
-                            <div class="info-value">correo@gmail.com</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Tipo de custodia:</div>
-                            <div class="info-value">Local-ONP</div>
-                        </div>
-                    </div>
-
-                    <div class="info-column">
-                        <div class="info-item">
-                            <div class="info-label">Unidad de negocio:</div>
-                            <div class="info-value">MACROFONDO</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Clasificación de riesgos:</div>
-                            <div class="info-value">AA+</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Fecha de suscripción del contrato:</div>
-                            <div class="info-value">22/09/2025</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Plazo (años):</div>
-                            <div class="info-value">5</div>
-                        </div>
-                         <div class="info-item">
-                            <div class="info-label">Información adicional:</div>
-                            <div class="info-value">a</div>
-                        </div>
-                    </div>
-
-                    <div class="info-column">
-                        <div class="info-item">
-                            <div class="info-label">Plazo de vencimiento:</div>
-                            <div class="info-value">-</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Grupo económico:</div>
-                            <div class="info-value">Grupo Intercorp</div>
-                        </div>
-                           <div class="info-item">
-                            <div class="info-label">Fecha de vencimiento:</div>
-                            <div class="info-value">22/09/2030</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Activo custodiado:</div>
-                            <div class="info-value">No</div>
-                        </div>
-                    </div>
-
-                    <div class="info-column">
-                        <div class="info-item">
-                            <div class="info-label">Nombre Fondo:</div>
-                            <div class="info-value">Fondo Privado Intercorp</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Moneda:</div>
-                            <div class="info-value">PEN</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Nombre de la persona de contacto (SAFI/GP):</div>
-                            <div class="info-value">persona</div>
-                        </div>
-                         <div class="info-item">
-                            <div class="info-label">Nombre del custodio:</div>
-                            <div class="info-value">Scotiabank</div>
-                        </div>
-                    </div>
-                </div>
-    </section>
     <!-- BANDA DE CAMPOS -->
-    <section class="bg-white border border-t-0 border-b-0 shadow-sm px-5 space-y-4 mb-0">
+    <section class="bg-white border border-b-0 shadow-sm p-5 space-y-4">
               <div class="border-b-2 border-[#3396d8] mb-4">
         <h1 class="text-xl font-semibold text-ink flex items-center">
-            <span class="border-l-4 border-[#3396d8] pl-2">Cabecera</span>
+            <span class="border-l-4 border-[#3396d8] pl-2">2. Cabecera</span>
         </h1>
        </div>
       <div class="grid md:grid-cols-3 gap-4">
@@ -314,9 +226,8 @@
 
         <div class="md:col-span-3">
           <label class="text-xs text-slate-500">Asunto</label>
-            <select id="txtAsunto" class="w-full rounded-xl border px-3 py-2">
-                <option> Solicitud de operación de transferencia y apertura </option>
-            </select>
+          <input id="txtAsunto" class="w-full rounded-xl border px-3 py-2"
+                 value="Solicitud de operación de transferencia y apertura">
         </div>
 
         <div>
@@ -330,35 +241,30 @@
                  value="GARAY SÁNCHEZ, CARLO">
         </div>
         <div>
+          <label class="text-xs text-slate-500">Proveedor</label>
+          <input id="txtProveedor" class="w-full rounded-xl border px-3 py-2" value="">
+        </div>
+
+        <div>
           <label class="text-xs text-slate-500">Elaborado</label>
-                    <select id="txtElaborado" class="w-full rounded-xl border px-3 py-2">
-            <option>70429350 - BEDREGAL JULCA, ELIZABETH</option>
-          </select>
+          <input id="txtElaborado" class="w-full rounded-xl border px-3 py-2"
+                 value="BEDREGAL JULCA, ELIZABETH">
         </div>
         <div>
-          <label class="text-xs text-slate-500">Autorizado 1</label>
-          <select id="txtAutorizado" class="w-full rounded-xl border px-3 py-2">
-            <option>70429350 - ALCALÁ BENITES, JORGE</option>
-            <option>70429350 - ALCALÁ BENITES, JORGE</option>
-          </select>
-        </div>
-                <div>
-          <label class="text-xs text-slate-500">Autorizado 2</label>
-           <select id="txtAutorizado2" class="w-full rounded-xl border px-3 py-2">
-            <option>70429350 - ALCALÁ BENITES, JORGE</option>
-            <option>70429350 - ALCALÁ BENITES, JORGE</option>
-          </select>
+          <label class="text-xs text-slate-500">Autorizado</label>
+          <input id="txtAutorizado" class="w-full rounded-xl border px-3 py-2"
+                 value="ALCALÁ BENITES, JORGE">
         </div>
         <div>
           <label class="text-xs text-slate-500">Número Digital</label>
-          <input id="txtNumDigital" class="w-full rounded-xl border px-3 py-2" value="" disabled>
+          <input id="txtNumDigital" class="w-full rounded-xl border px-3 py-2" value="0042985">
         </div>
       </div>
 
       <div class="flex items-center justify-between pt-2">
         <label class="flex items-center gap-2">
           <input id="chkLogo" type="checkbox" class="rounded border-slate-300 text-indigo-600" checked>
-          <span class="text-sm">Imprimir Logo de proveedor</span>
+          <span class="text-sm">Imprimir Logo</span>
         </label>
         <!-- Opciones -->
         <div class="flex items-center gap-2">
@@ -375,7 +281,7 @@
       <div class=" px-5">
                        <div class="border-b-2 border-[#3396d8] mb-4">
         <h1 class="text-xl font-semibold text-ink flex items-center">
-            <span class="border-l-4 border-[#3396d8] pl-2">Cuerpo</span>
+            <span class="border-l-4 border-[#3396d8] pl-2">2. Texto</span>
         </h1>
        </div>
         <textarea id="editorBody"></textarea>
@@ -384,7 +290,7 @@
       <div class="   px-5">
                       <div class="border-b-2 border-[#3396d8] mb-4">
         <h1 class="text-xl font-semibold text-ink flex items-center">
-            <span class="border-l-4 border-[#3396d8] pl-2">Pie de página</span>
+            <span class="border-l-4 border-[#3396d8] pl-2">3. Pie de página</span>
         </h1>
        </div>
         <textarea id="editorFooter"></textarea>
