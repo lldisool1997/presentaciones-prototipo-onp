@@ -381,11 +381,11 @@ $('select').select2({
 const SIGNATURE_CATALOG = {
   'leon nieto, pedro hun': './img/firma.webp',
   'garay sánchez, carlo':  './img/firma.webp',
-  'bedregal julca, elizabeth': './img/firma.webp',
-  'alcalá benites, jorge': './img/firma.webp',
+  'bedregal julca, elizabeth': './img/evelyn.png',
+  'alcala benites, jorge': './img/cruzado.png',
   // agrega los que uses
 };
-window.FIRMAS_URLS = window.FIRMAS_URLS || {}; // <- si tu backend inyecta { 'nombre': 'https://...' }
+window.FIRMAS_URLS = SIGNATURE_CATALOG || {}; // <- si tu backend inyecta { 'nombre': 'https://...' }
 
 const DEFAULT_SIGNATURE_URL = './img/firma.webp';
 
