@@ -1,30 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
   // ===== Contenidos iniciales =====
-  const bodyInicial = `
-    <p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales</strong> (FCR),
-    con RUC <strong>{{RUC_FONDO}}</strong>, a fin de solicitarle efectúe la(s) siguiente(s) operación(es):</p>
-    <br>
-    <p><strong>RECIBIR VÍA BCRP DE:</strong> SCOTIABANK PERÚ SAA / S/ 150,000,000.00</p>
+const bodyInicial = `
+  <p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales</strong> (FCR),
+  con RUC <strong>{{RUC_FONDO}}</strong>, a fin de solicitarle efectúe la(s) siguiente(s) operación(es):</p>
+  <br>
+  <div><strong>CANCELACIÓN:</strong></div>
+  <table style="width:100%; table-layout:fixed; border-collapse:collapse; margin:2px 0 8px; page-break-inside:avoid;">
+    <tr>
+      <!-- Columna izquierda -->
+      <td style="width:50%; vertical-align:top; padding-right:10px">
+        <div>TITULAR:&nbsp; {{TITULAR}}</div>
+        <div>INSTRUMENTO:&nbsp; {{INSTRUMENTO}}</div>
+        <div>MONTO:&nbsp; {{MONTO}}</div>
+        <div>INTERESES:&nbsp; {{INTERESES}}</div>
+      </td>
 
-    <p><strong>APERTURA/COMPRA DE:</strong><br/>
-       TITULAR: FCR–MACROFONDO<br/>
-       INSTRUMENTO: DEPÓSITO A PLAZO<br/>
-       MONTO: S/ 150,000,000.00 &nbsp;&nbsp;&nbsp;&nbsp; <strong>TASA:</strong> 4.59% T.E.A.<br/>
-       PLAZO: 361 días &nbsp;&nbsp;&nbsp;&nbsp; <strong>VENCIMIENTO:</strong> 23/02/2026</p>
-      <br>
-    <p>Asimismo, autorizamos a {{REPRESENTANTE_1}} (DNI {{DOC_REPRESENTANTE_1}}) y/o
-       {{REPRESENTANTE_2}} (DNI {{DOC_REPRESENTANTE_2}}) a recibir la documentación respectiva.</p>
+      <!-- Columna derecha -->
+      <td style="width:50%; vertical-align:top; padding-left:10px">
+        <div>NÚMERO:&nbsp; {{NUMERO}}</div>
+        <div>VENCIMIENTO:&nbsp; {{VENCIMIENTO}}</div>
+        <div>TASA:&nbsp; {{TASA}}</div>
+      </td>
+    </tr>
+  </table>
 
-    <p>Agradecidos por la atención, quedamos</p>
-    <p>Atentamente,</p>
-    <p><strong>Back Office Tesorería — FCR</strong></p>
-  `.trim();
+  <p><strong>ABONAR:</strong> {{ABONAR_MONTO}} a la {{CTA_TIPO}} N° {{CTA_ABONO}}, denominada {{CTA_DENOMINACION}}.</p>
 
-  const footerInicial = `
-    Número Digital: {{NUM_DIGITAL}} — Elaborado por: {{ELABORADO}} — Back Office Tesorería FCR
-    <br/>—————————————————————————————————————————————————<br/>
-    Jr. Bolivia Nº 109 Piso 16º – Centro Cívico y Comercial de Lima – Lima 1. Telf: 634-2222 — Anexo 2917, Fax: 431-7979
-  `.trim();
+  <p>Asimismo, autorizamos a {{REPRESENTANTE_1}} (DNI {{DOC_REPRESENTANTE_1}}) o a
+     {{REPRESENTANTE_2}} (DNI {{DOC_REPRESENTANTE_2}}) a recibir la documentación respectiva.</p>
+`.trim();
+
+
+const footerInicial = `
+  Número Digital: {{NUM_DIGITAL}} — Elaborado por: {{ELABORADO}} — Back Office Tesorería FCR
+  <br/>—————————————————————————————————————————————————<br/>
+  Jr. Bolivia Nº 109 Piso 16º – Centro Cívico y Comercial de Lima – Lima 1. Telf: 634-2222 — Anexo 2917, Fax: 431-7979
+`.trim();
+
+
+
 
   // ===== TinyMCE =====
   initEditor('#editorBody', 520, bodyInicial, '14px');
@@ -73,13 +87,49 @@ function buildInner() {
   // Contenidos de editores (cuerpo/pie)
 let body = tinymce.get('editorBody') ? tinymce.get('editorBody').getContent() : '';
 
-// Reemplazos en plantilla (si tu body tiene estos marcadores)
+
+// Datos de cancelación
+const titular      = valOr('#txtTitular',      DEF_CANCEL.TITULAR);
+const instrumento  = valOr('#txtInstrumento',  DEF_CANCEL.INSTRUMENTO);
+const numero       = valOr('#txtNumero',       DEF_CANCEL.NUMERO);
+const montoTxt     = valOr('#txtMonto',        DEF_CANCEL.MONTO);
+const interesesTxt = valOr('#txtIntereses',    DEF_CANCEL.INTERESES);
+const tasa         = valOr('#txtTasa',         DEF_CANCEL.TASA);
+const venc         = valOr('#txtVencimiento',  DEF_CANCEL.VENCIMIENTO);
+
+const ctaTipo      = valOr('#txtTipoCuentaAbono',   DEF_CANCEL.CTA_TIPO);
+const ctaAbono     = valOr('#txtCuentaAbono',       DEF_CANCEL.CTA_ABONO);
+const ctaDenom     = valOr('#txtDenominacionCuenta',DEF_CANCEL.CTA_DENOMINACION);
+
+// ABONAR = MONTO + INTERESES (siempre que ambos se puedan parsear)
+const nMonto     = parseAmount(montoTxt);
+const nIntereses = parseAmount(interesesTxt);
+const abonarTxt  = "S/ 4,885,000.00";
+
+// Reemplazos del template del body
+
+// Reemplazos en el body
+// Reemplazos del template del body
 body = body
+  .replace('{{RUC_FONDO}}', DEF_CANCEL.RUC_FONDO)
+  .replace('{{TITULAR}}', titular)
+  .replace('{{INSTRUMENTO}}', instrumento)
+  .replace('{{NUMERO}}', numero)
+  .replace('{{MONTO}}', montoTxt)
+  .replace('{{INTERESES}}', interesesTxt)
+  .replace('{{TASA}}', tasa)
+  .replace('{{VENCIMIENTO}}', venc)
+  .replace('{{CTA_TIPO}}', ctaTipo)
+  .replace('{{CTA_ABONO}}', ctaAbono)
+  .replace('{{CTA_DENOMINACION}}', ctaDenom)
+  .replace('{{ABONAR_MONTO}}', abonarTxt)
   .replace('{{REPRESENTANTE_1}}', rep1.nombre)
   .replace('{{REPRESENTANTE_2}}', rep2.nombre)
   .replace('{{DOC_REPRESENTANTE_1}}', rep1.dni || '')
-  .replace('{{DOC_REPRESENTANTE_2}}', rep2.dni || '')
-  .replace('{{RUC_FONDO}}', '20421413216');
+  .replace('{{DOC_REPRESENTANTE_2}}', rep2.dni || '');
+
+  
+
 
   const numDigital = $('#txtNumDigital').val() || '';
   const elaborado  = $('#txtElaborado').val()  || '';
@@ -401,3 +451,50 @@ function firmaCellOperador(url, nombre, cargo1 = '', cargo2 = '') {
 
   
 function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m])); }
+
+function parseAmount(v) {
+  const s = (v ?? '').toString().replace(/[^\d,.-]/g,'').replace(/\./g,'').replace(',', '.');
+  const n = parseFloat(s);
+  return isFinite(n) ? n : null;
+}
+function formatPEN(n) {
+  return 'S/ ' + (n ?? 0).toLocaleString('es-PE',{minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+
+// lee valor de un input si existe; si no, devuelve el default
+function valOr(sel, def) {
+  const $el = $(sel);
+  if (!$el.length) return def;
+  const v = ($el.val() || '').toString().trim();
+  return v || def;
+}
+function parseAmount(txt) {
+  const s = (txt || '').toString().replace(/[^\d,.-]/g,'').replace(/\./g,'').replace(',', '.');
+  const n = parseFloat(s);
+  return isFinite(n) ? n : null;
+}
+function formatPEN(n) {
+  return 'S/ ' + (n ?? 0).toLocaleString('es-PE',{minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+
+const DEF_CANCEL = {
+  RUC_FONDO: '20421413216',
+  TITULAR: 'FCR–MACROFONDO',
+  INSTRUMENTO: 'DEPÓSITO A PLAZO',
+  NUMERO: '634235',
+  MONTO: 'S/ 150,000,000.00',
+  INTERESES: 'S/ 4,885,000.00',
+  TASA: '4.59 % T.E.A.',
+  VENCIMIENTO: '23/02/2026',
+  CTA_TIPO: 'CUENTA DE AHORROS M.N',
+  CTA_ABONO: '200-3067561380',
+  CTA_DENOMINACION: 'FCR–MACROFONDO',
+  ATENCION: 'SR. GUSTAVO LINARES CÉSPEDES',
+  REFERENCIA: 'Jefe de Banca Institucional',
+  AUT1_NOMBRE: 'Jorge Alcala Benites',
+  AUT1_DNI: '45146151',
+  AUT2_NOMBRE: 'Damaris Calachahuín Huamán',
+  AUT2_DNI: '45144415',
+};
