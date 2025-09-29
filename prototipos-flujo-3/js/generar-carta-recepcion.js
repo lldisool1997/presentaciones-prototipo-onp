@@ -104,7 +104,7 @@ const ctaDenom     = valOr('#txtDenominacionCuenta',DEF_CANCEL.CTA_DENOMINACION)
 // ABONAR = MONTO + INTERESES (siempre que ambos se puedan parsear)
 const nMonto     = parseAmount(montoTxt);
 const nIntereses = parseAmount(interesesTxt);
-const abonarTxt  = "S/ 4,885,000.00";
+const abonarTxt  = "S/ 6,885,000.00";
 
 // Reemplazos del template del body
 
@@ -485,7 +485,7 @@ const DEF_CANCEL = {
   INSTRUMENTO: 'DEPÓSITO A PLAZO',
   NUMERO: '634235',
   MONTO: 'S/ 150,000,000.00',
-  INTERESES: 'S/ 4,885,000.00',
+  INTERESES: 'S/ 6,885,000.00',
   TASA: '4.59 % T.E.A.',
   VENCIMIENTO: '23/02/2026',
   CTA_TIPO: 'CUENTA DE AHORROS M.N',

@@ -1573,9 +1573,8 @@
         // Configuración de documentos por área
         const documentRequirements2 = {
             "general": [
-                "Informe de Riesgos",
-                "Informe Legal",
-                "Acta de Comité de Inversiones",
+                "Colocaciones e inversiones de fondos públicos",
+                "Subasta de Adjudicación",
             ],
             "tesoreria": {
                 // Cada tipo de instrumento tiene sus propios documentos
@@ -1638,9 +1637,8 @@
 
         const documentRequirements = {
             "general": [
-                "Informe de Riesgos",
-                "Informe Legal",
-                "Acta de Comité de Inversiones",
+                "Colocaciones e inversiones de fondos públicos",
+                "Subasta de Adjudicación",
             ],
             "tesoreria": {
                 // ===== INSTRUMENTOS ÚNICOS (solo nombre) =====
@@ -2923,14 +2921,23 @@
                                 "label": "Emisor",
                                 "type": "select",
                                 "options": [
-                                    "ALICORP S.A.A",
+                                    "BANCO INTERAMERICANO DE FINANZAS",
                                     "VOLCAN COMPAÑIA MINERA S.A.A.",
                                     "BANCO AGRARIO - AGROBANCO", "COFIDE"
 
 
                                 ]
                             },
-                            {
+                              {
+                                "label": "Banco Apertura",
+                                "type": "select",
+                                "options": [
+                                    "BANBIF",
+
+
+                                ]
+                            },
+                           /* {
                                 "label": "Agente Colocador",
                                 "type": "select",
                                 "options": [
@@ -2956,11 +2963,8 @@
                                     "SEMINARIO S.A.B.",
                                     "SUDAMERIS PERU S.A.B.     ",
                                     "WIESE SUDAMERIS S.A.B.     "
-
-
-
                                 ]
-                            },
+                            },*/
 
 
 
@@ -2969,19 +2973,28 @@
                                 "type": "select",
                                 "options": []
                             },
+                                                        {
+                                "label": "Plazo calificación",
+                                "type": "select",
+                                "options": [
+                                    "Corto",
+                                    "Largo"
+                                ]
+                            },
+                                                        {
+                                "label": "Cat. Riesgo Merc.",
+                                "type": "select",
+                                "options": []
+                            },
                             {
                                 "label": "Grupo económico",
                                 "type": "select",
                                 "options": []
                             },
-                            {
-                                "label": "Denominación",
-                                "type": "text"
-                            },
-                            {
+                            /*{
                                 "label": "Destino de emisión",
                                 "type": "text"
-                            },
+                            },*/
                            /* {
                                 "label": "ISIN",
                                 "type": "text",
@@ -2996,20 +3009,28 @@
 
                                 ]
                             },
-                           /* {
-                                "label": "Valor nominal adquirido",
-                                "type": "number",
-                                "attributes": {
-                                    "step": "0.01"
-                                }
-                            },*/
-                          /*  {
-                                "label": "Rendimiento (%)",
+                              {
+                                "label": "Tipo Tasa",
+                                "type": "select",
+                                "options": [
+                                    "Tasa Efectiva",
+                                ]
+                            },
+                            
+                            {
+                                "label": "Tasa Nominal (%)",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.0001"
                                 }
-                            },*/
+                            },
+                           {
+                                "label": "Tasa Efectiva (%)",
+                                "type": "number",
+                                "attributes": {
+                                    "step": "0.01"
+                                }
+                            },
                           /*  {
                                 "label": "Precio (%)",
                                 "type": "number",
@@ -3031,26 +3052,37 @@
                                     "step": "0.01"
                                 }
                             },*/
+
                             {
-                                "label": "Plazo en días",
-                                "type": "number",
-                                "attributes": {
-                                    "step": "1"
-                                }
+                                "label": "Fecha de emisión",
+                                "type": "date"
                             },
+                            
                             {
-                                "label": "Fecha de subasta",
+                                "label": "Fecha de compra/corte",
+                                "type": "date"
+                            },
+                              {
+                                "label": "Fecha Vencimiento",
+                                "type": "date"
+                            },
+                             {
+                                "label": "Fecha Pactada",
                                 "type": "date"
                             },
                             {
-                                "label": "Fecha de emisión",
+                                "label": "Fecha Custodia",
+                                "type": "date"
+                            },
+                            {
+                                "label": "Fecha Negociación",
                                 "type": "date"
                             },
                            /* {
                                 "label": "Fecha de redención",
                                 "type": "date"
                             },*/
-                            {
+                            /*{
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
                                 "options": [],
@@ -3076,7 +3108,7 @@
                                 "type": "select",
                                 "options": [],
                                 "special": "custody_name"
-                            }
+                            }*/
                         ],
                         "Papel comercial": [
                             {
@@ -10033,6 +10065,7 @@
 
         const centralizedOptions = {
             "Clasificación de riesgos": riskClassificationOptions,
+            "Cat. Riesgo Merc.": riskClassificationOptions,
             "Moneda": ["PEN", "USD", "EUR"],
             "Tipo de tasa": ["TEA", "TNA", "VAC", "Variable"],
 
@@ -10743,7 +10776,7 @@
 
                         // Generar código automático para campos autogenerados
                         if (fieldConfig.autogenerated) {
-                            input.value = "INV-6053";// generateCode();
+                            input.value = "INV-7000";// generateCode();
                             input.readOnly = true;
                         }
 
@@ -11955,7 +11988,7 @@
             registerButton.classList.remove('enabled');
 
             setTimeout(() => {
-                successMessage.textContent = '✅ Inversión financiera registrada correctamente. Código del instrumento: INV-6053';
+                successMessage.textContent = '✅ Inversión financiera registrada correctamente. Código del instrumento: INV-7000';
                 successMessage.classList.remove('hidden');
 
                 registerButton.textContent = 'Registrar inversión';

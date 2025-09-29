@@ -404,96 +404,139 @@ $("#banco_destino").on("change", function () {
     });
 
   // submit -> validar + modal
-  $("#formLlamado").off('submit.main').on("submit.main", function(e){
-    e.preventDefault();
+// submit -> validar + modal (con datos desde inputs)
+$("#formLlamado").off('submit.main').on("submit.main", function(e){
+  e.preventDefault();
 
-    // limpiar marcas
-    clearInvalid($fecha); clearInvalid($monto); clearInvalid($drop);
-    $cta.next(".select2").removeClass("ring-2 ring-red-400");
-    $cta.next(".select2").removeClass("ring-2 ring-red-400");
+  // === refs (ya existen en tu archivo) ===
+  const $fecha = $("#fecha_llamado"); // si no usas fecha, no se mostrará
+  const $monto = $("#monto");
+  const $comision = $("#comision");
+  const $banco = $("#banco");
+  const $cta = $("#cuenta");
+  const $bancoDst = $("#banco_destino");
+  const $ctaDst = $("#cuenta_destino");
+  const $drop  = $("#drop");
+  const $file  = $("#file");
 
-    // fecha
-    if(!$fecha.val()){
-      markInvalid($fecha); toastr.warning("Indica la fecha del llamado de capital."); $fecha.focus(); return;
-    }
-    // monto
-    const montoStr = ($monto.val()||"").trim();
-    const montoNum = parseFloat(montoStr.replace(/,/g,""));
-    if(!montoStr || isNaN(montoNum)){
-      markInvalid($monto); toastr.warning("Monto inválido. Usa formato 1,234.56"); $monto.focus(); return;
-    }
-    // cuenta bancaria
-        // cuenta bancaria
-    const bancoId = $banco.val();
-    const bancoTxt = $banco.select2('data')[0]?.text || "";
-    if(!bancoId){
-      $banco.next(".select2").addClass("ring-2 ring-red-400");
-      toastr.warning("Selecciona el banco."); 
-      $banco.select2('open');
-      return;
-    }
-
-    const ctaId = $cta.val();
-    const ctaTxt = $cta.select2('data')[0]?.text || "";
-    if(!ctaId){
-      $cta.next(".select2").addClass("ring-2 ring-red-400");
-      toastr.warning("Selecciona la cuenta bancaria."); 
-      $cta.select2('open');
-      return;
-    }
-    // archivo principal
-    const fileObj = $file[0].files[0];
-    const fv = validateFile(fileObj);
-    if(!fv.ok){
-      markInvalid($drop); toastr.warning(fv.msg); $("#btnFile").focus(); return;
-    }
-
-    // 🔒 validar TODOS los documentos dinámicos
-const missing = [];
-for (const [id, ok] of Object.entries(filesUploaded)) {
-  if (!ok) {
-    const group = document.getElementById(`field_${id}`);
-    const area  = group?.querySelector('.file-upload-area');
-    const label = group?.querySelector('label')?.textContent?.trim() || id;
-    if (area) $(area).addClass('ring-2 ring-red-400 border-red-400');
-    missing.push(label);
+  // === Validaciones mínimas que mantienes ===
+  // Monto
+  const montoStr = ($monto.val()||"").trim();
+  const montoNum = parseFloat(montoStr.replace(/,/g,""));
+  if(!montoStr || isNaN(montoNum)){
+    markInvalid($monto); toastr.warning("Monto inválido. Usa formato 1,234.56"); $monto.focus(); return;
   }
-}
-if (missing.length) {
-  toastr.warning(`Adjunta los siguientes documentos: ${missing.join(', ')}`);
-  return; // ⛔ no pasa
-}
 
-    // ok -> doble check
-$("#review").html(`
-  <dl class="divide-y divide-gray-200 text-sm text-gray-700">
-    <div class="py-2 flex justify-between">
-      <dt class="font-medium text-gray-600">Código del instrumento:</dt>
-      <dd class="text-gray-900">${selectedInvestment.descripcion}</dd>
-    </div>
-    <div class="py-2 flex justify-between">
-      <dt class="font-medium text-gray-600">Fecha:</dt>
-      <dd class="text-gray-900">${$fecha.val()}</dd>
-    </div>
-    <div class="py-2 flex justify-between">
-      <dt class="font-medium text-gray-600">Monto:</dt>
-      <dd class="text-gray-900">${montoStr}</dd>
-    </div>
-    <div class="py-2 flex justify-between">
-      <dt class="font-medium text-gray-600">Cuenta bancaria:</dt>
-      <dd class="text-gray-900">${ctaTxt}</dd>
-    </div>
-    <div class="py-2 flex justify-between">
-      <dt class="font-medium text-gray-600">Documento:</dt>
-      <dd class="text-gray-900">${fileObj.name}</dd>
-    </div>
-  </dl>
-`);
+  // Banco/cuenta de cargo
+  const bancoId = $banco.val();
+  const bancoTxt = $banco.select2('data')[0]?.text || "";
+  if(!bancoId){
+    $banco.next(".select2").addClass("ring-2 ring-red-400");
+    toastr.warning("Selecciona el banco."); 
+    $banco.select2('open');
+    return;
+  }
 
-    $("#chkConfirm").prop("checked", false);
-    $("#btnConfirmSave").prop("disabled", false);
-    $("#confirmModal").removeClass("hidden").addClass("flex");
-  });
+  const ctaId = $cta.val();
+  const ctaTxt = $cta.select2('data')[0]?.text || "";
+  if(!ctaId){
+    $cta.next(".select2").addClass("ring-2 ring-red-400");
+    toastr.warning("Selecciona la cuenta bancaria."); 
+    $cta.select2('open');
+    return;
+  }
+
+  // Archivo principal
+  const fileObj = $file[0].files[0];
+  const fv = validateFile(fileObj);
+  if(!fv.ok){
+    markInvalid($drop); toastr.warning(fv.msg); $("#btnFile").focus(); return;
+  }
+
+  // Documentos dinámicos
+  const missing = [];
+  for (const [id, ok] of Object.entries(filesUploaded)) {
+    if (!ok) {
+      const group = document.getElementById(`field_${id}`);
+      const area  = group?.querySelector('.file-upload-area');
+      const label = group?.querySelector('label')?.textContent?.trim() || id;
+      if (area) $(area).addClass('ring-2 ring-red-400 border-red-400');
+      missing.push(label);
+    }
+  }
+  if (missing.length) {
+    toastr.warning(`Adjunta los siguientes documentos: ${missing.join(', ')}`);
+    return; // ⛔ no pasa
+  }
+
+  // === Tomar valores de inputs para el REVIEW ===
+  const moneda = $("#moneda").val() || "PEN";
+  const comisionStr = ($comision.val() || "").trim();
+
+  const bancoDstTxt = $bancoDst.select2('data')[0]?.text || "";
+  const ctaDstTxt   = $ctaDst.select2('data')[0]?.text || "";
+
+  // (Opcional) Fecha si existe input
+  const fechaStr = $fecha.length ? ($fecha.val() || "") : "";
+
+  // === Render del review basado SOLO en inputs ===
+  $("#review").html(`
+    <dl class="divide-y divide-gray-200 text-sm text-gray-700">
+      ${fechaStr ? `
+      <div class="py-2 flex justify-between">
+        <dt class="font-medium text-gray-600">Fecha:</dt>
+        <dd class="text-gray-900">${fechaStr}</dd>
+      </div>` : ''}
+
+      <div class="py-2 flex justify-between">
+        <dt class="font-medium text-gray-600">Moneda:</dt>
+        <dd class="text-gray-900">${moneda}</dd>
+      </div>
+
+      <div class="py-2 flex justify-between">
+        <dt class="font-medium text-gray-600">Monto:</dt>
+        <dd class="text-gray-900">${montoStr}</dd>
+      </div>
+
+      ${comisionStr ? `
+      <div class="py-2 flex justify-between">
+        <dt class="font-medium text-gray-600">Comisión:</dt>
+        <dd class="text-gray-900">${comisionStr}</dd>
+      </div>` : ''}
+
+      <div class="py-2 flex justify-between">
+        <dt class="font-medium text-gray-600">Banco (cargo):</dt>
+        <dd class="text-gray-900">${bancoTxt}</dd>
+      </div>
+
+      <div class="py-2 flex justify-between">
+        <dt class="font-medium text-gray-600">Nro cuenta (cargo):</dt>
+        <dd class="text-gray-900">${ctaTxt}</dd>
+      </div>
+
+      <div class="py-2 flex justify-between">
+        <dt class="font-medium text-gray-600">Banco (destino):</dt>
+        <dd class="text-gray-900">${bancoDstTxt || '—'}</dd>
+      </div>
+
+      <div class="py-2 flex justify-between">
+        <dt class="font-medium text-gray-600">Nro cuenta (destino):</dt>
+        <dd class="text-gray-900">${ctaDstTxt || '—'}</dd>
+      </div>
+
+      <div class="py-2 flex justify-between">
+        <dt class="font-medium text-gray-600">Documento:</dt>
+        <dd class="text-gray-900">${fileObj.name}</dd>
+      </div>
+    </dl>
+  `);
+
+  // Abrir modal de confirmación
+  $("#chkConfirm").prop("checked", false);
+  $("#btnConfirmSave").prop("disabled", false);
+  $("#confirmModal").removeClass("hidden").addClass("flex");
+});
+
 
   // confirm modal
   $("#chkConfirm").off('change.main').on("change.main", function(){
@@ -502,7 +545,7 @@ $("#review").html(`
   $("#btnCancelConfirm").off('click.main').on("click.main", ()=> $("#confirmModal").addClass("hidden").removeClass("flex"));
   $("#btnConfirmSave").off('click.main').on("click.main", function(){
     $("#confirmModal").addClass("hidden").removeClass("flex");
-    toastr.success("✅ Llamado de capital registrado.");
+    toastr.success("✅ Transacción registrada.");
     $("#formLlamado")[0].reset();
     $("#banco").val(null).trigger("change");
     $("#fileName").addClass("hidden").text("");

@@ -7,79 +7,103 @@
   // =============== DATA MOCK ===============
   // Hijos usan estados: REGISTRADO, INSTRUIDO, CANCELADO
   let inversiones = [
-      {
-      entidad:"fdo-consolidado",
-      accion: "aprobar",
-      unidad:"fcr-macrofondo",
-      tipo:"Instrumento de corto plazo",
-      estado:"REGISTRADO",
-      inversionNum:"6053",
-      invPrincipal:"6053",
-      codFCR:"INV-6053",
-      producto:"Instrumento de corto plazo",
-      numeroDeposito:"ALPINV-SEC-22",
-      fechaCompra:"19/09/2025",
-      fechaEmision:"19/09/2025",
-      fechaVencimiento:"19/09/2030",
-      cataApertura:"19/09/2025",
-      cataCancelacion:"Local",
-      moneda:"PEN",
-      valorNominal:"10,000,000.00",
-      compraSpotCupon:"",
-      pCompraCupon:"-",
-      ecoInstrument:"Instrumento de corto plazo",
-    },
-    {
-      entidad:"fdo-consolidado",
-      accion: "cancelar",
-      unidad:"fcr-macrofondo",
-      tipo:"Instrumento de corto plazo",
-      estado:"APROBADO",
-      inversionNum:"6053",
-      invPrincipal:"6053",
-      codFCR:"INV-6053",
-      producto:"Instrumento de corto plazo",
-      numeroDeposito:"ALPINV-SEC-22",
-      fechaCompra:"19/09/2025",
-      fechaEmision:"19/09/2025",
-      fechaVencimiento:"19/09/2030",
-      cataApertura:"19/09/2025",
-      cataCancelacion:"Local",
-      moneda:"PEN",
-      valorNominal:"10,000,000.00",
-      compraSpotCupon:"",
-      pCompraCupon:"-",
-      ecoInstrument:"Instrumento de corto plazo",
-    },
-    {
-      entidad:"fdo-consolidado",
-      accion: "X",
-      unidad:"fcr-macrofondo",
-      tipo:"Instrumento de corto plazo",
-      estado:"CANCELADO",
-      inversionNum:"6053",
-      invPrincipal:"6053",
-      codFCR:"INV-6053",
-      producto:"Fondos Alternativos – Secondaries",
-      numeroDeposito:"ALPINV-SEC-22",
-      fechaCompra:"19/09/2025",
-      fechaEmision:"19/09/2025",
-      fechaVencimiento:"19/09/2030",
-      cataApertura:"19/09/2025",
-      cataCancelacion:"Local",
-      moneda:"PEN",
-      valorNominal:"10,000,000.00",
-      compraSpotCupon:"",
-      pCompraCupon:"-",
-      ecoInstrument:"ALTERNATIVOS",
-    },
-  ];
+  {
+    "entidad": "fdo-consolidado",
+    "accion": "aprobar",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Instrumento de corto plazo",
+    "estado": "REGISTRADO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Instrumento de corto plazo",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "23/02/2026",
+    "cataApertura": "BANBIF",
+    "cataCancelacion": "Grupo Breca",
+    "moneda": "PEN",
+    "valorNominal": "150,000,000.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": "A+"
+  },
+  {
+    "entidad": "fdo-consolidado",
+    "accion": "cancelar",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Instrumento de corto plazo",
+    "estado": "INSTRUIDO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Instrumento de corto plazo",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "23/02/2026",
+    "cataApertura": "BANBIF",
+    "cataCancelacion": "Grupo Breca",
+    "moneda": "PEN",
+    "valorNominal": "150,000,000.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": "A+"
+  },
+  {
+    "entidad": "fdo-consolidado",
+    "accion": "instruir",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Instrumento de corto plazo",
+    "estado": "APROBADO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Instrumento de corto plazo",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "23/02/2026",
+    "cataApertura": "BANBIF",
+    "cataCancelacion": "Grupo Breca",
+    "moneda": "PEN",
+    "valorNominal": "150,000,000.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": "A+"
+  },
+  {
+    "entidad": "fdo-consolidado",
+    "accion": "X",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Instrumento de corto plazo",
+    "estado": "CANCELADO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Fondos Alternativos – Secondaries",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "23/02/2026",
+    "cataApertura": "BANBIF",
+    "cataCancelacion": "Grupo Breca",
+    "moneda": "PEN",
+    "valorNominal": "150,000,000.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": "ALTERNATIVOS"
+  }
+]
+
 
   // =============== RENDER ===============
   function estadoBadge(st){
     if(st==="APROBADO") return 'status-aprobado';
     if(st==="CANCELADA") return 'status-cancelada';
     if(st==="REGISTRADO") return 'status-registrado';
+    if(st==="INSTRUIDO") return 'status-instruido';
     return '';
   }
   function badgeHijo(st){
@@ -115,14 +139,26 @@
         <td>${inv.ecoInstrument}</td>
         <td>
           ${
-                                inv.estado === "APROBADO" && getAreaParam() === "Tesoreria"
+                                inv.estado === "INSTRUIDO" && getAreaParam() === "Tesoreria"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDeCartaRecepcion('${inv.invPrincipal}')">
               Generar carta de Recepción
             </button>
-            <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDistribucion('${inv.invPrincipal}')">
+            <button class="btn btn-action btn-llamado-registro" onclick="irARegistroCancelacion('${inv.invPrincipal}')">
               Cancelación
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
+                             ${
+                                inv.estado === "APROBADO" && getAreaParam() === "DIN"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+            <button class="btn btn-action btn-llamado-registro" onclick="irARegistroInstruccion('${inv.invPrincipal}')">
+              Instruir
             </button>
           </div>`
                                 :
@@ -446,11 +482,19 @@ function irARegistrodeFondeo(inversionId){
     }
   }
 
-    function irARegistroDistribucion(inversionId){
+    function irARegistroCancelacion(inversionId){
     if(inversionId){
-      window.location.href = `registro-distribucion-capital.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `cancelar-instrumento.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
-      window.location.href = "registro-distribucion-capital.html";
+      window.location.href = "cancelar-instrumento.html";
+    }
+  }
+
+    function irARegistroInstruccion(inversionId){
+    if(inversionId){
+      window.location.href = `instruir-instrumento.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "instruir-instrumento.html";
     }
   }
 
