@@ -18,169 +18,17 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.3.1/html-docx.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
+
+    <!-- Select2 -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
   <!-- App -->
   <script src="js/generar-carta-recepcion.js" defer></script>
 
-  <style>
-    .a4{width:210mm;min-height:297mm;margin:0 auto;background:#fff;padding:20mm;box-sizing:border-box}
-    .doc-footer{margin-top:28px;border-top:1px solid #e5e7eb;padding-top:12px;color:#475569;font-size:12px}
-    @media print{.no-print{display:none!important}.a4{box-shadow:none}}
+  <link rel="stylesheet" href="css/generar-carta-recepcion.css">
 
-      /* Toastr: sin íconos por defecto */
-    #toast-container > .toast-success,
-    #toast-container > .toast-error,
-    #toast-container > .toast-info,
-    #toast-container > .toast-warning {
-      background-image: none !important;
-      background-repeat: none !important;
-      padding-left: 14px !important;
-    }
-    /* Select2 “muted” y p-2.5 */
-    .select2-container--default .select2-selection--single{
-      height: 46px;                     /* p-2.5 + border */
-      border: 2px solid #d1d5db;        /* gray-300 */
-      border-radius: 0.75rem;           /* rounded-xl */
-      background: #fff;
-      display: flex; align-items: center;
-    }
-    .select2-container--default .select2-selection--single .select2-selection__rendered{
-      line-height: 42px;                /* altura interior */
-      padding-left: 12px;               /* p-2.5 feel */
-      color:#111827;                    /* gray-900 */
-      font-size: 15px;
-      font-family: inherit;
-      width: 100%;
-    }
-    .select2-container--default .select2-selection--single .select2-selection__arrow{
-      height: 100%; right: 8px;
-    }
-    .select2-dropdown{
-      border: 1.5px solid #e5e7eb;
-      border-radius: 10px;
-      box-shadow: 0 6px 16px rgba(0,0,0,.06);
-    }
-            .section-header {
-            font-size: 1.2rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-left: 4px solid #005C97;
-            padding: 0.75rem 1rem;
-            border-radius: 6px;
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-            margin-bottom: 30px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .info-column {
-            padding: 20px;
-            border-left: 4px solid #3498db;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .info-item {
-            margin-bottom: 15px;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 5px;
-            font-size: 0.9em;
-        }
-
-        .info-value {
-            color: #555;
-            font-size: 1em;
-        }
-
-         .header {
-            background: linear-gradient(135deg, #005C97 0%, #004a7c 100%);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .header p {
-            opacity: 0.9;
-            font-size: 1.1rem;
-        }
-
-                .section-header {
-            font-size: 1.2rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-left: 4px solid #005C97;
-            padding: 0.75rem 1rem;
-            border-radius: 6px;
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
-
-                .config-section {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: #fff;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-        }
-
-        .add-document-btn {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        .add-document-btn:hover {
-            background: #218838;
-        }
-
-        .remove-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            margin-left: 0.5rem;
-        }
-
-        .remove-btn:hover {
-            background: #c82333;
-        }
-
-        /* Hover y clic para las zonas de subida */
-.file-upload-area, #drop{
-  cursor: pointer;
-  transition: border-color .2s, box-shadow .2s;
-}
-.file-upload-area:hover, #drop:hover{
-  border-color: #60a5fa; /* blue-400 */
-  box-shadow: inset 0 0 0 2px rgba(59,130,246,.25);
-}
-
-  </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
   <main class="max-w-screen-2xl mx-auto px-6 py-6 space-y-6">
@@ -197,13 +45,103 @@
                 <div class="header rounded-2xl rounded-b-none">
                 <h1>Generación de cartas</h1>
             </div>
+    <!-- Inversión seleccionada -->
+    <section class="bg-white border border-y-0 border-line shadow-card px-5 pt-3 pb-5">
+         <div class="section-header">1. Información del Instrumento</div>
+                <div class="info-grid">
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Código del instrumento:</div>
+                            <div class="info-value">INV-6053</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Nombre de la SAFI o General Partner:</div>
+                            <div class="info-value">SAFI</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Capital comprometido:</div>
+                            <div class="info-value">10,000,000.00</div>
+                        </div>
+                         <div class="info-item">
+                            <div class="info-label">Correo de la persona de contacto (SAFI/GP):</div>
+                            <div class="info-value">correo@gmail.com</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tipo de custodia:</div>
+                            <div class="info-value">Local-ONP</div>
+                        </div>
+                    </div>
+
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Unidad de negocio:</div>
+                            <div class="info-value">MACROFONDO</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Clasificación de riesgos:</div>
+                            <div class="info-value">AA+</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Fecha de suscripción del contrato:</div>
+                            <div class="info-value">22/09/2025</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Plazo (años):</div>
+                            <div class="info-value">5</div>
+                        </div>
+                         <div class="info-item">
+                            <div class="info-label">Información adicional:</div>
+                            <div class="info-value">a</div>
+                        </div>
+                    </div>
+
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Plazo de vencimiento:</div>
+                            <div class="info-value">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Grupo económico:</div>
+                            <div class="info-value">Grupo Intercorp</div>
+                        </div>
+                           <div class="info-item">
+                            <div class="info-label">Fecha de vencimiento:</div>
+                            <div class="info-value">22/09/2030</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Activo custodiado:</div>
+                            <div class="info-value">No</div>
+                        </div>
+                    </div>
+
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Nombre Fondo:</div>
+                            <div class="info-value">Fondo Privado Intercorp</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Moneda:</div>
+                            <div class="info-value">PEN</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Nombre de la persona de contacto (SAFI/GP):</div>
+                            <div class="info-value">persona</div>
+                        </div>
+                         <div class="info-item">
+                            <div class="info-label">Nombre del custodio:</div>
+                            <div class="info-value">Scotiabank</div>
+                        </div>
+                    </div>
+                </div>
+    </section>
     <!-- BANDA DE CAMPOS -->
-    <section class="bg-white border border-b-0 shadow-sm p-5 space-y-4">
-              <div class="border-b-2 border-[#3396d8] mb-4">
+     <section class="bg-white border border-t-0 border-b-0 shadow-sm px-5 space-y-4 mb-0">
+      <div class="border-b-2 border-[#3396d8] mb-4">
         <h1 class="text-xl font-semibold text-ink flex items-center">
-            <span class="border-l-4 border-[#3396d8] pl-2">2. Cabecera</span>
+          <span class="border-l-4 border-[#3396d8] pl-2">Cabecera</span>
         </h1>
-       </div>
+      </div>
+
       <div class="grid md:grid-cols-3 gap-4">
         <div>
           <label class="text-xs text-slate-500">Texto (plantilla)</label>
@@ -213,60 +151,79 @@
             <option value="TPL_REPO">REPO/TRANSFERENCIA</option>
           </select>
         </div>
+
         <div>
           <label class="text-xs text-slate-500">Atención</label>
-          <input id="txtAtencion" class="w-full rounded-xl border px-3 py-2"
-                 value="SR. CÉSAR AUGUSTO REÁTEGUI GARCÍA">
+          <select id="txtAtencion" class="w-full rounded-xl border px-3 py-2">
+            <option selected>SR. CÉSAR AUGUSTO REÁTEGUI GARCÍA</option>
+            <option>SR. JUAN PÉREZ</option>
+          </select>
         </div>
+
         <div>
           <label class="text-xs text-slate-500">Carta Referencia</label>
-          <input id="txtReferencia" class="w-full rounded-xl border px-3 py-2"
-                 value="SUBGERENTE DE BANCA INSTITUCIONAL">
+          <select id="txtReferencia" class="w-full rounded-xl border px-3 py-2">
+            <option selected>SUBGERENTE DE BANCA INSTITUCIONAL</option>
+            <option>GERENTE GENERAL</option>
+          </select>
         </div>
 
         <div class="md:col-span-3">
           <label class="text-xs text-slate-500">Asunto</label>
-          <input id="txtAsunto" class="w-full rounded-xl border px-3 py-2"
-                 value="Solicitud de operación de transferencia y apertura">
+          <select id="txtAsunto" class="w-full rounded-xl border px-3 py-2">
+            <option selected>Solicitud de operación de transferencia y apertura</option>
+            <option>Solicitud de depósito a plazo</option>
+          </select>
         </div>
 
         <div>
           <label class="text-xs text-slate-500">Firma 1</label>
-          <input id="txtFirma1" class="w-full rounded-xl border px-3 py-2"
-                 value="LEON NIETO, PEDRO HUN">
+          <select id="txtFirma1" class="w-full rounded-xl border px-3 py-2">
+            <option selected>LEON NIETO, PEDRO HUN</option>
+            <option>MARQUEZ RAMOS, ANA</option>
+          </select>
         </div>
+
         <div>
           <label class="text-xs text-slate-500">Firma 2</label>
-          <input id="txtFirma2" class="w-full rounded-xl border px-3 py-2"
-                 value="GARAY SÁNCHEZ, CARLO">
-        </div>
-        <div>
-          <label class="text-xs text-slate-500">Proveedor</label>
-          <input id="txtProveedor" class="w-full rounded-xl border px-3 py-2" value="">
+          <select id="txtFirma2" class="w-full rounded-xl border px-3 py-2">
+            <option selected>GARAY SÁNCHEZ, CARLO</option>
+            <option>CASTRO TORRES, JULIO</option>
+          </select>
         </div>
 
         <div>
           <label class="text-xs text-slate-500">Elaborado</label>
-          <input id="txtElaborado" class="w-full rounded-xl border px-3 py-2"
-                 value="BEDREGAL JULCA, ELIZABETH">
+          <select id="txtElaborado" class="w-full rounded-xl border px-3 py-2">
+            <option selected>70429350 - BEDREGAL JULCA, ELIZABETH</option>
+          </select>
         </div>
+
         <div>
-          <label class="text-xs text-slate-500">Autorizado</label>
-          <input id="txtAutorizado" class="w-full rounded-xl border px-3 py-2"
-                 value="ALCALÁ BENITES, JORGE">
+          <label class="text-xs text-slate-500">Autorizado 1</label>
+          <select id="txtAutorizado" class="w-full rounded-xl border px-3 py-2">
+            <option selected>70429350 - ALCALÁ BENITES, JORGE</option>
+          </select>
         </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Autorizado 2</label>
+          <select id="txtAutorizado2" class="w-full rounded-xl border px-3 py-2">
+            <option selected>70429350 - ALCALÁ BENITES, JORGE</option>
+          </select>
+        </div>
+
         <div>
           <label class="text-xs text-slate-500">Número Digital</label>
-          <input id="txtNumDigital" class="w-full rounded-xl border px-3 py-2" value="0042985">
+          <input id="txtNumDigital" class="w-full rounded-xl border px-3 py-2" value="" disabled>
         </div>
       </div>
 
       <div class="flex items-center justify-between pt-2">
         <label class="flex items-center gap-2">
           <input id="chkLogo" type="checkbox" class="rounded border-slate-300 text-indigo-600" checked>
-          <span class="text-sm">Imprimir Logo</span>
+          <span class="text-sm">Imprimir Logo de proveedor</span>
         </label>
-        <!-- Opciones -->
         <div class="flex items-center gap-2">
           <button id="btnAplicar"   class="px-3 py-2 rounded-lg border hover:bg-slate-50">Aplicar</button>
           <button id="btnPreview"  class="px-3 py-2 rounded-lg border hover:bg-slate-50">Vista previa</button>
@@ -275,13 +232,12 @@
         </div>
       </div>
     </section>
-    
     <!-- EDITORES -->
     <section class="grid grid-cols-1 bg-white gap-5 border rounded-b-xl border-y-0 py-5">
       <div class=" px-5">
                        <div class="border-b-2 border-[#3396d8] mb-4">
         <h1 class="text-xl font-semibold text-ink flex items-center">
-            <span class="border-l-4 border-[#3396d8] pl-2">2. Texto</span>
+            <span class="border-l-4 border-[#3396d8] pl-2">Cuerpo</span>
         </h1>
        </div>
         <textarea id="editorBody"></textarea>
@@ -290,7 +246,7 @@
       <div class="   px-5">
                       <div class="border-b-2 border-[#3396d8] mb-4">
         <h1 class="text-xl font-semibold text-ink flex items-center">
-            <span class="border-l-4 border-[#3396d8] pl-2">3. Pie de página</span>
+            <span class="border-l-4 border-[#3396d8] pl-2">Pie de página</span>
         </h1>
        </div>
         <textarea id="editorFooter"></textarea>
