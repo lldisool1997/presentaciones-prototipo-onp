@@ -563,8 +563,19 @@ function reloadCuentasDestino(bancoId) {
 function openAperturaModal(bancoId, bancoText) {
   $("#ap_banco_id").val(bancoId);
   $("#ap_banco_txt").val(bancoText || "");
+
+  // ✅ Preseleccionar moneda según la seleccionada en el formulario principal
+  const monedaPrincipal = $("#moneda").val();
+  if (monedaPrincipal) {
+    $("#ap_moneda").val(monedaPrincipal).trigger("change");
+  } else {
+    $("#ap_moneda").val("PEN").trigger("change"); // default PEN si no hay
+  }
+  
+
   $("#aperturaModal").removeClass("hidden").addClass("flex");
 }
+
 function closeAperturaModal() {
   $("#aperturaModal").addClass("hidden").removeClass("flex");
   $("#formApertura")[0].reset();
@@ -625,8 +636,8 @@ $("#formApertura").on("submit", function(e){
 
   // Construye etiqueta visible (ajústala a tu estándar)
   const etiqueta = cci
-    ? `${numero} · ${moneda} · ${tipo} · ${titular} · CCI ${cci}`
-    : `${numero} · ${moneda} · ${tipo} · ${titular}`;
+    ? `${numero} · ${tipo} · ${titular} · CCI ${cci}`
+    : `${numero} · ${tipo} · ${titular}`;
 
   const newId = genCuentaId(bancoId, moneda);
 
