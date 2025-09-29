@@ -139,7 +139,7 @@
               <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDeCartaAprobacion('${inv.invPrincipal}')">
               Generar Carta
             </button>
-              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroLlamado('${inv.invPrincipal}')">
+              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacion('${inv.invPrincipal}')">
               Aprobar
             </button>
           </div>`
@@ -421,11 +421,11 @@ function irARegistrodeFondeo(inversionId){
   }
 
 
-  function irARegistroLlamado(inversionId){
+  function irARegistroAprobacion(inversionId){
     if(inversionId){
-      window.location.href = `registro-llamado-capital.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `aprobar-instrumento.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
-      window.location.href = "registro-llamado-capital.html";
+      window.location.href = "aprobar-instrumento.html";
     }
   }
 
@@ -509,7 +509,7 @@ function irARegistrodeFondeo(inversionId){
   window.location.href = url.toString();
 }
 window.irABackOffice = irABackOffice;
-  window.irARegistroLlamado = irARegistroLlamado;
+  window.irARegistroAprobacion = irARegistroAprobacion;
   window.irARegistrodeFondeo = irARegistrodeFondeo;
   window.irARegistroDeCartaAprobacion = irARegistroDeCartaAprobacion;
   window.irARegistroDeCartaRecepcion = irARegistroDeCartaRecepcion;
