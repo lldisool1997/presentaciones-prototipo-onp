@@ -234,6 +234,14 @@ $('#btnPDF').on('click', () => {
     w.focus();
     w.print();
   });
+
+  // Activa Select2 en TODOS los <select>
+$('select').select2({
+  width: '100%',
+  placeholder: "Seleccione...",
+  allowClear: true
+});
+
 });
 
 
