@@ -625,3 +625,21 @@ $("#formApertura").on("submit", function(e){
   closeAperturaModal();
   toastr.success("✅ Cuenta aperturada y seleccionada.");
 });
+
+    function getAccionParam() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("accion");
+    }
+ $(document).ready(function () {
+
+    $('#ultima-carta').addClass('hidden');
+
+
+    const accion = getAccionParam();
+
+    if (accion) {
+      const fecha = new Date().toLocaleString();
+      $('#fechaCarta').text(fecha);
+      $('#ultima-carta').removeClass('hidden').show();
+    }
+  });
