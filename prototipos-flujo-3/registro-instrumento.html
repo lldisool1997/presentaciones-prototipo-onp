@@ -1639,94 +1639,8 @@
             "general": [
                 "Colocaciones e inversiones de fondos públicos",
                 "Subasta de Adjudicación",
+                "Colocación Subasta",
             ],
-            "tesoreria": {
-                // ===== INSTRUMENTOS ÚNICOS (solo nombre) =====
-                "Depósitos BCRP": [
-                    "Cierre de Cotización BCRP",
-                    "resultados de Subasta Adjudicada DPZ"
-                ],
-
-                "Certificado del BCRP": [
-                    "Subasta publicada por el BCRP",
-                    "Resultados de Subasta Adjudicada CD´s BCRP"
-                ],
-                "Depósito a plazo": ["Cierre de Cotización BCRP",
-                    "resultados de Subasta Adjudicada DPZ"],
-
-                "Instrumento sintético": ["Cierre de Cotización con Entidad Financiera"],//repitetido igual
-                "Instrumento estructurado": ["Cierre de Cotización con Entidad Financiera"],//repeito igual
-                "Cuenta remunerada": ["Correo con cierre de remuneración pactada con Entidad Financiera",
-                    "Carta de confirmación emitida por la Entidad Financiera"],//repetido =
-
-                "Papel comercial": ["Publicación de oferta Pública", "Póliza", "Confirmación de compra"]
-
-
-                , "Instrumento de corto plazo": ["Publicación de oferta Pública", "Póliza", "confirmación de compra"],
-
-
-                "Bono Soberano": ["Confirmación de compra", "Constancia de Confirmación de Venta de Entidad Financiera"],
-                "Bono Global": ["Confirmación de compra", "Constancia de Confirmación de Venta de Entidad Financiera"],
-                "Bono con Garantía de Gobierno": ["Publicación de oferta Pública", "Póliza", "Confirmación de compra"],
-
-                "Bono titulizado Gobierno": ["Publicación de oferta Pública", "Póliza", "Confirmación de compra"],
-                "Bono Corporativo": ["Publicación de oferta Pública", "Póliza", "Confirmación de compra"],
-
-                "Bono Subordinado": ["Publicación de oferta Pública", "Póliza", "Confirmación de compra"],
-                "Bono Hipotecario": ["Publicación de oferta Pública", "Póliza", "Confirmación de compra"],
-                "Otros Sistema Financiero": ["Publicación de oferta Pública", "Póliza", "Confirmación de compra"],
-                "Bonos de Arrendamiento Financiero": ["Publicación de oferta Pública", "Póliza", "Confirmación de compra"],
-                "Bono en Fideicomiso": ["Publicación de oferta Pública", "Póliza", "Confirmación de compra"],
-                "Bono Titulizados": ["Publicación de oferta Pública", "Póliza", "Confirmación de compra"],
-                "Instrumento de mediano plazo y largo plazo": ["Publicación de oferta Pública", "Póliza", "Confirmación de compra"],
-
-                "Mandato": ["Acta de comité de Inversiones", "Memorando dirigido a OAD."],
-
-                "Instrumentos Organismos Supranacionales": ["Acta de comité de Inversiones", "Memorando dirigido a OAD."],
-                "Inversiones en Notas y depósitos estructurados": ["Acta de comité de Inversiones", "Memorando dirigido a OAD"],
-                "Fondo mutuo": ["Acta de comité de Inversiones", "Memorando dirigido a OAD."],
-
-                "ETF": ["Acta de comité de Inversiones", "Memorando dirigido a OAD."],
-
-
-                "Inmobiliarias": [],
-
-                "Fondo alternativo privado": ["Acta de comité de Inversiones", "Carta de adjudicación de cuotas y/o monto comprometido", "Memorando dirigido a OAD"],
-                "Fondo alternativo público": ["Acta de comité de Inversiones", "Carta de adjudicación de cuotas y/o monto comprometido", "Memorando dirigido a OAD."],
-
-
-
-
-
-
-
-
-                // ===== INSTRUMENTOS REPETIDOS (ruta completa) =====
-
-                // Depósito a plazo LOCAL vs EXTRANJERO
-                "Renta Fija|Local|Fondos de Renta Fija|Fondo privado": [
-                    "Acta de comité de Inversiones", "Memorando dirigido a OAD"
-                ],
-                "Renta Fija|Extranjero|Fondos de Renta Fija|Fondo privado": [
-                    "Acta de comité de Inversiones", "Carta de adjudicación de cuotas y/o monto comprometido", "Memorando dirigido a OAD",
-                ],
-
-
-
-                "Renta Fija|Extranjero|Fondos de Renta Fija|ETF": [
-                    "Acta de comité de Inversiones", "Carta de adjudicación de cuotas y/o monto comprometido", "Memorando dirigido a OAD"
-                ],
-                "Renta Variable|Extranjero|Inversión Directa en instrumentos de capital|ETF": [
-                    "Acta de comité de Inversiones", "Memorando dirigido a OAD."
-                ],
-
-
-
-
-
-
-                // ... y así para todos los repetidos
-            }
         };
 
         let currentArea = 'general';
@@ -2929,7 +2843,7 @@
                                 ]
                             },
                               {
-                                "label": "Banco Apertura",
+                                "label": "Banco Apertura/Agente Colocador",
                                 "type": "select",
                                 "options": [
                                     "BANBIF",
@@ -2967,7 +2881,13 @@
                             },*/
 
 
-
+                            {
+                                "label": "ISIN",
+                                "type": "text",
+                                "attributes": {
+                                    "placeholder": "Ej: US0378331005"
+                                }
+                            },
                             {
                                 "label": "Clasificación de riesgos",
                                 "type": "select",
@@ -2982,7 +2902,7 @@
                                 ]
                             },
                                                         {
-                                "label": "Cat. Riesgo Merc.",
+                                "label": "Cat. Riesgo Merc. (Añadido)",
                                 "type": "select",
                                 "options": []
                             },
@@ -2991,10 +2911,10 @@
                                 "type": "select",
                                 "options": []
                             },
-                            /*{
+                            {
                                 "label": "Destino de emisión",
                                 "type": "text"
-                            },*/
+                            },
                            /* {
                                 "label": "ISIN",
                                 "type": "text",
@@ -3010,7 +2930,7 @@
                                 ]
                             },
                               {
-                                "label": "Tipo Tasa",
+                                "label": "Tipo Tasa (Añadido)",
                                 "type": "select",
                                 "options": [
                                     "Tasa Efectiva",
@@ -3059,7 +2979,7 @@
                             },
                             
                             {
-                                "label": "Fecha de compra/corte",
+                                "label": "Fecha de compra/corte (Añadido)",
                                 "type": "date"
                             },
                               {
@@ -3067,15 +2987,15 @@
                                 "type": "date"
                             },
                              {
-                                "label": "Fecha Pactada",
+                                "label": "Fecha Pactada (Añadido)",
                                 "type": "date"
                             },
                             {
-                                "label": "Fecha Custodia",
+                                "label": "Fecha Custodia (Añadido)",
                                 "type": "date"
                             },
                             {
-                                "label": "Fecha Negociación",
+                                "label": "Fecha Negociación (Añadido)",
                                 "type": "date"
                             },
                            /* {
