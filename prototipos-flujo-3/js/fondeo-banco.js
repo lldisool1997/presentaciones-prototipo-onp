@@ -570,10 +570,16 @@ $("#formLlamado").off('submit.main').on("submit.main", function(e){
     });
   }
 });
-             function getAreaParam() {
+  function getAreaParam() {
     const params = new URLSearchParams(window.location.search);
     return params.get("area");
   }
+
+  function getAccionParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("accion");
+  }
+
 
   const area = getAreaParam();
   if (area) {
@@ -697,4 +703,22 @@ $("#formApertura").on("submit", function(e){
 
   closeAperturaModal();
   toastr.success("✅ Cuenta aperturada y seleccionada.");
+
+  
+ function getAccionParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("accion");
+  }
+
+
+  const accion = getAccionParam();
+  if (accion) {
+    $('#datos-carta').show();
+  }
+
+
+
 });
+
+
+

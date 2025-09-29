@@ -1639,9 +1639,10 @@
             "general": [
                 "Colocaciones e inversiones de fondos públicos",
                 "Subasta de Adjudicación",
-                "Colocación Subasta",
+                 "Colocación Subasta",
             ],
         };
+
 
         let currentArea = 'general';
         let documentCounter = 0;
@@ -11631,6 +11632,8 @@
                 }
             }
 
+
+
             // Generar campos como antes
             documents.forEach((docName, index) => {
                 createDocumentField(docName, `${currentArea}_${index}`);
@@ -11644,6 +11647,7 @@
             filesUploaded = {};
 
             let documents = [];
+            let excels = [];
 
             if (currentArea === 'general') {
                 documents = documentRequirements[currentArea] || [];
@@ -11674,9 +11678,16 @@
                 }
             }
 
-            documents.forEach((docName, index) => {
-                createDocumentField(docName, `${currentArea}_${index}`);
+
+          documents.forEach((docName, index) => {
+                if (index === 2) {
+                    // el tercero (posición 2 porque empieza en 0) será Excel
+                    createExcelField(docName, `${currentArea}_${index}`);
+                } else {
+                    createDocumentField(docName, `${currentArea}_${index}`);
+                }
             });
+
         }
 
         function createDocumentField(docName, fieldId, isCustom = false) {
@@ -11719,6 +11730,47 @@
             filesUploaded[fieldId] = false;
         }
 
+        function createExcelField(docName, fieldId, isCustom = false) {
+    const container = document.getElementById('documentFields');
+
+    const fieldGroup = document.createElement('div');
+    fieldGroup.className = 'file-upload-group';
+    fieldGroup.id = `field_${fieldId}`;
+
+    const label = document.createElement('label');
+    label.textContent = docName;
+    if (isCustom) {
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.textContent = '✕';
+        removeBtn.onclick = () => removeCustomDocument(fieldId);
+        label.appendChild(removeBtn);
+    }
+
+    const uploadArea = document.createElement('div');
+    uploadArea.className = 'file-upload-area';
+    uploadArea.onclick = () => triggerFileInput(fieldId);
+    uploadArea.innerHTML = `
+        <div class="upload-text">📄 Seleccionar hoja de cálculo</div>
+        <div class="upload-text" style="font-size: 0.8rem; color: #999; margin-top: 0.25rem;">Excel (.xls, .xlsx)</div>
+    `;
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = fieldId;
+    fileInput.style.display = 'none';
+    fileInput.accept = ".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    fileInput.onchange = (e) => handleExcelUpload(e.target, docName);
+
+    fieldGroup.appendChild(label);
+    fieldGroup.appendChild(uploadArea);
+    fieldGroup.appendChild(fileInput);
+    container.appendChild(fieldGroup);
+
+    filesUploaded[fieldId] = false;
+}
+
+
         function triggerFileInput(inputId) {
             document.getElementById(inputId).click();
         }
@@ -11754,6 +11806,32 @@
 
             checkFormCompletion();
         }
+
+         // En registro-instrumento.html
+function handleExcelUpload(input, documentType) {
+  const fileArea = input.previousElementSibling;
+
+  if (input.files.length > 0) {
+    const file = input.files[0];
+    const fileName = file.name;
+
+    fileArea.innerHTML = `
+      <div class="file-name">📄 ${fileName}</div>
+      <div class="upload-text" style="font-size: 0.8rem; color: #28a745;">Archivo cargado correctamente</div>
+    `;
+    filesUploaded[input.id] = true;
+  } else {
+    // ⬇⬇ Cambia “PDF” por “Excel (.xls, .xlsx)”
+    fileArea.innerHTML = `
+      <div class="upload-text">📄 Seleccionar hoja de cálculo</div>
+      <div class="upload-text" style="font-size: 0.8rem; color: #999; margin-top: 0.25rem;">Excel (.xls, .xlsx)</div>
+    `;
+    filesUploaded[input.id] = false;
+  }
+
+  checkFormCompletion();
+}
+
 
         function addCustomDocument() {
             const input = document.getElementById('newDocumentName');
