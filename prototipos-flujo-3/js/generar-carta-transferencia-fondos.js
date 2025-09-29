@@ -49,44 +49,118 @@ document.addEventListener('DOMContentLoaded', () => {
   function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,a),ms); }; }
 
   // ===== Build doc =====
-  function buildInner() {
-    const showLogo     = document.getElementById('chkLogo').checked;
-    const logoHtml     = showLogo ? `<div style="text-align:right;margin-bottom:12px">
-                                      <img src="https://dummyimage.com/140x40/4f46e5/ffffff&text=LOGO" alt="Logo">
-                                    </div>` : '';
+ // ➜ Reemplaza tu buildInner() por esta versión
+function buildInner() {
+  const showLogo     = document.getElementById('chkLogo').checked;
+  const logoHtml     = showLogo ? `<div style="text-align:right;margin-bottom:12px">
+                                    <img src="https://dummyimage.com/140x40/4f46e5/ffffff&text=LOGO" alt="Logo">
+                                  </div>` : '';
 
-    const atencion   = $('#txtAtencion').val() || '';
-    const referencia = $('#txtReferencia').val() || '';
-    const asunto     = $('#txtAsunto').val() || '';
-    const firma1     = $('#txtFirma1').val() || '';
-    const firma2     = $('#txtFirma2').val() || '';
-    const elaborado  = $('#txtElaborado').val() || '';
-    const autorizado = $('#txtAutorizado').val() || '';
-    const proveedor  = $('#txtProveedor').val() || '';
-    const numDigital = $('#txtNumDigital').val() || '';
+  // Cabecera (leemos lo que ya tienes en los selects2)
+  const proveedor  = ($('#txtProveedor').val() || '').toString().trim(); // úsalo como BANCO
+  const bancoLine  = proveedor ? proveedor.toUpperCase() : 'BANCO INTERAMERICANO DE FINANZAS';
 
-    const body   = tinymce.get('editorBody') ? tinymce.get('editorBody').getContent() : '';
-    const footer = (tinymce.get('editorFooter') ? tinymce.get('editorFooter').getContent() : '')
-      .replace('{{NUM_DIGITAL}}', numDigital)
-      .replace('{{ELABORADO}}',  elaborado);
+  const atencion   = ($('#txtAtencion').val()   || 'SR. CÉSAR AUGUSTO REÁTEGUI GARCÍA').toString().trim();
+  const referencia = ($('#txtReferencia').val() || 'SUBGERENTE DE BANCA INSTITUCIONAL').toString().trim();
+  const firma1     = ($('#txtFirma1').val()     || 'PEDRO LEON NIETO').toString().trim();
+  const firma2     = ($('#txtFirma2').val()     || 'CARLOS GARAY SANCHEZ').toString().trim();
+  const rep1 = parseRepVal('#txtAutorizado');
+  const rep2 = parseRepVal('#txtAutorizado2');
 
-    return `
-      ${logoHtml}
-      <div style="font-size:12px;color:#334155;margin-bottom:10px">
-        <div><strong>Atención:</strong> ${escapeHtml(atencion)}</div>
-        <div><strong>Carta referencia:</strong> ${escapeHtml(referencia)}</div>
-        <div><strong>Asunto:</strong> ${escapeHtml(asunto)}</div>
-        <div><strong>Firmas:</strong> ${escapeHtml(firma1)} &nbsp;/&nbsp; ${escapeHtml(firma2)}</div>
-        <div><strong>Elaborado:</strong> ${escapeHtml(elaborado)} &nbsp;&nbsp; <strong>Autorizado:</strong> ${escapeHtml(autorizado)}</div>
-        ${proveedor ? `<div><strong>Proveedor:</strong> ${escapeHtml(proveedor)}</div>` : ''}
+  // Contenidos de editores (cuerpo/pie)
+let body = tinymce.get('editorBody') ? tinymce.get('editorBody').getContent() : '';
+
+// Reemplazos en plantilla (si tu body tiene estos marcadores)
+body = body
+  .replace('{{REPRESENTANTE_1}}', rep1.nombre)
+  .replace('{{REPRESENTANTE_2}}', rep2.nombre)
+  .replace('{{DOC_REPRESENTANTE_1}}', rep1.dni || '')
+  .replace('{{DOC_REPRESENTANTE_2}}', rep2.dni || '');
+
+  const numDigital = $('#txtNumDigital').val() || '';
+  const elaborado  = $('#txtElaborado').val()  || '';
+  const footer = (tinymce.get('editorFooter') ? tinymce.get('editorFooter').getContent() : '')
+    .replace('{{NUM_DIGITAL}}', numDigital)
+    .replace('{{ELABORADO}}',  elaborado);
+
+  // Fecha estilo: "Lima, 27 de Febrero de 2025"
+  const fechaLima = formatearFechaLarga(new Date());
+
+  // Bloque firmas (como en la imagen)
+  const firmasHtml = `
+    <br><br>
+    <table style="width:100%; margin-top:20px">
+      <tr>
+        <td style="width:50%; text-align:center; vertical-align:top; padding-right:10px">
+          <div style="margin-top:28px; font-weight:600; text-transform:uppercase">${escapeHtml(firma1)}</div>
+          <div style="font-size:12px; margin-top:4px">DIRECTOR/A GENERAL DE LA OFICINA DE EJECUTIVA/O DE INVERSIONES FINANCIERAS</div>
+          <div style="font-size:12px; margin-top:2px">Oficina de Normalización Previsional</div>
+        </td>
+        <td style="width:50%; text-align:center; vertical-align:top; padding-left:10px">
+          <div style="margin-top:28px; font-weight:600; text-transform:uppercase">${escapeHtml(firma2)}</div>
+          <div style="font-size:12px; margin-top:4px">ADMINISTRACIÓN</div>
+          <div style="font-size:12px; margin-top:2px">Oficina de Normalización Previsional</div>
+        </td>
+      </tr>
+    </table>
+  `;
+
+  // Render final (replica el orden del pantallazo)
+  return `
+    ${logoHtml}
+    <div class="carta" style="font-size:12px; color:#0f172a">
+      <div style="margin-bottom:12px">${escapeHtml(fechaLima)}</div>
+
+      <div style="font-weight:700; margin-bottom:4px">SEÑORES</div>
+      <div style="font-weight:700; text-transform:uppercase">${escapeHtml(bancoLine)}</div>
+      <div style="margin:6px 0 16px 0">Ciudad.-</div>
+
+      <div style="margin-bottom:10px">
+        <div><strong>Atención:</strong>&nbsp;&nbsp;${escapeHtml(atencion)}</div>
+        <div style="margin-left:68px">${escapeHtml(referencia)}</div>
       </div>
-      <hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0" />
-      ${body}
-      <div class="doc-footer">${footer}</div>
-    `;
-  }
 
-  function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m])); }
+      ${body}
+
+      <div style="margin-top:24px">Agradecidos por la atención, quedamos</div>
+      <div style="margin-top:16px">Atentamente,</div>
+
+      ${firmasHtml}
+
+      <div class="doc-footer" style="margin-top:28px;border-top:1px solid #e5e7eb;padding-top:12px;color:#475569;font-size:12px">
+        ${footer}
+      </div>
+    </div>
+  `;
+}
+
+// ➜ Pega este helper debajo (o arriba) del buildInner:
+function formatearFechaLarga(date) {
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const d = date.getDate();
+  const m = meses[date.getMonth()];
+  const y = date.getFullYear();
+  // Capitaliza el mes como en el pantallazo (Primera letra en mayúscula)
+  const mesCap = m.charAt(0).toUpperCase() + m.slice(1);
+  return `Lima, ${d} de ${mesCap} de ${y}`;
+}
+
+function parseRepVal(sel) {
+  const raw = ($(sel).val() || '').toString().trim();   // ej: "70429350 - ALCALÁ BENITES, JORGE"
+  const dniMatch = raw.match(/\b\d{8,}\b/);             // primer bloque de 8+ dígitos
+  const dni = dniMatch ? dniMatch[0] : '';
+  let nombre = raw;
+
+  if (dni) {
+    // quita el DNI y separadores iniciales " - ", " – ", " — "
+    nombre = raw.replace(dni, '').replace(/^\s*[-–—]\s*/, '').trim();
+  }
+  return { nombre, dni };
+}
+
+
+function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m])); }
+
 
   // ===== Preview modal =====
   function refreshPreview(){ document.getElementById('preview').innerHTML = buildInner(); }
