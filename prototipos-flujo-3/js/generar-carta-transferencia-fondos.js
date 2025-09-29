@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const bodyInicial = `
     <p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales</strong> (FCR),
     con RUC <strong>{{RUC_FONDO}}</strong>, a fin de solicitarle efectúe la(s) siguiente(s) operación(es):</p>
-
+    <br>
     <p><strong>RECIBIR VÍA BCRP DE:</strong> SCOTIABANK PERÚ SAA / S/ 150,000,000.00</p>
 
     <p><strong>APERTURA/COMPRA DE:</strong><br/>
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
        INSTRUMENTO: DEPÓSITO A PLAZO<br/>
        MONTO: S/ 150,000,000.00 &nbsp;&nbsp;&nbsp;&nbsp; <strong>TASA:</strong> 4.59% T.E.A.<br/>
        PLAZO: 361 días &nbsp;&nbsp;&nbsp;&nbsp; <strong>VENCIMIENTO:</strong> 23/02/2026</p>
-
+      <br>
     <p>Asimismo, autorizamos a {{REPRESENTANTE_1}} (DNI {{DOC_REPRESENTANTE_1}}) y/o
        {{REPRESENTANTE_2}} (DNI {{DOC_REPRESENTANTE_2}}) a recibir la documentación respectiva.</p>
 
@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
  // ➜ Reemplaza tu buildInner() por esta versión
 function buildInner() {
   const showLogo     = document.getElementById('chkLogo').checked;
-  const logoHtml     = showLogo ? `<div style="text-align:right;margin-bottom:12px">
-                                    <img src="https://dummyimage.com/140x40/4f46e5/ffffff&text=LOGO" alt="Logo">
+  const logoHtml     = showLogo ? `<div style="text-align:right;margin-bottom:12px" class="w-[150px]">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFvOeuVDPtFPk5JOW4qE0ViixY48jx65AN6A&s" alt="Logo">
                                   </div>` : '';
 
   // Cabecera (leemos lo que ya tienes en los selects2)
@@ -75,7 +75,8 @@ body = body
   .replace('{{REPRESENTANTE_1}}', rep1.nombre)
   .replace('{{REPRESENTANTE_2}}', rep2.nombre)
   .replace('{{DOC_REPRESENTANTE_1}}', rep1.dni || '')
-  .replace('{{DOC_REPRESENTANTE_2}}', rep2.dni || '');
+  .replace('{{DOC_REPRESENTANTE_2}}', rep2.dni || '')
+  .replace('{{RUC_FONDO}}', '20421413216');
 
   const numDigital = $('#txtNumDigital').val() || '';
   const elaborado  = $('#txtElaborado').val()  || '';
@@ -117,11 +118,11 @@ body = body
 
       <div style="margin-bottom:10px">
         <div><strong>Atención:</strong>&nbsp;&nbsp;${escapeHtml(atencion)}</div>
-        <div style="margin-left:68px">${escapeHtml(referencia)}</div>
+        <div style="margin-left:60px">${escapeHtml(referencia)}</div>
       </div>
+       ${body}
 
-      ${body}
-
+      
       <div style="margin-top:24px">Agradecidos por la atención, quedamos</div>
       <div style="margin-top:16px">Atentamente,</div>
 
@@ -174,7 +175,11 @@ function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, m=>({ '&':'&amp;','<':
   // Botones
   $('#btnAplicar').on('click', refreshPreview);
   $('#btnPreview').on('click', openPreview);
-  $('#btnGenerar').on('click', () => { refreshPreview(); toast('Carta generada (demo).'); });
+  $('#btnGenerar').on('click', () => { refreshPreview(); generarCarta(); toast('Carta generada (demo).'); });
+
+  function generarCarta(){
+    $('#txtNumDigital').val("615004");
+  }
 
   $('#btnWord').on('click', () => {
     const html = buildFullHTML();
@@ -182,17 +187,19 @@ function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, m=>({ '&':'&amp;','<':
     window.saveAs(blob, 'carta.docx');
   });
 
-  $('#btnPDF').on('click', () => {
-    const container = document.createElement('div');
-    container.innerHTML = `<div class="a4">${buildInner()}</div>`;
-    const idCarta = $('#txtNumDigital').val()
-    html2pdf().from(container).set({
-      margin: 10,
-      filename: 'carta-'+idCarta+'.pdf',
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    }).save();
-  });
+$('#btnPDF').on('click', () => {
+  const container = document.createElement('div');
+  container.innerHTML = `<div class="a4 a4--pdf">${buildInner()}</div>`;
+
+  html2pdf().from(container).set({
+    margin: 0,                                    // sin margen extra del PDF
+    filename: 'carta.pdf',
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css'] }     // intenta no partir
+  }).save();
+});
+
 
   // Modal close handlers
   $('#btnCloseModal, #btnCloseModal2, #modalBackdrop').on('click', () => toggleModal(false));

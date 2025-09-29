@@ -277,19 +277,27 @@
 <!-- Modal Aperturar Cuenta -->
 <div id="aperturaModal"
      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-2xl shadow-panel w-[880px] max-w-[92vw] p-5">
-    <h2 class="text-lg font-semibold mb-3">Aperturar nueva cuenta destino</h2>
-    <form id="formApertura" class="grid grid-cols-1 gap-3">
+  <div class="bg-white rounded-2xl shadow-panel w-[880px] max-w-[92vw]">
+    
+    <!-- Header azul -->
+    <div class="bg-[#005085] text-white px-5 py-3 rounded-t-2xl">
+      <h2 class="text-lg font-semibold">Aperturar nueva cuenta destino</h2>
+    </div>
+
+    <!-- Contenido -->
+    <form id="formApertura" class="grid grid-cols-1 gap-3 p-5">
       <div class="grid md:grid-cols-2 gap-3">
         <div>
           <label class="block text-sm font-medium mb-1">Banco</label>
-          <input id="ap_banco_txt" class="w-full rounded-xl border-2 border-gray-300 p-2.5"
+          <input id="ap_banco_txt"
+                 class="w-full rounded-xl border-2 border-gray-300 p-2.5"
                  disabled>
           <input type="hidden" id="ap_banco_id">
         </div>
         <div>
           <label class="block text-sm font-medium mb-1">Moneda</label>
-          <select id="ap_moneda" class="w-full rounded-xl border-2 border-gray-300 p-2.5">
+          <select id="ap_moneda"
+                  class="w-full rounded-xl border-2 border-gray-300 p-2.5">
             <option value="PEN" selected disabled>PEN</option>
             <option value="USD" disabled>USD</option>
           </select>
@@ -299,7 +307,8 @@
       <div class="grid md:grid-cols-2 gap-3">
         <div>
           <label class="block text-sm font-medium mb-1">Tipo de cuenta</label>
-          <select id="ap_tipo" class="w-full rounded-xl border-2 border-gray-300 p-2.5">
+          <select id="ap_tipo"
+                  class="w-full rounded-xl border-2 border-gray-300 p-2.5">
             <option value="Corriente">Corriente</option>
             <option value="Ahorros">Ahorros</option>
             <option value="Custodia">Custodia</option>
@@ -307,30 +316,36 @@
         </div>
         <div>
           <label class="block text-sm font-medium mb-1">Titular</label>
-          <select id="ap_titular" class="w-full rounded-xl border-2 border-gray-300 p-2.5">
-            <option value="Fondo Consolidado de Reservas Previsionales – FCR"> Fondo Consolidado de Reservas Previsionales – FCR</option>
+          <select id="ap_titular"
+                  class="w-full rounded-xl border-2 border-gray-300 p-2.5">
+            <option value="Fondo Consolidado de Reservas Previsionales – FCR">
+              Fondo Consolidado de Reservas Previsionales – FCR
+            </option>
           </select>
         </div>
       </div>
 
       <div class="grid md:grid-cols-2 gap-3">
-              <div>
-        <label class="block text-sm font-medium mb-1">Número de cuenta</label>
-        <input id="ap_numero" class="w-full rounded-xl border-2 border-gray-300 p-2.5"
-               placeholder="Ej. 193-1990153-0-54" required>
-      </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Número de cuenta</label>
+          <input id="ap_numero"
+                 class="w-full rounded-xl border-2 border-gray-300 p-2.5"
+                 placeholder="Ej. 193-1990153-0-54" required>
+        </div>
 
-      <div>
-        <label class="block text-sm font-medium mb-1">CCI (opcional)</label>
-        <input id="ap_cci" class="w-full rounded-xl border-2 border-gray-300 p-2.5"
-               placeholder="Ej. 002-...">
-      </div>
-
+        <div>
+          <label class="block text-sm font-medium mb-1">CCI (opcional)</label>
+          <input id="ap_cci"
+                 class="w-full rounded-xl border-2 border-gray-300 p-2.5"
+                 placeholder="Ej. 002-...">
+        </div>
       </div>
 
       <div class="flex justify-end gap-2 mt-2">
         <button type="button" id="ap_btn_cancel"
-                class="px-3 py-2 rounded-xl border border-gray-300">Cancelar</button>
+                class="px-3 py-2 rounded-xl border border-gray-300">
+          Cancelar
+        </button>
         <button type="submit" id="ap_btn_guardar"
                 class="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold">
           Crear cuenta
@@ -339,6 +354,7 @@
     </form>
   </div>
 </div>
+
 
 </body>
 </html>
