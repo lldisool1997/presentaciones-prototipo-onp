@@ -32,7 +32,7 @@ function markInvalid($el){ $el.addClass("ring-2 ring-red-400 border-red-400"); }
 function clearInvalid($el){ $el.removeClass("ring-2 ring-red-400 border-red-400"); }
 
 function validateFile(f){
-  if(!f) return { ok:false, msg:"Adjunta el documento de tranferencia (PDF/JPG/PNG)." };
+  if(!f) return { ok:false, msg:"Adjunta el documento de la transferencia (PDF/JPG/PNG)." };
   const okExt = /(\.pdf|\.png|\.jpg|\.jpeg)$/i.test(f.name);
   if(!okExt) return { ok:false, msg:"Formato no permitido. Solo PDF, JPG o PNG." };
   if(f.size > 10*1024*1024) return { ok:false, msg:"Archivo supera 10MB. Adjunta uno más liviano." };
