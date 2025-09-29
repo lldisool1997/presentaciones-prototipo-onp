@@ -536,3 +536,111 @@ $("#review").html(`
   if (area) {
     document.getElementById("area-badge").textContent = "Perfil: " + area;
   }
+
+
+  // Utilidad: recargar cuentas por banco (con opción "Nueva...")
+function reloadCuentasDestino(bancoId) {
+  const $sel = $("#cuenta_destino");
+  const cuentasFiltradas = CUENTAS_BANCARIAS.filter(c => c.banco === bancoId);
+
+  // Agrega opción especial para aperturar desde el mismo select
+  const data = cuentasFiltradas.map(c => ({ id: c.id, text: c.text }));
+  data.push({ id: "__NEW__", text: "➕ Aperturar nueva cuenta…" });
+
+  $sel.empty().select2({
+    data,
+    placeholder: "Selecciona una cuenta...",
+    allowClear: true,
+    width: "100%"
+  });
+
+  // Mostrar hint si no hay cuentas reales
+  const hasReal = cuentasFiltradas.length > 0;
+  $("#hintDestino").toggleClass("hidden", hasReal);
+}
+
+// Abrir/cerrar modal
+function openAperturaModal(bancoId, bancoText) {
+  $("#ap_banco_id").val(bancoId);
+  $("#ap_banco_txt").val(bancoText || "");
+  $("#aperturaModal").removeClass("hidden").addClass("flex");
+}
+function closeAperturaModal() {
+  $("#aperturaModal").addClass("hidden").removeClass("flex");
+  $("#formApertura")[0].reset();
+}
+
+// Generar ID simple para la nueva cuenta
+function genCuentaId(bancoId, moneda) {
+  const suf = Math.random().toString(36).slice(2, 7).toUpperCase();
+  return `${bancoId}-${moneda}-${suf}`;
+}
+
+// === En tu $(function(){ ... }) ===
+// Reemplaza el onChange de banco_destino por:
+$("#banco_destino").on("change", function () {
+  const bancoSeleccionado = $(this).val();
+  reloadCuentasDestino(bancoSeleccionado);
+});
+
+// Detectar selección de "__NEW__" en cuenta_destino
+$("#cuenta_destino").on("select2:select", function (e) {
+  const id = e.params.data?.id;
+  if (id === "__NEW__") {
+    const bancoId = $("#banco_destino").val();
+    const bancoText = $("#banco_destino").select2('data')[0]?.text || "";
+    // limpiar selección para que no quede "__NEW__"
+    $("#cuenta_destino").val(null).trigger("change");
+    openAperturaModal(bancoId, bancoText);
+  }
+});
+
+// Botón manual "Aperturar cuenta"
+$("#btnNuevaCuentaDestino").on("click", function(){
+  const bancoId = $("#banco_destino").val();
+  const bancoText = $("#banco_destino").select2('data')[0]?.text || "";
+  if (!bancoId) {
+    toastr.warning("Primero selecciona el banco destino.");
+    $("#banco_destino").select2('open');
+    return;
+  }
+  openAperturaModal(bancoId, bancoText);
+});
+
+// Modal: cancelar
+$("#ap_btn_cancel").on("click", closeAperturaModal);
+
+// Modal: guardar nueva cuenta
+$("#formApertura").on("submit", function(e){
+  e.preventDefault();
+  const bancoId  = $("#ap_banco_id").val();
+  const bancoTxt = $("#ap_banco_txt").val();
+  const moneda   = $("#ap_moneda").val();
+  const tipo     = $("#ap_tipo").val();
+  const titular  = ($("#ap_titular").val() || "").trim();
+  const numero   = ($("#ap_numero").val()  || "").trim();
+  const cci      = ($("#ap_cci").val()     || "").trim();
+
+  if (!numero) { toastr.warning("Indica el número de cuenta."); return; }
+
+  // Construye etiqueta visible (ajústala a tu estándar)
+  const etiqueta = cci
+    ? `${numero} · ${moneda} · ${tipo} · ${titular} · CCI ${cci}`
+    : `${numero} · ${moneda} · ${tipo} · ${titular}`;
+
+  const newId = genCuentaId(bancoId, moneda);
+
+  // Inserta en el mock/array base
+  CUENTAS_BANCARIAS.push({
+    id: newId,
+    banco: bancoId,
+    text: etiqueta
+  });
+
+  // Recarga select y selecciona la nueva cuenta
+  reloadCuentasDestino(bancoId);
+  $("#cuenta_destino").val(newId).trigger("change");
+
+  closeAperturaModal();
+  toastr.success("✅ Cuenta aperturada y seleccionada.");
+});

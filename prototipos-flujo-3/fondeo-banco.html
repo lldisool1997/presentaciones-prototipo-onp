@@ -185,18 +185,30 @@
             <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde donde se realizará el aporte.</p>
           </div>
         </div>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-semibold mb-1">Banco cuenta destino</label>
-            <select id="banco_destino" style="width:100%"></select>
-            <p class="text-xs text-gray-500 mt-1">Selecciona el banco desde donde se realizará el aporte.</p>
-          </div>
-          <div>
-            <label class="block text-sm font-semibold mb-1">Nro cuenta destino</label>
-            <select id="cuenta_destino" style="width:100%"></select>
-            <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde donde se realizará el aporte.</p>
-          </div>
-        </div>
+<div class="grid md:grid-cols-2 gap-4">
+  <div>
+    <label class="block text-sm font-semibold mb-1">Banco cuenta destino</label>
+    <select id="banco_destino" style="width:100%"></select>
+    <p class="text-xs text-gray-500 mt-1">Selecciona el banco destino del aporte.</p>
+  </div>
+
+  <div>
+    <label class="block text-sm font-semibold mb-1">Nro cuenta destino</label>
+    <div class="flex gap-2">
+      <select id="cuenta_destino" style="width:100%"></select>
+      <button id="btnNuevaCuentaDestino" type="button"
+              class="whitespace-nowrap text-sm px-3 py-2 rounded-lg border hover:bg-gray-50">
+        ➕ Aperturar
+      </button>
+    </div>
+    <p id="hintDestino" class="text-xs text-amber-600 mt-1 hidden">
+      No existen cuentas para este banco. Puedes aperturar una.
+    </p>
+  </div>
+</div>
+
+
+
         <div class="section-header">3. Sustento documentario</div>
         <div class="p-5 rounded-md bg-gray-100">
                   <div class="text-center justify-center">
@@ -262,6 +274,71 @@
     </div>
   </div>
 
+<!-- Modal Aperturar Cuenta -->
+<div id="aperturaModal"
+     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-2xl shadow-panel w-[880px] max-w-[92vw] p-5">
+    <h2 class="text-lg font-semibold mb-3">Aperturar nueva cuenta destino</h2>
+    <form id="formApertura" class="grid grid-cols-1 gap-3">
+      <div class="grid md:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium mb-1">Banco</label>
+          <input id="ap_banco_txt" class="w-full rounded-xl border-2 border-gray-300 p-2.5"
+                 disabled>
+          <input type="hidden" id="ap_banco_id">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Moneda</label>
+          <select id="ap_moneda" class="w-full rounded-xl border-2 border-gray-300 p-2.5">
+            <option value="PEN" selected>PEN</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium mb-1">Tipo de cuenta</label>
+          <select id="ap_tipo" class="w-full rounded-xl border-2 border-gray-300 p-2.5">
+            <option value="Corriente">Corriente</option>
+            <option value="Ahorros">Ahorros</option>
+            <option value="Custodia">Custodia</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Titular</label>
+          <select id="ap_titular" class="w-full rounded-xl border-2 border-gray-300 p-2.5">
+            <option value="Fondo Consolidado de Reservas Previsionales – FCR"> Fondo Consolidado de Reservas Previsionales – FCR</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-3">
+              <div>
+        <label class="block text-sm font-medium mb-1">Número de cuenta</label>
+        <input id="ap_numero" class="w-full rounded-xl border-2 border-gray-300 p-2.5"
+               placeholder="Ej. 193-1990153-0-54" required>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">CCI (opcional)</label>
+        <input id="ap_cci" class="w-full rounded-xl border-2 border-gray-300 p-2.5"
+               placeholder="Ej. 002-...">
+      </div>
+
+      </div>
+
+      <div class="flex justify-end gap-2 mt-2">
+        <button type="button" id="ap_btn_cancel"
+                class="px-3 py-2 rounded-xl border border-gray-300">Cancelar</button>
+        <button type="submit" id="ap_btn_guardar"
+                class="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold">
+          Crear cuenta
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
 </body>
 </html>
