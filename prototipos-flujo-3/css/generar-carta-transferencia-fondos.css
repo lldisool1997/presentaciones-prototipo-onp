@@ -174,3 +174,13 @@
 .select2-container--default .select2-selection--single{
   padding-left: 10px;
 }
+
+
+/* solo para la versión PDF */
+.a4.a4--pdf { margin:0; padding:10mm 16mm 12mm 16mm; box-sizing:border-box; }
+.a4.a4--pdf > *:first-child { margin-top: 0 !important; }
+
+/* Dentro de la carta (contenido TinyMCE y bloques internos) */
+.a4.a4--pdf .carta { margin-top: 0 !important; }
+.a4.a4--pdf .carta > *:first-child { margin-top: 0 !important; }
+.a4.a4--pdf .mce-content-body p { margin-top: 0 !important; }

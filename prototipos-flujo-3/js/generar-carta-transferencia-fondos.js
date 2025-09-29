@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
        {{REPRESENTANTE_2}} (DNI {{DOC_REPRESENTANTE_2}}) a recibir la documentación respectiva.</p>
 
     <p>Agradecidos por la atención, quedamos</p>
-    <p>Atentamente,</p><br/><br/>
+    <p>Atentamente,</p>
     <p><strong>Back Office Tesorería — FCR</strong></p>
   `.trim();
 
@@ -29,6 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== TinyMCE =====
   initEditor('#editorBody', 520, bodyInicial, '14px');
   initEditor('#editorFooter', 160, footerInicial, '12px');
+
+
+
 
   function initEditor(selector, height, content, size) {
     tinymce.init({
@@ -52,8 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
  // ➜ Reemplaza tu buildInner() por esta versión
 function buildInner() {
   const showLogo     = document.getElementById('chkLogo').checked;
-  const logoHtml     = showLogo ? `<div style="text-align:right;margin-bottom:12px" class="w-[150px]">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFvOeuVDPtFPk5JOW4qE0ViixY48jx65AN6A&s" alt="Logo">
+  const logoHtml     = showLogo ? `<div style="text-align:left;margin-bottom:0px;">
+                                    <img style="width: 150px !important" src="img/logo-fcr.png" alt="Logo">
                                   </div>` : '';
 
   // Cabecera (leemos lo que ya tienes en los selects2)
@@ -84,27 +87,62 @@ body = body
     .replace('{{NUM_DIGITAL}}', numDigital)
     .replace('{{ELABORADO}}',  elaborado);
 
+    // Directivos (selects existentes)
+const dir1Nombre = ($('#txtFirma1').val() || '').toString().trim();
+const dir2Nombre = ($('#txtFirma2').val() || '').toString().trim();
+
+    // Operadores (usamos lo que YA tienes: Elaborado + Autorizado1 + Autorizado2)
+const op1 = parseRepVal('#txtElaborado');   // { nombre, dni } – ya tienes parseRepVal
+const op2 = parseRepVal('#txtAutorizado');
+const op3 = parseRepVal('#txtAutorizado2');
+
+// URLs de firma (BD→FIRMAS_URLS o catálogo→fallback)
+const dir1Url = dir1Nombre ? getSignatureUrlByName(dir1Nombre) : null;
+const dir2Url = dir2Nombre ? getSignatureUrlByName(dir2Nombre) : null;
+const op1Url  = op1.nombre ? getSignatureUrlByName(op1.nombre) : null;
+const op2Url  = op2.nombre ? getSignatureUrlByName(op2.nombre) : null;
+const op3Url  = op3.nombre ? getSignatureUrlByName(op3.nombre) : null;
+
   // Fecha estilo: "Lima, 27 de Febrero de 2025"
   const fechaLima = formatearFechaLarga(new Date());
 
+  // 👇 NUEVO: encabezado sin saltos
+const encabezadoHtml = `
+  <div style="page-break-inside:avoid; page-break-after:avoid; margin-bottom:12px">
+    <div style="font-weight:700; margin:0">SEÑORES</div>
+    <div style="font-weight:700; text-transform:uppercase; margin:2px 0 4px 0">${escapeHtml(bancoLine)}</div>
+    <div style="margin:0">Ciudad.-</div>
+  </div>
+`;
+
   // Bloque firmas (como en la imagen)
-  const firmasHtml = `
-    <br><br>
-    <table style="width:100%; margin-top:20px">
-      <tr>
-        <td style="width:50%; text-align:center; vertical-align:top; padding-right:10px">
-          <div style="margin-top:28px; font-weight:600; text-transform:uppercase">${escapeHtml(firma1)}</div>
-          <div style="font-size:12px; margin-top:4px">DIRECTOR/A GENERAL DE LA OFICINA DE EJECUTIVA/O DE INVERSIONES FINANCIERAS</div>
-          <div style="font-size:12px; margin-top:2px">Oficina de Normalización Previsional</div>
-        </td>
-        <td style="width:50%; text-align:center; vertical-align:top; padding-left:10px">
-          <div style="margin-top:28px; font-weight:600; text-transform:uppercase">${escapeHtml(firma2)}</div>
-          <div style="font-size:12px; margin-top:4px">ADMINISTRACIÓN</div>
-          <div style="font-size:12px; margin-top:2px">Oficina de Normalización Previsional</div>
-        </td>
-      </tr>
-    </table>
-  `;
+const firmasHtml = `
+  <br><br>
+
+   <div style="width:100%; font-size:0;">
+    ${firmaCell(dir1Url, dir1Nombre || firma1,
+      'DIRECTOR/A GENERAL DE LA OFICINA DE EJECUTIVA/O DE INVERSIONES FINANCIERAS',
+      'Oficina de Normalización Previsional',
+      '50%')}
+    ${firmaCell(dir2Url, dir2Nombre || firma2,
+      'ADMINISTRACIÓN',
+      'Oficina de Normalización Previsional',
+      '50%')}
+  </div>
+
+  <!-- Operadores (3 columnas, solo nombre + firma) -->
+  ${(op1.nombre || op2.nombre || op3.nombre) ? `
+  <table style="width:100%; margin-top:14px">
+    <tr>
+      ${firmaCellOperador(op1Url, op1.nombre || '')}
+      ${firmaCellOperador(op2Url, op2.nombre || '')}
+      ${firmaCellOperador(op3Url, op3.nombre || '')}
+    </tr>
+  </table>
+  ` : ''}
+`;
+
+
 
   // Render final (replica el orden del pantallazo)
   return `
@@ -112,9 +150,7 @@ body = body
     <div class="carta" style="font-size:12px; color:#0f172a">
       <div style="margin-bottom:12px">${escapeHtml(fechaLima)}</div>
 
-      <div style="font-weight:700; margin-bottom:4px">SEÑORES</div>
-      <div style="font-weight:700; text-transform:uppercase">${escapeHtml(bancoLine)}</div>
-      <div style="margin:6px 0 16px 0">Ciudad.-</div>
+      ${encabezadoHtml}
 
       <div style="margin-bottom:10px">
         <div><strong>Atención:</strong>&nbsp;&nbsp;${escapeHtml(atencion)}</div>
@@ -160,9 +196,6 @@ function parseRepVal(sel) {
 }
 
 
-function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m])); }
-
-
   // ===== Preview modal =====
   function refreshPreview(){ document.getElementById('preview').innerHTML = buildInner(); }
   function openPreview(){ refreshPreview(); toggleModal(true); }
@@ -187,18 +220,57 @@ function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, m=>({ '&':'&amp;','<':
     window.saveAs(blob, 'carta.docx');
   });
 
-$('#btnPDF').on('click', () => {
-  const container = document.createElement('div');
-  container.innerHTML = `<div class="a4 a4--pdf">${buildInner()}</div>`;
+// Util: esperar a que carguen las imágenes dentro de un nodo
+function waitImagesLoaded(root) {
+  const imgs = Array.from(root.querySelectorAll('img'));
+  if (!imgs.length) return Promise.resolve();
+  return Promise.all(imgs.map(img => new Promise(res => {
+    // normaliza src relativo a absoluto (mismo origen)
+    const src = img.getAttribute('src') || '';
+    if (src && !/^https?:|^data:/.test(src)) {
+      img.setAttribute('src', new URL(src, location.href).href);
+    }
+    if (img.complete) return res();
+    img.addEventListener('load', res, { once: true });
+    img.addEventListener('error', res, { once: true });
+  })));
+}
 
-  html2pdf().from(container).set({
-    margin: 0,                                    // sin margen extra del PDF
-    filename: 'carta.pdf',
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all', 'css'] }     // intenta no partir
-  }).save();
+$('#btnPDF').off('click').on('click', async () => {
+  try {
+    // 1) crea contenedor oculto en el DOM (mejor que fuera del DOM)
+    const host = document.createElement('div');
+    host.style.position = 'fixed';
+    host.style.left = '-99999px';
+    host.style.top = '0';
+    host.innerHTML = `<div class="a4 a4--pdf">${buildInner()}</div>`;
+    document.body.appendChild(host);
+
+    // 2) espera imágenes
+    await waitImagesLoaded(host);
+
+    // 3) genera y fuerza descarga (ruta robusta)
+    await html2pdf()
+      .set({
+        margin: 0,
+        filename: 'carta.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: false, allowTaint: true, imageTimeout: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
+      })
+      .from(host.firstElementChild)
+      .toPdf()
+      .get('pdf')
+      .then(pdf => pdf.save('carta.pdf'));
+
+    // 4) limpia
+    host.remove();
+  } catch (err) {
+    console.error('Error generando PDF:', err);
+  }
 });
+
 
 
   // Modal close handlers
@@ -254,3 +326,78 @@ $('select').select2({
   if (area) {
     document.getElementById("area-badge").textContent = "Perfil: " + area;
   }
+
+  // ===== Firmas por nombre (puedes reemplazar por las URL reales de tu BD)
+const SIGNATURE_CATALOG = {
+  'leon nieto, pedro hun': './img/firma.webp',
+  'garay sánchez, carlo':  './img/firma.webp',
+  'bedregal julca, elizabeth': './img/firma.webp',
+  'alcalá benites, jorge': './img/firma.webp',
+  // agrega los que uses
+};
+window.FIRMAS_URLS = window.FIRMAS_URLS || {}; // <- si tu backend inyecta { 'nombre': 'https://...' }
+
+const DEFAULT_SIGNATURE_URL = './img/firma.webp';
+
+function normName(s){
+  return (s||'')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // quita tildes
+    .replace(/\s+/g,' ')
+    .trim();
+}
+function getSignatureUrlByName(nombre){
+  const k = normName(nombre);
+  return window.FIRMAS_URLS[k] || SIGNATURE_CATALOG[k] || DEFAULT_SIGNATURE_URL;
+}
+
+// Celda de firma reutilizable con espacios consistentes
+function firmaCell(url, nombre, cargo1 = '', cargo2 = '') {
+  if (!nombre) return '';
+
+  // usa la local si no te pasan url; y normaliza a absoluta para el PDF
+  const src = new URL((url || DEFAULT_SIGNATURE_URL), window.location.href).href;
+
+  return `
+    <div style="display:inline-block; vertical-align:top; width:50%; max-width:50%; 
+                padding:0 10px; box-sizing:border-box; text-align:center; font-size:12px; line-height:1.35;">
+      <img src="${src}" alt="firma" 
+           style="max-width:100%; max-height:80px; display:block; margin:0 auto 6px;" />
+
+      <div style="margin-top:6px; font-weight:600; text-transform:uppercase; min-height:18px;">
+        ${escapeHtml(nombre)}
+      </div>
+      <div style="font-size:12px; margin-top:4px; min-height:16px;">
+        ${cargo1 ? escapeHtml(cargo1) : '&nbsp;'}
+      </div>
+      <div style="font-size:12px; margin-top:2px; min-height:16px;">
+        ${cargo2 ? escapeHtml(cargo2) : '&nbsp;'}
+      </div>
+    </div>
+  `;
+}
+
+function firmaCellOperador(url, nombre, cargo1 = '', cargo2 = '') {
+  if (!nombre) return '';
+
+  // si no viene url, usa la firma local por defecto
+  const src = new URL((url || './img/firma.webp'), window.location.href).href;
+
+  return `
+    <div style="
+      display:inline-block;
+      vertical-align:top;
+      width:33.33%;
+      max-width:33.33%;
+      padding:0 10px;
+      box-sizing:border-box;
+      text-align:center;
+    ">
+      <img src="${src}" alt="firma"
+           style="max-width:100%; max-height:80px; display:block; margin:0 auto 6px;" />
+    </div>
+  `;
+}
+
+  
+function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m])); }
