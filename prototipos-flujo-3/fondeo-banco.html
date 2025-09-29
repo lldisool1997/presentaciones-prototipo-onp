@@ -151,25 +151,32 @@
       <form id="formLlamado" class="space-y-5" novalidate>
         <input type="hidden" id="inv_id"/>
 
-        <div class="grid md:grid-cols-3 gap-4">
+        <div class="grid md:grid-cols-8 gap-4">
          <!-- <div>
             <label class="block text-sm font-semibold mb-1">Fecha del llamado</label>
             <input id="fecha_llamado" type="date" required
                    class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
           </div>-->
-          <div>
-            <label class="block text-sm font-semibold mb-1">Monto</label>
-            <input id="monto" type="text" inputmode="decimal" required
-                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
-                   placeholder="Ej. 1,310,067.70">
-          </div>
-            <div>
+            <div >
             <label class="block text-sm font-semibold mb-1">Moneda</label>
-             <select id="moneda" class="w-1/2 rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
+             <select id="moneda" class="rounded-xl w-full border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
                 <option value="PEN" selected>PEN</option>
                 <option value="USD">USD</option>
               </select>
           </div>
+          <div class="col-span-2">
+            <label class="block text-sm font-semibold mb-1">Monto</label>
+            <input id="monto" type="text" inputmode="decimal" required
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
+                   placeholder="Ej. 1,310,067.70">
+          </div >
+             <div class="col-span-2">
+            <label class="block text-sm font-semibold mb-1">Comisión</label>
+            <input id="comision" type="text" inputmode="decimal" required
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
+                   placeholder="Ej. 1,310,067.70">
+          </div>
+          
         </div>
 
         <!-- NUEVO: Cuenta Bancaria (Select2) -->
