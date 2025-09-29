@@ -18,6 +18,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.3.1/html-docx.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
+
+    <!-- Select2 -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
   <!-- App -->
   <script src="js/generar-carta-aprobacion.js" defer></script>
 
@@ -179,6 +185,27 @@
   box-shadow: inset 0 0 0 2px rgba(59,130,246,.25);
 }
 
+.select2-container--default .select2-selection--single{
+  height: 46px;
+  border: 2px solid #d1d5db;
+  border-radius: 0.75rem;
+  background: #fff;
+  display: flex; align-items: center;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+  line-height: 42px;
+  padding-left: 12px;  /* 👈 este es tu "px" left */
+  color:#111827;
+  font-size: 15px;
+  font-family: inherit;
+  width: 100%;
+}
+
+.select2-container--default .select2-selection--single{
+  padding-left: 10px;
+}
+
+
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
@@ -286,12 +313,13 @@
                 </div>
     </section>
     <!-- BANDA DE CAMPOS -->
-    <section class="bg-white border border-t-0 border-b-0 shadow-sm px-5 space-y-4 mb-0">
-              <div class="border-b-2 border-[#3396d8] mb-4">
+     <section class="bg-white border border-t-0 border-b-0 shadow-sm px-5 space-y-4 mb-0">
+      <div class="border-b-2 border-[#3396d8] mb-4">
         <h1 class="text-xl font-semibold text-ink flex items-center">
-            <span class="border-l-4 border-[#3396d8] pl-2">Cabecera</span>
+          <span class="border-l-4 border-[#3396d8] pl-2">Cabecera</span>
         </h1>
-       </div>
+      </div>
+
       <div class="grid md:grid-cols-3 gap-4">
         <div>
           <label class="text-xs text-slate-500">Texto (plantilla)</label>
@@ -301,54 +329,68 @@
             <option value="TPL_REPO">REPO/TRANSFERENCIA</option>
           </select>
         </div>
+
         <div>
           <label class="text-xs text-slate-500">Atención</label>
-          <input id="txtAtencion" class="w-full rounded-xl border px-3 py-2"
-                 value="SR. CÉSAR AUGUSTO REÁTEGUI GARCÍA">
+          <select id="txtAtencion" class="w-full rounded-xl border px-3 py-2">
+            <option selected>SR. CÉSAR AUGUSTO REÁTEGUI GARCÍA</option>
+            <option>SR. JUAN PÉREZ</option>
+          </select>
         </div>
+
         <div>
           <label class="text-xs text-slate-500">Carta Referencia</label>
-          <input id="txtReferencia" class="w-full rounded-xl border px-3 py-2"
-                 value="SUBGERENTE DE BANCA INSTITUCIONAL">
+          <select id="txtReferencia" class="w-full rounded-xl border px-3 py-2">
+            <option selected>SUBGERENTE DE BANCA INSTITUCIONAL</option>
+            <option>GERENTE GENERAL</option>
+          </select>
         </div>
 
         <div class="md:col-span-3">
           <label class="text-xs text-slate-500">Asunto</label>
-            <select id="txtAsunto" class="w-full rounded-xl border px-3 py-2">
-                <option> Solicitud de operación de transferencia y apertura </option>
-            </select>
+          <select id="txtAsunto" class="w-full rounded-xl border px-3 py-2">
+            <option selected>Solicitud de operación de transferencia y apertura</option>
+            <option>Solicitud de depósito a plazo</option>
+          </select>
         </div>
 
         <div>
           <label class="text-xs text-slate-500">Firma 1</label>
-          <input id="txtFirma1" class="w-full rounded-xl border px-3 py-2"
-                 value="LEON NIETO, PEDRO HUN">
-        </div>
-        <div>
-          <label class="text-xs text-slate-500">Firma 2</label>
-          <input id="txtFirma2" class="w-full rounded-xl border px-3 py-2"
-                 value="GARAY SÁNCHEZ, CARLO">
-        </div>
-        <div>
-          <label class="text-xs text-slate-500">Elaborado</label>
-                    <select id="txtElaborado" class="w-full rounded-xl border px-3 py-2">
-            <option>70429350 - BEDREGAL JULCA, ELIZABETH</option>
+          <select id="txtFirma1" class="w-full rounded-xl border px-3 py-2">
+            <option selected>LEON NIETO, PEDRO HUN</option>
+            <option>MARQUEZ RAMOS, ANA</option>
           </select>
         </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Firma 2</label>
+          <select id="txtFirma2" class="w-full rounded-xl border px-3 py-2">
+            <option selected>GARAY SÁNCHEZ, CARLO</option>
+            <option>CASTRO TORRES, JULIO</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Elaborado</label>
+          <select id="txtElaborado" class="w-full rounded-xl border px-3 py-2">
+            <option selected>70429350 - BEDREGAL JULCA, ELIZABETH</option>
+          </select>
+        </div>
+
         <div>
           <label class="text-xs text-slate-500">Autorizado 1</label>
           <select id="txtAutorizado" class="w-full rounded-xl border px-3 py-2">
-            <option>70429350 - ALCALÁ BENITES, JORGE</option>
-            <option>70429350 - ALCALÁ BENITES, JORGE</option>
+            <option selected>70429350 - ALCALÁ BENITES, JORGE</option>
           </select>
         </div>
-                <div>
+
+        <div>
           <label class="text-xs text-slate-500">Autorizado 2</label>
-           <select id="txtAutorizado2" class="w-full rounded-xl border px-3 py-2">
-            <option>70429350 - ALCALÁ BENITES, JORGE</option>
-            <option>70429350 - ALCALÁ BENITES, JORGE</option>
+          <select id="txtAutorizado2" class="w-full rounded-xl border px-3 py-2">
+            <option selected>70429350 - ALCALÁ BENITES, JORGE</option>
           </select>
         </div>
+
         <div>
           <label class="text-xs text-slate-500">Número Digital</label>
           <input id="txtNumDigital" class="w-full rounded-xl border px-3 py-2" value="" disabled>
@@ -360,7 +402,6 @@
           <input id="chkLogo" type="checkbox" class="rounded border-slate-300 text-indigo-600" checked>
           <span class="text-sm">Imprimir Logo de proveedor</span>
         </label>
-        <!-- Opciones -->
         <div class="flex items-center gap-2">
           <button id="btnAplicar"   class="px-3 py-2 rounded-lg border hover:bg-slate-50">Aplicar</button>
           <button id="btnPreview"  class="px-3 py-2 rounded-lg border hover:bg-slate-50">Vista previa</button>
@@ -369,7 +410,6 @@
         </div>
       </div>
     </section>
-    
     <!-- EDITORES -->
     <section class="grid grid-cols-1 bg-white gap-5 border rounded-b-xl border-y-0 py-5">
       <div class=" px-5">

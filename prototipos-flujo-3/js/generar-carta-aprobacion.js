@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    $('#selTexto, #txtAtencion, #txtReferencia, #txtAsunto, #txtFirma1, #txtFirma2, #txtElaborado, #txtAutorizado, #txtAutorizado2').select2({
+        width: '100%',
+        placeholder: "Seleccione...",
+        allowClear: true
+      });
+
+      
   // ===== Contenidos iniciales =====
   const bodyInicial = `
     <p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales</strong> (FCR),
