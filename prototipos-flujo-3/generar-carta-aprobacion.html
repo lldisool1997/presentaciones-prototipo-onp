@@ -26,7 +26,6 @@
 
   <!-- App -->
   <script src="js/generar-carta-aprobacion.js" defer></script>
-
   <link rel="stylesheet" href="css/generar-carta-aprobacion.css">
 
 </head>
@@ -171,6 +170,7 @@
         <div class="md:col-span-3">
           <label class="text-xs text-slate-500">Asunto</label>
           <select id="txtAsunto" class="w-full rounded-xl border px-3 py-2">
+            <option></option> <!-- opción vacía para que no seleccione nada -->
             <option selected>Solicitud de operación de transferencia y apertura</option>
             <option>Solicitud de depósito a plazo</option>
           </select>
@@ -267,7 +267,6 @@
           <div id="preview" class="a4 bg-white shadow"></div>
         </div>
         <div class="flex justify-end gap-2 px-4 py-3 border-t">
-          <button id="btnPrint" class="px-3 py-2 rounded-lg border hover:bg-slate-50">Imprimir</button>
           <button id="btnCloseModal2" class="px-3 py-2 rounded-lg bg-slate-900 text-white hover:bg-black">Cerrar</button>
         </div>
       </div>
