@@ -756,7 +756,7 @@ $("#formApertura").on("submit", function(e){
       valor = valor ? valor : 0;
 
       if(valor == 0){
-         $('#monto_total').val(1500000)
+         $('#monto_total').val(150000000)
         new Cleave('#monto_total', {
         numeral: true,
         numeralThousandsGroupStyle: 'thousand',
@@ -765,7 +765,7 @@ $("#formApertura").on("submit", function(e){
       });
       }
       else{
-        $('#monto_total').val(1500000 + parseFloat(valor.replace(/,/g, "")))
+        $('#monto_total').val(150000000 + parseFloat(valor.replace(/,/g, "")))
         new Cleave('#monto_total', {
         numeral: true,
         numeralThousandsGroupStyle: 'thousand',

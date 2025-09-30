@@ -408,6 +408,8 @@ $("#formLlamado").off('submit.main').on("submit.main", function(e){
     markInvalid($drop); toastr.warning(fv.msg); $("#btnFile").focus(); return;
   }
 
+  
+
   const missing = [];
   for (const [id, ok] of Object.entries(filesUploaded)) {
     if (!ok) {
@@ -642,4 +644,111 @@ $("#formApertura").on("submit", function(e){
       $('#fechaCarta').text(fecha);
       $('#ultima-carta').removeClass('hidden').show();
     }
+
+
+    // 1) Setear los 4 campos en solo lectura con los valores pedidos
+$("#monto_cond").val("150,000,000.00");
+$("#plazo_cond").val("316 días");
+$("#tasa_cond").val("4.59% T.E.A.");
+$("#vencimiento_cond").val("23/02/2026");
+
+// 2) Habilitar banco/cuenta origen (editables) y preseleccionar Scotiabank + cuenta
+$("#banco").prop("disabled", true);
+$("#cuenta").prop("disabled", true);
+
+// Inicializar #banco con el catálogo ya definido (si aún no lo está)
+if (!$("#banco").data("select2")) {
+  $("#banco").select2({
+    data: BANCOS,
+    placeholder: "Selecciona un banco...",
+    allowClear: true,
+    width: "100%"
+  });
+}
+
+// Inicializar #cuenta vacío (se llena según banco)
+if (!$("#cuenta").data("select2")) {
+  $("#cuenta").select2({
+    placeholder: "Selecciona una cuenta...",
+    allowClear: true,
+    width: "100%"
+  });
+}
+
+// Preseleccionar Scotiabank
+$("#banco").val("Scotiabank").trigger("change");
+
+// Después de cambiar banco, elegir la cuenta '97007001108' (coincide aunque venga con guiones)
+const cuentaScotia = CUENTAS_BANCARIAS.find(c =>
+  c.banco === "Scotiabank" && c.text.replace(/\D/g, "") === "97007001108"
+);
+// fallback: por id conocido del mock
+const cuentaId = cuentaScotia ? cuentaScotia.id : "SCOTIA-PEN-002";
+$("#cuenta").val(cuentaId).trigger("change");
+  });
+
+
+   $(document).ready(function () {
+
+    $('#ultima-carta').addClass('hidden');
+
+    
+    new Cleave('#monto_solicitado', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand',
+    numeralDecimalMark: '.',
+    delimiter: ','
+  });
+
+  
+    new Cleave('#comision', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand',
+    numeralDecimalMark: '.',
+    delimiter: ','
+  });
+  comision
+
+  new Cleave('#monto_total', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand',
+    numeralDecimalMark: '.',
+    delimiter: ','
+  });
+
+
+    const accion = getAccionParam();
+
+    if (accion) {
+      const fecha = new Date().toLocaleString();
+      $('#fechaCarta').text(fecha);
+      $('#ultima-carta').removeClass('hidden').show();
+    }
+    
+
+     $("#comision").on("change", function () {
+      let valor = $(this).val().trim();
+      valor = valor ? valor : 0;
+
+      if(valor == 0){
+         $('#monto_total').val(150000000)
+        new Cleave('#monto_total', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand',
+        numeralDecimalMark: '.',
+        delimiter: ','
+      });
+      }
+      else{
+        $('#monto_total').val(150000000 + parseFloat(valor.replace(/,/g, "")))
+        new Cleave('#monto_total', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand',
+        numeralDecimalMark: '.',
+        delimiter: ','
+      });
+      }
+
+      
+    });
   });

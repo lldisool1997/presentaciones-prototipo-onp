@@ -59,15 +59,15 @@
   <main class="max-w-screen-2xl mx-auto px-4 py-6">
     
             <div class="header rounded-2xl rounded-b-none">
-                <h1>Aprobar Instrumento de Inversión</h1>
+                <h1>Instruir Cancelación de la Inversión</h1>
             </div>
     <!-- Inversión seleccionada -->
     <section class="bg-white rounded-2xl rounded-t-none border border-line shadow-card p-5 mt-0">
-         <div class="section-header">1. Información del Instrumento</div>
+         <div class="section-header">1. Información de la inversión</div>
                            <div class="info-grid">
   <div class="info-column">
     <div class="info-item">
-      <div class="info-label">Código del instrumento:</div>
+      <div class="info-label">Código de la inversión:</div>
       <div class="info-value">INV-7000</div>
     </div>
     <div class="info-item">
@@ -157,74 +157,51 @@
     </div>
   </div>
             </div>
-                   <div class="section-header">2. Información de la operación financiera</div>
+                   <div class="section-header">2. Registro de la instrucción</div>
       <form id="formLlamado" class="space-y-5" novalidate>
         <input type="hidden" id="inv_id"/>
 
       <!-- Bloque: Operación BCRP -->
 <!-- Bloque: Vencimiento / Interbank -->
 <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-  <!-- Header -->
-  <header class="mb-4 flex flex-wrap items-center justify-between gap-3">
-    <h2 class="text-sm font-semibold tracking-wide text-slate-700">
-      INTERBANK
-      <span class="ml-2 inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-        DPZ FCR–MacroFondo
-      </span>
-    </h2>
 
-    <!-- Monto principal -->
-    <span class="inline-flex items-center rounded-xl bg-emerald-50 px-3 py-1.5 text-sm font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">
-      S/ 150,000,000.00
-    </span>
-  </header>
 
-  <!-- Cinta informativa -->
-  <div class="mb-4 rounded-xl bg-slate-50/80 p-3 ring-1 ring-inset ring-slate-100">
-    <p class="text-xs font-medium uppercase tracking-wide text-slate-500">
-      Operación
-    </p>
-    <p class="mt-0.5 text-sm text-slate-800">
-      <span class="font-semibold">Vencimiento DPZ FCR–MacroFondo</span> por
-      <span class="font-semibold">S/ 150,000,000.00</span> (capital + interés).
-    </p>
+  <!-- Resumen numérico -->
+  <div class="grid sm:grid-cols-3 gap-4">
+    <div>
+      <label class="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">Monto</label>
+      <input id="op_monto" class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
+             value="150,000,000.00" disabled>
+    </div>
+    <div>
+      <label class="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">Interés (4.59%)</label>
+      <input id="op_interes" class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
+             value="6,885,000.00" disabled>
+    </div>
+    <div>
+      <label class="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">Total</label>
+      <input id="op_total" class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
+             value="156,885,000.00" disabled>
+    </div>
   </div>
 
-  <!-- Detalle en tarjetas -->
-  <dl class="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
-    <!-- Cuenta de abono -->
-    <div class="rounded-xl border border-slate-100 bg-white p-3">
-      <dt class="text-[11px] uppercase tracking-wide text-slate-500">Cuenta de abono</dt>
-      <dd class="mt-1 font-medium text-slate-800">
-        <span class="mr-2 rounded-md bg-indigo-50 px-2 py-0.5 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200">MN</span>
-        <span class="font-mono">200-3067561380</span>
-      </dd>
-      <dd class="mt-1 text-slate-600">Denominada <span class="font-medium">FCR MacroFondo</span></dd>
+  <!-- Destino editable -->
+  <div class="grid sm:grid-cols-2 gap-4 mt-4">
+    <div>
+      <label class="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">
+        Banco destino <span class="text-rose-600">*</span>
+      </label>
+      <select id="banco_destino" style="width:100%"></select>
     </div>
-
-    <!-- Banco -->
-    <div class="rounded-xl border border-slate-100 bg-white p-3">
-      <dt class="text-[11px] uppercase tracking-wide text-slate-500">Banco</dt>
-      <dd class="mt-1 font-medium text-slate-800">Interbank</dd>
+    <div>
+      <label class="block text-[11px] uppercase tracking-wide text-slate-500 mb-1">
+        Cuenta destino <span class="text-rose-600">*</span>
+      </label>
+      <select id="cuenta_destino" style="width:100%"></select>
     </div>
-
-    <!-- Concepto -->
-    <div class="rounded-xl border border-slate-100 bg-white p-3">
-      <dt class="text-[11px] uppercase tracking-wide text-slate-500">Concepto</dt>
-      <dd class="mt-1 font-medium text-slate-800">Vencimiento de Depósito a Plazo</dd>
-    </div>
-  </dl>
-
-  <!-- Nota / justificación -->
-  <div class="mt-5 rounded-xl bg-slate-50/80 p-3 ring-1 ring-inset ring-slate-100">
-    <p class="text-xs font-medium uppercase tracking-wide text-slate-500">
-      Justificación
-    </p>
-    <p class="mt-0.5 text-sm text-slate-700">
-      <span class="font-semibold">Producto del vencimiento</span> de depósito en el mercado local a plazo por subasta a través del módulo de Colocaciones del MEF.
-    </p>
   </div>
 </section>
+
 
 
 

@@ -643,3 +643,70 @@ $("#formApertura").on("submit", function(e){
       $('#ultima-carta').removeClass('hidden').show();
     }
   });
+
+
+  
+   $(document).ready(function () {
+
+    $('#ultima-carta').addClass('hidden');
+
+    
+    new Cleave('#monto_solicitado', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand',
+    numeralDecimalMark: '.',
+    delimiter: ','
+  });
+
+  
+    new Cleave('#comision', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand',
+    numeralDecimalMark: '.',
+    delimiter: ','
+  });
+  comision
+
+  new Cleave('#monto_total', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand',
+    numeralDecimalMark: '.',
+    delimiter: ','
+  });
+
+
+    const accion = getAccionParam();
+
+    if (accion) {
+      const fecha = new Date().toLocaleString();
+      $('#fechaCarta').text(fecha);
+      $('#ultima-carta').removeClass('hidden').show();
+    }
+    
+
+     $("#comision").on("change", function () {
+      let valor = $(this).val().trim();
+      valor = valor ? valor : 0;
+
+      if(valor == 0){
+         $('#monto_total').val(156885000)
+        new Cleave('#monto_total', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand',
+        numeralDecimalMark: '.',
+        delimiter: ','
+      });
+      }
+      else{
+        $('#monto_total').val(156885000 + parseFloat(valor.replace(/,/g, "")))
+        new Cleave('#monto_total', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand',
+        numeralDecimalMark: '.',
+        delimiter: ','
+      });
+      }
+
+      
+    });
+  });

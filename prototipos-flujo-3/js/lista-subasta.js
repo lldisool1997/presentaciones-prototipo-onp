@@ -158,7 +158,7 @@
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroInstruccion('${inv.invPrincipal}')">
-              Instruir
+              Instruir cancelación
             </button>
           </div>`
                                 :
@@ -171,6 +171,9 @@
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistrodeFondeoDIN('${inv.invPrincipal}')">
               Instruir Transferencia de fondos
+            </button>
+             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionDIN('${inv.invPrincipal}')">
+              Instruir apertura de cuenta
             </button>
           </div>`
                                 :
@@ -187,7 +190,7 @@
               <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDeCartaAprobacion('${inv.invPrincipal}')">
               Generar Carta
             </button>
-              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacion('${inv.invPrincipal}')">
+              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionTesoreria('${inv.invPrincipal}')">
               Aprobar
             </button>
           </div>`
@@ -477,11 +480,19 @@ function irARegistrodeFondeoDIN(inversionId){
   }
 
 
-  function irARegistroAprobacion(inversionId){
+  function irARegistroAprobacionDIN(inversionId){
     if(inversionId){
-      window.location.href = `aprobar-instrumento.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `aprobar-instrumento-DIN.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
-      window.location.href = "aprobar-instrumento.html";
+      window.location.href = "aprobar-instrumento-DIN.html";
+    }
+  }
+
+    function irARegistroAprobacionTesoreria(inversionId){
+    if(inversionId){
+      window.location.href = `aprobar-instrumento-tesoreria.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "aprobar-instrumento-tesoreria.html";
     }
   }
 
@@ -573,7 +584,6 @@ function irARegistrodeFondeoDIN(inversionId){
   window.location.href = url.toString();
 }
 window.irABackOffice = irABackOffice;
-  window.irARegistroAprobacion = irARegistroAprobacion;
   window.irARegistroDeCartaAprobacion = irARegistroDeCartaAprobacion;
   window.irARegistroDeCartaRecepcion = irARegistroDeCartaRecepcion;
 

@@ -32,7 +32,7 @@ function markInvalid($el){ $el.addClass("ring-2 ring-red-400 border-red-400"); }
 function clearInvalid($el){ $el.removeClass("ring-2 ring-red-400 border-red-400"); }
 
 function validateFile(f){
-  if(!f) return { ok:false, msg:"Adjunta el documento de tranferencia (PDF/JPG/PNG)." };
+  if(!f) return { ok:false, msg:"Adjunta el documento de la operación (PDF/JPG/PNG)." };
   const okExt = /(\.pdf|\.png|\.jpg|\.jpeg)$/i.test(f.name);
   if(!okExt) return { ok:false, msg:"Formato no permitido. Solo PDF, JPG o PNG." };
   if(f.size > 10*1024*1024) return { ok:false, msg:"Archivo supera 10MB. Adjunta uno más liviano." };
@@ -408,25 +408,25 @@ $("#formLlamado").off('submit.main').on("submit.main", function(e){
     markInvalid($drop); toastr.warning(fv.msg); $("#btnFile").focus(); return;
   }
 
-      // ⬇️ Validación Banco Origen y Cuenta Origen
-  const bancoVal = $("#banco_destino").val();
-  const cuentaVal = $("#cuenta_destino").val();
+    // ⬇️ Validación Banco Origen y Cuenta Origen
+  const bancoVal = $("#banco").val();
+  const cuentaVal = $("#cuenta").val();
   if (!bancoVal) {
-    markInvalid($("#banco_destino").next(".select2")); // pinta rojo el select2
-    toastr.warning("Selecciona el banco de destino.");
-    $("#banco_destino").select2('open');
+    markInvalid($("#banco").next(".select2")); // pinta rojo el select2
+    toastr.warning("Selecciona el banco de origen.");
+    $("#banco").select2('open');
     return;
   } else {
-    clearInvalid($("#banco_destino").next(".select2"));
+    clearInvalid($("#banco").next(".select2"));
   }
 
   if (!cuentaVal) {
-    markInvalid($("#cuenta_destino").next(".select2"));
-    toastr.warning("Selecciona la cuenta de destino.");
-    $("#cuenta_destino").select2('open');
+    markInvalid($("#cuenta").next(".select2"));
+    toastr.warning("Selecciona la cuenta de origen.");
+    $("#cuenta").select2('open');
     return;
   } else {
-    clearInvalid($("#cuenta_destino").next(".select2"));
+    clearInvalid($("#cuenta").next(".select2"));
   }
 
   const missing = [];
@@ -646,3 +646,62 @@ $("#formApertura").on("submit", function(e){
   closeAperturaModal();
   toastr.success("✅ Cuenta aperturada y seleccionada.");
 });
+
+    function getAccionParam() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("accion");
+    }
+ $(document).ready(function () {
+
+    $('#ultima-carta').addClass('hidden');
+
+
+    const accion = getAccionParam();
+
+    if (accion) {
+      const fecha = new Date().toLocaleString();
+      $('#fechaCarta').text(fecha);
+      $('#ultima-carta').removeClass('hidden').show();
+    }
+
+
+    // 1) Setear los 4 campos en solo lectura con los valores pedidos
+$("#monto_cond").val("150,000,000.00");
+$("#plazo_cond").val("316 días");
+$("#tasa_cond").val("4.59% T.E.A.");
+$("#vencimiento_cond").val("23/02/2026");
+
+// 2) Habilitar banco/cuenta origen (editables) y preseleccionar Scotiabank + cuenta
+$("#banco").prop("disabled", false);
+$("#cuenta").prop("disabled", false);
+
+// Inicializar #banco con el catálogo ya definido (si aún no lo está)
+if (!$("#banco").data("select2")) {
+  $("#banco").select2({
+    data: BANCOS,
+    placeholder: "Selecciona un banco...",
+    allowClear: true,
+    width: "100%"
+  });
+}
+
+// Inicializar #cuenta vacío (se llena según banco)
+if (!$("#cuenta").data("select2")) {
+  $("#cuenta").select2({
+    placeholder: "Selecciona una cuenta...",
+    allowClear: true,
+    width: "100%"
+  });
+}
+
+// Preseleccionar Scotiabank
+$("#banco").val("Scotiabank").trigger("change");
+
+// Después de cambiar banco, elegir la cuenta '97007001108' (coincide aunque venga con guiones)
+const cuentaScotia = CUENTAS_BANCARIAS.find(c =>
+  c.banco === "Scotiabank" && c.text.replace(/\D/g, "") === "97007001108"
+);
+// fallback: por id conocido del mock
+const cuentaId = cuentaScotia ? cuentaScotia.id : "SCOTIA-PEN-002";
+$("#cuenta").val(cuentaId).trigger("change");
+  });

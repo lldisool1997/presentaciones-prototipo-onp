@@ -33,8 +33,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-   <script src="js/aprobar-instrumento.js" defer></script>
-  <link rel="stylesheet" href="css/aprobar-instrumento.css">
+   <script src="js/cancelar-instrumento.js" defer></script>
+  <link rel="stylesheet" href="css/cancelar-instrumento.css">
 </head>
 <body class="bg-gray-100 text-ink">
 <div id="area-badge"
@@ -157,91 +157,98 @@
     </div>
   </div>
             </div>
-                   <div class="section-header">2. Información de la operación financiera</div>
+                   <div class="section-header">2. Información de la instrucción</div>
       <form id="formLlamado" class="space-y-5" novalidate>
         <input type="hidden" id="inv_id"/>
 
       <!-- Bloque: Operación BCRP -->
 <!-- Bloque: Cancelación -->
 <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-  <header class="mb-4 flex flex-wrap items-center justify-between gap-3">
+  <!--<header class="mb-4 flex flex-wrap items-center justify-between gap-3">
     <h2 class="text-sm font-semibold tracking-wide text-slate-700">
       CANCELACIÓN:
       <span class="ml-1 inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
         Depósito a Plazo • Nº 634235
       </span>
     </h2>
-    <span class="inline-flex items-center rounded-xl bg-emerald-50 px-3 py-1.5 text-sm font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">
-      S/ 150,000,000.00
-    </span>
-  </header>
+  </header>-->
 
-  <div class="mb-2 text-sm font-semibold text-slate-700">
+  <!--<div class="mb-2 text-sm font-semibold text-slate-700">
     DETALLES DE LA CANCELACIÓN
-  </div>
+  </div>-->
 
-  <dl class="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2 lg:grid-cols-3">
-    <!-- Titular -->
-    <div class="rounded-xl border border-slate-100 bg-slate-50/60 p-3">
-      <dt class="text-[11px] uppercase tracking-wide text-slate-500">Titular</dt>
-      <dd class="mt-0.5 font-medium text-slate-800">FCR–MACROFONDO</dd>
-    </div>
-
-    <!-- Instrumento -->
-    <div class="rounded-xl border border-slate-100 bg-slate-50/60 p-3">
-      <dt class="text-[11px] uppercase tracking-wide text-slate-500">Instrumento</dt>
-      <dd class="mt-0.5 font-medium text-slate-800">Depósito a Plazo</dd>
-    </div>
-
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
     <!-- Monto -->
-    <div class="rounded-xl border border-slate-100 bg-slate-50/60 p-3">
-      <dt class="text-[11px] uppercase tracking-wide text-slate-500">Monto</dt>
-      <dd class="mt-0.5 font-medium text-slate-800">S/ 150,000,000.00</dd>
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Monto</label>
+      <input type="text" value="150,000,000.00"
+             class="w-full rounded-xl border border-gray-300 p-2.5 text-sm bg-gray-50" disabled>
     </div>
 
     <!-- Intereses -->
-    <div class="rounded-xl border border-slate-100 bg-slate-50/60 p-3">
-      <dt class="text-[11px] uppercase tracking-wide text-slate-500">Intereses</dt>
-      <dd class="mt-0.5 font-medium text-slate-800">S/ 6,885,000.00</dd>
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Intereses</label>
+      <input type="text" value="6,885,000.00"
+             class="w-full rounded-xl border border-gray-300 p-2.5 text-sm bg-gray-50" disabled>
     </div>
 
-    <!-- Número -->
-    <div class="rounded-xl border border-slate-100 bg-slate-50/60 p-3">
-      <dt class="text-[11px] uppercase tracking-wide text-slate-500">Número</dt>
-      <dd class="mt-0.5 font-medium text-slate-800">634235</dd>
+    <!-- Total -->
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Total</label>
+      <input type="text" value="156,885,000.00"
+             class="w-full rounded-xl border border-gray-300 p-2.5 text-sm bg-gray-50" disabled>
     </div>
 
-    <!-- Vencimiento -->
-    <div class="rounded-xl border border-slate-100 bg-slate-50/60 p-3">
-      <dt class="text-[11px] uppercase tracking-wide text-slate-500">Vencimiento</dt>
-      <dd class="mt-0.5 font-medium text-slate-800">23/02/2026</dd>
+    <!-- Banco destino -->
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Banco destino</label>
+      <select id="banco_destino" class="w-full rounded-xl border border-gray-300 p-2.5 text-sm bg-gray-50" disabled>
+        <option selected>Scotiabank</option>
+      </select>
     </div>
 
-    <!-- Tasa -->
-    <div class="rounded-xl border border-slate-100 bg-slate-50/60 p-3">
-      <dt class="text-[11px] uppercase tracking-wide text-slate-500">Tasa</dt>
-      <dd class="mt-0.5 font-medium text-slate-800">4.59% T.E.A.</dd>
-    </div>
-  </dl>
-
-  <!-- Abono -->
-  <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
-    <div class="text-sm text-slate-800">
-      <span class="font-semibold text-slate-700">ABONAR:</span>
-      <span class="ml-1 inline-flex items-center rounded-lg bg-indigo-50 px-2.5 py-1 text-sm font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200">
-        S/ 6,885,000.00
-      </span>
-      <span class="ml-2">
-        a la <span class="font-medium">Cuenta de Ahorros M.N N° 200-3067561380</span>, denominada FCR–MACROFONDO.
-      </span>
+    <!-- Cuenta destino -->
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1">Cuenta destino</label>
+      <select id="cuenta_destino" class="w-full rounded-xl border border-gray-300 p-2.5 text-sm bg-gray-50" disabled>
+        <option selected>970-07001108</option>
+      </select>
     </div>
   </div>
 </section>
 
+   <div class="section-header">3. Registro de la operación</div>
 
+       <div class="flex flex-row justify-center gap-3">
+         <!-- <div>
+            <label class="block text-sm font-semibold mb-1">Fecha del llamado</label>
+            <input id="fecha_llamado" type="date" required
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
+          </div>-->
+            <div class="w-1/6">
+            <label class="block text-sm font-semibold mb-1">Monto</label>
+            <input id="monto_solicitado" type="text" inputmode="decimal" required disabled
+                   value="156885000"
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
+                   placeholder="Ej. 1,310,067.70">
+          </div >
+             <div class="w-1/6">
+            <label class="block text-sm font-semibold mb-1">Comisión</label>
+            <input id="comision" type="text" inputmode="decimal" required
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
+                   placeholder="Ej. 20.70">
+          </div>
+          <div class="w-1/6">
+            <label class="block text-sm font-semibold mb-1">Total</label>
+            <input id="monto_total" type="text" inputmode="decimal" required disabled
+                    value="156885000"
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
+                   placeholder="Ej. 20.70">
+          </div>
+          
+        </div>
 
-
-        <div class="section-header">3. Sustento documentario</div>
+        <div class="section-header">4. Sustento documentario</div>
         <section id="ultima-carta" class="mt-6 p-4 border rounded-lg bg-white shadow">
   <h2 class="text-lg font-semibold text-gray-800 mb-2">
     📄 Última carta generada
