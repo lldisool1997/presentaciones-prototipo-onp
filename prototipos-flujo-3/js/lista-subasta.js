@@ -75,7 +75,7 @@
   },
   {
     "entidad": "fdo-consolidado",
-    "accion": "X",
+    "accion": "revisar",
     "unidad": "fcr-macrofondo",
     "tipo": "Instrumento de corto plazo",
     "estado": "CANCELADO",
@@ -94,7 +94,8 @@
     "compraSpotCupon": "4.59",
     "pCompraCupon": "4.4961",
     "ecoInstrument": "ALTERNATIVOS"
-  }
+  },
+  
 ]
 
 
@@ -104,6 +105,7 @@
     if(st==="CANCELADA") return 'status-cancelada';
     if(st==="REGISTRADO") return 'status-registrado';
     if(st==="INSTRUIDO") return 'status-instruido';
+    if(st==="CANCELADO") return 'status-cancelada';
     return '';
   }
   function badgeHijo(st){
@@ -138,6 +140,16 @@
         <td class="text-left">${inv.valorNominal}</td>
         <td>${inv.ecoInstrument}</td>
         <td>
+         ${
+                                inv.estado === "CANCELADO"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
           ${
                                 inv.estado === "INSTRUIDO" && getAreaParam() === "Tesoreria"
                                 ? 
@@ -473,7 +485,10 @@ function irARegistrodeFondeoDIN(inversionId){
 
   function irARegistrodeFondeoTesoreria(inversionId){
     if(inversionId){
-      window.location.href = `fondeo-banco-tesoreria.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+            let subaccion = "";
+      if(getSubAccion())
+        subaccion = "&accion=accion&"
+      window.location.href = `fondeo-banco-tesoreria.html?area=Tesoreria${subaccion}&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
       window.location.href = "fondeo-banco-tesoreria.html";
     }
@@ -490,7 +505,8 @@ function irARegistrodeFondeoDIN(inversionId){
 
     function irARegistroAprobacionTesoreria(inversionId){
     if(inversionId){
-      window.location.href = `aprobar-instrumento-tesoreria.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+
+      window.location.href = `aprobar-instrumento-tesoreria.html?area=DIN&accion=accion&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
       window.location.href = "aprobar-instrumento-tesoreria.html";
     }
@@ -983,7 +999,7 @@ window.irABackOffice = irABackOffice;
     return params.get("accion");
   }
 
-      function getSubAccion() {
+  function getSubAccion() {
     const params = new URLSearchParams(window.location.search);
     return params.get("subaccion");
   }
