@@ -447,11 +447,11 @@ $("#formLlamado").off('submit.main').on("submit.main", function(e){
   }
 
   // Archivo principal
-  const fileObj = $file[0].files[0];
+ /* const fileObj = $file[0].files[0];
   const fv = validateFile(fileObj);
   if(!fv.ok){
     markInvalid($drop); toastr.warning(fv.msg); $("#btnFile").focus(); return;
-  }
+  }*/
 
   // Documentos dinámicos
   const missing = [];
@@ -524,10 +524,6 @@ $("#formLlamado").off('submit.main').on("submit.main", function(e){
         <dd class="text-gray-900">${ctaDstTxt || '—'}</dd>
       </div>
 
-      <div class="py-2 flex justify-between">
-        <dt class="font-medium text-gray-600">Documento:</dt>
-        <dd class="text-gray-900">${fileObj.name}</dd>
-      </div>
     </dl>
   `);
 
