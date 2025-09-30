@@ -162,8 +162,13 @@ const firmasHtml = `
       <div style="margin-top:24px">Agradecidos por la atención, quedamos</div>
       <div style="margin-top:16px">Atentamente,</div>
 
+      <br>
+      <br>
       ${firmasHtml}
-
+      <br>
+      <br>
+      <br>
+      <br>
       <div class="doc-footer" style="margin-top:28px;border-top:1px solid #e5e7eb;padding-top:12px;color:#475569;font-size:12px">
         ${footer}
       </div>
@@ -212,6 +217,7 @@ function parseRepVal(sel) {
 
   function generarCarta(){
     $('#txtNumDigital').val("615004");
+    $('#btnPDF').prop("disabled", false);
   }
 
   $('#btnWord').on('click', () => {
@@ -246,6 +252,8 @@ $('#btnPDF').off('click').on('click', async () => {
     host.innerHTML = `<div class="a4 a4--pdf">${buildInner()}</div>`;
     document.body.appendChild(host);
 
+    const id = $('#txtNumDigital').val()
+
     // 2) espera imágenes
     await waitImagesLoaded(host);
 
@@ -262,7 +270,7 @@ $('#btnPDF').off('click').on('click', async () => {
       .from(host.firstElementChild)
       .toPdf()
       .get('pdf')
-      .then(pdf => pdf.save('carta.pdf'));
+      .then(pdf => pdf.save('carta-'+id+'.pdf'));
 
     // 4) limpia
     host.remove();
@@ -361,8 +369,6 @@ function firmaCell(url, nombre, cargo1 = '', cargo2 = '') {
   return `
     <div style="display:inline-block; vertical-align:top; width:50%; max-width:50%; 
                 padding:0 10px; box-sizing:border-box; text-align:center; font-size:12px; line-height:1.35;">
-      <img src="${src}" alt="firma" 
-           style="max-width:100%; max-height:80px; display:block; margin:0 auto 6px;" />
 
       <div style="margin-top:6px; font-weight:600; text-transform:uppercase; min-height:18px;">
         ${escapeHtml(nombre)}
@@ -393,8 +399,6 @@ function firmaCellOperador(url, nombre, cargo1 = '', cargo2 = '') {
       box-sizing:border-box;
       text-align:center;
     ">
-      <img src="${src}" alt="firma"
-           style="max-width:100%; max-height:80px; display:block; margin:0 auto 6px;" />
     </div>
   `;
 }

@@ -262,6 +262,7 @@ function parseRepVal(sel) {
 
   function generarCarta(){
     $('#txtNumDigital').val("615004");
+    $('#btnPDF').prop("disabled", false);
   }
 
   $('#btnWord').on('click', () => {
@@ -296,6 +297,8 @@ $('#btnPDF').off('click').on('click', async () => {
     host.innerHTML = `<div class="a4 a4--pdf">${buildInner()}</div>`;
     document.body.appendChild(host);
 
+    const id = $('#txtNumDigital').val()
+
     // 2) espera imágenes
     await waitImagesLoaded(host);
 
@@ -312,7 +315,7 @@ $('#btnPDF').off('click').on('click', async () => {
       .from(host.firstElementChild)
       .toPdf()
       .get('pdf')
-      .then(pdf => pdf.save('carta.pdf'));
+      .then(pdf => pdf.save('carta-'+id+'.pdf'));
 
     // 4) limpia
     host.remove();
