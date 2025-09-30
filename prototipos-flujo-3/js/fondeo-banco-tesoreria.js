@@ -303,6 +303,15 @@ $("#cuenta_destino").select2({
     delimiter: ','
   });
 
+  
+    new Cleave('#comision', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand',
+    numeralDecimalMark: '.',
+    delimiter: ','
+  });
+  comision
+
   new Cleave('#monto_total', {
     numeral: true,
     numeralThousandsGroupStyle: 'thousand',
@@ -744,13 +753,27 @@ $("#formApertura").on("submit", function(e){
 
      $("#comision").on("change", function () {
       let valor = $(this).val().trim();
+      valor = valor ? valor : 0;
 
-      $('#monto_total').val(1500000 + parseFloat(valor))
+      if(valor == 0){
+         $('#monto_total').val(1500000)
         new Cleave('#monto_total', {
         numeral: true,
         numeralThousandsGroupStyle: 'thousand',
         numeralDecimalMark: '.',
         delimiter: ','
       });
+      }
+      else{
+        $('#monto_total').val(1500000 + parseFloat(valor.replace(/,/g, "")))
+        new Cleave('#monto_total', {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand',
+        numeralDecimalMark: '.',
+        delimiter: ','
+      });
+      }
+
+      
     });
   });
