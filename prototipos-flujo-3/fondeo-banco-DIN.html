@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tranferencia de Fondos</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand1:'#005C97', brand2:'#004a7c', line:'#e5e7eb', ink:'#2c3e50', muted:'#f9fafb' },
+          boxShadow: { card:'0 8px 32px rgba(0,0,0,.08)', panel:'0 10px 30px rgba(0,0,0,.15)' }
+        }
+      }
+    }
+  </script>
+
+  <!-- Toastr -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
+
+  <!-- Select2 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
+
+      <!-- libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+   <script src="js/fondeo-banco-DIN.js" defer></script>
+  <link rel="stylesheet" href="css/fondeo-banco.css">
+</head>
+<body class="bg-gray-100 text-ink">
+<div id="area-badge"
+     style="position: absolute; top: 15px; right: 20px;
+            background-color: #1e6ba8; color: #fff;
+            font-weight: bold; font-size: 0.9rem;
+            padding: 6px 14px; border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+  Área: -
+</div>
+  <!-- Topbar -->
+  <!--<header class="sticky top-0 z-40 bg-gradient-to-br from-brand1 to-brand2 text-white shadow-md">
+    <div class="max-w-[1100px] mx-auto px-4 py-3 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-white/15 border border-white/25 grid place-items-center">
+        <svg viewBox="0 0 24 24" class="w-5 h-5 fill-white"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm7 6-7 4-7-4m0 0 7-4m7 4v8l-7 4m-7-12v8l7 4"/></svg>
+      </div>
+      <div class="font-semibold">FCR · Registrar Llamado de Capital</div>
+      <div class="ml-auto text-sm opacity-90"></div>
+    </div>
+  </header>-->
+
+  <main class="max-w-screen-2xl mx-auto px-4 py-6">
+    
+            <div class="header rounded-2xl rounded-b-none">
+                <h1>Transferir fondos</h1>
+            </div>
+    <!-- Inversión seleccionada -->
+    <section class="bg-white rounded-2xl rounded-t-none border border-line shadow-card p-5 mt-0">
+         <div class="section-header">1. Información del Instrumento</div>
+            <div class="info-grid">
+  <div class="info-column">
+    <div class="info-item">
+      <div class="info-label">Código del instrumento:</div>
+      <div class="info-value">INV-7000</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Banco Apertura:</div>
+      <div class="info-value">BANBIF</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Grupo Económico:</div>
+      <div class="info-value">Grupo Breca</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Tasa Efectiva (%):</div>
+      <div class="info-value">4.59</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha Vencimiento:</div>
+      <div class="info-value">23/02/2026</div>
+    </div>
+  </div>
+
+  <div class="info-column">
+    <div class="info-item">
+      <div class="info-label">Unidad de negocio:</div>
+      <div class="info-value">FCR-MACROFONDO</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Clasificación de riesgos:</div>
+      <div class="info-value">A+</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Plazo calificación:</div>
+      <div class="info-value">Corto</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Monto de adjudicación:</div>
+      <div class="info-value">150,000,000.00</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha de emisión:</div>
+      <div class="info-value">29/09/2025</div>
+    </div>
+  </div>
+
+  <div class="info-column">
+    <div class="info-item">
+      <div class="info-label">Plazo de vencimiento:</div>
+      <div class="info-value">361 días</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Emisor:</div>
+      <div class="info-value">BANCO INTERAMERICANO DE FINANZAS</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Categoría Riesgo Merc.:</div>
+      <div class="info-value">A+</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Tipo Tasa:</div>
+      <div class="info-value">Tasa Efectiva</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Tasa Nominal (%):</div>
+      <div class="info-value">4.4961</div>
+    </div>
+  </div>
+
+  <div class="info-column">
+    <div class="info-item">
+      <div class="info-label">Moneda:</div>
+      <div class="info-value">PEN</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha de compra/corte:</div>
+      <div class="info-value">29/09/2025</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha Custodia:</div>
+      <div class="info-value">27/02/2025</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha Negociación:</div>
+      <div class="info-value">27/02/2025</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha Pactada:</div>
+      <div class="info-value">01/01/0001</div>
+    </div>
+  </div>
+            </div>
+
+                   <div class="section-header">2. Información de la operación financiera</div>
+      <form id="formLlamado" class="space-y-5" novalidate>
+        <input type="hidden" id="inv_id"/>
+
+        <div class="grid md:grid-cols-8 gap-4">
+         <!-- <div>
+            <label class="block text-sm font-semibold mb-1">Fecha del llamado</label>
+            <input id="fecha_llamado" type="date" required
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
+          </div>-->
+            <div >
+            <label class="block text-sm font-semibold mb-1">Moneda</label>
+             <select id="moneda" class="rounded-xl w-full border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
+                <option value="PEN" selected>PEN</option>
+                <option value="USD">USD</option>
+              </select>
+          </div>
+          <div class="col-span-2">
+            <label class="block text-sm font-semibold mb-1">Monto</label>
+            <input id="monto" type="text" inputmode="decimal" required
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
+                   placeholder="Ej. 1,310,067.70">
+          </div >
+          
+        </div>
+
+        <!-- NUEVO: Cuenta Bancaria (Select2) -->
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Banco cuenta de cargo</label>
+            <select id="banco" style="width:100%"></select>
+            <p class="text-xs text-gray-500 mt-1">Selecciona el banco desde donde se realizará el aporte.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Nro cuenta bancaria</label>
+            <select id="cuenta" style="width:100%"></select>
+            <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde donde se realizará el aporte.</p>
+          </div>
+        </div>
+<div class="grid md:grid-cols-2 gap-4">
+  <div>
+    <label class="block text-sm font-semibold mb-1">Banco cuenta destino</label>
+    <select id="banco_destino" style="width:100%"></select>
+    <p class="text-xs text-gray-500 mt-1">Selecciona el banco destino del aporte.</p>
+  </div>
+
+  <div>
+    <label class="block text-sm font-semibold mb-1">Nro cuenta destino</label>
+    <div class="flex gap-2">
+      <select id="cuenta_destino" style="width:100%"></select>
+      <!--<button id="btnNuevaCuentaDestino" type="button"
+              class="whitespace-nowrap text-sm px-3 py-2 rounded-lg border hover:bg-gray-50">
+        ➕ Aperturar
+      </button>-->
+    </div>
+    <p id="hintDestino" class="text-xs text-amber-600 mt-1 hidden">
+      No existen cuentas para este banco. Puedes aperturar una.
+    </p>
+  </div>
+</div>
+
+
+
+        <div class="section-header">3. Sustento documentario</div>
+        <!-- Sección Última Carta Generada -->
+<section id="ultima-carta" class="mt-6 p-4 border rounded-lg bg-white shadow">
+  <h2 class="text-lg font-semibold text-gray-800 mb-2">
+    📄 Última carta generada
+  </h2>
+  <p class="text-sm text-gray-600">
+    Fecha y hora: 
+    <span id="fechaCarta" class="font-medium text-gray-900">--/--/---- --:--</span>
+  </p>
+</section>
+
+        <div class="p-5 rounded-md bg-gray-100">
+                  <div class="text-center justify-center">
+          <label class=" text-sm font-semibold mb-1">Documento sustento de tranferencia</label>
+          <div id="drop" class="rounded-sm border-2 border-dashed border-gray-300 bg-muted p-4 w-[30%] m-auto">
+            <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg" required class="hidden">
+            <div class="flex items-center text-center text-sm">
+              <div class="text-center w-full">
+                <div class="font-semibold">📄 Seleccionar archivo</div>
+                <div class="text-gray-500">PDF</div>
+              </div>
+              
+            </div>
+            <div id="fileName" class="mt-2 text-blue-700 font-medium hidden"></div>
+          </div>
+        </div>
+        <div>
+          <div id="documentFields" class="mt-4 flex flex-row gap-3"></div>
+        </div>
+        <div class="config-section">
+                    <h4>🔧 Configuración avanzada</h4>
+                    <p style="color: #666; font-size: 0.9rem;">Agregue documentos adicionales para el área seleccionada:
+                    </p>
+                   <input type="text" id="newDocumentName" placeholder="Nombre del nuevo documento"
+  style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; width: 250px;">
+
+<button type="button" class="add-document-btn" >+ Agregar Documento</button>
+          </div>
+
+        </div>
+
+        
+
+        <div class="flex justify-end gap-3">
+
+          <a href="#" class="px-4 py-2.5 rounded-xl border-2 border-gray-300 bg-white hover:bg-gray-50">Cancelar</a>
+                  
+          <button type="submit"
+            class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+            Instruir
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Formulario -->
+
+  </main>
+
+  <!-- Modal de confirmación -->
+  <div id="confirmModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-panel w-[560px] max-w-[92vw] p-5">
+      <h1 class="text-xl font-semibold text-ink flex items-center">
+            <span class="border-l-4 border-[#3396d8] pl-2">Revisar y confirmar</span>
+      </h1>
+      <div id="review" class="space-y-2 text-sm"></div>
+      <div class="flex justify-end gap-2 mt-4">
+        <button id="btnCancelConfirm" class="px-3 py-2.5 rounded-xl border border-gray-300">Volver</button>
+        <button id="btnConfirmSave"
+          class="px-4 py-2.5 rounded-xl bg-blue-600 text-white font-semibold disabled:opacity-50"
+          >Confirmar y guardar</button>
+      </div>
+    </div>
+  </div>
+
+<!-- Modal Aperturar Cuenta -->
+<div id="aperturaModal"
+     class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-2xl shadow-panel w-[880px] max-w-[92vw]">
+    
+    <!-- Header azul -->
+    <div class="bg-[#005085] text-white px-5 py-3 rounded-t-2xl">
+      <h2 class="text-lg font-semibold">Aperturar nueva cuenta destino</h2>
+    </div>
+
+    <!-- Contenido -->
+    <form id="formApertura" class="grid grid-cols-1 gap-3 p-5">
+      <div class="grid md:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium mb-1">Banco</label>
+          <input id="ap_banco_txt"
+                 class="w-full rounded-xl border-2 border-gray-300 p-2.5"
+                 disabled>
+          <input type="hidden" id="ap_banco_id">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Moneda</label>
+          <select id="ap_moneda"
+                  class="w-full rounded-xl border-2 border-gray-300 p-2.5">
+            <option value="PEN" selected disabled>PEN</option>
+            <option value="USD" disabled>USD</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium mb-1">Tipo de cuenta</label>
+          <select id="ap_tipo"
+                  class="w-full rounded-xl border-2 border-gray-300 p-2.5">
+            <option value="Corriente">Corriente</option>
+            <option value="Ahorros">Ahorros</option>
+            <option value="Custodia">Custodia</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Titular</label>
+          <select id="ap_titular"
+                  class="w-full rounded-xl border-2 border-gray-300 p-2.5">
+            <option value="Fondo Consolidado de Reservas Previsionales – FCR">
+              Fondo Consolidado de Reservas Previsionales – FCR
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm font-medium mb-1">Número de cuenta</label>
+          <input id="ap_numero"
+                 class="w-full rounded-xl border-2 border-gray-300 p-2.5"
+                 placeholder="Ej. 193-1990153-0-54" required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">CCI (opcional)</label>
+          <input id="ap_cci"
+                 class="w-full rounded-xl border-2 border-gray-300 p-2.5"
+                 placeholder="Ej. 002-...">
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-2">
+        <button type="button" id="ap_btn_cancel"
+                class="px-3 py-2 rounded-xl border border-gray-300">
+          Cancelar
+        </button>
+        <button type="submit" id="ap_btn_guardar"
+                class="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold">
+          Crear cuenta
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+</body>
+</html>

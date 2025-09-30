@@ -33,7 +33,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-   <script src="js/fondeo-banco.js" defer></script>
+   <script src="js/fondeo-banco-tesoreria.js" defer></script>
   <link rel="stylesheet" href="css/fondeo-banco.css">
 </head>
 <body class="bg-gray-100 text-ink">
@@ -158,11 +158,48 @@
   </div>
             </div>
 
-                   <div class="section-header">2. Información de la operación financiera</div>
+      <div class="section-header">2. Información de la instrucción</div>
       <form id="formLlamado" class="space-y-5" novalidate>
         <input type="hidden" id="inv_id"/>
 
-        <div class="grid md:grid-cols-8 gap-4">
+
+        <!-- NUEVO: Cuenta Bancaria (Select2) -->
+         <div class="flex flex-col justify-center ">
+                  <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Banco cuenta de cargo</label>
+            <select id="banco" style="width:100%" disabled></select>
+            <p class="text-xs text-gray-500 mt-1">Selecciona el banco desde donde se realizará el aporte.</p>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Nro cuenta bancaria</label>
+            <select id="cuenta" style="width:100%" disabled></select>
+            <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde donde se realizará el aporte.</p>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Banco cuenta destino</label>
+            <select id="banco_destino" style="width:100%" disabled></select>
+            <p class="text-xs text-gray-500 mt-1">Selecciona el banco destino del aporte.</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold mb-1">Nro cuenta destino</label>
+            <div class="flex gap-2">
+              <select id="cuenta_destino" style="width:100%" disabled></select>
+            <!-- <button id="btnNuevaCuentaDestino" type="button"
+                      class="whitespace-nowrap text-sm px-3 py-2 rounded-lg border hover:bg-gray-50">
+                ➕ Aperturar
+              </button>-->
+            </div>
+            <p id="hintDestino" class="text-xs text-amber-600 mt-1 hidden">
+              No existen cuentas para este banco. Puedes aperturar una.
+            </p>
+          </div>
+        </div>
+        <div class="justify-center items-center w-full flex flex-col">
+           <div class="grid md:grid-cols-2 gap-4 w-1/3">
          <!-- <div>
             <label class="block text-sm font-semibold mb-1">Fecha del llamado</label>
             <input id="fecha_llamado" type="date" required
@@ -170,64 +207,57 @@
           </div>-->
             <div >
             <label class="block text-sm font-semibold mb-1">Moneda</label>
-             <select id="moneda" class="rounded-xl w-full border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
+             <select id="moneda" class="rounded-xl w-full border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500" disabled>
                 <option value="PEN" selected>PEN</option>
                 <option value="USD">USD</option>
               </select>
           </div>
-          <div class="col-span-2">
+          <div class="col-span">
             <label class="block text-sm font-semibold mb-1">Monto</label>
-            <input id="monto" type="text" inputmode="decimal" required
+            <input id="monto" type="text" inputmode="decimal" required disabled
+                   value="1500000"
                    class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
                    placeholder="Ej. 1,310,067.70">
           </div >
-             <div class="col-span-2">
+          
+        </div>
+        </div>
+
+       
+         </div>
+
+
+<div class="section-header">3. Comisión de la operación</div>
+
+       <div class="flex flex-row justify-center gap-3">
+         <!-- <div>
+            <label class="block text-sm font-semibold mb-1">Fecha del llamado</label>
+            <input id="fecha_llamado" type="date" required
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500">
+          </div>-->
+            <div class="w-1/6">
+            <label class="block text-sm font-semibold mb-1">Fondo solicitado</label>
+            <input id="monto_solicitado" type="text" inputmode="decimal" required disabled
+                   value="1500000"
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
+                   placeholder="Ej. 1,310,067.70">
+          </div >
+             <div class="w-1/6">
             <label class="block text-sm font-semibold mb-1">Comisión</label>
             <input id="comision" type="text" inputmode="decimal" required
                    class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
                    placeholder="Ej. 20.70">
           </div>
+          <div class="w-1/6">
+            <label class="block text-sm font-semibold mb-1">Total</label>
+            <input id="monto_total" type="text" inputmode="decimal" required disabled
+                    value="1500000"
+                   class="w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px] focus:border-blue-500"
+                   placeholder="Ej. 20.70">
+          </div>
           
         </div>
-
-        <!-- NUEVO: Cuenta Bancaria (Select2) -->
-        <div class="grid md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-semibold mb-1">Banco cuenta de cargo</label>
-            <select id="banco" style="width:100%"></select>
-            <p class="text-xs text-gray-500 mt-1">Selecciona el banco desde donde se realizará el aporte.</p>
-          </div>
-          <div>
-            <label class="block text-sm font-semibold mb-1">Nro cuenta bancaria</label>
-            <select id="cuenta" style="width:100%"></select>
-            <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde donde se realizará el aporte.</p>
-          </div>
-        </div>
-<div class="grid md:grid-cols-2 gap-4">
-  <div>
-    <label class="block text-sm font-semibold mb-1">Banco cuenta destino</label>
-    <select id="banco_destino" style="width:100%"></select>
-    <p class="text-xs text-gray-500 mt-1">Selecciona el banco destino del aporte.</p>
-  </div>
-
-  <div>
-    <label class="block text-sm font-semibold mb-1">Nro cuenta destino</label>
-    <div class="flex gap-2">
-      <select id="cuenta_destino" style="width:100%"></select>
-      <button id="btnNuevaCuentaDestino" type="button"
-              class="whitespace-nowrap text-sm px-3 py-2 rounded-lg border hover:bg-gray-50">
-        ➕ Aperturar
-      </button>
-    </div>
-    <p id="hintDestino" class="text-xs text-amber-600 mt-1 hidden">
-      No existen cuentas para este banco. Puedes aperturar una.
-    </p>
-  </div>
-</div>
-
-
-
-        <div class="section-header">3. Sustento documentario</div>
+        <div class="section-header">4. Sustento documentario</div>
         <!-- Sección Última Carta Generada -->
 <section id="ultima-carta" class="mt-6 p-4 border rounded-lg bg-white shadow">
   <h2 class="text-lg font-semibold text-gray-800 mb-2">
@@ -281,6 +311,8 @@
           </button>
         </div>
       </form>
+
+      
     </section>
 
     <!-- Formulario -->

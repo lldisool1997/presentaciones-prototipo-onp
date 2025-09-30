@@ -165,11 +165,23 @@
                                 
                                  ` `
                             }
+                             ${
+                                inv.estado === "REGISTRADO" && getAreaParam() === "DIN"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+            <button class="btn btn-action btn-llamado-registro" onclick="irARegistrodeFondeoDIN('${inv.invPrincipal}')">
+              Instruir Transferencia de fondos
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
             ${
                                 inv.estado === "REGISTRADO" && getAreaParam() === "Tesoreria"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
-                         <button class="btn btn-action btn-llamado-registro" onclick="irARegistrodeFondeo('${inv.invPrincipal}')">
+                         <button class="btn btn-action btn-llamado-registro" onclick="irARegistrodeFondeoTesoreria('${inv.invPrincipal}')">
               Transferir Fondos
             </button>
               <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDeCartaAprobacion('${inv.invPrincipal}')">
@@ -448,11 +460,19 @@ async function cancelarMovimiento(i, j){
   // =============== NAVEGACIÓN ===============
 
 
-function irARegistrodeFondeo(inversionId){
+function irARegistrodeFondeoDIN(inversionId){
     if(inversionId){
-      window.location.href = `fondeo-banco.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `fondeo-banco-DIN.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
-      window.location.href = "fondeo-banco.html";
+      window.location.href = "fondeo-banco-DIN.html";
+    }
+  }
+
+  function irARegistrodeFondeoTesoreria(inversionId){
+    if(inversionId){
+      window.location.href = `fondeo-banco-tesoreria.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "fondeo-banco-tesoreria.html";
     }
   }
 
@@ -554,7 +574,6 @@ function irARegistrodeFondeo(inversionId){
 }
 window.irABackOffice = irABackOffice;
   window.irARegistroAprobacion = irARegistroAprobacion;
-  window.irARegistrodeFondeo = irARegistrodeFondeo;
   window.irARegistroDeCartaAprobacion = irARegistroDeCartaAprobacion;
   window.irARegistroDeCartaRecepcion = irARegistroDeCartaRecepcion;
 
