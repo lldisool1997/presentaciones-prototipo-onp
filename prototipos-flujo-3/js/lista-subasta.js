@@ -515,7 +515,7 @@ function irARegistrodeFondeoDIN(inversionId){
 
     function irARegistroCancelacion(inversionId){
     if(inversionId){
-      window.location.href = `cancelar-instrumento.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `cancelar-instrumento.html?area=DIN&accion=accion&&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
       window.location.href = "cancelar-instrumento.html";
     }
