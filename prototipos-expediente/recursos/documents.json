@@ -786,7 +786,7 @@
     "acciones": [
       {
         "fecha": "14/07/2025, 4:03:00 p. m.",
-        "accion": "Registro de Instrumento Financiero",
+        "accion": "Registro de Inversión Financiera",
         "usuario": "JSIFUENTESR",
         "nombreUsuario": "Josue Sifuentes",
         "ip": "172.16.34.132",
@@ -796,7 +796,7 @@
       },
       {
         "fecha": "14/07/2025, 4:05:00 p. m.",
-        "accion": "Envío de notificación de registro de instrumento",
+        "accion": "Envío de notificación de registro de inversión",
         "usuario": "4",
         "nombreUsuario": "-",
         "ip": "-",
@@ -837,7 +837,7 @@
       },
       {
         "fecha": "14/07/2025, 4:05:00 p. m.",
-        "accion": "Recepción de notificación de registro de instrumento",
+        "accion": "Recepción de notificación de registro de inversión",
         "usuario": "4",
         "nombreUsuario": "-",
         "ip": "-",
@@ -1866,7 +1866,7 @@
        "acciones": [
       {
         "fecha": "14/07/2025, 4:03:00 p. m.",
-        "accion": "Registro de Instrumento Financiero",
+        "accion": "Registro de Inversión Financiera",
         "usuario": "JSIFUENTESR",
         "nombreUsuario": "Josue Sifuentes",
         "ip": "172.16.34.132",
@@ -1876,7 +1876,7 @@
       },
       {
         "fecha": "14/07/2025, 4:05:00 p. m.",
-        "accion": "Envío de notificación de registro de instrumento",
+        "accion": "Envío de notificación de registro de inversión",
         "usuario": "4",
         "nombreUsuario": "-",
         "ip": "-",
@@ -1917,7 +1917,7 @@
       },
       {
         "fecha": "14/07/2025, 4:05:00 p. m.",
-        "accion": "Recepción de notificación de registro de instrumento",
+        "accion": "Recepción de notificación de registro de inversión",
         "usuario": "4",
         "nombreUsuario": "-",
         "ip": "-",
