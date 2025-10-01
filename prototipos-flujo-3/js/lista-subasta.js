@@ -477,7 +477,7 @@ async function cancelarMovimiento(i, j){
 
 function irARegistrodeFondeoDIN(inversionId){
     if(inversionId){
-      window.location.href = `fondeo-banco-DIN.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `fondeo-banco-DIN.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
       window.location.href = "fondeo-banco-DIN.html";
     }

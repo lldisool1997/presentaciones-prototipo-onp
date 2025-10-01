@@ -442,7 +442,11 @@ $("#formLlamado").off('submit.main').on("submit.main", function(e){
       text: "El registro se completó correctamente.",
       icon: "success",
       confirmButtonColor: "#16a34a"
-    });
+    }).then((result) => {
+          // 5) redirige
+    window.location.href = "listado-subasta.html?area=Tesoreria&accion=revisar";
+    })
+    
 
     // Limpieza básica del form + selects
     $("#formLlamado")[0].reset();
