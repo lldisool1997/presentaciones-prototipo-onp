@@ -29,6 +29,28 @@
     "pCompraCupon": "4.4961",
     "ecoInstrument": "A+"
   },
+    {
+    "entidad": "fdo-consolidado",
+    "accion": "aprobar",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Operación cambiaria",
+    "estado": "REGISTRADO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Operación cambiaria",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "29/09/2025",
+    "cataApertura": "",
+    "cataCancelacion": "",
+    "moneda": "PEN",
+    "valorNominal": "17,642,500.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": ""
+  },
   {
     "entidad": "fdo-consolidado",
     "accion": "cancelar",
@@ -39,6 +61,28 @@
     "invPrincipal": "7000",
     "codFCR": "INV-7000",
     "producto": "Instrumento de corto plazo",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "23/02/2026",
+    "cataApertura": "BANBIF",
+    "cataCancelacion": "Grupo Breca",
+    "moneda": "PEN",
+    "valorNominal": "150,000,000.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": "A+"
+  },
+    {
+    "entidad": "fdo-consolidado",
+    "accion": "cancelar",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Operación cambiaria",
+    "estado": "INSTRUIDO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Operación cambiaria",
     "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
     "fechaCompra": "29/09/2025",
     "fechaEmision": "29/09/2025",
@@ -185,7 +229,7 @@
               Instruir Transferencia de fondos
             </button>
              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionDIN('${inv.invPrincipal}')">
-              Instruir apertura de cuenta
+              Instruir habilitación de cuenta
             </button>
           </div>`
                                 :
