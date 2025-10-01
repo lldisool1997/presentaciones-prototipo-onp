@@ -10,7 +10,7 @@ const bodyInicial = `
       <!-- Columna izquierda -->
       <td style="width:50%; vertical-align:top; padding-right:10px">
         <div>TITULAR:&nbsp; {{TITULAR}}</div>
-        <div>INSTRUMENTO:&nbsp; {{INSTRUMENTO}}</div>
+        <div>INVERSIÓN:&nbsp; {{INSTRUMENTO}}</div>
         <div>MONTO:&nbsp; {{MONTO}}</div>
         <div>INTERESES:&nbsp; {{INTERESES}}</div>
       </td>
@@ -211,8 +211,13 @@ const firmasHtml = `
       
       <div style="margin-top:24px">Agradecidos por la atención, quedamos</div>
       <div style="margin-top:16px">Atentamente,</div>
-
+      <br>
+      <br>
       ${firmasHtml}
+      <br>
+      <br>
+      <br>
+      <br>
 
       <div class="doc-footer" style="margin-top:28px;border-top:1px solid #e5e7eb;padding-top:12px;color:#475569;font-size:12px">
         ${footer}
@@ -262,7 +267,7 @@ function parseRepVal(sel) {
 
   function generarCarta(){
     $('#txtNumDigital').val("615004");
-    $('#btnPDF').prop("disabled", false);
+    generarPdf();
   }
 
   $('#btnWord').on('click', () => {
@@ -287,9 +292,9 @@ function waitImagesLoaded(root) {
   })));
 }
 
-$('#btnPDF').off('click').on('click', async () => {
+async function generarPdf() {
   try {
-    // 1) crea contenedor oculto en el DOM (mejor que fuera del DOM)
+    // 1) crea contenedor oculto en el DOM
     const host = document.createElement('div');
     host.style.position = 'fixed';
     host.style.left = '-99999px';
@@ -297,12 +302,12 @@ $('#btnPDF').off('click').on('click', async () => {
     host.innerHTML = `<div class="a4 a4--pdf">${buildInner()}</div>`;
     document.body.appendChild(host);
 
-    const id = $('#txtNumDigital').val()
+    const id = $('#txtNumDigital').val();
 
     // 2) espera imágenes
     await waitImagesLoaded(host);
 
-    // 3) genera y fuerza descarga (ruta robusta)
+    // 3) genera y fuerza descarga
     await html2pdf()
       .set({
         margin: 0,
@@ -315,15 +320,18 @@ $('#btnPDF').off('click').on('click', async () => {
       .from(host.firstElementChild)
       .toPdf()
       .get('pdf')
-      .then(pdf => pdf.save('carta-'+id+'.pdf'));
+      .then(pdf => pdf.save('carta-' + id + '.pdf'));
 
     // 4) limpia
     host.remove();
+
+    // 5) redirige
+    //window.location.href = "fondeo-banco-tesoreria.html?area=Tesoreria&inv_id=7000&accion=accion";
+
   } catch (err) {
     console.error('Error generando PDF:', err);
   }
-});
-
+}
 
 
   // Modal close handlers
@@ -414,8 +422,6 @@ function firmaCell(url, nombre, cargo1 = '', cargo2 = '') {
   return `
     <div style="display:inline-block; vertical-align:top; width:50%; max-width:50%; 
                 padding:0 10px; box-sizing:border-box; text-align:center; font-size:12px; line-height:1.35;">
-      <img src="${src}" alt="firma" 
-           style="max-width:100%; max-height:80px; display:block; margin:0 auto 6px;" />
 
       <div style="margin-top:6px; font-weight:600; text-transform:uppercase; min-height:18px;">
         ${escapeHtml(nombre)}
@@ -446,8 +452,6 @@ function firmaCellOperador(url, nombre, cargo1 = '', cargo2 = '') {
       box-sizing:border-box;
       text-align:center;
     ">
-      <img src="${src}" alt="firma"
-           style="max-width:100%; max-height:80px; display:block; margin:0 auto 6px;" />
     </div>
   `;
 }
