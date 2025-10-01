@@ -480,7 +480,7 @@ $("#formLlamado").off('submit.main').on("submit.main", function(e){
   const fechaStr = $fecha.length ? ($fecha.val() || "") : "";
 
   // === Render del review basado SOLO en inputs ===
-  $("#review").html(`
+  /*$("#review").html(`
     <dl class="divide-y divide-gray-200 text-sm text-gray-700">
       ${fechaStr ? `
       <div class="py-2 flex justify-between">
@@ -530,7 +530,47 @@ $("#formLlamado").off('submit.main').on("submit.main", function(e){
   // Abrir modal de confirmación
   $("#chkConfirm").prop("checked", false);
   $("#btnConfirmSave").prop("disabled", false);
-  $("#confirmModal").removeClass("hidden").addClass("flex");
+  $("#confirmModal").removeClass("hidden").addClass("flex");*/
+  
+  // ✅ Confirmación con SweetAlert2 (sin review)
+  Swal.fire({
+    title: "¿Confirmar registro?",
+    text: "Se guardará la operación.",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Sí, guardar",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#2563eb",
+    cancelButtonColor: "#6b7280"
+  }).then((result) => {
+    if (!result.isConfirmed) return;
+
+    // Éxito
+    Swal.fire({
+      title: "¡Guardado!",
+      text: "El registro se completó correctamente.",
+      icon: "success",
+      confirmButtonColor: "#16a34a"
+    });
+
+    // Limpieza básica del form + selects
+    $("#formLlamado")[0].reset();
+    $("#banco, #cuenta, #banco_destino, #cuenta_destino").val(null).trigger("change");
+    $("#fileName").addClass("hidden").text("");
+
+    // Limpia estado de dinámicos
+    filesUploaded = {};
+    document.getElementById('documentFields')?.querySelectorAll('input[type="file"]').forEach(i => i.value = '');
+    document.getElementById('documentFields')?.querySelectorAll('.file-upload-area').forEach(a => a.innerHTML = `
+      <div class="upload-text font-medium">📄 Seleccionar archivo</div>
+      <div class="upload-text text-gray-500 text-sm mt-1">PDF</div>
+    `);
+
+    // Reset del drop principal a prompt
+    $drop.find(".font-semibold").text("📄 Seleccionar archivo");
+    $drop.find(".text-gray-500").text("PDF");
+    $(document).find('.ring-2.ring-red-400').removeClass('ring-2 ring-red-400 border-red-400');
+  });
 });
 
 
