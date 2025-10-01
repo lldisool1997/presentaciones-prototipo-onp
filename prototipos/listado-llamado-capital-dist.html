@@ -299,7 +299,7 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="tipoInstrumento">Tipo Instrumento:</label>
+              <label for="tipoInstrumento">Tipo Inversión:</label>
               <select id="tipoInstrumento">
                 <option value="">Todos los tipos</option>
                 <option value="Fondo Privado" selected>Fondo Privado</option>
@@ -369,7 +369,7 @@
                 <th>Carta Cancelación</th>
                 <th>Moneda</th>
                 <th>Valor Nominal</th>
-                <th>Eco Instrumento</th>
+                <th>Eco Inversión</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -1052,7 +1052,7 @@ window.irABackOffice = irABackOffice;
               // Segunda confirmación
         const step2 = await Swal.fire({
           title: "Confirmación",
-          text: "¿Estás completamente seguro de aprobar el instrumento?. Esta acción no se puede deshacer.",
+          text: "¿Estás completamente seguro de aprobar la inversión?. Esta acción no se puede deshacer.",
           icon: "warning",
           showCancelButton: true,
           confirmButtonText: "Sí, aprobar",

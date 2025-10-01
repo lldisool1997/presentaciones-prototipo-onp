@@ -138,11 +138,11 @@
 
           <div class="grid grid-3" style="margin-top:12px">
             <div>
-              <label for="flt_grupo">Grupo de Instrumento</label>
+              <label for="flt_grupo">Subcategoría</label>
               <select id="flt_grupo" style="width:100%" disabled></select>
             </div>
             <div>
-              <label for="flt_tipo">Tipo de Instrumento</label>
+              <label for="flt_tipo">Tipo de Inversión</label>
               <select id="flt_tipo" style="width:100%" disabled></select>
             </div>
             <div>
@@ -178,8 +178,8 @@
             <thead>
               <tr>
                 <th>Mercado</th>
-                <th>Grupo de Instrumento</th>
-                <th>Tipo de Instrumento</th>
+                <th>Subcategoría</th>
+                <th>Tipo de Inversión</th>
                 <th class="text-left">Concepto (SGAFCR)</th>
                 <th>Debe/Haber</th>
                 <th>Cuenta Contable</th>
@@ -228,18 +228,18 @@
         <form id="form">
           <!-- 1) Clasificación: Mercado → Grupo → Tipo -->
           <div class="card">
-            <h3 class="section-title">Clasificación de Instrumentos</h3>
+            <h3 class="section-title">Clasificación de Inversiones</h3>
             <div class="grid grid-3">
               <div>
                 <label for="sel_mercado">Mercado</label>
                 <select id="sel_mercado" style="width:100%"></select>
               </div>
               <div>
-                <label for="sel_subcat">Grupo de Instrumento</label>
+                <label for="sel_subcat">Subcategoría</label>
                 <select id="sel_subcat" style="width:100%" disabled></select>
               </div>
               <div>
-                <label for="sel_tipo">Tipo de Instrumento</label>
+                <label for="sel_tipo">Tipo de Inversión</label>
                 <select id="sel_tipo" style="width:100%" disabled></select>
               </div>
             </div>
@@ -583,7 +583,7 @@ $(document).ready(function(){
       area: $("#f_area").val()
     };
     if(!row.mercado || !row.grupo || !row.tipoCatalogo){
-      toastr.error("Completa Mercado, Grupo y Tipo de Instrumento"); return;
+      toastr.error("Completa Mercado, Grupo y Tipo de Inversión"); return;
     }
     const key = `${row.mercado}::${row.concepto}`;
     const h = HOMOLOGACION[key];
