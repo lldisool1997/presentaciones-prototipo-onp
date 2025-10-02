@@ -21,8 +21,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <!-- Tu CSS general; no hace falta cambiarlo -->
-  <link rel="stylesheet" href="css/operacion-cambiaria.css">
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="css/back-office-ope-camb.css">
 </head>
 <body class="bg-gray-100 text-slate-800">
   <main class="max-w-screen-xl mx-auto px-4 py-6">
@@ -36,25 +36,23 @@
       <!-- Tab bar -->
       <div class="oc-tabs px-4 pt-4">
         <div class="oc-tablist" role="tablist" aria-label="Tabs Operación cambiaria">
-          <!-- Las transferencias se insertan inmediatamente ANTES de este botón -->
-          <button class="oc-tab is-active" role="tab" aria-selected="true"
-                  aria-controls="tab-operacion" id="tabbtn-operacion">
+          <button class="oc-tab is-active" role="tab" aria-selected="true" aria-controls="tab-operacion" id="tabbtn-operacion">
             Operación
           </button>
 
-          <!-- Botón para añadir (se mantiene a la derecha) -->
-          <button id="btnAddTransferencia" type="button" class="oc-tab-add" title="Añadir transferencia">
-            + Añadir transferencia
-          </button>
+          <!-- aquí se inyectan los tabs de transferencias -->
+          <span id="oc-tab-dynamic"></span>
+
+
         </div>
       </div>
 
       <!-- Tab panels -->
       <div class="oc-panels p-5">
-        <!-- Panel Operación (fijo, sin comisión ni sustento) -->
+        <!-- Panel Operación (fijo) -->
         <section id="tab-operacion" class="oc-panel is-active" role="tabpanel" aria-labelledby="tabbtn-operacion">
+          <!-- ====== BLOQUE PRINCIPAL (igual que antes) ====== -->
           <div class="section-header">1. Registro de Operación cambiaria</div>
-
           <form id="formOperacion" class="space-y-4" novalidate>
             <div class="dashed card p-4">
               <div class="grid md:grid-cols-6 gap-4">
@@ -86,7 +84,7 @@
 
                 <div>
                   <label class="lbl">Importe Destino</label>
-                  <input id="oc_importe_destino" readonly type="text" class="inp" placeholder="100,000,000.00" inputmode="decimal">
+                  <input id="oc_importe_destino" type="text" class="inp" placeholder="100,000,000.00" inputmode="decimal">
                 </div>
               </div>
 
@@ -120,9 +118,56 @@
               </div>
             </div>
 
-            <!-- Botonera final -->
+            <!-- 2. Comisión (global) -->
+            <div class="subsection">
+              <div class="subsection-title">2. Registro de la Comisión</div>
+              <div class="grid gap-4 md:grid-cols-3">
+                <div>
+                  <label class="lbl">Fondo solicitado</label>
+                  <input id="oc_fondo" type="text" class="inp" placeholder="150,000,000" inputmode="decimal">
+                </div>
+                <div>
+                  <label class="lbl">Comisión</label>
+                  <input id="oc_comision" type="text" class="inp" placeholder="Ej. 20.70" inputmode="decimal">
+                </div>
+                <div>
+                  <label class="lbl">Total</label>
+                  <input id="oc_total" type="text" class="inp" placeholder="150,000,000" inputmode="decimal" readonly>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Sustento (global) -->
+            <div class="subsection">
+              <div class="subsection-title">3. Sustento documentario</div>
+
+              <div class="dropzone">
+                <div class="dz-title">Documento sustento de transferencia</div>
+                <label class="dz-select">
+                  <input type="file" id="oc_file" accept="application/pdf" hidden>
+                  <span class="dz-btn">Seleccionar archivo</span>
+                  <span class="dz-sub">PDF</span>
+                  <span class="dz-filename" id="oc_filename"></span>
+                </label>
+              </div>
+
+              <div class="adv-config">
+                <div class="flex items-center gap-3 mb-2 text-slate-600">
+                  <span class="i-info"></span>
+                  <span>Configuración avanzada</span>
+                </div>
+                <p class="text-xs text-slate-500 mb-2">Agregue documentos adicionales para el área seleccionada:</p>
+                <div class="flex gap-2">
+                  <input type="text" id="oc_doc_nombre" class="inp flex-1" placeholder="Nombre del nuevo documento">
+                  <button type="button" id="oc_btn_add_doc" class="btn-success">+ Agregar Documento</button>
+                </div>
+                <div id="oc_docs" class="doc-tags mt-3"></div>
+              </div>
+            </div>
+
             <div class="flex justify-end gap-3 pt-3">
               <button type="button" id="btnCancelar" class="btn-secondary">Cancelar</button>
+              <button type="button" id="btnGenerarCarta" class="btn-secondary">Generar Carta</button>
               <button type="submit" id="btnInstruir" class="btn-primary">Confirmar</button>
             </div>
           </form>
@@ -133,20 +178,19 @@
       </div>
     </section>
 
-    <!-- ====== TEMPLATE: Transferencia (solo datos, sin comisión ni sustento) ====== -->
+    <!-- ====== TEMPLATE de una Transferencia (contenido del panel) ====== -->
     <template id="tplTransferencia">
       <section class="oc-panel">
         <div class="flex items-center justify-between mb-2">
           <h3 class="trf-title">Transferencia <span class="num">1</span></h3>
-          <button type="button" class="btn-subtle btnEliminarTransferencia">Eliminar</button>
         </div>
 
-        <!-- Datos de la transferencia -->
+        <!-- 1. Datos -->
         <div class="card p-4">
           <div class="grid gap-4 md:grid-cols-2">
             <div>
               <label class="lbl">Moneda</label>
-              <select class="inp sel-moneda" >
+              <select class="inp sel-moneda">
                 <option value="PEN">PEN</option>
                 <option value="USD">USD</option>
               </select>
@@ -183,7 +227,54 @@
           </div>
         </div>
 
+        <!-- 2. Comisión -->
+        <div class="subsection">
+          <div class="subsection-title">2. Registro de la Comisión</div>
+          <div class="grid gap-4 md:grid-cols-3">
+            <div>
+              <label class="lbl">Fondo solicitado</label>
+              <input type="text" class="inp trf-fondo" placeholder="150,000,000" inputmode="decimal">
+            </div>
+            <div>
+              <label class="lbl">Comisión</label>
+              <input type="text" class="inp trf-comision" placeholder="Ej. 20.70" inputmode="decimal">
+            </div>
+            <div>
+              <label class="lbl">Total</label>
+              <input type="text" class="inp trf-total" placeholder="150,000,000" inputmode="decimal" readonly>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Sustento documentario -->
+        <div class="subsection">
+          <div class="subsection-title">3. Sustento documentario</div>
+          <div class="dropzone">
+            <div class="dz-title">Documento sustento de transferencia</div>
+            <label class="dz-select">
+              <input type="file" class="trf-file" accept="application/pdf" hidden>
+              <span class="dz-btn">Seleccionar archivo</span>
+              <span class="dz-sub">PDF</span>
+              <span class="dz-filename"></span>
+            </label>
+          </div>
+
+          <div class="adv-config">
+            <div class="flex items-center gap-3 mb-2 text-slate-600">
+              <span class="i-info"></span>
+              <span>Configuración avanzada</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-2">Agregue documentos adicionales para el área seleccionada:</p>
+            <div class="flex gap-2">
+              <input type="text" class="inp flex-1 trf-doc-nombre" placeholder="Nombre del nuevo documento">
+              <button type="button" class="btn-success trf-btn-add-doc">+ Agregar Documento</button>
+            </div>
+            <div class="doc-tags trf-docs mt-3"></div>
+          </div>
+        </div>
+
         <div class="flex justify-end gap-3 mt-4">
+          <button type="button" class="btn-secondary trf-btn-carta">Generar Carta</button>
           <button type="button" class="btn-primary trf-btn-confirmar">Confirmar</button>
         </div>
       </section>
@@ -191,6 +282,6 @@
   </main>
 
   <!-- JS -->
-  <script src="js/operacion-cambiaria.js"></script>
+  <script src="js/back-office-ope-camb.js"></script>
 </body>
 </html>

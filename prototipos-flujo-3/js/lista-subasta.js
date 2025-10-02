@@ -195,7 +195,7 @@
                                  ` `
                             }
           ${
-                                inv.estado === "INSTRUIDO" && getAreaParam() === "Tesoreria"
+                                inv.estado === "INSTRUIDO" && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDeCartaRecepcion('${inv.invPrincipal}')">
@@ -210,7 +210,7 @@
                                  ` `
                             }
                              ${
-                                inv.estado === "APROBADO" && getAreaParam() === "DIN"
+                                inv.estado === "APROBADO" && getAreaParam() === "DIN" && inv.producto == "Instrumento de corto plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroInstruccion('${inv.invPrincipal}')">
@@ -222,7 +222,7 @@
                                  ` `
                             }
                              ${
-                                inv.estado === "REGISTRADO" && getAreaParam() === "DIN"
+                                inv.estado === "REGISTRADO" && getAreaParam() === "DIN" && inv.producto == "Instrumento de corto plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistrodeFondeoDIN('${inv.invPrincipal}')">
@@ -236,8 +236,21 @@
                                 
                                  ` `
                             }
+
+                                                       ${
+                                inv.estado === "REGISTRADO" && getAreaParam() === "Tesoreria" && inv.producto == "Operación cambiaria"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+            <button class="btn btn-action btn-llamado-registro" onclick="irAInstruccionOpeCambiaria('${inv.invPrincipal}')">
+              Confirmar
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
             ${
-                                inv.estado === "REGISTRADO" && getAreaParam() === "Tesoreria"
+                                inv.estado === "REGISTRADO" && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
                          <button class="btn btn-action btn-llamado-registro" onclick="irARegistrodeFondeoTesoreria('${inv.invPrincipal}')">
@@ -255,7 +268,7 @@
                                  ` `
                             }
            ${
-                                inv.estado !== "APROBADO" && getAreaParam() === "Tesoreria"
+                                inv.estado !== "APROBADO" && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
 
@@ -527,6 +540,15 @@ function irARegistrodeFondeoDIN(inversionId){
     }
   }
 
+  
+function irAInstruccionOpeCambiaria(inversionId){
+    if(inversionId){
+      window.location.href = `back-office-ope-camb.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "back-office-ope-camb.html";
+    }
+  }
+
   function irARegistrodeFondeoTesoreria(inversionId){
     if(inversionId){
             let subaccion = "";
@@ -690,6 +712,14 @@ window.irABackOffice = irABackOffice;
 
   // =============== INIT ===============
   $(function(){
+    const inst = getInstruParam();
+    if(inst){
+      $('#tipoInstrumento').val("Operación cambiaria")
+    }
+    else{
+      
+      $('#tipoInstrumento').val("Instrumento de corto plazo")
+    }
     // Inputs de texto -> al escribir
     $("#inversionNum, #numeroDeposito").on("input", applyFilters);
 
@@ -1037,6 +1067,12 @@ window.irABackOffice = irABackOffice;
     const params = new URLSearchParams(window.location.search);
     return params.get("area");
   }
+
+           function getInstruParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("inst");
+  }
+
 
       function getAccion() {
     const params = new URLSearchParams(window.location.search);

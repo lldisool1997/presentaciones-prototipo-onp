@@ -133,11 +133,15 @@ function populateOperacion(op){
     $('#oc_cuenta_destino').val(op.cuenta_destino).trigger('change');
   }
   if (op.fecha) $('#oc_fecha').val(op.fecha);
+  lockGlobal();
 }
 function populateTransfer($panel, t){
   if (!t) return;
+
+  // Poblar datos
   $panel.find('.sel-moneda').val(t.moneda).trigger('change');
   $panel.find('.txt-monto').val(t.monto ? formatMoney(t.monto) : '');
+
   if (t.banco_cargo){
     $panel.find('.sel-banco-cargo').val(t.banco_cargo).trigger('change');
     loadCuentas($panel.find('.sel-cuenta-cargo'), t.banco_cargo);
@@ -148,7 +152,27 @@ function populateTransfer($panel, t){
     loadCuentas($panel.find('.sel-cuenta-destino'), t.banco_destino);
     $panel.find('.sel-cuenta-destino').val(t.cuenta_destino).trigger('change');
   }
+
+  // (si llegan estos campos, pónlos)
+  if (t.fondo       != null) $panel.find('.trf-fondo').val(formatMoney(t.fondo));
+  if (t.comision    != null) $panel.find('.trf-comision').val(formatMoney(t.comision));
+  if (t.total       != null) $panel.find('.trf-total').val(formatMoney(t.total));
+  if (t.sustento_pdf)         $panel.find('.dz-filename').text('• ' + t.sustento_pdf);
+
+  // === Deshabilitar TODO ===
+  $panel.find('input, select, textarea, button').prop('disabled', true);
+  $panel.find('.sel2').prop('disabled', true).trigger('change.select2');
+  $panel.find('.trf-total').prop('readonly', true);
+
+  // === Rehabilitar lo permitido ===
+  // Comisión (editable)
+  $panel.find('.trf-comision').prop('disabled', false).prop('readonly', false);
+
+  // Sustento (habilitado) — BORRA estas dos líneas si no lo quieres activo
+  $panel.find('.trf-file').prop('disabled', false);
+  $panel.find('.trf-doc-nombre, .trf-btn-add-doc').prop('disabled', false);
 }
+
 
 /* =====================  Crear tab + panel de Transferencia ===================== */
 function addTransferTab(prefillData = null){
@@ -183,6 +207,7 @@ function addTransferTab(prefillData = null){
   // renumera por orden visual y guarda
   renumerarTabs();
   saveToStorage(false);
+  
 }
 
 function initTransferPanel($panel){
@@ -250,15 +275,6 @@ function initGlobal(){
     Swal.fire({icon:'success',title:'Operación confirmada (guardada localmente)',timer:1200,showConfirmButton:false});
   });
 
-  $('#oc_importe_origen, #oc_tipo_cambio').on('change', function(e){
-    const importe = $('#oc_importe_origen').val();
-    const tipoCambio = $('#oc_tipo_cambio').val();
-
-    if(importe && tipoCambio){
-      $('#oc_importe_destino').val(formatMoney(parseMoney(importe)/parseMoney(tipoCambio)))
-    }
-  })
-
   // helpers expuestos (opcional)
   window.ocStorage = {
     save: saveToStorage,
@@ -277,6 +293,34 @@ function restoreFromStorage(){
   (data.transferencias || []).forEach(t => addTransferTab(t));
   if (window.toastr) toastr.info('Se restauró un borrador local');
 }
+
+/* ============ Locks (vista) ============ */
+function lockTransfer($panel){
+  // deshabilita todo
+  $panel.find('input, select, textarea').prop('disabled', true);
+
+  // habilita solo: comisión, file y docs extra
+  $panel.find('.trf-comision').prop('disabled', false);
+  $panel.find('.trf-file').prop('disabled', false);
+  $panel.find('.trf-doc-nombre, .trf-btn-add-doc').prop('disabled', false);
+
+  // select2 refresh
+  $panel.find('.sel2').trigger('change.select2');
+  $panel.find('.trf-total').prop('readonly', true);
+}
+function lockGlobal(){
+  const $s1 = $('.dashed.card');
+  $s1.find('input, select, textarea').prop('disabled', true);
+  $s1.find('.sel2').trigger('change.select2');
+
+  $('#oc_fondo').prop('disabled', true);
+  $('#oc_total').prop('disabled', true).prop('readonly', true);
+  $('#oc_comision').prop('disabled', false);
+
+  $('#oc_file').prop('disabled', false);
+  $('#oc_doc_nombre, #oc_btn_add_doc').prop('disabled', false);
+}
+
 
 /* =====================  INIT ===================== */
 $(function(){
