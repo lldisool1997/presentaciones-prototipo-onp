@@ -43,7 +43,7 @@
       </div>
 
       <!-- Lista de transferencias (inicialmente vacío) -->
-      <div id="transferList" class="space-y-4"></div>
+      <div id="transferList" class="space-y-4 mb-4"></div>
 
       <!-- Template (oculto) de una transferencia -->
       <template id="tplTransferencia">
@@ -56,7 +56,7 @@
           <div class="grid gap-4 md:grid-cols-2 mt-3">
             <div>
               <label class="lbl">Moneda</label>
-              <select class="inp sel-moneda">
+              <select class="inp sel-moneda ">
                 <option value="PEN">PEN</option>
                 <option value="USD">USD</option>
               </select>
@@ -70,7 +70,7 @@
           <div class="grid gap-4 md:grid-cols-2 mt-3">
             <div>
               <label class="lbl">Banco cuenta de cargo</label>
-              <select class="sel2 sel-banco-cargo" style="width:100%"></select>
+              <select class="sel2 sel-banco-cargo " style="width:100%"></select>
               <p class="help">Selecciona el banco desde donde se realizará el aporte.</p>
             </div>
             <div>
@@ -93,11 +93,8 @@
           </div>
         </div>
       </template>
-    </section>
 
-    <!-- PANEL: Registro de Operación Cambiaria (SIEMPRE visible) -->
-    <section class="bg-white rounded-2xl border border-gray-200 shadow p-5 mt-5">
-      <div class="section-header">1. Registro de Operación cambiaria</div>
+            <div class="section-header">1. Registro de Operación cambiaria</div>
 
       <form id="formOperacion" class="space-y-4" novalidate>
         <div class="grid md:grid-cols-6 gap-4">
@@ -168,6 +165,7 @@
         </div>
       </form>
     </section>
+
   </main>
 
   <!-- TU JS -->
