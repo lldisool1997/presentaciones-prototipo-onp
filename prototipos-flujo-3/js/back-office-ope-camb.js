@@ -282,7 +282,7 @@ function populateTransfer($panel, t){
   renderDocsGrid($panel.find('.trf-docs-grid'), docs);
 
   // bloquear: todo disabled excepto comisión y sustentos
-  $panel.find('input, select, textarea, button').prop('disabled', true);
+  $panel.find('input, select, textarea').prop('disabled', true);
   $panel.find('.sel2').prop('disabled', true).trigger('change.select2');
   $panel.find('.trf-total').prop('readonly', true);
 
@@ -370,12 +370,14 @@ function initTransferPanel($panel){
   });
 
   // por defecto bloquear todo excepto comisión/sustentos
-  $panel.find('input, select, textarea, button').prop('disabled', true);
+  $panel.find('input, select, textarea').prop('disabled', true);
   $panel.find('.sel2').prop('disabled', true).trigger('change.select2');
   $panel.find('.trf-total').prop('readonly', true);
   $panel.find('.trf-comision').prop('disabled', false).prop('readonly', false);
   $panel.find('.trf-docs-grid .doc-file').prop('disabled', false);
   $panel.find('.trf-btn-add-doc, .trf-doc-nombre').prop('disabled', false);
+
+  wireCartaTransferencia($panel)
 }
 
 /* =====================  Global / Operación ===================== */
@@ -457,6 +459,58 @@ function lockGlobal(){
   $('#oc_docs_grid .doc-file').prop('disabled', false);
   $('#oc_doc_nombre, #oc_btn_add_doc').prop('disabled', false);
 }
+
+/* =====================  Enrutado a “Generar Carta”  ===================== */
+const CARTA_CTX_KEY = 'oc_carta_context';
+
+/**
+ * Guarda contexto y navega a la vista de carta.
+ * @param {'operacion'|'transferencia'} scope
+ * @param {string} tabId - 'tab-operacion' | 'tab-trf-1' | 'tab-trf-2' ...
+ * @param {string} route - url de la vista de carta
+ */
+function goToCarta(scope, tabId, route){
+  // 1) Guarda el borrador actual
+  saveToStorage(false);
+
+  // 2) Guarda un contexto en LS (backup por si se pierde el querystring)
+  const ctx = {
+    scope,          // 'operacion' | 'transferencia'
+    tabId,          // id del tab que originó la carta
+    storageKey: STORAGE_KEY,
+    storageVersion: STORAGE_VERSION,
+    ts: Date.now()
+  };
+  localStorage.setItem(CARTA_CTX_KEY, JSON.stringify(ctx));
+
+  // 3) También lo mandamos en el querystring
+  const url = new URL(route, window.location.href);
+  url.searchParams.set('scope', scope);
+  url.searchParams.set('id', tabId);
+
+    const qs = new URLSearchParams({
+      scope: scope,
+      id: tabId
+    }).toString();
+  window.location.href = `${route}?${qs}`;
+}
+
+/* =====================  Hooks de botones “Generar Carta”  ===================== */
+// OPERACIÓN (usa el tab fijo 'tab-operacion')
+$('#btnGenerarCarta').off('click').on('click', () => {
+  goToCarta('operacion', 'tab-operacion', 'generar-carta-operacion-cambiaria.html');
+});
+
+// TRANSFERENCIAS (dentro de initTransferPanel)
+function wireCartaTransferencia($panel){
+  $panel.find('.trf-btn-carta').off('click').on('click', () => {
+    const tabId = $panel.attr('id'); // ej: 'tab-trf-3'
+    goToCarta('transferencia', tabId, 'generar-carta-operacion-cambiaria.html');
+  });
+}
+// Llama a wireCartaTransferencia($panel) al final de initTransferPanel($panel)
+
+
 
 /* =====================  INIT ===================== */
 $(function(){
