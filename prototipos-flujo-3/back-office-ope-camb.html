@@ -50,6 +50,11 @@
     .file-chip .x{cursor:pointer;color:#ef4444;font-weight:700}
     .doc-tag{display:inline-flex;align-items:center;gap:.35rem;margin:.25rem .45rem .25rem 0;padding:.2rem .5rem;border:1px solid #cbd5e1;border-radius:.5rem;background:#fff;font-size:.75rem}
     .doc-tag .x{cursor:pointer;color:#ef4444;font-weight:700}
+
+      .oc-confirm-card{background:#fff;border:1px solid #e5e7eb;border-radius:.75rem;padding:1rem;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+  .oc-confirm-card h2{font-size:1rem;font-weight:600;color:#1f2937;margin-bottom:.25rem}
+  .oc-confirm-card p{font-size:.875rem;color:#475569}
+  .oc-confirm-card .fecha{font-weight:600;color:#0f172a}
   </style>
     <link rel="stylesheet" href="css/back-office-ope-camb.css">
 </head>
@@ -155,7 +160,8 @@
             <!-- Sustento global -->
             <div class="subsection">
               <div class="subsection-title font-semibold mb-2">3. Sustento documentario</div>
-
+              <!-- Card de confirmación / última carta (OPERACIÓN) -->
+              <div id="oc_card_operation_confirm" class="my-4"></div>
               <!-- Grilla de tarjetas (Riesgos, Legal, Acta + extras) -->
               <div id="oc_docs_grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
@@ -253,7 +259,8 @@
         <!-- Sustento transferencia -->
         <div class="subsection">
           <div class="subsection-title font-semibold mb-2">3. Sustento documentario</div>
-
+         <!-- Card de confirmación / última carta (TRANSFERENCIA) -->
+        <div class="oc_card_transfer_confirm my-4"></div>
           <div class="trf-docs-grid grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
           <div class="mt-5">

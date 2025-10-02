@@ -18,6 +18,78 @@ const CUENTAS = {
 const DEFAULT_DOCS = ['Documento sustentatorio'];
 
 /* =====================  HELPERS UI  ===================== */
+
+// ====== Última carta generada (helpers) ======
+function formatFechaLima(iso){
+  if (!iso) return '--/--/---- --:--';
+  try {
+    return new Date(iso).toLocaleString('es-PE', {
+      timeZone: 'America/Lima', hour12: false,
+      year:'numeric', month:'2-digit', day:'2-digit',
+      hour:'2-digit', minute:'2-digit', second:'2-digit'
+    });
+  } catch { return '--/--/---- --:--'; }
+}
+
+/**
+ * Inserta (si no existe) o actualiza el bloque “Última carta generada”
+ * bajo la subsección de Sustento del scope dado.
+ * @param {$} $anchorSubsection - la .subsection que contiene los sustentos
+ * @param {string} isoTs - fecha ISO
+ * @param {string} suffix - sufijo único (ej: 'operacion' o el id del panel)
+ */
+function renderUltimaCarta($anchorSubsection, isoTs, suffix){
+  const secId  = `ultima-carta-${suffix}`;
+  const spanId = `fechaCarta-${suffix}`;
+
+  if (!$anchorSubsection.find(`#${secId}`).length){
+    $anchorSubsection.append(`
+      <section id="${secId}" class="mt-6 p-4 border rounded-lg bg-white shadow">
+        <h2 class="text-lg font-semibold text-gray-800 mb-2">📄 Última carta generada</h2>
+        <p class="text-sm text-gray-600">
+          Fecha y hora:
+          <span id="${spanId}" class="font-medium text-gray-900">--/--/---- --:--</span>
+        </p>
+      </section>
+    `);
+  }
+  $anchorSubsection.find(`#${spanId}`).text(formatFechaLima(isoTs));
+}
+
+
+// --- MERGE helpers para no perder 'carta_*' ni metadata de docs ---
+function mergeDocLists(prev = [], next = []) {
+  // next (lo que está en la UI) manda en nombres y archivos,
+  // pero preservamos last_carta_fecha del doc previo si existía.
+  const byNamePrev = new Map(prev.map(d => [d?.nombre, d || {}]));
+  return (next || []).map(d => {
+    const p = byNamePrev.get(d?.nombre) || {};
+    const last_carta_fecha = p.last_carta_fecha || d.last_carta_fecha;
+    return { ...d, last_carta_fecha };
+  });
+}
+
+function mergeOperacion(prevOp = {}, newOp = {}) {
+  const merged = { ...prevOp, ...newOp };
+  // preserva flags/fecha de carta si el nuevo no los trae
+  merged.carta_generada = newOp.carta_generada ?? prevOp.carta_generada;
+  merged.carta_fecha    = newOp.carta_fecha    ?? prevOp.carta_fecha;
+  // docs
+  merged.docs_by_area    = mergeDocLists(prevOp.docs_by_area, newOp.docs_by_area);
+  merged.docs_adic_files = merged.docs_by_area; // compat
+  return merged;
+}
+
+function mergeTransfer(prevT = {}, newT = {}) {
+  const merged = { ...prevT, ...newT };
+  merged.carta_generada = newT.carta_generada ?? prevT.carta_generada;
+  merged.carta_fecha    = newT.carta_fecha    ?? prevT.carta_fecha;
+  merged.docs_by_area    = mergeDocLists(prevT.docs_by_area, newT.docs_by_area);
+  merged.docs_adic_files = merged.docs_by_area;
+  return merged;
+}
+
+
 const $tpl = $('#tplTransferencia');
 const $panelContainer = $('#transfer-panels');
 let transfSeq = 0;
@@ -67,6 +139,8 @@ function bindDocsGrid($grid){
     saveToStorage();
   });
 }
+
+
 function docCardHtml(nombre, removable=false){
   return `
   <div class="doc-card" data-nombre="${nombre}">
@@ -176,22 +250,35 @@ function serializeTransfer($panel){
     docs_adic_files: docs
   };
 }
-function collectAll(){
+
+function collectAll(prevData = null){
   const transferencias = [];
-  $panelContainer.children('.oc-panel').each(function(){
-    transferencias.push(serializeTransfer($(this)));
+  $panelContainer.children('.oc-panel').each(function(i){
+    const newT  = serializeTransfer($(this));
+    const prevT = (prevData?.transferencias && prevData.transferencias[i]) || {};
+    transferencias.push(mergeTransfer(prevT, newT));
   });
+
+  const newOp  = serializeOperacion();
+  const prevOp = prevData?.operacion || {};
+
   return {
-    meta: { savedAt: new Date().toISOString(), version: STORAGE_VERSION },
-    operacion: serializeOperacion(),
+    meta: {
+      ...(prevData?.meta || {}),
+      savedAt: new Date().toISOString(),
+      version: STORAGE_VERSION
+    },
+    operacion: mergeOperacion(prevOp, newOp),
     transferencias
   };
 }
 
+
 /* =====================  STORAGE ===================== */
 function saveToStorage(showToast = true){
   try {
-    const data = collectAll();
+    const prev = loadFromStorage() || {};
+    const data = collectAll(prev); // << mezcla en vez de sobrescribir
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     if (showToast && window.toastr) toastr.success('Borrador guardado localmente');
     return data;
@@ -200,6 +287,7 @@ function saveToStorage(showToast = true){
     if (window.toastr) toastr.error('No se pudo guardar el borrador');
   }
 }
+
 function loadFromStorage(){
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -249,6 +337,12 @@ function populateOperacion(op){
       : DEFAULT_DOCS.map(n => ({ nombre:n, files:[] }));
   renderDocsGrid($('#oc_docs_grid'), docs);
 
+   // En populateOperacion:
+    if (op.carta_generada) {
+      const ts = op.carta_fecha || (window.ocStorage?.load()?.meta?.cartaUpdatedAt);
+      renderUltimaCarta($('#oc_card_operation_confirm'), ts, 'operacion'); // <-- usa el placeholder
+    }
+
   // bloqueo global: todo disabled menos comisión y sustentos
   lockGlobal();
 }
@@ -280,6 +374,12 @@ function populateTransfer($panel, t){
       ? t.docs_adic_files
       : DEFAULT_DOCS.map(n => ({ nombre:n, files:[] }));
   renderDocsGrid($panel.find('.trf-docs-grid'), docs);
+
+  if (t.carta_generada) {
+  const ts = t.carta_fecha || (window.ocStorage?.load()?.meta?.cartaUpdatedAt);
+  const suff = $panel.attr('id');
+  renderUltimaCarta($panel.find('.oc_card_transfer_confirm'), ts, suff); // <-- placeholder del panel
+}
 
   // bloquear: todo disabled excepto comisión y sustentos
   $panel.find('input, select, textarea').prop('disabled', true);

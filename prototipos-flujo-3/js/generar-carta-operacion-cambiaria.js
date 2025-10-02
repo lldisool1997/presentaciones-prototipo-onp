@@ -217,7 +217,7 @@ function parseRepVal(sel) {
   $('#btnGenerar').on('click', () => { refreshPreview(); generarCarta(); toast('Carta generada (demo).'); });
 
   function generarCarta(){
-    $('#txtNumDigital').val("615004");
+        $('#txtNumDigital').val("615004");
     generarPdf();
   }
 
@@ -253,10 +253,11 @@ async function generarPdf() {
     host.innerHTML = `<div class="a4 a4--pdf">${buildInner()}</div>`;
     document.body.appendChild(host);
 
-    const id = $('#txtNumDigital').val();
+    const id = $('#txtNumDigital').val(); // opcional, para nombrar el archivo
 
     // 2) espera imágenes
     await waitImagesLoaded(host);
+
 
     // 3) genera y fuerza descarga
     await html2pdf()
@@ -276,8 +277,9 @@ async function generarPdf() {
     // 4) limpia
     host.remove();
 
-    // 5) redirige
-    //window.location.href = "fondeo-banco-tesoreria.html?area=Tesoreria&inv_id=7000&accion=accion";
+    // 5) Marca en localStorage y vuelve al back-office
+    marcarCartaGenerada();   // <<< setea carta_generada: true según scope/id
+    volverALaVista();        // <<< regresar
 
   } catch (err) {
     console.error('Error generando PDF:', err);
@@ -406,6 +408,71 @@ function firmaCellOperador(url, nombre, cargo1 = '', cargo2 = '') {
     ">
     </div>
   `;
+}
+// ========= CARTA: helpers de navegación y storage =========
+// ===== Carta: setear flag y volver =====
+const STORAGE_KEY_CARTA = 'oc_operacion_v1';
+const RETURN_FALLBACK   = 'back-office-ope-camb.html'; // cámbialo si tu back-office tiene otra ruta
+
+function qsGet(k){ return new URLSearchParams(location.search).get(k); }
+
+
+function qsGet(k){ return new URLSearchParams(location.search).get(k); }
+
+function marcarCartaGenerada(){
+  const scope = qsGet('scope');        // 'operacion' | 'transferencia'
+  const tabId = qsGet('id');           // 'tab-operacion' | 'tab-trf-1' | ...
+  if (!scope || !tabId) return;
+
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY_CARTA) || '{}');
+  const nowISO = new Date().toISOString();
+
+  if (scope === 'operacion') {
+    data.operacion = data.operacion || {};
+    data.operacion.carta_generada = true;
+    data.operacion.carta_fecha    = nowISO;   // << guarda fecha
+  } else if (scope === 'transferencia') {
+    let idx = -1;
+    const m = /tab-trf-(\d+)/.exec(tabId);
+    if (m) idx = parseInt(m[1], 10) - 1;
+    if ((idx < 0 || !data.transferencias?.[idx]) && Array.isArray(data.transferencias)) {
+      idx = data.transferencias.findIndex(t => t?.id === tabId); // fallback por id
+    }
+    if (idx >= 0) {
+      data.transferencias[idx] = data.transferencias[idx] || {};
+      data.transferencias[idx].carta_generada = true;
+      data.transferencias[idx].carta_fecha    = nowISO; // << guarda fecha
+    }
+  }
+
+  data.meta = { ...(data.meta||{}), cartaUpdatedAt: nowISO };
+  localStorage.setItem(STORAGE_KEY_CARTA, JSON.stringify(data));
+}
+
+
+function volverALaVista(){
+  const ret = qsGet('return');
+  if (ret) { window.location.href = ret; return; }
+  if (document.referrer) {
+    try {
+      const sameOrigin = new URL(document.referrer).origin === location.origin;
+      if (sameOrigin && history.length > 1) { history.back(); return; }
+    } catch {}
+  }
+  window.location.href = RETURN_FALLBACK;
+}
+
+
+function volverALaVista(){
+  const ret = qsGet('return');
+  if (ret) { window.location.href = ret; return; }
+  if (document.referrer) {
+    try {
+      const sameOrigin = new URL(document.referrer).origin === location.origin;
+      if (sameOrigin && history.length > 1) { history.back(); return; }
+    } catch(e){}
+  }
+  window.location.href = RETURN_FALLBACK;
 }
 
   
