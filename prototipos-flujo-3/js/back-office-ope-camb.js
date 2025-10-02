@@ -15,6 +15,7 @@ const CUENTAS = {
   BBVA:   ['0011-123456-00-01'],
   INTER:  ['777-000111-22']
 };
+const DEFAULT_DOCS = ['Documento sustentatorio'];
 
 /* =====================  HELPERS UI  ===================== */
 const $tpl = $('#tplTransferencia');
@@ -37,10 +38,6 @@ function formatMoney(n){ return new Intl.NumberFormat('es-PE',{minimumFractionDi
 let _seq = 0;
 const uid = ()=>'f_'+Date.now().toString(36)+'_'+(_seq++).toString(36);
 
-function ensure($root, selector, html){
-  if (!$root.find(selector).length) $root.append(html);
-  return $root.find(selector).first();
-}
 function fileMeta(file){
   return { id: uid(), name: file.name, size: file.size||null, type: file.type||'application/pdf', added_at: new Date().toISOString() };
 }
@@ -50,36 +47,76 @@ function fileChip(meta){
             ${meta.name}${sizeKb}<span class="x" title="Quitar">×</span>
           </span>`;
 }
-function bindFileChipRemove($scope){
-  $scope.off('click','.file-chip .x').on('click','.file-chip .x',function(){
+function bindDocsGrid($grid){
+  // subir archivos
+  $grid.off('change','.doc-file').on('change','.doc-file', function(){
+    const files = Array.from(this.files||[]);
+    const $list = $(this).closest('.doc-card').find('.doc-file-list');
+    files.map(fileMeta).forEach(m => $list.append(fileChip(m)));
+    $(this).val('');
+    saveToStorage(false);
+  });
+  // quitar archivo
+  $grid.off('click','.file-chip .x').on('click','.file-chip .x', function(){
     $(this).closest('.file-chip').remove();
     saveToStorage(false);
   });
-}
-function addDocChip($wrap, name){
-  const n = (name||'').trim();
-  if(!n) return;
-  const $chip = $(`
-    <span class="doc-tag" data-nombre="${n}">
-      ${n}
-      <button type="button" class="clip" title="Adjuntar">📎</button>
-      <span class="x" title="Quitar">×</span>
-      <span class="doc-files"></span>
-      <input type="file" class="doc-file-input" accept="application/pdf" multiple hidden>
-    </span>
-  `);
-  $chip.find('.x').on('click',()=>{ $chip.remove(); saveToStorage(false); });
-  const $inp = $chip.find('.doc-file-input');
-  $chip.find('.clip').on('click',()=> $inp.trigger('click'));
-  $inp.on('change', function(){
-    const files = Array.from(this.files||[]);
-    const $list = $chip.find('.doc-files');
-    files.map(fileMeta).forEach(m => $list.append(fileChip(m)));
-    bindFileChipRemove($chip);
-    this.value = '';
-    saveToStorage(false);
+  // quitar tarjeta solo si es removible
+  $grid.off('click','.doc-remove').on('click','.doc-remove', function(){
+    $(this).closest('.doc-card').remove();
+    saveToStorage();
   });
-  $wrap.append($chip);
+}
+function docCardHtml(nombre, removable=false){
+  return `
+  <div class="doc-card" data-nombre="${nombre}">
+    <div class="flex items-center justify-between mb-2">
+      <div class="doc-title">${nombre}</div>
+      ${removable ? '<button type="button" class="doc-remove">X</button>' : ''}
+    </div>
+    <div class="border-0">
+      <label class="dz-select">
+        <input type="file" class="doc-file" accept="application/pdf" multiple hidden>
+        <span class="dz-btn">Seleccionar archivo</span>
+        <span class="dz-sub">PDF</span>
+      </label>
+      <div class="doc-file-list mt-2"></div>
+    </div>
+  </div>`;
+}
+function renderDocsGrid($grid, items){
+  // items: [{nombre, files:[{...}]}]
+  $grid.empty();
+  const defaults = new Set(DEFAULT_DOCS);
+  // default cards (no removibles)
+  DEFAULT_DOCS.forEach(n => $grid.append(docCardHtml(n,false)));
+  // extras (removibles)
+  (items||[]).filter(d => !defaults.has(d.nombre))
+             .forEach(d => $grid.append(docCardHtml(d.nombre,true)));
+  // pintar archivos existentes
+  (items||[]).forEach(d=>{
+    const $list = $grid.find(`.doc-card[data-nombre="${CSS.escape(d.nombre)}"] .doc-file-list`);
+    (d.files||[]).forEach(m => $list.append(fileChip(m)));
+  });
+  bindDocsGrid($grid);
+}
+function gatherDocsFromGrid($grid){
+  const out = [];
+  $grid.find('.doc-card').each(function(){
+    const nombre = $(this).data('nombre');
+    const files = $(this).find('.file-chip').toArray().map(el=>{
+      const $el = $(el);
+      return {
+        id: $el.data('id'),
+        name: $el.data('name'),
+        size: $el.data('size') ? Number($el.data('size')) : null,
+        type: $el.data('type') || 'application/pdf',
+        added_at: new Date().toISOString()
+      };
+    });
+    out.push({ nombre, files });
+  });
+  return out;
 }
 
 /* =====================  Tabs ===================== */
@@ -90,7 +127,6 @@ function switchTab(id){
   $(`#${id}`).addClass('is-active');
 }
 function renumerarTabs(){
-  // usa el orden visual actual: todas las transferencias se ubican antes de "Operación"
   $('.oc-tablist .oc-tab[data-kind="trf"]').each(function(i){
     $(this).text(`Transferencia ${i + 1}`);
     const panelId = $(this).data('tab');
@@ -99,31 +135,8 @@ function renumerarTabs(){
 }
 
 /* =====================  SERIALIZACIÓN ===================== */
-function gatherFilesFrom($root){
-  return $root.find('.file-chip').toArray().map(el => {
-    const $el = $(el);
-    return {
-      id: $el.data('id'),
-      name: $el.data('name'),
-      size: $el.data('size') ? Number($el.data('size')) : null,
-      type: $el.data('type') || 'application/pdf',
-      added_at: new Date().toISOString()
-    };
-  });
-}
-function gatherDocFilesFrom($scope){
-  const out = [];
-  $scope.find('.doc-tag').each(function(){
-    const nombre = $(this).data('nombre') || $(this).text().replace('×','').trim();
-    const files = gatherFilesFrom($(this).find('.doc-files'));
-    out.push({ nombre, files });
-  });
-  return out;
-}
-
 function serializeOperacion(){
-  const $dz = $('.dropzone').first();
-  const $filesBox = ensure($dz, '#oc_files', '<div id="oc_files" class="file-list mt-2"></div>');
+  const docs = gatherDocsFromGrid($('#oc_docs_grid'));
   return {
     moneda_origen   : $('#oc_moneda_origen').val(),
     importe_origen  : parseMoney($('#oc_importe_origen').val()),
@@ -135,18 +148,18 @@ function serializeOperacion(){
     banco_destino   : $('#oc_banco_destino').val(),
     cuenta_destino  : $('#oc_cuenta_destino').val(),
     fecha           : $('#oc_fecha').val(),
-    // comisión + sustento global
+    // comisión global
     fondo           : parseMoney($('#oc_fondo').val()),
     comision        : parseMoney($('#oc_comision').val()),
     total           : parseMoney($('#oc_total').val()),
-    sustento_pdf    : ($('#oc_filename').text() || '').replace('•','').trim() || null,
-    docs_adic       : $('#oc_docs .doc-tag').toArray().map(e => $(e).dataset.nombre || $(e).text().replace('×','').trim()),
-    sustentos       : gatherFilesFrom($filesBox),
-    docs_adic_files : gatherDocFilesFrom($('#oc_docs'))
+    // sustentos (nuevo formato)
+    docs_by_area    : docs,
+    // compat con vistas previas
+    docs_adic_files : docs
   };
 }
 function serializeTransfer($panel){
-  const $filesBox = ensure($panel.find('.dropzone'), '.trf-files', '<div class="trf-files file-list mt-2"></div>');
+  const docs = gatherDocsFromGrid($panel.find('.trf-docs-grid'));
   return {
     moneda         : $panel.find('.sel-moneda').val(),
     monto          : parseMoney($panel.find('.txt-monto').val()),
@@ -154,14 +167,13 @@ function serializeTransfer($panel){
     cuenta_cargo   : $panel.find('.sel-cuenta-cargo').val(),
     banco_destino  : $panel.find('.sel-banco-destino').val(),
     cuenta_destino : $panel.find('.sel-cuenta-destino').val(),
-    // comisión + sustento por transferencia
+    // comisión por transferencia
     fondo          : parseMoney($panel.find('.trf-fondo').val()),
     comision       : parseMoney($panel.find('.trf-comision').val()),
     total          : parseMoney($panel.find('.trf-total').val()),
-    sustento_pdf   : ($panel.find('.dz-filename').text() || '').replace('•','').trim() || null,
-    docs_adic      : $panel.find('.trf-docs .doc-tag').toArray().map(e => $(e).dataset.nombre || $(e).text().replace('×','').trim()),
-    sustentos      : gatherFilesFrom($filesBox),
-    docs_adic_files: gatherDocFilesFrom($panel.find('.trf-docs'))
+    // sustentos por transferencia
+    docs_by_area   : docs,
+    docs_adic_files: docs
   };
 }
 function collectAll(){
@@ -211,7 +223,7 @@ function populateOperacion(op){
   $('#oc_tipo_cambio').val(op.tipo_cambio || '');
   $('#oc_moneda_destino').val(op.moneda_destino).trigger('change');
   $('#oc_importe_destino').val(op.importe_destino ? formatMoney(op.importe_destino) : '');
-  // bancos/cuentas (cargar cuentas según banco)
+  // bancos/cuentas
   if (op.banco_cargo){
     $('#oc_banco_cargo').val(op.banco_cargo).trigger('change');
     loadCuentas($('#oc_cuenta_cargo'), op.banco_cargo);
@@ -224,42 +236,27 @@ function populateOperacion(op){
   }
   if (op.fecha) $('#oc_fecha').val(op.fecha);
 
-  // comisión + total
-  if (typeof op.fondo === 'number')   $('#oc_fondo').val(formatMoney(op.fondo));
-  if (typeof op.comision === 'number')$('#oc_comision').val(formatMoney(op.comision));
-  if (typeof op.total === 'number')   $('#oc_total').val(formatMoney(op.total));
+  // comisión/total
+  if (typeof op.fondo === 'number')    $('#oc_fondo').val(formatMoney(op.fondo));
+  if (typeof op.comision === 'number') $('#oc_comision').val(formatMoney(op.comision));
+  if (typeof op.total === 'number')    $('#oc_total').val(formatMoney(op.total));
 
-  // Sustento (nombre principal + lista de archivos)
-  $('#oc_filename').text(op.sustento_pdf ? `• ${op.sustento_pdf}` : '');
-  const $dz = $('.dropzone').first();
-  const $filesBox = ensure($dz, '#oc_files', '<div id="oc_files" class="file-list mt-2"></div>');
-  $filesBox.empty();
-  (op.sustentos || []).forEach(m => $filesBox.append(fileChip(m)));
-  bindFileChipRemove($filesBox);
+  // docs grid (usa docs_by_area si existe; si no, defaults)
+  const docs = Array.isArray(op.docs_by_area) && op.docs_by_area.length
+    ? op.docs_by_area
+    : Array.isArray(op.docs_adic_files) && op.docs_adic_files.length
+      ? op.docs_adic_files
+      : DEFAULT_DOCS.map(n => ({ nombre:n, files:[] }));
+  renderDocsGrid($('#oc_docs_grid'), docs);
 
-  // Docs adicionales (con adjuntos por doc si existen)
-  const $docs = $('#oc_docs').empty();
-  if (Array.isArray(op.docs_adic_files) && op.docs_adic_files.length){
-    op.docs_adic_files.forEach(item=>{
-      addDocChip($docs, item.nombre);
-      const $last = $docs.find('.doc-tag').last();
-      const $list = $last.find('.doc-files');
-      (item.files||[]).forEach(m => $list.append(fileChip(m)));
-      bindFileChipRemove($last);
-    });
-  } else {
-    (op.docs_adic || []).forEach(n => addDocChip($docs, n));
-  }
-
+  // bloqueo global: todo disabled menos comisión y sustentos
   lockGlobal();
 }
 function populateTransfer($panel, t){
   if (!t) return;
-
-  // Poblar datos
+  // básicos
   $panel.find('.sel-moneda').val(t.moneda).trigger('change');
   $panel.find('.txt-monto').val(t.monto ? formatMoney(t.monto) : '');
-
   if (t.banco_cargo){
     $panel.find('.sel-banco-cargo').val(t.banco_cargo).trigger('change');
     loadCuentas($panel.find('.sel-cuenta-cargo'), t.banco_cargo);
@@ -271,42 +268,28 @@ function populateTransfer($panel, t){
     $panel.find('.sel-cuenta-destino').val(t.cuenta_destino).trigger('change');
   }
 
-  // (si llegan estos campos, pónlos)
-  if (t.fondo       != null) $panel.find('.trf-fondo').val(formatMoney(t.fondo));
-  if (t.comision    != null) $panel.find('.trf-comision').val(formatMoney(t.comision));
-  if (t.total       != null) $panel.find('.trf-total').val(formatMoney(t.total));
-  if (t.sustento_pdf)         $panel.find('.dz-filename').text('• ' + t.sustento_pdf);
+  // comisión
+  if (t.fondo != null)    $panel.find('.trf-fondo').val(formatMoney(t.fondo));
+  if (t.comision != null) $panel.find('.trf-comision').val(formatMoney(t.comision));
+  if (t.total != null)    $panel.find('.trf-total').val(formatMoney(t.total));
 
-  // Render archivos de la transferencia (lista propia)
-  const $filesBox = ensure($panel.find('.dropzone'), '.trf-files', '<div class="trf-files file-list mt-2"></div>');
-  $filesBox.empty();
-  (t.sustentos || []).forEach(m => $filesBox.append(fileChip(m)));
-  bindFileChipRemove($panel);
+  // docs grid
+  const docs = Array.isArray(t.docs_by_area) && t.docs_by_area.length
+    ? t.docs_by_area
+    : Array.isArray(t.docs_adic_files) && t.docs_adic_files.length
+      ? t.docs_adic_files
+      : DEFAULT_DOCS.map(n => ({ nombre:n, files:[] }));
+  renderDocsGrid($panel.find('.trf-docs-grid'), docs);
 
-  // Docs adicionales + archivos por doc
-  const $docs = $panel.find('.trf-docs').empty();
-  if (Array.isArray(t.docs_adic_files) && t.docs_adic_files.length){
-    t.docs_adic_files.forEach(item=>{
-      addDocChip($docs, item.nombre);
-      const $last = $docs.find('.doc-tag').last();
-      const $list = $last.find('.doc-files');
-      (item.files||[]).forEach(m => $list.append(fileChip(m)));
-      bindFileChipRemove($last);
-    });
-  } else {
-    (t.docs_adic || []).forEach(n => addDocChip($docs, n));
-  }
-
-  // === Deshabilitar TODO ===
+  // bloquear: todo disabled excepto comisión y sustentos
   $panel.find('input, select, textarea, button').prop('disabled', true);
   $panel.find('.sel2').prop('disabled', true).trigger('change.select2');
   $panel.find('.trf-total').prop('readonly', true);
 
-  // === Rehabilitar lo permitido ===
-  // Comisión y sustentos activos
   $panel.find('.trf-comision').prop('disabled', false).prop('readonly', false);
-  $panel.find('.trf-file').prop('disabled', false);
-  $panel.find('.trf-doc-nombre, .trf-btn-add-doc').prop('disabled', false);
+  $panel.find('.trf-docs-grid .doc-file').prop('disabled', false);
+  $panel.find('.trf-btn-add-doc, .trf-doc-nombre').prop('disabled', false);
+  $panel.find('.trf-docs-grid .doc-remove').prop('disabled', false);
 }
 
 /* =====================  Crear tab + panel de Transferencia ===================== */
@@ -315,31 +298,22 @@ function addTransferTab(prefillData = null){
   const panelId = `tab-trf-${transfSeq}`;
   const btnId   = `tabbtn-trf-${transfSeq}`;
 
-  // botón tab: insertar **justo antes** del tab "Operación" y no tomar foco
-  const $btn = $(`
-    <button class="oc-tab" role="tab" aria-selected="false"
+  // botón tab ANTES de Operación
+  const $btn = $(`<button class="oc-tab" role="tab" aria-selected="false"
             aria-controls="${panelId}" id="${btnId}"
-            data-tab="${panelId}" data-kind="trf">
-      Transferencia
-    </button>
-  `);
+            data-tab="${panelId}" data-kind="trf">Transferencia</button>`);
   $btn.insertBefore('#tabbtn-operacion');
 
-  // panel (oculto por defecto)
+  // panel
   const $panel = $($tpl.html())
     .attr('id', panelId)
-    .attr('role', 'tabpanel')
+    .attr('role','tabpanel')
     .attr('aria-labelledby', btnId);
 
   $panelContainer.append($panel);
-
-  // init UI del panel
   initTransferPanel($panel);
-
-  // prefill si se pasó data
   if (prefillData) populateTransfer($panel, prefillData);
 
-  // renumera por orden visual y guarda
   renumerarTabs();
   saveToStorage(false);
 }
@@ -359,7 +333,7 @@ function initTransferPanel($panel){
   attachMoneyMask($panel.find('.trf-comision')[0]);
   attachMoneyMask($panel.find('.trf-total')[0]);
 
-  // recalculo total: fondo + comisión
+  // total dinámico
   function recalc(){ 
     const f = parseMoney($panel.find('.trf-fondo').val());
     const c = parseMoney($panel.find('.trf-comision').val());
@@ -367,54 +341,41 @@ function initTransferPanel($panel){
   }
   $panel.on('input', '.trf-fondo, .trf-comision', ()=>{ recalc(); saveToStorage(false); });
 
-  // eliminar transferencia: quita tab y panel + guarda
+  // eliminar transferencia
   $panel.find('.btnEliminarTransferencia').on('click', ()=>{
     const id = $panel.attr('id');
     $(`[data-tab="${id}"]`).remove();
     $panel.remove();
     renumerarTabs();
-    switchTab('tab-operacion'); // vuelve a Operación
+    switchTab('tab-operacion');
     saveToStorage();
   });
 
-  // confirmar (demo) + guardar
+  // confirmar (demo)
   $panel.find('.trf-btn-confirmar').on('click', ()=>{
     saveToStorage();
     Swal.fire({icon:'success',title:'Transferencia confirmada (guardada localmente)',timer:1200,showConfirmButton:false});
   });
 
-  // === Sustento de la transferencia (simulación múltiples archivos) ===
-  const $dz = $panel.find('.dropzone');
-  const $filesBox = ensure($dz, '.trf-files', '<div class="trf-files file-list mt-2"></div>');
-
-  $panel.find('.trf-file').on('change', function(){
-    const files = Array.from(this.files || []);
-    if (!files.length) return;
-    $panel.find('.dz-filename').text('• ' + files[0].name); // nombre “principal”
-    files.map(fileMeta).forEach(m => $filesBox.append(fileChip(m)));
-    bindFileChipRemove($panel);
-    this.value = ''; // reset input
-    saveToStorage(false);
-  });
-
-  // Docs adicionales (con adjuntos)
+  // alta de doc extra
   $panel.find('.trf-btn-add-doc').on('click', ()=>{
     const $inp = $panel.find('.trf-doc-nombre');
     const name = ($inp.val()||'').trim();
-    if (!name) return toastr.warning('Escribe un nombre para el documento.');
-    addDocChip($panel.find('.trf-docs'), name);
+    if(!name) return toastr.warning('Escribe un nombre para el documento.');
+    const $grid = $panel.find('.trf-docs-grid');
+    $grid.append(docCardHtml(name,true));
+    bindDocsGrid($grid);
     $inp.val('');
     saveToStorage(false);
   });
 
-  // por defecto, bloquear todo excepto comisión y sustentos
-  // (si viene prefill, populateTransfer ya hace esto; si es nuevo, también lo hacemos)
+  // por defecto bloquear todo excepto comisión/sustentos
   $panel.find('input, select, textarea, button').prop('disabled', true);
   $panel.find('.sel2').prop('disabled', true).trigger('change.select2');
   $panel.find('.trf-total').prop('readonly', true);
   $panel.find('.trf-comision').prop('disabled', false).prop('readonly', false);
-  $panel.find('.trf-file').prop('disabled', false);
-  $panel.find('.trf-doc-nombre, .trf-btn-add-doc').prop('disabled', false);
+  $panel.find('.trf-docs-grid .doc-file').prop('disabled', false);
+  $panel.find('.trf-btn-add-doc, .trf-doc-nombre').prop('disabled', false);
 }
 
 /* =====================  Global / Operación ===================== */
@@ -424,8 +385,6 @@ function initGlobal(){
     const id = $(this).data('tab') || this.id.replace('tabbtn-','tab-');
     if(id) switchTab(id);
   });
-  // añadir transferencia
-  $('#btnAddTransferencia').on('click', ()=> addTransferTab());
 
   // select2
   initSelect2($('#oc_banco_cargo'), BANCOS);
@@ -435,91 +394,56 @@ function initGlobal(){
   $('#oc_banco_cargo').on('change', ()=> loadCuentas($('#oc_cuenta_cargo'), $('#oc_banco_cargo').val()));
   $('#oc_banco_destino').on('change', ()=> loadCuentas($('#oc_cuenta_destino'), $('#oc_banco_destino').val()));
 
-  // máscaras de importes
+  // máscaras
   attachMoneyMask(document.getElementById('oc_importe_origen'));
   attachMoneyMask(document.getElementById('oc_importe_destino'));
   attachMoneyMask(document.getElementById('oc_fondo'));
   attachMoneyMask(document.getElementById('oc_comision'));
   attachMoneyMask(document.getElementById('oc_total'));
 
-  // recalculo total global
+  // total global
   function recalcGlobal(){
     const total = parseMoney($('#oc_fondo').val()) + parseMoney($('#oc_comision').val());
     $('#oc_total').val(formatMoney(total));
   }
   $('#oc_fondo, #oc_comision').on('input', ()=>{ recalcGlobal(); saveToStorage(false); });
 
-  // Sustento GLOBAL (simulación archivos múltiples)
-  const $dz = $('.dropzone').first();
-  const $filesBox = ensure($dz, '#oc_files', '<div id="oc_files" class="file-list mt-2"></div>');
-  $('#oc_file').prop('multiple', true); // por si no estaba en el HTML
-  $('#oc_file').on('change', function(){
-    const files = Array.from(this.files || []);
-    if (!files.length) return;
-    $('#oc_filename').text('• ' + files[0].name); // nombre principal
-    files.map(fileMeta).forEach(m => $filesBox.append(fileChip(m)));
-    bindFileChipRemove($dz);
-    this.value = '';
-    saveToStorage(false);
-  });
-
-  // Docs GLOBAL adicionales
+  // Docs GLOBAL: defaults + agregar doc extra
+  renderDocsGrid($('#oc_docs_grid'), DEFAULT_DOCS.map(n => ({nombre:n, files:[]})));
   $('#oc_btn_add_doc').on('click', ()=>{
     const $inp = $('#oc_doc_nombre');
     const name = ($inp.val()||'').trim();
     if(!name) return toastr.warning('Escribe un nombre para el documento.');
-    addDocChip($('#oc_docs'), name);
+    const $grid = $('#oc_docs_grid');
+    $grid.append(docCardHtml(name, true));
+    bindDocsGrid($grid);
     $inp.val('');
     saveToStorage(false);
   });
 
-  // acciones (global)
-  $('#btnGenerarCarta').on('click', ()=>{
-    saveToStorage();
-    toastr.success('Borrador guardado y carta generada (demo)');
-  });
+  // botonería
+  $('#btnGenerarCarta').on('click', ()=>{ saveToStorage(); toastr.success('Borrador guardado y carta generada (demo)'); });
   $('#btnCancelar').on('click', ()=> Swal.fire({icon:'info',title:'Acción cancelada',timer:1100,showConfirmButton:false}));
-
-  // Confirmar Operación = guardar todo
   $('#formOperacion').on('submit', function(e){
     e.preventDefault();
     saveToStorage();
     Swal.fire({icon:'success',title:'Operación confirmada (guardada localmente)',timer:1200,showConfirmButton:false});
   });
 
-  // helpers expuestos (opcional)
-  window.ocStorage = {
-    save: saveToStorage,
-    load: loadFromStorage,
-    clear: clearStorage
-  };
+  // helpers
+  window.ocStorage = { save: saveToStorage, load: loadFromStorage, clear: clearStorage };
 }
 
 /* =====================  RESTORE ===================== */
 function restoreFromStorage(){
   const data = loadFromStorage();
   if (!data) return;
-  // operacion
   populateOperacion(data.operacion);
-  // transferencias
   (data.transferencias || []).forEach(t => addTransferTab(t));
-  if (window.toastr) toastr.info('Se restauró un borrador local');
+  toastr?.info('Se restauró un borrador local');
 }
 
 /* ============ Locks (vista) ============ */
-function lockTransfer($panel){
-  // deshabilita todo
-  $panel.find('input, select, textarea, button').prop('disabled', true);
-
-  // habilita solo: comisión, file y docs extra
-  $panel.find('.trf-comision').prop('disabled', false);
-  $panel.find('.trf-file').prop('disabled', false);
-  $panel.find('.trf-doc-nombre, .trf-btn-add-doc').prop('disabled', false);
-
-  // select2 refresh
-  $panel.find('.sel2').prop('disabled', true).trigger('change.select2');
-  $panel.find('.trf-total').prop('readonly', true);
-}
 function lockGlobal(){
   const $s1 = $('.dashed.card');
   $s1.find('input, select, textarea').prop('disabled', true);
@@ -527,14 +451,15 @@ function lockGlobal(){
 
   $('#oc_fondo').prop('disabled', true);
   $('#oc_total').prop('disabled', true).prop('readonly', true);
-  $('#oc_comision').prop('disabled', false);
+  $('#oc_comision').prop('disabled', false); // editable
 
-  $('#oc_file').prop('disabled', false);
+  // Sustentos (grilla) activos
+  $('#oc_docs_grid .doc-file').prop('disabled', false);
   $('#oc_doc_nombre, #oc_btn_add_doc').prop('disabled', false);
 }
 
 /* =====================  INIT ===================== */
 $(function(){
   initGlobal();
-  restoreFromStorage(); // comenta esta línea si NO deseas restauración automática
+  restoreFromStorage(); // restauración automática
 });
