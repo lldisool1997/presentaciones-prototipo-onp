@@ -1,0 +1,56 @@
+/* Tarjeta y cabeceras */
+.header {
+  background: linear-gradient(135deg, #005C97 0%, #004a7c 100%);
+  color: #fff;
+  padding: 18px 20px;
+}
+.header h1 { font-weight: 700; font-size: 1.15rem; }
+
+.section-header {
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 10px;
+}
+
+/* Card reutilizable */
+.card {
+  border: 1px dashed #d1d5db;
+  border-radius: 14px;
+  background: #fff;
+  padding: 16px;
+  box-shadow: 0 8px 18px rgba(0,0,0,.05);
+}
+
+/* Etiquetas / inputs */
+.lbl { display:block; font-size:.875rem; font-weight:600; color:#334155; margin-bottom:6px; }
+.inp {
+  width:100%;
+  border:2px solid #e5e7eb;
+  border-radius:12px;
+  padding:10px 12px;
+  font-size:15px;
+}
+.help { margin-top:4px; font-size:12px; color:#6b7280; }
+
+/* Botones */
+.btn-primary {
+  background:#2563eb; color:#fff; padding:10px 16px; border-radius:12px; font-weight:600;
+}
+.btn-primary:hover { background:#1d4ed8; }
+
+.btn-secondary {
+  background:#fff; border:2px solid #e5e7eb; padding:10px 16px; border-radius:12px; font-weight:600;
+}
+.btn-secondary:hover { background:#f8fafc; }
+
+/* Botón eliminar transferencia */
+.btnEliminarTransferencia {
+  background:#ef4444; color:#fff; border:none; border-radius:12px;
+  font-weight:600; padding:8px 12px;
+}
+.btnEliminarTransferencia:hover { filter: brightness(.95); }
+
+/* Títulos de transferencia */
+.titulo-transferencia {
+  font-weight:700; color:#0f172a; font-size:1rem;
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Operación Cambiaria</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Toastr -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+
+  <!-- Select2 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
+
+  <!-- libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- TU CSS -->
+  <link rel="stylesheet" href="css/operacion-cambiaria.css">
+</head>
+<body class="bg-gray-100 text-slate-800">
+
+  <main class="max-w-screen-xl mx-auto px-4 py-6">
+    <!-- Header -->
+    <div class="header rounded-2xl rounded-b-none">
+      <h1>Operación Cambiaria</h1>
+    </div>
+
+    <!-- PANEL: Transferencias -->
+    <section class="bg-white rounded-2xl rounded-t-none border border-gray-200 shadow p-5">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="font-semibold text-slate-700">Transferencias</h2>
+        <button id="btnAddTransferencia" type="button"
+                class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+          + Añadir transferencia
+        </button>
+      </div>
+
+      <!-- Lista de transferencias (inicialmente vacío) -->
+      <div id="transferList" class="space-y-4"></div>
+
+      <!-- Template (oculto) de una transferencia -->
+      <template id="tplTransferencia">
+        <div class="transferencia card">
+          <div class="flex items-center justify-between">
+            <h3 class="titulo-transferencia">Transferencia <span class="num">1</span></h3>
+            <button type="button" class="btnEliminarTransferencia">Eliminar</button>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-2 mt-3">
+            <div>
+              <label class="lbl">Moneda</label>
+              <select class="inp sel-moneda">
+                <option value="PEN">PEN</option>
+                <option value="USD">USD</option>
+              </select>
+            </div>
+            <div>
+              <label class="lbl">Monto</label>
+              <input type="text" class="inp txt-monto" placeholder="Ej. 1,310,067.70" inputmode="decimal">
+            </div>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-2 mt-3">
+            <div>
+              <label class="lbl">Banco cuenta de cargo</label>
+              <select class="sel2 sel-banco-cargo" style="width:100%"></select>
+              <p class="help">Selecciona el banco desde donde se realizará el aporte.</p>
+            </div>
+            <div>
+              <label class="lbl">Nro cuenta bancaria</label>
+              <select class="sel2 sel-cuenta-cargo" style="width:100%"></select>
+              <p class="help">Selecciona la cuenta desde donde se realizará el aporte.</p>
+            </div>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-2 mt-3">
+            <div>
+              <label class="lbl">Banco cuenta destino</label>
+              <select class="sel2 sel-banco-destino" style="width:100%"></select>
+              <p class="help">Selecciona el banco destino del aporte.</p>
+            </div>
+            <div>
+              <label class="lbl">Nro cuenta destino</label>
+              <select class="sel2 sel-cuenta-destino" style="width:100%"></select>
+            </div>
+          </div>
+        </div>
+      </template>
+    </section>
+
+    <!-- PANEL: Registro de Operación Cambiaria (SIEMPRE visible) -->
+    <section class="bg-white rounded-2xl border border-gray-200 shadow p-5 mt-5">
+      <div class="section-header">1. Registro de Operación cambiaria</div>
+
+      <form id="formOperacion" class="space-y-4" novalidate>
+        <div class="grid md:grid-cols-6 gap-4">
+          <div>
+            <label class="lbl">Moneda Origen</label>
+            <select id="oc_moneda_origen" class="inp">
+              <option value="PEN">PEN</option>
+              <option value="USD">USD</option>
+            </select>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="lbl">Importe Origen</label>
+            <input id="oc_importe_origen" type="text" class="inp" placeholder="100,000,000.00" inputmode="decimal">
+          </div>
+
+          <div>
+            <label class="lbl">Tipo de Cambio</label>
+            <input id="oc_tipo_cambio" type="text" class="inp" placeholder="3.454554" inputmode="decimal">
+          </div>
+
+          <div>
+            <label class="lbl">Moneda Destino</label>
+            <select id="oc_moneda_destino" class="inp">
+              <option value="USD">USD</option>
+              <option value="PEN">PEN</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="lbl">Importe Destino</label>
+            <input id="oc_importe_destino" type="text" class="inp" placeholder="100,000,000.00" inputmode="decimal">
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="lbl">Banco cuenta cargo</label>
+            <select id="oc_banco_cargo" class="sel2" style="width:100%"></select>
+          </div>
+          <div>
+            <label class="lbl">Nro Cuenta Bancaria</label>
+            <select id="oc_cuenta_cargo" class="sel2" style="width:100%"></select>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="lbl">Banco cuenta destino</label>
+            <select id="oc_banco_destino" class="sel2" style="width:100%"></select>
+          </div>
+          <div>
+            <label class="lbl">Nro Cuenta Destino</label>
+            <select id="oc_cuenta_destino" class="sel2" style="width:100%"></select>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4">
+          <div>
+            <label class="lbl">Fecha Cambio</label>
+            <input id="oc_fecha" type="date" class="inp">
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-3">
+          <button type="button" id="btnCancelar" class="btn-secondary">Cancelar</button>
+          <button type="submit" id="btnInstruir" class="btn-primary">Instruir</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <!-- TU JS -->
+  <script src="js/operacion-cambiaria.js"></script>
+</body>
+</html>
