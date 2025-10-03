@@ -195,8 +195,8 @@ function initBasePanel(){
   initBancoCuenta($("#banco_destino_base"), $("#cuenta_destino_base"));
 
   // Crear contenedor documentos base y dos ejemplos
-  createDocumentField("tab-instruir", "Carta de instrucción (PDF)");
-  createDocumentField("tab-instruir", "Constancia de custodia (PDF)");
+  //createDocumentField("tab-instruir", "Carta de instrucción (PDF)");
+  //createDocumentField("tab-instruir", "Constancia de custodia (PDF)");
 
   // Drop base
  // AHORA: evita burbujeo y dispara un click nativo sin bubbles

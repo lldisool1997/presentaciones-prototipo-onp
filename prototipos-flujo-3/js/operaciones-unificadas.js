@@ -78,6 +78,13 @@ function createDocumentField(panelId, docName, isCustom=false){
   filesUploadedByPanel[panelId][fieldId] = false;
 }
 
+    new Cleave('#comision', {
+    numeral: true,
+    numeralThousandsGroupStyle: 'thousand',
+    numeralDecimalMark: '.',
+    delimiter: ','
+  });
+
 // Bind delegados comunes a toda la página (una sola vez)
 function bindDelegatesOnce(){
   if (window.__unifiedBinds) return;
@@ -180,10 +187,10 @@ function bindDelegatesOnce(){
   // Recalcular total neto
 function actualizarTotalNeto(){
   const monto = 150000000.00;
-  const interes = 6885000.00;
+  //const interes = 6885000.00;
   const comisionStr = ($("#comision").val() || "").replace(/,/g,"");
   const comision = parseFloat(comisionStr) || 0;
-  const total = monto + interes + comision;
+  const total = monto + comision;
   $("#totalNeto").val(total.toLocaleString("es-PE", { minimumFractionDigits:2 }));
 }
 
@@ -227,8 +234,8 @@ function initBasePanel(){
   initBancoCuenta($("#banco_destino_base"), $("#cuenta_destino_base"));
 
   // Crear contenedor documentos base y dos ejemplos
-  createDocumentField("tab-instruir", "Carta de instrucción (PDF)");
-  createDocumentField("tab-instruir", "Constancia de custodia (PDF)");
+  //createDocumentField("tab-instruir", "Carta de instrucción (PDF)");
+  //createDocumentField("tab-instruir", "Constancia de custodia (PDF)");
 
   // Drop base
  // AHORA: evita burbujeo y dispara un click nativo sin bubbles
@@ -309,7 +316,7 @@ function addFondeoTab(){
 
   // Crear un documento requerido por defecto
   filesUploadedByPanel[panelId] = {};
-  createDocumentField(panelId, "Voucher de transferencia (PDF)");
+  //createDocumentField(panelId, "Voucher de transferencia (PDF)");
 
   // Submit de este panel
   $panel.find("form.fondeo-form").on("submit", function(e){

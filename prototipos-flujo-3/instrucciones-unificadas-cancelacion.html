@@ -30,8 +30,8 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
 
-  <link rel="stylesheet" href="css/operaciones-unificadas.css">
-  <script src="js/operaciones-unificadas.js" defer></script>
+  <link rel="stylesheet" href="css/instrucciones-unificadas.css">
+  <script src="js/instrucciones-unificadas.js" defer></script>
 </head>
 <body class="bg-gray-100 text-ink">
   <!-- Área badge -->
@@ -42,7 +42,7 @@
 
   <main class="max-w-screen-2xl mx-auto px-4 py-6">
     <header class="header rounded-2xl rounded-b-none">
-      <h1>Aprobar instrumento</h1>
+      <h1>Cancelación del instrumento</h1>
     </header>
 
     <!-- Info de la inversión (común) -->
@@ -90,13 +90,17 @@
             <a href="#tab-instruir" class="tab-link active">Instruir Instrumento</a>
           </li>
         </ul>
+        <button id="btnAddFondeo"
+          class="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-800">
+          Agregar transferencia a banco
+        </button>
       </div>
 
       <!-- Panels -->
       <div id="panels">
         <!-- Panel: Instruir (completo, basado en instruir-instrumento.html) -->
         <div id="tab-instruir" class="tab-panel">
-          <div class="section-header">2. Información de la instrucción</div>
+          <div class="section-header">2. Registro de la instrucción</div>
           <form id="formLlamado_base" class="space-y-5" novalidate>
             <input type="hidden" id="inv_id_base"/>
 
@@ -122,46 +126,17 @@
 
               <div class="grid sm:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label class="mini-label">Banco destino <span class="text-rose-600">*</span></label>
-                  <select id="banco_destino_base" class="select2 w-full" disabled></select>
+                  <label class="mini-label">Banco origen <span class="text-rose-600">*</span></label>
+                  <select id="banco_destino_base" class="select2 w-full"></select>
                 </div>
                 <div>
-                  <label class="mini-label">Cuenta destino <span class="text-rose-600">*</span></label>
-                  <select id="cuenta_destino_base" class="select2 w-full" disabled></select>
+                  <label class="mini-label">Cuenta origen <span class="text-rose-600">*</span></label>
+                  <select id="cuenta_destino_base" class="select2 w-full"></select>
                 </div>
               </div>
             </section>
 
-            <div class="section-header">3. Registro de la comisión</div>
-
-                        <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div class="grid sm:grid-cols-4 gap-4">
-  <div>
-    <label class="mini-label">Monto</label>
-    <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-           value="150,000,000.00" disabled>
-  </div>
-  <!--<div>
-    <label class="mini-label">Interés (4.59%)</label>
-    <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-           value="6,885,000.00" disabled>
-  </div>-->
-  <div>
-    <label class="mini-label">Comisión</label>
-    <input id="comision" type="text"
-           class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-white font-semibold"
-           placeholder="Ej. 50,000.00">
-  </div>
-  <div>
-    <label class="mini-label">Total Neto</label>
-    <input id="totalNeto" class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-           value="150,000,000.00" disabled>
-  </div>
-            </div>
-
-            </section>
-
-            <div class="section-header">4. Sustento documentario</div>
+            <div class="section-header">3. Sustento documentario</div>
             <div class="p-5 rounded-md bg-gray-100">
               <div class="text-center justify-center">
                 <label class="text-sm font-semibold mb-1">Documento sustento</label>
@@ -190,13 +165,10 @@
               </div>
             </div>
 
-        <div class="flex justify-end gap-3">
-  <a href="#" class="btn-secondary">Cancelar</a>
-  <button type="button" class="btn-info btnCarta">Agregar Carta</button>
-  <button type="submit" class="btn-primary">Confirmar</button>
-</div>
-
-
+            <div class="flex justify-end gap-3">
+              <a href="#" class="btn-secondary">Cancelar</a>
+              <button type="submit" class="btn-primary">Instruir</button>
+            </div>
           </form>
         </div>
       </div><!-- /panels -->
@@ -271,7 +243,7 @@
   <!-- Template Fondeo Banco (se clona dinámicamente) -->
   <template id="tpl-fondeo">
     <div class="tab-panel">
-      <div class="section-header cabecera-transferencia"></div>
+      <div class="section-header"></div>
       <form class="space-y-5 fondeo-form" novalidate>
         <input type="hidden" class="inv_id"/>
         <div class="grid md:grid-cols-8 gap-4">
@@ -283,7 +255,7 @@
             </select>
           </div>
           <div class="col-span-2">
-            <label class="block text-sm font-semibold mb-1" disabled>Monto</label>
+            <label class="block text-sm font-semibold mb-1">Monto</label>
             <input type="text" inputmode="decimal" required
                    class="monto w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px]"
                    placeholder="Ej. 1,310,067.70">
@@ -293,12 +265,12 @@
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-semibold mb-1">Banco cuenta de cargo</label>
-            <select class="banco w-full" disabled></select>
+            <select class="banco w-full"></select>
             <p class="text-xs text-gray-500 mt-1">Selecciona el banco desde donde se realizará el aporte.</p>
           </div>
           <div>
             <label class="block text-sm font-semibold mb-1">Nro cuenta bancaria</label>
-            <select class="cuenta w-full" disabled></select>
+            <select class="cuenta w-full"></select>
             <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde donde se realizará el aporte.</p>
           </div>
         </div>
@@ -306,40 +278,16 @@
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-semibold mb-1">Banco cuenta destino</label>
-            <select class="banco_destino w-full" disabled></select>
+            <select class="banco_destino w-full"></select>
             <p class="text-xs text-gray-500 mt-1">Selecciona el banco destino del aporte.</p>
           </div>
           <div>
             <label class="block text-sm font-semibold mb-1">Nro cuenta destino</label>
             <div class="flex gap-2">
-              <select class="cuenta_destino w-full" disabled></select>
+              <select class="cuenta_destino w-full"></select>
             </div>
           </div>
         </div>
-
-          <div class="section-header">3. Registro de la comisión</div>
-           <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div class="grid sm:grid-cols-4 gap-4">
-  <div>
-    <label class="mini-label">Monto</label>
-    <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-           value="150,000,000.00" disabled>
-  </div>
-  <div>
-    <label class="mini-label">Comisión</label>
-    <input type="text"
-           class="comision w-full rounded-xl border-2 border-gray-200 p-2.5 bg-white font-semibold"
-           placeholder="Ej. 50,000.00">
-  </div>
-  <div>
-    <label class="mini-label">Total Neto</label>
-    <input class="totalNeto w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-           value="150,000,000.00" disabled>
-  </div>
-            </div>
-
-            </section>
-          <div class="section-header">4. Sustento Documentario</div>
 
         <div class="p-5 rounded-md bg-gray-100">
           <div class="text-center justify-center">
@@ -368,11 +316,10 @@
           </div>
         </div>
 
-              <div class="flex justify-end gap-3">
-  <a href="#" class="btn-secondary">Cancelar</a>
-  <button type="button" class="btn-info btnCarta">Agregar Carta</button>
-  <button type="submit" class="btn-primary">Confirmar</button>
-</div>
+        <div class="flex justify-end gap-3">
+          <a href="#" class="btn-secondary">Cancelar</a>
+          <button type="submit" class="btn-success">Guardar</button>
+        </div>
       </form>
     </div>
   </template>

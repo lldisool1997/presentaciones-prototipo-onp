@@ -198,9 +198,6 @@
                                 inv.estado === "INSTRUIDO" && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
-            <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDeCartaRecepcion('${inv.invPrincipal}')">
-              Generar carta de Recepción
-            </button>
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroCancelacion('${inv.invPrincipal}')">
               Cancelación
             </button>
@@ -250,14 +247,8 @@
                                 inv.estado === "REGISTRADO" && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
-                         <button class="btn btn-action btn-llamado-registro" onclick="irARegistrodeFondeoTesoreria('${inv.invPrincipal}')">
-              Transferir Fondos
-            </button>
-              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroDeCartaAprobacion('${inv.invPrincipal}')">
-              Generar Carta
-            </button>
               <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionTesoreria('${inv.invPrincipal}')">
-              Aprobar
+              Registrar Operación
             </button>
           </div>`
                                 :
@@ -569,9 +560,9 @@ function irAInstruccionOpeCambiaria(inversionId){
     function irARegistroAprobacionTesoreria(inversionId){
     if(inversionId){
 
-      window.location.href = `aprobar-instrumento-tesoreria.html?area=DIN&accion=accion&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `operaciones-unificadas.html?area=DIN&accion=accion&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
-      window.location.href = "aprobar-instrumento-tesoreria.html";
+      window.location.href = "operaciones-unificadas.html";
     }
   }
 
@@ -594,17 +585,17 @@ function irAInstruccionOpeCambiaria(inversionId){
 
     function irARegistroCancelacion(inversionId){
     if(inversionId){
-      window.location.href = `cancelar-instrumento.html?area=DIN&accion=accion&&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `operaciones-unificadas-cancelacion.html?area=DIN&accion=accion&&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
-      window.location.href = "cancelar-instrumento.html";
+      window.location.href = "operaciones-unificadas-cancelacion.html";
     }
   }
 
     function irARegistroInstruccion(inversionId){
     if(inversionId){
-      window.location.href = `instruir-instrumento.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `instrucciones-unificadas-cancelacion.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
-      window.location.href = "instruir-instrumento.html";
+      window.location.href = "instrucciones-unificadas-cancelacion.html";
     }
   }
 
