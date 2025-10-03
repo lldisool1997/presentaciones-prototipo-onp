@@ -410,3 +410,5 @@ function firmaCellOperador(url, nombre, cargo1 = '', cargo2 = '') {
 
   
 function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m])); }
+
+

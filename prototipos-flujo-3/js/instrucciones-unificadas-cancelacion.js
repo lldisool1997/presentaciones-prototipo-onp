@@ -614,7 +614,7 @@ function __setBaseDropFileName(fileName) {
  */
 function load_aprobacion_inst_corto_plazo(opId) {
   try {
-    const KEY = "aprobacion_inst_corto_plazo";
+    const KEY = "cancelacion_inst_corto_plazo";
     const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
     if (!Array.isArray(lista) || !lista.length) return;
 
