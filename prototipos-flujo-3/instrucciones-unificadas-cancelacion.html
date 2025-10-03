@@ -31,7 +31,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
 
   <link rel="stylesheet" href="css/instrucciones-unificadas.css">
-  <script src="js/instrucciones-unificadas.js" defer></script>
+  <script src="js/instrucciones-unificadas-cancelacion.js" defer></script>
 </head>
 <body class="bg-gray-100 text-ink">
   <!-- Área badge -->
@@ -42,7 +42,7 @@
 
   <main class="max-w-screen-2xl mx-auto px-4 py-6">
     <header class="header rounded-2xl rounded-b-none">
-      <h1>Cancelación del instrumento</h1>
+      <h1>Cancelación de la inversión</h1>
     </header>
 
     <!-- Info de la inversión (común) -->
@@ -316,10 +316,17 @@
           </div>
         </div>
 
-        <div class="flex justify-end gap-3">
-          <a href="#" class="btn-secondary">Cancelar</a>
-          <button type="submit" class="btn-success">Guardar</button>
-        </div>
+         <div class="flex items-center justify-end">
+
+
+      <div class="flex gap-3">
+        <a href="#" class="btn-secondary">Cancelar</a>
+              <button type="button" class="btn-secondary btn-delete-transfer">
+        Eliminar transferencia
+      </button>
+        <button type="submit" class="btn-success">Guardar</button>
+      </div>
+    </div>
       </form>
     </div>
   </template>

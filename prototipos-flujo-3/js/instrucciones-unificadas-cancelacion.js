@@ -407,7 +407,7 @@ function build_aprobacion_snapshot(){
  */
 function aprobacion_inst_corto_plazo(){
   try {
-    const KEY = "aprobacion_inst_corto_plazo";
+    const KEY = "cancelacion_inst_corto_plazo";
     const snap = build_aprobacion_snapshot();
 
     let lista = [];
@@ -435,7 +435,7 @@ function aprobacion_inst_corto_plazo(){
  */
 function aprobacion_inst_corto_plazo_upsert() {
   try {
-    const KEY = "aprobacion_inst_corto_plazo";
+    const KEY = "cancelacion_inst_corto_plazo";
     const snap = build_aprobacion_snapshot();
 
     let lista = [];

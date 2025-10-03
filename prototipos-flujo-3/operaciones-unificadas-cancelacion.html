@@ -31,7 +31,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
 
   <link rel="stylesheet" href="css/operaciones-unificadas.css">
-  <script src="js/operaciones-unificadas.js" defer></script>
+  <script src="js/operaciones-unificadas-cancelacion.js" defer></script>
 </head>
 <body class="bg-gray-100 text-ink">
   <!-- Área badge -->
@@ -42,7 +42,7 @@
 
   <main class="max-w-screen-2xl mx-auto px-4 py-6">
     <header class="header rounded-2xl rounded-b-none">
-      <h1>Cancelar instrumento</h1>
+      <h1>Aprobar instrumento</h1>
     </header>
 
     <!-- Info de la inversión (común) -->
@@ -122,11 +122,11 @@
 
               <div class="grid sm:grid-cols-2 gap-4 mt-4">
                 <div>
-                  <label class="mini-label">Banco origen <span class="text-rose-600">*</span></label>
+                  <label class="mini-label">Banco destino <span class="text-rose-600">*</span></label>
                   <select id="banco_destino_base" class="select2 w-full" disabled></select>
                 </div>
                 <div>
-                  <label class="mini-label">Cuenta origen <span class="text-rose-600">*</span></label>
+                  <label class="mini-label">Cuenta destino <span class="text-rose-600">*</span></label>
                   <select id="cuenta_destino_base" class="select2 w-full" disabled></select>
                 </div>
               </div>
@@ -155,44 +155,62 @@
   <div>
     <label class="mini-label">Total Neto</label>
     <input id="totalNeto" class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-           value="156,885,000.00" disabled>
+           value="150,000,000.00" disabled>
   </div>
             </div>
 
             </section>
 
-            <div class="section-header">4. Sustento documentario</div>
-            <div class="p-5 rounded-md bg-gray-100">
-              <div class="text-center justify-center">
-                <label class="text-sm font-semibold mb-1">Documento sustento</label>
-                <div id="drop_base" class="dropzone w-[30%] m-auto">
-                  <input id="file_base" type="file" accept=".pdf,.png,.jpg,.jpeg" required class="hidden">
-                  <div class="flex items-center text-center text-sm">
-                    <div class="text-center w-full">
-                      <div class="font-semibold">📄 Seleccionar archivo</div>
-                      <div class="text-gray-500">PDF</div>
-                    </div>
-                  </div>
-                  <div id="fileName_base" class="mt-2 text-blue-700 font-medium hidden"></div>
-                </div>
-              </div>
-              <div>
-                <div id="documentFields_base" class="documentFields mt-4 flex flex-row gap-3"></div>
-              </div>
-              <div class="config-section">
-                <h4>🔧 Configuración avanzada</h4>
-                <p class="muted-par">Agregue documentos adicionales para el área seleccionada:</p>
-                <div class="flex items-center gap-2">
-                  <input type="text" id="newDocumentName_base" placeholder="Nombre del nuevo documento"
-                         class="input-basic w-[280px]">
-                  <button type="button" class="add-document-btn" data-target="base">+ Agregar Documento</button>
-                </div>
-              </div>
-            </div>
+           <div class="section-header">4. Sustentos previos (solo lectura)</div>
+<div class="p-5 rounded-md bg-gray-50 border border-slate-200">
+  <ul id="prev_docs_list" class="list-disc list-inside text-sm text-slate-700">
+    <!-- Se llena desde JS -->
+  </ul>
+  <p class="text-xs text-slate-500 mt-2">
+    Estos documentos provienen de la etapa anterior y no pueden ser modificados aquí.
+  </p>
+</div>
+
+<div class="section-header mt-6">5. Sustento documentario de la operación</div>
+<div id="tab-instruir-op" class="p-5 rounded-md bg-gray-100">
+  <div class="text-center justify-center">
+    <label class="text-sm font-semibold mb-1">Documento sustento</label>
+    <div id="drop_op" class="dropzone w-[30%] m-auto rounded-sm border-2 border-dashed border-gray-300 bg-muted p-4">
+      <input id="file_op" type="file" accept=".pdf,.png,.jpg,.jpeg" class="hidden">
+      <div class="flex items-center text-center text-sm">
+        <div class="text-center w-full">
+          <div class="font-semibold">📄 Seleccionar archivo</div>
+          <div class="text-gray-500">PDF/Imagen</div>
+        </div>
+      </div>
+      <div id="fileName_op" class="mt-2 text-blue-700 font-medium hidden"></div>
+    </div>
+  </div>
+
+  <div>
+    <div id="documentFields_op" class="documentFields mt-4 flex flex-row gap-3"></div>
+  </div>
+
+  <div class="config-section">
+    <h4>🔧 Agregar documentos adicionales</h4>
+    <p class="muted-par">Adjunta sustentos complementarios para esta operación:</p>
+    <div class="flex items-center gap-2">
+      <input type="text" id="newDocumentName_op" placeholder="Nombre del nuevo documento" class="input-basic w-[280px]">
+      <button type="button" class="add-document-btn" data-target="op">+ Agregar Documento</button>
+    </div>
+  </div>
+</div>
+
 
         <div class="flex justify-end gap-3">
   <a href="#" class="btn-secondary">Cancelar</a>
-  <button type="button" class="btn-info btnCarta">Agregar Carta</button>
+  <button type="button"
+        class="btn-info btnCartaOp"
+        data-url-operacion="generar-carta-aprobacion.html" 
+        data-param="panel">                         
+  Agregar Carta
+</button>
+
   <button type="submit" class="btn-primary">Confirmar</button>
 </div>
 
@@ -339,38 +357,57 @@
             </div>
 
             </section>
-          <div class="section-header">4. Sustento Documentario</div>
+          <!-- 4. Sustentos previos (solo lectura) -->
+<div class="section-header">4. Sustentos previos (solo lectura)</div>
+<div class="p-4 rounded-md bg-gray-50 border border-slate-200">
+  <ul class="prev_docs_list_trf list-disc list-inside text-sm text-slate-700">
+    <!-- Se llena por JS: voucher previo + docs adicionales previos -->
+  </ul>
+  <p class="text-xs text-slate-500 mt-2">
+    Estos documentos provienen de la etapa anterior y no pueden ser modificados aquí.
+  </p>
+</div>
 
-        <div class="p-5 rounded-md bg-gray-100">
-          <div class="text-center justify-center">
-            <label class=" text-sm font-semibold mb-1">Documento sustento</label>
-            <div class="drop rounded-sm border-2 border-dashed border-gray-300 bg-muted p-4 w-[30%] m-auto">
-              <input type="file" accept=".pdf" required class="file hidden">
-              <div class="flex items-center text-center text-sm">
-                <div class="text-center w-full">
-                  <div class="font-semibold">📄 Seleccionar archivo</div>
-                  <div class="text-gray-500">PDF</div>
-                </div>
-              </div>
-              <div class="fileName mt-2 text-blue-700 font-medium hidden"></div>
-            </div>
-          </div>
-          <div>
-            <div class="documentFields mt-4 flex flex-row gap-3"></div>
-          </div>
-          <div class="config-section">
-            <h4>🔧 Configuración avanzada</h4>
-            <p class="muted-par">Agregue documentos adicionales para el área seleccionada:</p>
-            <div class="flex items-center gap-2">
-              <input type="text" class="newDocumentName input-basic w-[280px]" placeholder="Nombre del nuevo documento">
-              <button type="button" class="add-document-btn">+ Agregar Documento</button>
-            </div>
-          </div>
+<!-- 5. Sustento documentario de la operación (de esta transferencia) -->
+<div class="section-header mt-6">5. Sustento documentario de la operación</div>
+<div class="p-5 rounded-md bg-gray-100">
+  <div class="text-center justify-center">
+    <label class="text-sm font-semibold mb-1">Documento sustento</label>
+    <div class="drop_op_trf rounded-sm border-2 border-dashed border-gray-300 bg-muted p-4 w-[30%] m-auto">
+      <input type="file" accept=".pdf,.png,.jpg,.jpeg" class="file_op_trf hidden">
+      <div class="flex items-center text-center text-sm">
+        <div class="text-center w-full">
+          <div class="font-semibold">📄 Seleccionar archivo</div>
+          <div class="text-gray-500">PDF/Imagen</div>
         </div>
+      </div>
+      <div class="fileName_op_trf mt-2 text-blue-700 font-medium hidden"></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="documentFields_op_trf documentFields mt-4 flex flex-row gap-3"></div>
+  </div>
+
+  <div class="config-section">
+    <h4>🔧 Agregar documentos adicionales</h4>
+    <p class="muted-par">Adjunta sustentos complementarios para esta transferencia:</p>
+    <div class="flex items-center gap-2">
+      <input type="text" class="newDocumentName_op_trf input-basic w-[280px]" placeholder="Nombre del nuevo documento">
+      <button type="button" class="add-document-btn-op-trf">+ Agregar Documento</button>
+    </div>
+  </div>
+</div>
 
               <div class="flex justify-end gap-3">
   <a href="#" class="btn-secondary">Cancelar</a>
-  <button type="button" class="btn-info btnCarta">Agregar Carta</button>
+ <button type="button"
+        class="btn-info btnCarta"
+        data-url-transferencia="generar-carta-transferencia-fondos.html"
+        data-param="panel">                                  
+  Agregar Carta
+</button>
+
   <button type="submit" class="btn-primary">Confirmar</button>
 </div>
       </form>
