@@ -543,7 +543,7 @@ function irARegistrodeFondeoDIN(inversionId){
   
 function irAInstruccionOpeCambiaria(inversionId){
     if(inversionId){
-      window.location.href = `back-office-ope-camb.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `back-office-ope-camb.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
       window.location.href = "back-office-ope-camb.html";
     }

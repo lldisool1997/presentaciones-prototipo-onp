@@ -1,37 +1,78 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // ===== Contenidos iniciales =====
-  const bodyInicial = `
-    <p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales</strong> (FCR),
-    con RUC <strong>{{RUC_FONDO}}</strong>, a fin de solicitarle efectúe la(s) siguiente(s) operación(es):</p>
+  // ===== Decide plantilla según query param =====
+  const idTab = new URLSearchParams(location.search).get('id');
+  const esOperacion = idTab === 'tab-operacion';
+
+  // ===== Plantillas de cuerpo =====
+    // Plantilla para cualquier cosa distinta a tab-operacion
+  const BODY_TRF = `
+    <p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales - FCR</strong>,
+    con RUC <strong>20421413216</strong>, a fin de solicitarle efectúe la(s) siguiente(s) operación(es):</p>
     <br>
-    <p><strong>RECIBIR VÍA BCRP DE:</strong> SCOTIABANK PERÚ SAA / S/ 150,000,000.00</p>
 
-    <p><strong>APERTURA/COMPRA DE:</strong><br/>
-       TITULAR: FCR–MACROFONDO<br/>
-       INVERSIÓN: DEPÓSITO A PLAZO<br/>
-       MONTO: S/ 150,000,000.00 &nbsp;&nbsp;&nbsp;&nbsp; <strong>TASA:</strong> 4.59% T.E.A.<br/>
-       PLAZO: 361 días &nbsp;&nbsp;&nbsp;&nbsp; <strong>VENCIMIENTO:</strong> 23/02/2026</p>
-      <br>
-    <p>Asimismo, autorizamos a {{REPRESENTANTE_1}} (DNI {{DOC_REPRESENTANTE_1}}) y/o
-       {{REPRESENTANTE_2}} (DNI {{DOC_REPRESENTANTE_2}}) a recibir la documentación respectiva.</p>
+    <p><strong>CARGO DE:</strong><br>
+      S/ 17,652,500.00 de la CUENTA DE AHORROS M.N N° 200-3067561380, en el BANCO INTERBANK,
+      denominada FCR–MACROFONDO, con CCI 003-200-013067561380-31</p>
 
-    <p>Agradecidos por la atención, quedamos</p>
-    <p>Atentamente,</p>
-    <p><strong>Back Office Tesorería — FCR</strong></p>
+    <p><strong>ENVIAR VÍA BCRP A LA CUENTA ORDINARIA DE:</strong><br>
+      BANCO BBVA PERÚ el monto de S/ 17,652,500.00.<br>
+      El RUC de BANCO BBVA PERÚ es el N° 20100130204</p>
+
+    <p>Son: DIECISIETE MILLONES SEISCIENTOS CINCUENTA Y DOS MIL QUINIENTOS Y 00/100 SOLES</p>
+
+    <p>El beneficiario de los fondos es <strong>Fondo Consolidado de Reservas Previsionales – FCR</strong>.</p>
+    <p>Los gastos de transferencia sírvase cargarlos a la(s) cuenta(s) mencionada(s).</p>
+
+    <p>Asimismo, autorizamos al señor {{REPRESENTANTE_1}} (DNI {{DOC_REPRESENTANTE_1}})
+    y/o a la señora {{REPRESENTANTE_2}} (DNI {{DOC_REPRESENTANTE_2}}), a recibir la documentación respectiva.</p>
   `.trim();
+
+  // Plantilla para tab-operacion
+  const BODY_OPE = `
+    <p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales - FCR</strong>,
+    con RUC <strong>20421413216</strong>, a fin de solicitarle efectúe la(s) siguiente(s) operación(es):</p>
+    <br>
+
+    <p><strong>RECIBIR VÍA BCRP:</strong> BANCO INTERBANK S/ 17,652,500.00</p>
+
+    <p><strong>COMPRA/VENTA DE MONEDA EXTRANJERA</strong><br>
+       TITULAR: FCR–MACROFONDO<br>
+       OPERACIÓN: Compra US$ 5,000,000.00<br>
+       TIPO DE CAMBIO: 3.4897 (S/ 17,652,500.00)</p>
+
+    <p><strong>ABONAR VÍA BCRP:</strong><br>
+       US$ 5,000,000.00 a la CUENTA DE AHORROS M.E N° 200-3068999825 en el BANCO INTERBANK,
+       denominada FCR–MACROFONDO, con CCI 003-200-013068999825-35. El RUC del BANCO INTERBANK es el N° {{RUC_INTERBANK}}</p>
+
+    <p>Asimismo, autorizamos al señor {{REPRESENTANTE_1}} (DNI {{DOC_REPRESENTANTE_1}})
+    y/o a la señora {{REPRESENTANTE_2}} (DNI {{DOC_REPRESENTANTE_2}}), a recibir la documentación respectiva.</p>
+  `.trim();
+
+
+  // ===== Asunto por defecto según casuística =====
+  const asuntoDef =
+    esOperacion
+      ? 'RECIBE VÍA BCRP T/C COMPRA DE MONEDA EXTRANJERA'
+      : 'CARGO: ENVÍO VÍA BCRP OPERACIÓN DE CAMBIO';
+
+  // Si existe el input de asunto, lo prellenamos sin bloquear edición
+  if ($('#txtAsunto').length) {
+    const yaTieneValor = ($('#txtAsunto').val() || '').toString().trim().length > 0;
+    if (!yaTieneValor) $('#txtAsunto').val(asuntoDef);
+  }
+
+  // ===== Contenidos iniciales (body/footer) =====
+  const bodyInicial = esOperacion ? BODY_OPE : BODY_TRF;
 
   const footerInicial = `
     Número Digital: {{NUM_DIGITAL}} — Elaborado por: {{ELABORADO}} — Back Office Tesorería FCR
     <br/>—————————————————————————————————————————————————<br/>
-    Jr. Bolivia Nº 109 Piso 16º – Centro Cívico y Comercial de Lima – Lima 1. Telf: 634-2222 — Anexo 2917, Fax: 431-7979
+    Jr. Bolivia Nº 109 Piso 16° – Centro Cívico y Comercial de Lima – Lima 1. Telf: 634-2222 — Anexo 2917, Fax: 431-7979
   `.trim();
 
   // ===== TinyMCE =====
   initEditor('#editorBody', 520, bodyInicial, '14px');
   initEditor('#editorFooter', 160, footerInicial, '12px');
-
-
-
 
   function initEditor(selector, height, content, size) {
     tinymce.init({

@@ -19,6 +19,70 @@ const DEFAULT_DOCS = ['Documento sustentatorio'];
 
 /* =====================  HELPERS UI  ===================== */
 
+// ====== ESTADO + CHECK EN TABS ======
+const ESTADOS_OK = new Set(['confirmado','registrado','enviado','aprobado']);
+
+function setEstado(scope, tabId, nuevoEstado){
+  const data = loadFromStorage() || {};
+  if (scope === 'operacion') {
+    data.operacion = data.operacion || {};
+    data.operacion.estado = nuevoEstado;
+  } else if (scope === 'transferencia') {
+    const m = /tab-trf-(\d+)/.exec(tabId);
+    const idx = m ? (parseInt(m[1],10) - 1) : -1;
+    if (idx >= 0) {
+      data.transferencias = Array.isArray(data.transferencias) ? data.transferencias : [];
+      data.transferencias[idx] = data.transferencias[idx] || {};
+      data.transferencias[idx].estado = nuevoEstado;
+    }
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  applyEstadoBadges(data);
+  return data;
+}
+
+
+function applyEstadoBadges(data){
+  // limpia checks
+  $('.oc-tab').removeClass('is-done').find('.oc-tab-check').remove();
+  // resetea visibilidad de botones (por si vuelves de un estado no-final)
+  $('#btnInstruir').removeClass('hidden');
+  $('#transfer-panels .oc-panel .trf-btn-confirmar').removeClass('hidden');
+
+  // Operación
+  if (data?.operacion?.estado && ESTADOS_OK.has(data.operacion.estado)) {
+    addCheck($('#tabbtn-operacion'));
+    // ocultar botón Confirmar de Operación
+    $('#btnGenerarCarta').addClass('hidden');
+    $('#btnInstruir').addClass('hidden');
+  }
+
+  // Transferencias
+  $('.oc-tab[data-kind="trf"]').each(function(){
+    const $tabBtn = $(this);
+    const panelId = $tabBtn.data('tab');            // ej: 'tab-trf-2'
+    const m = /tab-trf-(\d+)/.exec(panelId);
+    const idx = m ? (parseInt(m[1],10) - 1) : -1;
+
+    if (idx >= 0 && data?.transferencias?.[idx]?.estado && ESTADOS_OK.has(data.transferencias[idx].estado)) {
+      addCheck($tabBtn);
+      // ocultar botón Confirmar de esa transferencia
+      const $panel = $('#'+panelId);
+      $panel.find('.trf-btn-confirmar').addClass('hidden');
+      $panel.find('.trf-btn-carta').addClass('hidden');
+    }
+  });
+
+  function addCheck($btn){
+    $btn.addClass('is-done');
+    if (!$btn.find('.oc-tab-check').length){
+      $btn.append(' <span class="oc-tab-check" aria-label="confirmado">✓</span>');
+    }
+  }
+}
+
+
+
 // ====== Última carta generada (helpers) ======
 function formatFechaLima(iso){
   if (!iso) return '--/--/---- --:--';
@@ -452,9 +516,10 @@ function initTransferPanel($panel){
   });
 
   // confirmar (demo)
-  $panel.find('.trf-btn-confirmar').on('click', ()=>{
-    saveToStorage();
-    Swal.fire({icon:'success',title:'Transferencia confirmada (guardada localmente)',timer:1200,showConfirmButton:false});
+  $panel.find('.trf-btn-confirmar').off('click').on('click', ()=>{
+    saveToStorage(false);
+    setEstado('transferencia', $panel.attr('id'), 'confirmado'); // estado + check en su tab
+    Swal.fire({icon:'success',title:'Transferencia confirmada',timer:1200,showConfirmButton:false});
   });
 
   // alta de doc extra
@@ -526,10 +591,11 @@ function initGlobal(){
   // botonería
   $('#btnGenerarCarta').on('click', ()=>{ saveToStorage(); toastr.success('Borrador guardado y carta generada (demo)'); });
   $('#btnCancelar').on('click', ()=> Swal.fire({icon:'info',title:'Acción cancelada',timer:1100,showConfirmButton:false}));
-  $('#formOperacion').on('submit', function(e){
+  $('#formOperacion').off('submit').on('submit', function(e){
     e.preventDefault();
-    saveToStorage();
-    Swal.fire({icon:'success',title:'Operación confirmada (guardada localmente)',timer:1200,showConfirmButton:false});
+    saveToStorage(false);                              // guarda la UI actual
+    setEstado('operacion', 'tab-operacion', 'confirmado'); // marca estado + check
+    Swal.fire({icon:'success',title:'Operación confirmada',timer:1200,showConfirmButton:false});
   });
 
   // helpers
@@ -542,8 +608,10 @@ function restoreFromStorage(){
   if (!data) return;
   populateOperacion(data.operacion);
   (data.transferencias || []).forEach(t => addTransferTab(t));
+  applyEstadoBadges(data); // <<< pinta checks según estados guardados
   toastr?.info('Se restauró un borrador local');
 }
+
 
 /* ============ Locks (vista) ============ */
 function lockGlobal(){
@@ -616,4 +684,14 @@ function wireCartaTransferencia($panel){
 $(function(){
   initGlobal();
   restoreFromStorage(); // restauración automática
+               function getAreaParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("area");
+  }
+
+  const area = getAreaParam();
+  if (area) {
+    document.getElementById("area-badge").textContent = "Perfil: " + area;
+  }
+
 });

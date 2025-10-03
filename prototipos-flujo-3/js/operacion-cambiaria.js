@@ -17,6 +17,11 @@ const CUENTAS = {
 };
 
 /* =====================  HELPERS UI  ===================== */
+
+// arriba, junto a tus globals
+let IS_RESTORING = false;
+
+
 const $tpl = $('#tplTransferencia');
 const $panelContainer = $('#transfer-panels');
 let transfSeq = 0;
@@ -182,7 +187,8 @@ function addTransferTab(prefillData = null){
 
   // renumera por orden visual y guarda
   renumerarTabs();
-  saveToStorage(false);
+  // antes: saveToStorage(false);
+if (!IS_RESTORING) saveToStorage(false);   // <- NO guardes mientras restauras
 }
 
 function initTransferPanel($panel){
@@ -268,18 +274,32 @@ function initGlobal(){
 }
 
 /* =====================  RESTORE ===================== */
+// en restoreFromStorage()
 function restoreFromStorage(){
   const data = loadFromStorage();
   if (!data) return;
-  // operacion
+
+  IS_RESTORING = true;                 // <- activa el modo restauración
   populateOperacion(data.operacion);
-  // transferencias
   (data.transferencias || []).forEach(t => addTransferTab(t));
+  IS_RESTORING = false;                // <- desactívalo
+
   if (window.toastr) toastr.info('Se restauró un borrador local');
 }
+
 
 /* =====================  INIT ===================== */
 $(function(){
   initGlobal();
   restoreFromStorage(); // comenta esta línea si NO deseas restauración automática
+               function getAreaParam() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("area");
+  }
+
+  const area = getAreaParam();
+  if (area) {
+    document.getElementById("area-badge").textContent = "Perfil: " + area;
+  }
+
 });

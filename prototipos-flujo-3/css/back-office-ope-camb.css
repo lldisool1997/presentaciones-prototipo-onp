@@ -105,3 +105,9 @@
             opacity: 0.9;
             font-size: 1.1rem;
         }
+
+        .oc-tab.is-done{ border-color:#22c55e; }
+.oc-tab .oc-tab-check{ font-weight:700; color:#16a34a; }
+
+.opacity-50 { opacity: .5; }
+.cursor-not-allowed { cursor: not-allowed; }
