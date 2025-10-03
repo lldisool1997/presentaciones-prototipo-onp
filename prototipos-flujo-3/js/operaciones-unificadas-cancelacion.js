@@ -187,10 +187,10 @@ function bindDelegatesOnce(){
   // Recalcular total neto
 function actualizarTotalNeto(){
   const monto = 150000000.00;
-  //const interes = 6885000.00;
+  const interes = 6885000.00;
   const comisionStr = ($("#comision").val() || "").replace(/,/g,"");
   const comision = parseFloat(comisionStr) || 0;
-  const total = monto + comision;
+  const total = monto + comision + interes;
   $("#totalNeto").val(total.toLocaleString("es-PE", { minimumFractionDigits:2 }));
 }
 
