@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lista de Inversiones · Llamados (con colapsable)</title>
+
+  <!-- jQuery + Toastr -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- App -->
+  <script src="js/lista-subasta-3.5.js" defer></script>
+  <link rel="stylesheet" href="css/listado-subasta.css">
+
+</head>
+<body>
+  <!-- Badge área en esquina -->
+<div id="area-badge"
+     style="position: absolute; top: 15px; right: 20px;
+            background-color: #1e6ba8; color: #fff;
+            font-weight: bold; font-size: 0.9rem;
+            padding: 6px 14px; border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+  Área: -
+</div>
+  <div class="container">
+    <div class="main-container">
+      <div class="header">
+        <h1>Lista de Inversiones</h1>
+        <div>Administración de Recursos Financieros de Corto Plazo (Estados: Registrado, Aprobado, Cancelado)</div>
+      </div>
+
+      <div class="content-wrapper">
+        <!-- === Filtros (NO tocados) === -->
+        <div class="filters-section" style="background-color:#f8f9fa;">
+          <div class="filters-row" style="margin-bottom:20px;">
+            <div class="form-group">
+              <label for="entidad">Entidad:</label>
+              <select id="entidad">
+                <option value="">Todas las entidades</option>
+                <option value="fdo-consolidado" selected>Fondo Consolidado de Reservas Previsionales – FCR</option>
+                <option value="fcr-macrofondo">FCR-MACROFONDO</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="unidadNegocio">Unidad de Negocio:</label>
+              <select id="unidadNegocio">
+                <option value="">Todas las unidades</option>
+                <option value="fcr-macrofondo" selected>FCR-MACROFONDO</option>
+                <option value="bonos-corporativos">BONOS CORPORATIVOS</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tipoInstrumento">Tipo de Inversión:</label>
+              <select id="tipoInstrumento">
+                <option value="">Todos los tipos</option>
+                <option value="Instrumento de corto plazo">Instrumento de corto plazo</option>
+                <option value="Operación cambiaria" selected>Operación cambiaria</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="inversionNum">Inversión #:</label>
+              <input type="text" id="inversionNum" placeholder="Número de inversión">
+            </div>
+          </div>
+
+          <div class="filters-row" style="margin-bottom:20px;">
+            <!--<div class="form-group">
+              <label for="numeroDeposito"># Depósito:</label>
+              <input type="text" id="numeroDeposito" placeholder="Número de depósito">
+            </div>
+
+            <div class="form-group">
+              <label for="estadoFiltro">Estado del hijo:</label>
+              <select id="estadoFiltro">
+                <option value="">Todos</option>
+                <option value="Aprobado">Aprobado</option>
+                <option value="Desagregado Registrado">Desagregado Registrado</option>
+                <option value="Instruido">Instruido</option>
+              </select>
+            </div>-->
+
+            <div class="form-group">
+              <label>Fechas:</label>
+              <div style="display:flex;gap:10px;align-items:center;">
+                <label style="display:flex;align-items:center;gap:5px;font-weight:normal;">
+                  <input type="checkbox" id="checkFechaCompra"> F. Compra
+                </label>
+                <label style="display:flex;align-items:center;gap:5px;font-weight:normal;">
+                  <input type="checkbox" id="checkFechaEmision"> F. Emisión
+                </label>
+                <label style="display:flex;align-items:center;gap:5px;font-weight:normal;">
+                  <input type="checkbox" id="checkFechaVencim"> F. Vencim.
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filters-row">
+            <button class="btn btn-primary" id="btnBuscar">Buscar</button>
+            <button class="btn btn-secondary" id="btnLimpiar" class="border border-gray-400 hover:translate-y-1">Limpiar</button>
+          </div>
+        </div>
+
+        <div class="section-header">Inversiones Registradas</div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Estado</th>
+                <th>Cod. FCR</th>
+                <th>Inversión #</th>
+                <th class="text-left">Tipo Inversión</th>
+                <th class="text-left">Entidad Financiera</th>
+                <th>Fecha Compra</th>
+                <th>Fecha Emisión</th>
+                <th>Fecha Vencim.</th>
+                <th>Carta Apertura</th>
+                <th>Carta Cancelación</th>
+                <th>Moneda</th>
+                <th>Valor Nominal</th>
+                <th>Eco Inversión</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="inversionesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+      <!-- Modal de Aprobación -->
+    <div id="modalAprobacion" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Aprobación de Inversión</h2>
+                <span class="modal-close" onclick="cerrarModal()">&times;</span>
+            </div>
+            <div class="modal-content">
+                <div class="modal-section">
+                    <div class="section-header">1. Información general de la inversión</div>
+                    <div id="infoGeneral" class="info-grid">
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="section-header">2. Sustento documentario</div>
+                    <div class="tabs-container">
+                        <div class="tabs">
+                            <button class="tab active" onclick="cambiarTab('general')">General</button>
+                            <button class="tab" onclick="cambiarTab('tesoreria')">Tesorería</button>
+                        </div>
+                        <div class="tab-content">
+                            <div id="tab-general" class="tab-pane active">
+                            </div>
+                            <div id="tab-tesoreria" class="tab-pane">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="section-header">3. Justificación de aprobación</div>
+                    <div id="seccionJustificacion">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-aprobar" onclick="aprobarInversion()">APROBAR</button>
+                <button class="btn btn-cerrar" onclick="cerrarModal()"
+                    style="background: #6c757d; color: white; margin-left: 10px;">CERRAR</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
