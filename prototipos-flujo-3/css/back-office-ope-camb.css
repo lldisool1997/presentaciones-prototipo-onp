@@ -43,10 +43,10 @@
 /* ===== Tabs ===== */
 .oc-tabs{border-bottom:1px solid #e5e7eb}
 .oc-tablist{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
-.oc-tab{padding:.6rem .9rem;border-radius:.75rem;border:2px solid transparent;background:#f8fafc;font-weight:600;color:#334155}
+.oc-tab{padding:.6rem .9rem;border-radius:.5rem .5rem 0 0;border:2px solid transparent; border-bottom:none !important; background:#f8fafc;font-weight:600;color:#334155}
 .oc-tab:hover{background:#eef2ff}
 .oc-tab.is-active{background:#fff;border-color:#e5e7eb;box-shadow:0 1px 0 rgba(0,0,0,.02)}
-.oc-tab-add{margin-left:auto;padding:.55rem .85rem;border-radius:.75rem;background:#2563eb;color:#fff;font-weight:700}
+.oc-tab-add{margin-left:auto;padding:.55rem .85rem;border-radius:.5rem .5rem 0 0;background:#2563eb;color:#fff;font-weight:700; border-bottom:none}
 .oc-panel{display:none}
 .oc-panel.is-active{display:block}
 

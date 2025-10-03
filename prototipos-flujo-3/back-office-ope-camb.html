@@ -70,8 +70,11 @@
         <div class="oc-tablist" role="tablist" aria-label="Tabs Operación cambiaria">
           <!-- tabs de transferencias se inyectan antes -->
           <span id="oc-tab-dynamic"></span>
-          <button class="oc-tab is-active" role="tab" aria-selected="true" aria-controls="tab-operacion" id="tabbtn-operacion">Operación</button>
-        </div>
+         <button class="oc-tab is-active"
+        role="tab" aria-selected="true"
+        aria-controls="tab-operacion"
+        id="tabbtn-operacion"
+        data-tab="tab-operacion">Operación</button>
       </div>
 
       <!-- Panels -->
@@ -140,7 +143,7 @@
 
             <!-- Comisión global -->
             <div class="subsection">
-              <div class="subsection-title font-semibold mb-2">2. Registro de la Comisión</div>
+              <div class="section-header">2. Registro de la comisión</div>
               <div class="grid gap-4 md:grid-cols-3">
                 <div>
                   <label class="lbl">Fondo solicitado</label>
@@ -159,7 +162,7 @@
 
             <!-- Sustento global -->
             <div class="subsection">
-              <div class="subsection-title font-semibold mb-2">3. Sustento documentario</div>
+              <div class="section-header">3. Sustento Documentario</div>
               <!-- Card de confirmación / última carta (OPERACIÓN) -->
               <div id="oc_card_operation_confirm" class="my-4"></div>
               <!-- Grilla de tarjetas (Riesgos, Legal, Acta + extras) -->
@@ -193,8 +196,8 @@
     <!-- TEMPLATE transferencia -->
     <template id="tplTransferencia">
       <section class="oc-panel">
-        <div class="flex items-center justify-between mb-2">
-          <h3 class="trf-title">Transferencia <span class="num">1</span></h3>
+        <div class="flex items-center justify-between">
+           <div class="section-header w-full trf-title">1. Información de la transferencia #<span class="num">1</span></div>
         </div>
 
         <div class="card p-4">
@@ -239,7 +242,7 @@
 
         <!-- Comisión transferencia -->
         <div class="subsection">
-          <div class="subsection-title font-semibold mb-2">2. Registro de la Comisión</div>
+             <div class="section-header">2. Registro de la comisión</div>
           <div class="grid gap-4 md:grid-cols-3">
             <div>
               <label class="lbl">Fondo solicitado</label>
@@ -258,7 +261,7 @@
 
         <!-- Sustento transferencia -->
         <div class="subsection">
-          <div class="subsection-title font-semibold mb-2">3. Sustento documentario</div>
+         <div class="section-header">3. Sustento documentario</div>
          <!-- Card de confirmación / última carta (TRANSFERENCIA) -->
         <div class="oc_card_transfer_confirm my-4"></div>
           <div class="trf-docs-grid grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
