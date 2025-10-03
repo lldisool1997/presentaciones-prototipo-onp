@@ -243,6 +243,7 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
     }).then(res => {
       if (!res.isConfirmed) return;
       Swal.fire({ icon:"success", title:"¡Instrucción registrada!", confirmButtonColor:"#16a34a" });
+      aprobacion_inst_corto_plazo_upsert();
     });
   });
 }
@@ -277,7 +278,7 @@ function addFondeoTab(){
 
   // Crear un documento requerido por defecto
   filesUploadedByPanel[panelId] = {};
-  createDocumentField(panelId, "Voucher de transferencia (PDF)");
+  //createDocumentField(panelId, "Voucher de transferencia (PDF)");
 
   // Submit de este panel
   $panel.find("form.fondeo-form").on("submit", function(e){
@@ -301,13 +302,167 @@ function addFondeoTab(){
       cancelButtonColor: "#6b7280"
     }).then(res => {
       if (!res.isConfirmed) return;
-      Swal.fire({ icon:"success", title:"¡Fondeo registrado!", confirmButtonColor:"#16a34a" });
+      Swal.fire({ icon:"success", title:"Transferencia registrada", confirmButtonColor:"#16a34a" });
+      aprobacion_inst_corto_plazo_upsert();
     });
   });
 
   // Activar el tab nuevo
   $(`#tabs a[href="#${panelId}"]`).trigger("click");
 }
+
+// =============== Helpers de snapshot ===============
+function __getSelectText($sel){
+  // Soporta select2 o <select> nativo
+  const opt = $sel.find("option:selected");
+  return (opt && opt.length) ? (opt.text() || null) : ($sel.val() || null);
+}
+
+function __collectDynamicDocs($scope){
+  // Documentos dinámicos (inputs .file-dyn agregados con "Agregar Documento")
+  const docs = [];
+  $scope.find('input.file-dyn').each(function(){
+    const f = this.files && this.files[0] ? this.files[0].name : null;
+    if (f) docs.push(f);
+  });
+  return docs;
+}
+
+function __collectDropDoc($scope){
+  // Documento principal del drop (clase .file + .fileName en fondeo; #file_base en instruir)
+  const $file = $scope.find('input.file').first();
+  if ($file.length && $file[0].files && $file[0].files[0]) {
+    return $file[0].files[0].name;
+  }
+  const txt = $scope.find('.fileName').first().text().trim();
+  return txt || null;
+}
+
+function __parseMontoToNumber(montoStr){
+  if(!montoStr) return null;
+  const n = parseFloat(String(montoStr).replace(/,/g, ''));
+  return Number.isFinite(n) ? n : null;
+}
+
+// =============== Snapshot + persistencia ===============
+function build_aprobacion_snapshot(){
+  // ID/código de la inversión (preferir hidden, si no usar el visible "INV-7000")
+  const opId = $("#inv_id_base").val() || $(".info-value").first().text().trim(); // INV-xxxx
+  const codigoInversion = $(".info-value").first().text().trim();                 // Visual en cabecera
+
+  // -------- Operación principal (tab-instruir) --------
+  const $base = $("#tab-instruir");
+  const base = {
+    tipo: "operacion_principal",
+    opId,
+    codigoInversion,
+    bancoDestinoId: $("#banco_destino_base").val() || null,
+    bancoDestinoTxt: __getSelectText($("#banco_destino_base")),
+    cuentaDestinoId: $("#cuenta_destino_base").val() || null,
+    cuentaDestinoTxt: __getSelectText($("#cuenta_destino_base")),
+    documentoPrincipal: __collectBaseDropDoc(),
+    documentosAdicionales: __collectDynamicDocs($base),
+  };
+
+  // -------- Transferencias (todas las .fondeo-form existentes) --------
+  const transferencias = [];
+  $(".tab-panel[id^='tab-fondeo-']").each(function(i, panel){
+    const $p = $(panel);
+    const $form = $p.find("form.fondeo-form");
+    if(!$form.length) return;
+
+    const moneda = $p.find(".moneda").val() || null;
+    const montoStr = ($p.find(".monto").val() || "").trim();
+    const transfer = {
+      tipo: "transferencia",
+      idx: i + 1,
+      moneda,
+      monto: __parseMontoToNumber(montoStr),
+      montoRaw: montoStr || null,
+      bancoCargoId: $p.find(".banco").val() || null,
+      bancoCargoTxt: __getSelectText($p.find(".banco")),
+      cuentaCargoId: $p.find(".cuenta").val() || null,
+      cuentaCargoTxt: __getSelectText($p.find(".cuenta")),
+      bancoDestinoId: $p.find(".banco_destino").val() || null,
+      bancoDestinoTxt: __getSelectText($p.find(".banco_destino")),
+      cuentaDestinoId: $p.find(".cuenta_destino").val() || null,
+      cuentaDestinoTxt: __getSelectText($p.find(".cuenta_destino")),
+      documentoPrincipal: __collectDropDoc($p),
+      documentosAdicionales: __collectDynamicDocs($p),
+    };
+    transferencias.push(transfer);
+  });
+
+  return {
+    opId,
+    timestamp: new Date().toISOString(),
+    base,
+    transferencias
+  };
+}
+
+/**
+ * Guardar en localStorage SOLO si no existe (carga inicial).
+ * Key: "aprobacion_inst_corto_plazo"
+ */
+function aprobacion_inst_corto_plazo(){
+  try {
+    const KEY = "aprobacion_inst_corto_plazo";
+    const snap = build_aprobacion_snapshot();
+
+    let lista = [];
+    try { lista = JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch { lista = []; }
+
+    // ¿Ya existe un item con este opId?
+    const yaExiste = lista.some(x => x && x.opId === snap.opId);
+
+    if (!yaExiste) {
+      lista.push(snap);
+      localStorage.setItem(KEY, JSON.stringify(lista));
+      console.log(`[aprobación][init] snapshot creado (${snap.opId}).`);
+    } else {
+      console.log(`[aprobación][init] existe, no se sobrescribe (${snap.opId}).`);
+    }
+  } catch (err) {
+    console.error("Error guardando carga inicial en localStorage:", err);
+  }
+}
+
+/**
+ * Upsert del snapshot: si no existe lo crea, si existe lo reemplaza (manteniendo created_at).
+ * Key: "aprobacion_inst_corto_plazo"
+ */
+function aprobacion_inst_corto_plazo_upsert() {
+  try {
+    const KEY = "aprobacion_inst_corto_plazo";
+    const snap = build_aprobacion_snapshot();
+
+    let lista = [];
+    try { lista = JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch { lista = []; }
+
+    const idx = lista.findIndex(x => x && x.opId === snap.opId);
+    const now = new Date().toISOString();
+
+    if (idx === -1) {
+      // No existía: lo creamos (carga inicial con created_at)
+      lista.push({ ...snap, created_at: now, updated_at: now });
+      console.log(`[aprobación][upsert] creado (${snap.opId}).`);
+    } else {
+      // Ya existía: reemplazamos con el snapshot nuevo, conservando created_at
+      const created = lista[idx]?.created_at || now;
+      lista[idx] = { ...snap, created_at: created, updated_at: now };
+      console.log(`[aprobación][upsert] actualizado (${snap.opId}).`);
+    }
+
+    localStorage.setItem(KEY, JSON.stringify(lista));
+  } catch (err) {
+    console.error("Error en upsert de localStorage:", err);
+  }
+}
+
+
 
 // Ready
 $(function(){
@@ -316,6 +471,15 @@ $(function(){
 
   bindDelegatesOnce();
   initBasePanel();
+  // Carga inicial: guardar operación principal + transferencias existentes (si no existe aún)
+  aprobacion_inst_corto_plazo();
+
+  // 1) Identificamos la inversión mostrada en pantalla
+  const __opId = $("#inv_id_base").val() || $(".info-value").first().text().trim(); // ej. "INV-7000"
+
+  // 2) Intentamos leer y pintar la data guardada (si existe)
+  load_aprobacion_inst_corto_plazo(__opId);
+
 
   // Tabs inicial: mostrar instruir
   $(".tab-panel").addClass("hidden");
@@ -323,3 +487,199 @@ $(function(){
 
   $("#btnAddFondeo").on("click", addFondeoTab);
 });
+
+
+// Eliminar transferencia (delegado)
+$(document).on("click", ".btn-delete-transfer", function(e){
+  e.preventDefault();
+
+  const $panel   = $(this).closest(".tab-panel");
+  const panelId  = $panel.attr("id"); // ej: "tab-fondeo-2"
+  if (!panelId) return;
+
+  // No permitir borrar el panel base
+  if (panelId === "tab-instruir") return;
+
+  Swal.fire({
+    title: "¿Eliminar transferencia?",
+    text: "Se quitará el tab y su contenido.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#dc2626",
+    cancelButtonColor: "#6b7280"
+  }).then(res => {
+    if (!res.isConfirmed) return;
+
+    // 1) Quitar el panel
+    $panel.remove();
+
+    // 2) Quitar el tab de la cabecera
+    const $tabA = $(`#tabs a[href="#${panelId}"]`);
+    $tabA.closest("li").remove();
+
+    // 3) Reetiquetar tabs restantes ("Transferencia Bancaria 1..N")
+    $('#tabs a[href^="#tab-fondeo-"]').each(function(i){
+      $(this).text(`Transferencia Bancaria ${i+1}`);
+    });
+
+    // 4) Activar algún tab visible
+    const $alguno = $("#panels .tab-panel").not(".hidden").first();
+    if (!$alguno.length) {
+      // si ninguno está visible, mostrar base por defecto
+      $(".tab-panel").addClass("hidden");
+      $("#tab-instruir").removeClass("hidden");
+      // marcar activo en pestañas
+      $(".tab-link").removeClass("active");
+      $(`#tabs a[href="#tab-instruir"]`).addClass("active");
+    } else {
+      // asegurar que haya un tab activo coherente
+      const visId = $alguno.attr("id");
+      $(".tab-link").removeClass("active");
+      $(`#tabs a[href="#${visId}"]`).addClass("active");
+    }
+
+    // 5) Actualizar snapshot completo en localStorage
+    //    (usa tu función upsert ya agregada)
+    if (typeof aprobacion_inst_corto_plazo_upsert === "function") {
+      aprobacion_inst_corto_plazo_upsert();
+    }
+
+    toastr.success("Transferencia eliminada.");
+  });
+});
+
+
+// ------ Helpers para setear selects (soporta select2) ------
+function __ensureOption($sel, value, text) {
+  if (value == null || value === "") return;
+  // Si el option no existe, lo agregamos
+  if ($sel.find(`option[value="${value}"]`).length === 0) {
+    const $opt = $('<option/>', { value, text: text || value });
+    $sel.append($opt);
+  }
+}
+function __setSelect2Value($sel, value, text) {
+  if (value == null || value === "") { $sel.val(null).trigger("change"); return; }
+  __ensureOption($sel, value, text);
+  $sel.val(String(value)).trigger("change");
+}
+
+// ------ Helper para mostrar el nombre del archivo en el "drop" principal ------
+function __setDropFileName($scope, fileName) {
+  if (!fileName) return;
+  const $fileName = $scope.find(".fileName").first();
+  if ($fileName.length) {
+    $fileName.removeClass("hidden").text(fileName);
+    $scope.find(".drop .font-semibold").text("📎 Archivo cargado");
+    $scope.find(".drop .text-gray-500").text(fileName);
+  }
+}
+
+// ------ Helper: crea campos dinámicos por cada documento adicional (solo muestra nombre) ------
+function __renderDynamicDocsByNames(panelId, names) {
+  if (!Array.isArray(names) || !names.length) return;
+  names.forEach((name) => {
+    // Creamos un campo dinámico con el nombre como etiqueta
+    createDocumentField(panelId, name, true);
+    // Visualmente “marcamos” que ya hay archivo (no podemos cargar el File real por seguridad del navegador)
+    const $group = $(`#field_${panelId}_doc_${docCounterByPanel[panelId]}`);
+    $group.find(".file-upload-area")
+      .html(`<div class="file-name">📎 ${name}</div><div class="upload-text text-green-600 text-sm">Archivo previamente adjuntado</div>`);
+  });
+}
+
+// ---- Tab principal: leer el archivo del drop (#file_base / #fileName_base)
+function __collectBaseDropDoc() {
+  const inp = document.getElementById("file_base");
+  if (inp && inp.files && inp.files[0]) return inp.files[0].name;
+  const txt = $("#fileName_base").text().trim();
+  return txt || null;
+}
+
+// ---- Tab principal: mostrar nombre del archivo en el drop base
+function __setBaseDropFileName(fileName) {
+  if (!fileName) return;
+  $("#fileName_base").removeClass("hidden").text(fileName);
+  $("#drop_base .font-semibold").text("📎 Archivo cargado");
+  $("#drop_base .text-gray-500").text(fileName);
+}
+
+
+
+/**
+ * Carga inicial desde localStorage y pinta en la UI.
+ * @param {string} opId - ID/código de la inversión (ej. INV-7000 / INV-6120)
+ */
+function load_aprobacion_inst_corto_plazo(opId) {
+  try {
+    const KEY = "aprobacion_inst_corto_plazo";
+    const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
+    if (!Array.isArray(lista) || !lista.length) return;
+
+    const snap = lista.find(x => x && x.opId === opId);
+    if (!snap) return;
+
+    // -------- Operación principal (tab-instruir) --------
+    const base = snap.base || {};
+    // Combos base (Select2): banco/cuenta destino
+    __setSelect2Value($("#banco_destino_base"), base.bancoDestinoId, base.bancoDestinoTxt);
+    __setSelect2Value($("#cuenta_destino_base"), base.cuentaDestinoId, base.cuentaDestinoTxt);
+
+    // Documento principal (drop)
+    __setBaseDropFileName(base.documentoPrincipal);
+
+    // Documentos dinámicos
+    __renderDynamicDocsByNames("tab-instruir", base.documentosAdicionales);
+
+    // -------- Transferencias (crear tantas como existan y setear campos) --------
+    const arr = Array.isArray(snap.transferencias) ? snap.transferencias : [];
+    if (arr.length) {
+      // Limpieza opcional: si ya hay tabs de fondeo por defecto, puedes dejarlos o removerlos antes
+      // (Por defecto partimos de cero y vamos agregando)
+    }
+
+    arr.forEach((t, i) => {
+      // Crea un panel nuevo con tu factory (inicializa select2, validadores, etc.)
+      addFondeoTab(); // genera #tab-fondeo-N y su tab correspondiente. :contentReference[oaicite:2]{index=2}
+
+      // Ese último panel creado:
+      const panelId = `tab-fondeo-${fondeoCount}`;
+      const $p = $(`#${panelId}`);
+
+      // Moneda / Monto
+      if (t.moneda) $p.find(".moneda").val(t.moneda).trigger("change");
+      if (t.montoRaw) {
+        $p.find(".monto").val(t.montoRaw);
+      } else if (typeof t.monto === "number") {
+        // fallback simple si no hay raw (sin formateo miles)
+        $p.find(".monto").val(t.monto.toString());
+      }
+
+      // Banco/cuenta de cargo
+      __setSelect2Value($p.find(".banco"), t.bancoCargoId, t.bancoCargoTxt);
+      __setSelect2Value($p.find(".cuenta"), t.cuentaCargoId, t.cuentaCargoTxt);
+
+      // Banco/cuenta destino
+      __setSelect2Value($p.find(".banco_destino"), t.bancoDestinoId, t.bancoDestinoTxt);
+      __setSelect2Value($p.find(".cuenta_destino"), t.cuentaDestinoId, t.cuentaDestinoTxt);
+
+      // Documento principal del panel de fondeo
+      __setDropFileName($p, t.documentoPrincipal);
+
+      // Documentos dinámicos del panel
+      __renderDynamicDocsByNames(panelId, t.documentosAdicionales);
+    });
+
+    // Deja activo el tab base o el último que prefieras
+    $(".tab-link").removeClass("active");
+    $(`#tabs a[href="#tab-instruir"]`).addClass("active");
+    $(".tab-panel").addClass("hidden");
+    $("#tab-instruir").removeClass("hidden");
+
+    console.log(`[aprobación][load] snapshot cargado para ${opId}.`);
+  } catch (err) {
+    console.error("Error al cargar desde localStorage:", err);
+  }
+}
