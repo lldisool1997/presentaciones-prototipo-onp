@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Índice de Flujos - OGR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Índice de Flujos</title>
 
-  <!-- Tailwind -->
+  <!-- Tailwind por CDN (sí, importado bien) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -15,13 +14,14 @@
           colors: {
             brand1: '#005C97',
             brand2: '#004a7c',
-            line: '#e8eef5',
-            muted: '#f9fafb',
-            ink: '#2c3e50'
+            line:   '#e8eef5',
+            ink:    '#0f172a'
           },
           boxShadow: {
-            card: '0 8px 32px rgba(0,0,0,.08)',
-            panel: '0 10px 30px rgba(0,0,0,.15)'
+            card: '0 8px 24px rgba(15,23,42,.08)'
+          },
+          borderRadius: {
+            'xl2': '1rem'
           }
         }
       }
@@ -29,72 +29,111 @@
   </script>
 </head>
 
-<body class="bg-white min-h-screen p-6 text-ink">
-  <div class="container mx-auto max-w-5xl">
+<body class="bg-white text-ink min-h-screen">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+
     <!-- Header -->
-    <div class="header text-center mb-10 bg-white p-8 rounded-xl shadow-lg border border-line relative">
-      <h1 class="text-3xl font-bold text-brand1">Índice</h1>
-      <p class="text-gray-600 mt-2">Vista general de los procesos principales del sistema</p>
-      <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand1 to-brand2 rounded-t-xl"></div>
-    </div>
+    <header class="relative mb-10 rounded-2xl border border-line bg-white p-8 shadow-sm">
+      <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl bg-gradient-to-r from-brand1 to-brand2"></div>
+      <h1 class="text-3xl font-bold text-brand1">Índice de Flujos</h1>
+      <p class="mt-2 text-slate-600">Accesos rápidos a cada flujo / módulo.</p>
+    </header>
 
-    <!-- Grid -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <!-- Item 1 -->
-      <div class="card bg-white p-6 rounded-xl shadow-md border border-line hover:shadow-lg transition">
-        <div class="card-icon mb-3 w-12 h-12 flex items-center justify-center bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg text-white text-xl">📄</div>
-        <h2 class="font-semibold text-lg mb-2">Grupo 1 - Flujo 1</h2>
-        <p class="text-md text-gray-600 mb-4">Gestión de instrumentos de Inversión.</p>
-        <a href="index.html" class="btn bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded-lg text-sm font-semibold">Abrir</a>
+    <!-- COMPONENTE CARD: todo con clases Tailwind (sin @apply) -->
+    <!-- Utiliza: rounded-xl, border, shadow-card, hover:shadow-lg, transition -->
+    <!-- Icono: caja de 48px con gradiente -->
+    <!-- Botón: gradiente brand1->brand2 -->
+    <!-- Grids: grid gap-6 sm:grid-cols-2 lg:grid-cols-3 -->
+    
+    <!-- ====================== Flujo 1 (1 item) ====================== -->
+    <section class="mb-12">
+      <h2 class="mb-4 text-xl font-semibold text-brand2">Flujo 1</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <article class="bg-white rounded-xl border border-line p-6 shadow-card hover:shadow-lg transition">
+          <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-lg text-xl text-white bg-gradient-to-br from-blue-500 to-blue-700">📄</div>
+          <h3 class="mb-1 text-lg font-semibold">Gestión de Instrumentos</h3>
+          <p class="mb-4 text-sm text-slate-600">Alta y administración de instrumentos de inversión.</p>
+          <a href="index.html" class="inline-block rounded-lg px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-brand1 to-brand2">Abrir</a>
+        </article>
       </div>
-      <!-- Item 2 -->
-      <div class="card bg-white p-6 rounded-xl shadow-md border border-line hover:shadow-lg transition">
-        <div class="card-icon mb-3 w-12 h-12 flex items-center justify-center bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg text-white text-xl">📄</div>
-        <h2 class="font-semibold text-lg mb-2">Grupo 1 - Flujo 2</h2>
-        <p class="text-md text-gray-600 mb-4">Gestión de Llamados y Distribución de Capital.</p>
-        <a href="prototipos//index.html" class="btn bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded-lg text-sm font-semibold">Abrir</a>
-      </div>
+    </section>
 
-            <!-- Item 3 -->
-            <div class="card bg-white p-6 rounded-xl shadow-md border border-line hover:shadow-lg transition">
-        <div class="card-icon mb-3 w-12 h-12 flex items-center justify-center bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg text-white text-xl">📄</div>
-        <h2 class="font-semibold text-lg mb-2">Grupo 1 - Flujo 3</h2>
-        <p class="text-md text-gray-600 mb-4">Administración de Recursos Financieros de Corto Plazo.</p>
-        <a href="prototipos-flujo-3/index.html" class="btn bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded-lg text-sm font-semibold">Abrir</a>
+    <!-- ====================== Flujo 2 (1 item) ====================== -->
+    <section class="mb-12">
+      <h2 class="mb-4 text-xl font-semibold text-brand2">Flujo 2</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <article class="bg-white rounded-xl border border-line p-6 shadow-card hover:shadow-lg transition">
+          <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-lg text-xl text-white bg-gradient-to-br from-cyan-500 to-sky-700">📊</div>
+          <h3 class="mb-1 text-lg font-semibold">Llamados y Distribución</h3>
+          <p class="mb-4 text-sm text-slate-600">Gestión de llamados de capital y distribución.</p>
+          <a href="prototipos/index.html" class="inline-block rounded-lg px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-brand1 to-brand2">Abrir</a>
+        </article>
       </div>
+    </section>
 
-         <!-- Item 3 -->
-            <div class="card bg-white p-6 rounded-xl shadow-md border border-line hover:shadow-lg transition">
-        <div class="card-icon mb-3 w-12 h-12 flex items-center justify-center bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg text-white text-xl">📄</div>
-        <h2 class="font-semibold text-lg mb-2">Grupo 1 - Flujo 3 (3.5)</h2>
-        <p class="text-md text-gray-600 mb-4">Administración de Recursos Financieros de Corto Plazo.</p>
-        <a href="prototipos-flujo-3/index.html" class="btn bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded-lg text-sm font-semibold">Abrir</a>
-      </div>
-      
-         <div class="card bg-white p-6 rounded-xl shadow-md border border-line hover:shadow-lg transition">
-        <div class="card-icon mb-3 w-12 h-12 flex items-center justify-center bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg text-white text-xl">📄</div>
-        <h2 class="font-semibold text-lg mb-2">Grupo 1 - Flujo 3 (Operaciones cambiarias)</h2>
-        <p class="text-md text-gray-600 mb-4">Administración de Recursos Financieros de Corto Plazo.</p>
-        <a href="prototipos-flujo-3/index-ope-camb.html" class="btn bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded-lg text-sm font-semibold">Abrir</a>
-      </div>
+    <!-- ====================== Flujo 3 (3 items) ====================== -->
+    <section class="mb-12">
+      <h2 class="mb-4 text-xl font-semibold text-brand2">Flujo 3</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Item 1 -->
+        <article class="bg-white rounded-xl border border-line p-6 shadow-card hover:shadow-lg transition">
+          <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-lg text-xl text-white bg-gradient-to-br from-emerald-500 to-green-700">💼</div>
+          <h3 class="mb-1 text-lg font-semibold">Recursos de Corto Plazo</h3>
+          <p class="mb-4 text-sm text-slate-600">Administración de recursos financieros de corto plazo.</p>
+          <a href="prototipos-flujo-3/index.html" class="inline-block rounded-lg px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-brand1 to-brand2">Abrir</a>
+        </article>
 
-      <!-- Item 4 -->
-            <div class="card bg-white p-6 rounded-xl shadow-md border border-line hover:shadow-lg transition">
-        <div class="card-icon mb-3 w-12 h-12 flex items-center justify-center bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg text-white text-xl">📄</div>
-        <h2 class="font-semibold text-lg mb-2">Expediente Digital</h2>
-        <p class="text-md text-gray-600 mb-4">Gestión integral de documentos en formato digital..</p>
-        <a href="prototipos-expediente/listado-expediente.html" class="btn bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded-lg text-sm font-semibold">Abrir</a>
-      </div>
+        <!-- Item 2 -->
+        <article class="bg-white rounded-xl border border-line p-6 shadow-card hover:shadow-lg transition">
+          <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-lg text-xl text-white bg-gradient-to-br from-indigo-500 to-indigo-700">💱</div>
+          <h3 class="mb-1 text-lg font-semibold">Operaciones Cambiarias</h3>
+          <p class="mb-4 text-sm text-slate-600">Compra y venta de divisas vinculadas al flujo 3.</p>
+          <a href="prototipos-flujo-3/index-ope-camb.html" class="inline-block rounded-lg px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-brand1 to-brand2">Abrir</a>
+        </article>
 
-      <!-- Item 3 -->
-      <div class="card bg-white p-6 rounded-xl shadow-md border border-line hover:shadow-lg transition">
-        <div class="card-icon mb-3 w-12 h-12 flex items-center justify-center bg-gradient-to-r from-purple-400 to-purple-600 rounded-lg text-white text-xl">📌</div>
-        <h2 class="font-semibold text-lg mb-2">Otros</h2>
-        <p class="text-md text-gray-600 mb-4">Sección para otros procesos relacionados.</p>
-        <a href="otros.html" class="btn bg-gradient-to-r from-purple-500 to-purple-700 text-white py-2 px-4 rounded-lg text-sm font-semibold">Abrir</a>
+        <!-- Item 3 -->
+        <article class="bg-white rounded-xl border border-line p-6 shadow-card hover:shadow-lg transition">
+          <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-lg text-xl text-white bg-gradient-to-br from-teal-500 to-cyan-700">📈</div>
+          <h3 class="mb-1 text-lg font-semibold">Seguimiento Financiero</h3>
+          <p class="mb-4 text-sm text-slate-600">Visualización y control de movimientos financieros.</p>
+          <a href="prototipos-flujo-3/seguimiento.html" class="inline-block rounded-lg px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-brand1 to-brand2">Abrir</a>
+        </article>
       </div>
-    </div>
+    </section>
+
+    <!-- ====================== Expediente (1 item) ====================== -->
+    <section class="mb-12">
+      <h2 class="mb-4 text-xl font-semibold text-brand2">Expediente</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <article class="bg-white rounded-xl border border-line p-6 shadow-card hover:shadow-lg transition">
+          <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-lg text-xl text-white bg-gradient-to-br from-purple-500 to-fuchsia-600">🗂️</div>
+          <h3 class="mb-1 text-lg font-semibold">Expediente Digital</h3>
+          <p class="mb-4 text-sm text-slate-600">Gestión integral de documentos sustentatorios.</p>
+          <a href="prototipos-expediente/listado-expediente.html" class="inline-block rounded-lg px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-brand1 to-brand2">Abrir</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ====================== Otros (1 item) ====================== -->
+    <section class="mb-4">
+      <h2 class="mb-4 text-xl font-semibold text-brand2">Otros</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <article class="bg-white rounded-xl border border-line p-6 shadow-card hover:shadow-lg transition">
+          <div class="mb-3 flex h-12 w-12 items-center justify-center rounded-lg text-xl text-white bg-gradient-to-br from-amber-500 to-orange-600">📌</div>
+          <h3 class="mb-1 text-lg font-semibold">Misceláneos</h3>
+          <p class="mb-4 text-sm text-slate-600">Otras vistas, reportes y utilidades complementarias.</p>
+          <a href="otros.html" class="inline-block rounded-lg px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-brand1 to-brand2">Abrir</a>
+        </article>
+      </div>
+    </section>
+
+    <footer class="mt-6 pb-6 text-center text-xs text-slate-500">
+      © <span id="year"></span> — Flujos
+    </footer>
   </div>
-</body>
 
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
 </html>
