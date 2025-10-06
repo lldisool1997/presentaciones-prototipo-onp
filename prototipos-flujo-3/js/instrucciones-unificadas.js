@@ -260,7 +260,7 @@ function addFondeoTab(){
   // Panel (clonado del template)
   const $tpl = $($("#tpl-fondeo").html());
   $tpl.attr("id", panelId);
-  $tpl.find(".section-header").text(`2. Transferencia a banco #${fondeoCount}`);
+  $tpl.find(".section-header").text(`Transferencia a banco #${fondeoCount}`);
   $("#panels").append($tpl);
 
   // Init select2 para los cuatro combos del panel
@@ -683,5 +683,3 @@ function load_aprobacion_inst_corto_plazo(opId) {
     console.error("Error al cargar desde localStorage:", err);
   }
 }
-
-
