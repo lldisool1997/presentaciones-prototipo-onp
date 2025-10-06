@@ -683,3 +683,151 @@ function load_aprobacion_inst_corto_plazo(opId) {
     console.error("Error al cargar desde localStorage:", err);
   }
 }
+
+ // Abrir modal genérico
+    function abrirModal(titulo) {
+      $('#modalTitle').text(titulo || 'Vista previa');
+      $('#modal').removeClass('hidden').addClass('flex');
+    }
+    function cerrarModal() {
+      $('#modal').addClass('hidden').removeClass('flex');
+      $('#modalContent').empty();
+    }
+
+    // Delegado: abrir visores
+    $(document).on('click', '.btn-ver', function (e) {
+      e.preventDefault();
+      const kind = $(this).data('kind');   // 'pdf' | 'excel'
+      const url  = $(this).data('url');
+
+      if (kind === 'pdf') {
+  abrirModal('📄 Visor PDF');
+  const viewerUrl = 'https://mozilla.github.io/pdf.js/web/viewer.html?file='
+                    + encodeURIComponent(url);
+  $('#modalContent').html(
+    `<iframe src="${viewerUrl}" style="width:100%;height:80vh;border:0;" allowfullscreen></iframe>`
+  );
+
+   $('#modalContent').html(`
+    <div class="flex justify-end mb-2">
+      <a href="${url}" target="_blank"
+         class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-3 py-1.5 rounded-md transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/>
+        </svg>
+        Descargar
+      </a>
+    </div>
+    <iframe src="${viewerUrl}"
+            style="width:100%;height:80vh;border:0;" allowfullscreen></iframe>
+  `);
+}
+
+if (kind === 'excel') {
+  abrirModal('📊 Visor Excel');
+  const viewerUrl = 'https://view.officeapps.live.com/op/embed.aspx?src='
+                    + encodeURIComponent(url);
+  $('#modalContent').html(
+    `<iframe src="${viewerUrl}" style="width:100%;height:80vh;border:0;" allowfullscreen></iframe>`
+  );
+
+    // Agregamos botón de descarga arriba
+   $('#modalContent').html(`
+    <div class="flex justify-end mb-2">
+      <a href="${url}" target="_blank"
+         class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-3 py-1.5 rounded-md transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/>
+        </svg>
+        Descargar
+      </a>
+    </div>
+    <iframe src="${viewerUrl}"
+            style="width:100%;height:80vh;border:0;" allowfullscreen></iframe>
+  `);
+}
+
+    });
+
+function renderExcelDT(url){
+  fetch(url)
+    .then(r => r.arrayBuffer())
+    .then(buf => {
+      const wb = XLSX.read(buf, { type: 'array', cellDates:true, cellNF:false, cellText:false });
+      const names = wb.SheetNames || [];
+
+      // llenar selector de hojas
+      const $picker = $('#sheetPicker').empty();
+      names.forEach((n,i) => $picker.append(`<option value="${i}">${n}</option>`));
+
+      const renderSheet = (idx) => {
+        const name = names[idx];
+        const ws   = wb.Sheets[name];
+
+        // a JSON (usa primera fila como encabezados)
+        let rows = XLSX.utils.sheet_to_json(ws, { defval: "", raw: true });
+        const cols = Object.keys(rows[0] || {}).map(k => ({ title: k, data: k }));
+
+        // resetear DataTable si ya existe
+        if ($.fn.dataTable.isDataTable('#excelTable')) {
+          $('#excelTable').DataTable().destroy();
+          $('#excelTable').empty();
+        }
+
+        // inicializar DataTable
+        $('#excelTable').DataTable({
+          data: rows,
+          columns: cols,
+          scrollX: true,
+          responsive: true,
+          pageLength: 10,
+          lengthMenu: [10,25,50,100],
+          order: [],
+          layout: {
+            topStart: 'buttons',
+            topEnd: 'search',
+            bottomStart: 'info',
+            bottomEnd: 'paging'
+          },
+          buttons: [
+            { extend: 'copyHtml5',  text: 'Copiar' },
+            { extend: 'excelHtml5', text: 'Exportar Excel', title: name }
+          ],
+          language: {
+            search: 'Buscar:',
+            lengthMenu: 'Mostrar _MENU_',
+            info: 'Mostrando _START_–_END_ de _TOTAL_',
+            infoEmpty: 'Sin datos',
+            zeroRecords: 'No hay coincidencias',
+            paginate: { first:'«', last:'»', next:'›', previous:'‹' }
+          }
+        });
+      };
+
+      // primera hoja
+      renderSheet(0);
+
+      // cambio de hoja
+      $(document).off('change', '#sheetPicker').on('change', '#sheetPicker', function(){
+        renderSheet(parseInt($(this).val(), 10));
+      });
+    })
+    .catch(() => {
+      $('#modalContent').html('<div class="text-center text-red-500">No se pudo cargar el Excel.</div>');
+    });
+}
+
+
+    // Cerrar modal (botón, click fuera, ESC)
+    $(document).on('click', '.btn-cerrar', cerrarModal);
+    $(document).on('click', function(e){
+      const $m = $('#modal');
+      if($m.is(':visible') && $(e.target).is('#modal')) cerrarModal();
+    });
+    $(document).on('keydown', function(e){
+      if(e.key === 'Escape') cerrarModal();
+    });
