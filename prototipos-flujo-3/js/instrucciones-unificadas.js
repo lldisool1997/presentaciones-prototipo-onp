@@ -280,6 +280,8 @@ function addFondeoTab(){
   filesUploadedByPanel[panelId] = {};
   //createDocumentField(panelId, "Voucher de transferencia (PDF)");
 
+  ordenarTabs(1);
+
   // Submit de este panel
   $panel.find("form.fondeo-form").on("submit", function(e){
     e.preventDefault();
@@ -831,3 +833,39 @@ function renderExcelDT(url){
     $(document).on('keydown', function(e){
       if(e.key === 'Escape') cerrarModal();
     });
+
+
+    /**
+ * Ordena los tabs según el modo.
+ * @param {number} modo - Si es 1 → operaciones al final; Si es -1 → operaciones al inicio.
+ */
+function ordenarTabs(modo = 1) {
+  const $tabsContainer = $("#tabs");
+  const $panelsContainer = $("#panels");
+
+  const $tabOperacion = $tabsContainer.find('a[href="#tab-instruir"]').closest("li");
+  const $panelOperacion = $("#tab-instruir");
+
+  // Todos los tabs de fondeo (transferencias)
+  const $tabsFondeo = $tabsContainer.find('a[href^="#tab-fondeo-"]').closest("li");
+  const $panelsFondeo = $panelsContainer.find('[id^="tab-fondeo-"]');
+
+  if (modo === 1) {
+    // Modo 1 → operaciones al final, transferencias al inicio
+    $tabsContainer.prepend($tabsFondeo);
+    $tabsContainer.append($tabOperacion);
+    $panelsContainer.prepend($panelsFondeo);
+    $panelsContainer.append($panelOperacion);
+  } else if (modo === -1) {
+    // Modo -1 → operaciones al inicio, transferencias al final
+    $tabsContainer.prepend($tabOperacion);
+    $tabsContainer.append($tabsFondeo);
+    $panelsContainer.prepend($panelOperacion);
+    $panelsContainer.append($panelsFondeo);
+  }
+
+  // Reordenar visualmente numeración de transferencias
+  $('#tabs a[href^="#tab-fondeo-"]').each(function (i) {
+    $(this).text(`Transferencia Bancaria ${i + 1}`);
+  });
+}
