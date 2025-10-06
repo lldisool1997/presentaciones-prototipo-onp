@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aprobación · Cuenta Remunerada</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <!-- Toastr + SweetAlert2 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- App -->
+  <script defer src="js/aprobacion-cuenta-remunerada.js"></script>
+  <link rel="stylesheet" href="css/aprobacion-cuenta-remunerada.css">
+</head>
+<body class="bg-slate-100 text-slate-800">
+  <!-- Badge área -->
+  <div id="area-badge"
+       class="fixed top-4 right-5 bg-blue-700 text-white font-semibold text-sm px-3 py-1.5 rounded-full shadow">
+    Área: Aprobación
+  </div>
+
+  <main class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>Registro de Cuenta Remunerada</h1>
+      <p>Captura de datos, subida de sustento y guardado local.</p>
+    </header>
+
+
+    <!-- Card -->
+    <section class="bg-white rounded-b-2xl shadow border border-slate-200">
+      <div class="px-6 pt-6 space-y-8">
+        <!-- 1. Datos del registro (solo lectura) -->
+        <div class="space-y-4">
+          <div class="flex items-center">
+            <div class="section-header w-full">1. Datos del registro</div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Entidad</label>
+              <input id="ap_entidad" type="text" disabled class="w-full ap-readonly" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Unidad de Negocio</label>
+              <input id="ap_unidad" type="text" disabled class="w-full ap-readonly" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Cuenta Bancaria</label>
+              <input id="ap_cuenta" type="text" disabled class="w-full ap-readonly" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Fecha</label>
+              <input id="ap_fecha" type="text" disabled class="w-full ap-readonly" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Monto</label>
+              <input id="ap_monto" type="text" disabled class="w-full ap-readonly" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Sustentos registrados -->
+        <div class="space-y-4">
+             <div class="flex items-center">
+            <div class="section-header w-full">2. Documentos de la instrucción</div>
+          </div>
+
+          <!-- principal -->
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+            <div class="flex items-center justify-between">
+              <div class="font-semibold text-slate-700">Documento sustento</div>
+              <div id="ap_sustento_badge" class="text-xs rounded-full px-2 py-1 bg-slate-200 text-slate-700">—</div>
+            </div>
+            <div id="ap_sustento_block" class="mt-3 text-sm text-slate-700">
+              <!-- poblado por JS: nombre, tamaño, botón de descarga -->
+            </div>
+          </div>
+
+          <!-- adicionales -->
+          <div class="bg-slate-50 border border-slate-200 rounded-xl">
+            <div class="px-4 py-3 flex items-center gap-2 border-b border-slate-200">
+              <span class="font-semibold text-slate-700">Documentos adicionales</span>
+            </div>
+            <div id="ap_docs_reg_grid" class="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- tarjetas pobladas por JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Cargar nuevos sustentos (en aprobación) -->
+        <div class="space-y-4">
+               <div class="flex items-center">
+            <div class="section-header w-full">3. Sustento documentario</div>
+          </div>
+
+          <!-- Drop principal (aprobación) -->
+          <section class="w-full bg-slate-100 border border-slate-200 rounded-xl p-6">
+            <h3 class="text-center text-slate-700 font-semibold">Documento sustento (aprobación)</h3>
+
+            <div class="mt-3 flex justify-center">
+              <label for="ap_sustento_file"
+                     class="block w-full max-w-xl border-2 border-dashed border-slate-300 rounded-xl bg-white p-6 text-center cursor-pointer hover:border-blue-400 transition">
+                <div class="flex items-center justify-center gap-2 text-sm font-medium text-slate-700">
+                  <span>📄</span>
+                  <span>Seleccionar archivo</span>
+                </div>
+                <div class="text-xs text-slate-500">PDF</div>
+              </label>
+            </div>
+
+            <input id="ap_sustento_file" type="file" accept="application/pdf" class="hidden" />
+            <div id="ap_sustento_info" class="mt-2 text-center text-sm text-slate-700"></div>
+
+            <!-- Documentos adicionales en aprobación -->
+            <div class="mt-5 bg-white border border-slate-200 rounded-xl">
+              <div class="px-4 py-3 flex items-center gap-2 border-b border-slate-200">
+                <span class="text-slate-500">🛠️</span>
+                <span class="font-semibold text-slate-700">Documentos adicionales</span>
+                <span class="text-slate-500 text-sm">Agregue documentos adicionales a esta aprobación:</span>
+              </div>
+
+              <div id="ap_docs_grid" class="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- items dinámicos -->
+              </div>
+
+              <div class="px-4 pb-4 flex items-center gap-3">
+                <input id="ap_new_doc_name" type="text" placeholder="Nombre del nuevo documento"
+                       class="flex-1 border-2 border-slate-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-blue-500" />
+                <button type="button" id="ap_btn_add_doc"
+                        class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2.5 rounded-xl">
+                  + Agregar Documento
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Acciones -->
+          <div class="flex justify-end gap-3 pb-6">
+            <button type="button" id="ap_btn_limpiar"
+                    class="bg-white border-2 border-slate-200 text-slate-800 font-semibold px-4 py-2.5 rounded-xl hover:bg-slate-50">
+              Limpiar
+            </button>
+            <button type="button" id="ap_btn_guardar"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-xl">
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

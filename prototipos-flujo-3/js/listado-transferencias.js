@@ -128,7 +128,6 @@ function renderTabla(list){
       <td>
         <span class="status-badge ${estadoBadge(t.estado)}">${t.estado}</span>
         <span class="toggle" data-target="${key}" style="margin-left:8px;">
-          <span id="sign-${key}" class="sign">+</span>
         </span>
       </td>
       <td>${t.transferenciaNum}</td>
@@ -143,7 +142,7 @@ function renderTabla(list){
       <td>
         ${t.estado === "REGISTRADA" && area === "Tesoreria" ? `
           <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
-            <button class="btn btn-action btn-registrar" onclick="abrirModalConfirmacion('${t.transferenciaNum}')">Registrar</button>
+            <button class="btn btn-action btn-registrar" onclick="irAAprobacion('${t.transferenciaNum}')">Aprobar</button>
           </div>` : ``}
         ${t.estado === "EN PROCESO" && area === "Tesoreria" ? `
           <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
@@ -245,6 +244,12 @@ function applyFilters(){
 
 // =============== MODAL ===============
 let transferenciaActual = null;
+
+function irAAprobacion(num){
+  transferenciaActual = transferencias.find(t=>t.transferenciaNum===num) || null;
+  const url = `aprobacion-cuenta-remunerada.html?num=${encodeURIComponent(transferenciaActual.transferenciaNum)}`;
+  window.location.href = url;
+}
 
 function abrirModalConfirmacion(num){
   transferenciaActual = transferencias.find(t=>t.transferenciaNum===num) || null;
