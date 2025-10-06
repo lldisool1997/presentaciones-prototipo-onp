@@ -98,24 +98,52 @@ function bindDelegatesOnce(){
   });
 
   // Cambio de archivo en dinámicos
-  $(document).on("change", ".file-dyn", function(){
-    const panelId = $(this).closest(".tab-panel").attr("id");
-    const fileArea = $(this).siblings(".file-upload-area");
-    const fieldId  = $(this).data("field");
-    const file     = this.files[0];
-    const v = validatePdf(file);
-    if(!v.ok){
-      this.value = "";
+  // Cambio de archivo en dinámicos (documentos adicionales)
+$(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", function(){
+  // Asegura que no esté deshabilitado por bloqueo de solo lectura
+  $(this).prop("disabled", false);
+
+  const $group   = $(this).closest(".file-upload-group");
+  const $fileArea= $group.find(".file-upload-area").first();
+  const panelId  = $(this).closest(".tab-panel").attr("id");
+  const fieldId  = $(this).data("field");
+  const file     = this.files && this.files[0];
+
+  const v = validatePdf(file);
+  if(!v.ok){
+    this.value = "";
+    if (panelId && fieldId) {
+      filesUploadedByPanel[panelId] = filesUploadedByPanel[panelId] || {};
       filesUploadedByPanel[panelId][fieldId] = false;
-      $(fileArea).addClass('ring-2 ring-red-400 border-red-400')
-                 .html('<div class="upload-text text-red-600">⌫ '+v.msg+'</div><div class="upload-text text-gray-500 text-sm mt-1">PDF</div>');
-      return;
     }
+    $fileArea
+      .removeClass('ring-2 ring-green-600 border-green-600')
+      .addClass('ring-2 ring-red-400 border-red-400')
+      .html('<div class="upload-text text-red-600">⌫ '+v.msg+'</div><div class="upload-text text-gray-500 text-sm mt-1">PDF</div>');
+    return;
+  }
+
+  // OK: actualiza estado + UI del card
+  if (panelId && fieldId) {
+    filesUploadedByPanel[panelId] = filesUploadedByPanel[panelId] || {};
     filesUploadedByPanel[panelId][fieldId] = true;
-    $(fileArea).removeClass('ring-2 ring-red-400 border-red-400')
-               .html('<div class="file-name">📎 '+file.name+'</div><div class="upload-text text-green-600 text-sm">Archivo cargado correctamente</div>');
-    checkFormCompletion(panelId);
-  });
+  }
+
+  $fileArea
+    .removeClass('ring-2 ring-red-400 border-red-400')
+    .html('<div class="file-name">📎 '+file.name+'</div><div class="upload-text text-green-600 text-sm">Archivo cargado correctamente</div>');
+
+  // (Opcional) marca visual verde
+  // $fileArea.addClass('ring-2 ring-green-600 border-green-600');
+
+  // Re-evalúa habilitación del submit del panel
+  checkFormCompletion(panelId);
+
+  // ✅ Persistir al vuelo, para que no “se pierda” al refrescar
+  if (typeof aprobacion_inst_corto_plazo_upsert === "function") {
+    aprobacion_inst_corto_plazo_upsert();
+  }
+});
 
   // Remover documento dinámico
   $(document).on("click", ".remove-btn", function(){
@@ -133,7 +161,7 @@ function bindDelegatesOnce(){
       // ⬇⬇⬇ evita que el handler genérico corra cuando es para operación
   if ($(this).data("target") === "op") return;
 
-  
+
     const $panel = $(this).closest(".tab-panel");
     const panelId = $panel.attr("id");
     const $input = $panel.find(".newDocumentName");
