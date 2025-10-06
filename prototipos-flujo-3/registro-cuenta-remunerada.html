@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro de Cuenta Remunerada</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <!-- Select2 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+
+  <!-- Toastr + SweetAlert2 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Cleave (formato de montos) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
+
+  <!-- App -->
+  <script defer src="js/cuenta-remunerada.js"></script>
+  <link rel="stylesheet" href="css/cuenta-remunerada.css">
+</head>
+<body class="bg-gray-100" style="background:#f5f7fb;color:#202e3a;">
+  <!-- Badge área en esquina -->
+  <div id="area-badge"
+       style="position: absolute; top: 15px; right: 20px;
+              background-color: #1e6ba8; color: #fff;
+              font-weight: bold; font-size: 0.9rem;
+              padding: 6px 14px; border-radius: 20px;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+    Área: -
+  </div>
+
+  <main class="container">
+    <header class="header">
+      <h1>Registro de Cuenta Remunerada</h1>
+      <p>Captura de datos, subida de sustento y guardado local.</p>
+    </header>
+
+    <section class="card main-card">
+      <div class="section-header">1. Datos de la operación</div>
+
+      <form id="cr_form" class="form" novalidate>
+        <div class="grid grid-1">
+          <div class="form-group">
+            <label class="lbl" for="cr_entidad">Entidad</label>
+            <select id="cr_entidad" class="sel2" style="width:100%">
+              <option value="">Seleccione...</option>
+              <option value="fdo-consolidado" selected>Fondo Consolidado de Reservas Previsionales – FCR</option>
+              <option value="fcr-macrofondo">FCR-MACROFONDO</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="lbl" for="cr_unidad">Unidad de Negocio</label>
+            <select id="cr_unidad" class="sel2" style="width:100%">
+              <option value="">Seleccione...</option>
+              <option value="fcr-macrofondo" selected>FCR-MACROFONDO</option>
+              <option value="tesoreria">TESORERÍA</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="lbl" for="cr_cuenta">Cuenta Bancaria</label>
+            <select id="cr_cuenta" class="sel2" style="width:100%">
+              <option value="">Seleccione...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="lbl" for="cr_fecha">Fecha</label>
+            <input id="cr_fecha" type="date" class="inp" />
+          </div>
+
+          <div class="form-group">
+            <label class="lbl" for="cr_monto">Monto</label>
+            <input id="cr_monto" type="text" placeholder="Ej. 1,310,067.70" class="inp" inputmode="decimal" />
+          </div>
+        </div>
+
+        <div class="section-header">2. Sustento</div>
+        <!-- 2. Sustento (nuevo layout con Tailwind) -->
+<section class="w-full bg-slate-100 border border-slate-200 rounded-xl p-6">
+  <h3 class="text-center text-slate-700 font-semibold">Documento sustento</h3>
+
+  <div class="mt-3 flex justify-center">
+    <label for="cr_sustento_file"
+           class="block w-full max-w-xl border-2 border-dashed border-slate-300 rounded-xl bg-white p-6 text-center cursor-pointer hover:border-blue-400 transition">
+      <div class="flex items-center justify-center gap-2 text-sm font-medium text-slate-700">
+        <span>📄</span>
+        <span>Seleccionar archivo</span>
+      </div>
+      <div class="text-xs text-slate-500">PDF</div>
+    </label>
+  </div>
+
+  <input id="cr_sustento_file" type="file" accept="application/pdf" class="hidden" />
+  <div id="cr_sustento_info" class="mt-2 text-center text-sm text-slate-700"></div>
+              <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-6" id="cr_docs_grid">
+              <!-- items dinámicos -->
+            </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-xl">
+            <div class="px-4 py-3 flex items-center gap-2 border-b border-slate-200">
+              <span class="text-slate-500">🛠️</span>
+              <span class="font-semibold text-slate-700">Configuración avanzada</span>
+              <span class="text-slate-500 text-sm">Agregue documentos adicionales para el área seleccionada:</span>
+            </div>
+
+
+            <div class="px-4 pb-4 flex items-center gap-3 w-1/3 mt-2">
+              <input id="cr_new_doc_name" type="text" placeholder="Nombre del nuevo documento"
+                     class="tw-input flex-1 p-2.5 border border-gray-400 rounded-md" />
+              <button type="button" id="cr_btn_add_doc"
+                      class="tw-btn-primary p-2.5 rounded-md flex items-center gap-2 bg-green-600 text-white hover:bg-green-700 transition">
+                + Agregar Documento
+              </button>
+            </div>
+          </div>
+</section>
+
+                  <!-- 3. Documentos adicionales -->
+
+
+        <div class="actions">
+          <button type="button" id="cr_btn_limpiar" class="btn-secondary">Limpiar</button>
+          <button type="submit" id="cr_btn_guardar" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
