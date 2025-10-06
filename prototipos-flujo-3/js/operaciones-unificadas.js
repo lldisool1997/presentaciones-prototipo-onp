@@ -129,6 +129,11 @@ function bindDelegatesOnce(){
 
   // Add-document (delegado)
   $(document).on("click", ".add-document-btn", function(){
+
+      // ⬇⬇⬇ evita que el handler genérico corra cuando es para operación
+  if ($(this).data("target") === "op") return;
+
+  
     const $panel = $(this).closest(".tab-panel");
     const panelId = $panel.attr("id");
     const $input = $panel.find(".newDocumentName");
@@ -147,6 +152,7 @@ function bindDelegatesOnce(){
       $input.val("");
     }
   });
+
 
   // Drop principal per panel
   $(document).on("click", ".drop", function(e){
@@ -801,6 +807,11 @@ if (Array.isArray(t.sustentoOpAdicionales)) {
     __setOpDropFileName(base.sustentoOpPrincipal);
     __renderDynamicDocsByNames("tab-instruir-op", base.sustentoOpAdicionales);
 
+    // Bloquear todos los campos de la operación y transferencias, salvo comisiones y sustentos nuevos
+bloquearCamposSoloLectura($("#tab-instruir"));
+$(".tab-panel[id^='tab-fondeo-']").each(function() {
+  bloquearCamposSoloLectura($(this));
+});
 
     console.log(`[aprobación][load] snapshot cargado para ${opId}.`);
   } catch (err) {
@@ -1156,4 +1167,23 @@ function ordenarTabs(modo = 1) {
   $('#tabs a[href^="#tab-fondeo-"]').each(function (i) {
     $(this).text(`Transferencia Bancaria ${i + 1}`);
   });
+}
+
+/**
+ * Deshabilita todos los campos de un panel excepto comisiones y sustentos.
+ * @param {jQuery} $panel - panel jQuery (por ejemplo $("#tab-instruir") o $("#tab-fondeo-1"))
+ */
+function bloquearCamposSoloLectura($panel) {
+  // 1️⃣ Deshabilitar todos los inputs, selects y textareas
+  $panel.find("input, select, textarea").prop("disabled", true);
+
+  // 2️⃣ Rehabilitar campos permitidos (comisión y sustentos nuevos)
+  $panel.find(".comision").prop("disabled", false);        // campos de comisión
+  $panel.find("input[type='file']").prop("disabled", false); // permitir uploads PDF
+  $panel.find("#newDocumentName_op").prop("disabled", false); // permitir uploads PDF
+
+  // 3️⃣ Deshabilitar botones excepto los de sustento
+  $panel.find("button").prop("disabled", true);
+  $panel.find(".add-document-btn, .add-document-btn-op-trf").prop("disabled", false); // “Agregar Sustento”
+  $panel.find(".btn-ver").prop("disabled", false); // visor de PDF/Excel
 }
