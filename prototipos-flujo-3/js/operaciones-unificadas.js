@@ -1362,7 +1362,6 @@ function desbloquearCamposGlobales(){
   //$("#agregar-carta-btn").prop("disabled", false);
 }
 
-
 /**
  * Cambia el estado de la operación principal o de una transferencia específica.
  *
@@ -1405,4 +1404,127 @@ function actualizarEstadoAprobacion(opId, tipo, nuevoEstado, idx){
   snap.updated_at = new Date().toISOString();
   lista[i] = snap;
   localStorage.setItem(KEY, JSON.stringify(lista));
+}
+
+/**
+ * Aplica UI según estado para operación principal y transferencias.
+ * Lee de localStorage clave "aprobacion_inst_corto_plazo".
+ * Reglas:
+ *  - BASE:   REGISTRADO -> mostrar Modificar/Agregar ; INSTRUIDO -> marcar tab y ocultar todo
+ *  - TRANSF: REGISTRADO -> mostrar Registrar         ; INSTRUIDO -> marcar tab y ocultar todo
+ */
+function aplicarUIEstados(opId, idx = null){
+  const KEY = "aprobacion_inst_corto_plazo";
+  const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
+  const snap = lista.find(x => x && x.opId === opId);
+  if (!snap) return;
+
+  // Helpers
+  const show = sel => $(sel).show();
+  const hide = sel => $(sel).hide();
+  const markDone = (sel) => { const $a = $(sel); if ($a.length) $a.addClass('is-done'); };
+  const unmarkDone = (sel) => { const $a = $(sel); if ($a.length) $a.removeClass('is-done'); };
+
+  // === Si piden una transferencia específica ===
+  if (idx !== null && idx !== undefined) {
+    const trf = (snap.transferencias || []).find(t => t.idx === idx);
+    if (!trf) return;
+
+    const estado = (trf.estado || "").trim().toUpperCase();
+    const panelSel = `#tab-fondeo-${idx}`;
+    const TABBTN_TRF = `#tabs a[href="#tab-fondeo-${idx}"]`;
+
+    const BTN_TRF_REG = `${panelSel} .btn-trf-registrar`;
+    const BTN_TRF_DEL = `${panelSel} .btn-trf-eliminar`;
+
+    // Reset
+    show(BTN_TRF_REG); show(BTN_TRF_DEL);
+    unmarkDone(TABBTN_TRF);
+
+    if (estado === 'INSTRUIDO'){
+      // En REGISTRADO: dejar registrar visible
+      show(BTN_TRF_REG);
+      show(BTN_TRF_DEL);
+    } else if (estado === 'APROBADO'){
+      // En INSTRUIDO: marcar tab y ocultar acciones
+      markDone(TABBTN_TRF);
+      hide(BTN_TRF_REG);
+      hide(BTN_TRF_DEL);
+    }
+    return;
+  }
+
+  // ===== Operación principal (cuando NO se pasa idx) =====
+  const estadoBase = (snap.base?.estado || "").trim().toUpperCase();
+  const TABBTN_BASE = '#tabs a[href="#tab-instruir"]';
+  const BTN_BASE_REG = '#tab-instruir .btn-base-registrar';
+  const BTN_ADD_TRF  = '#btnAddFondeo';
+
+  // Reset base
+  show(BTN_BASE_REG); show(BTN_ADD_TRF);
+  unmarkDone(TABBTN_BASE);
+
+  if (estadoBase === 'INSTRUIDO'){
+    // Puedes seguir registrando y agregando transferencias
+    show(BTN_BASE_REG);
+    show(BTN_ADD_TRF);
+  } else if (estadoBase === 'APROBADO'){
+    // Tab checkeado y sin botones de acción
+    markDone(TABBTN_BASE);
+    hide(BTN_BASE_REG);
+    hide(BTN_ADD_TRF);
+  }
+
+  // ===== Transferencias (todas) =====
+  const trfs = Array.isArray(snap.transferencias) ? snap.transferencias : [];
+  trfs.forEach(t => {
+    const i = t.idx;
+    const estado = (t.estado || "").trim().toUpperCase();
+
+    const panelSel = `#tab-fondeo-${i}`;
+    const TABBTN_TRF = `#tabs a[href="#tab-fondeo-${i}"]`;
+
+    const BTN_TRF_REG = `${panelSel} .btn-trf-registrar`;
+    const BTN_TRF_DEL = `${panelSel} .btn-trf-eliminar`;
+
+    // Reset
+    show(BTN_TRF_REG); show(BTN_TRF_DEL);
+    unmarkDone(TABBTN_TRF);
+
+    if (estado === 'INSTRUIDO'){
+      show(BTN_TRF_REG);
+      show(BTN_TRF_DEL);
+    } else if (estado === 'APROBADO'){
+      markDone(TABBTN_TRF);
+      hide(BTN_TRF_REG);
+      hide(BTN_TRF_DEL);
+    }
+  });
+}
+
+/**
+ * Retorna true si todas las transferencias del snapshot están en estado "INSTRUIDO".
+ * Retorna false si hay al menos una transferencia con otro estado.
+ */
+function todasTransferenciasInstruidas(opId) {
+  const KEY = "aprobacion_inst_corto_plazo";
+  const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
+  const snap = lista.find(x => x && x.opId === opId);
+  if (!snap) return false;
+
+  const trfs = Array.isArray(snap.transferencias) ? snap.transferencias : [];
+  if (trfs.length === 0) return true; // si no hay transferencias, consideramos que está todo listo
+
+  // revisa si TODAS están en INSTRUIDO
+  return trfs.every(t => (t.estado || "").trim().toUpperCase() === "APROBADO");
+}
+
+
+function __getListaAprobacion(KEY = "aprobacion_inst_corto_plazo"){
+  let lista;
+  try { lista = JSON.parse(localStorage.getItem(KEY) || "[]"); }
+  catch { lista = []; }
+  if (!Array.isArray(lista)) lista = [];
+  // elimina nulos y “huecos”
+  return lista.filter(x => x && typeof x === 'object' && typeof x.opId === 'string' && x.opId.trim());
 }

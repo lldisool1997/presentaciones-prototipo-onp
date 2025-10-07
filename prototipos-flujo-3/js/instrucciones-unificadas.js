@@ -230,6 +230,10 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
 
   // Submit base
   $("#formLlamado_base").on("submit", function(e){
+    if(!todasTransferenciasInstruidas("INV-7000")){
+      toastr.warning("Todas las transferencias deben estar instruidas.");
+      return false;
+    }
     e.preventDefault();
     Swal.fire({
       title: "¿Confirmar instrucción?",
@@ -245,6 +249,7 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
       Swal.fire({ icon:"success", title:"¡Instrucción registrada!", confirmButtonColor:"#16a34a" });
       actualizarEstadoAprobacion("INV-7000", "base", "INSTRUIDO");
       aprobacion_inst_corto_plazo_upsert();
+      aplicarUIEstados("INV-7000");
     });
   });
 }
@@ -281,6 +286,7 @@ function addFondeoTab(){
   filesUploadedByPanel[panelId] = {};
   //createDocumentField(panelId, "Voucher de transferencia (PDF)");
 
+  aprobacion_inst_corto_plazo_upsert();
   ordenarTabs(1);
 
   // Submit de este panel
@@ -308,6 +314,7 @@ function addFondeoTab(){
       Swal.fire({ icon:"success", title:"Transferencia registrada", confirmButtonColor:"#16a34a" });
       actualizarEstadoAprobacion("INV-7000", "transferencia", "INSTRUIDO", fondeoCount);
       aprobacion_inst_corto_plazo_upsert();
+      aplicarUIEstados("INV-7000", fondeoCount);
     });
   });
 
@@ -350,17 +357,18 @@ function __parseMontoToNumber(montoStr){
 
 // =============== Snapshot + persistencia ===============
 function build_aprobacion_snapshot(){
-  // ID/código de la inversión (preferir hidden, si no usar el visible "INV-7000")
-  const opId = $("#inv_id_base").val() || $(".info-value").first().text().trim(); // INV-xxxx
-  const codigoInversion = $(".info-value").first().text().trim();                 // Visual en cabecera
+   // ID/código de la inversión
+  const opId = $("#inv_id_base").val() || $(".info-value").first().text().trim();
+  const codigoInversion = $(".info-value").first().text().trim();
 
-      const KEY = "aprobacion_inst_corto_plazo";
-    const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
-    if (!Array.isArray(lista) || !lista.length) return;
+  // Si no hay opId, no seguimos
+  if (!opId) {
+    console.warn("⚠️ build_aprobacion_snapshot: opId vacío");
+    return { opId:null, base:{}, transferencias:[] }; // devuelve algo seguro
+  }
 
-    const snap = lista.find(x => x && x.opId === opId);
-    if (!snap) return;
-
+  // Intenta leer el snap previo SOLO para defaults (pero no dependas de él)
+  const snap = (__getListaAprobacion().find(x => x.opId === opId)) || {};
   // -------- Operación principal (tab-instruir) --------
   const $base = $("#tab-instruir");
   const base = {
@@ -376,9 +384,10 @@ function build_aprobacion_snapshot(){
     sustentoOpPrincipal: __collectOpDropDoc(),
     documentosAdicionalesOperacion: __collectDynamicDocsFrom("#tab-instruir-op .documentFields"),
       // ⬇⬇⬇  SOLO documentos de OPERACIÓN (base)
-    sustentoOpPrincipal: snap.base.sustentoOpPrincipal,
-    documentosAdicionalesOperacion: snap.base.documentosAdicionalesOperacion,
-    estado: snap.base.estado || "REGISTRADO"
+   sustentoOpPrincipal: snap?.base?.sustentoOpPrincipal ?? null,
+  documentosAdicionalesOperacion: snap?.base?.documentosAdicionalesOperacion ?? [],
+  estado: snap?.base?.estado ?? "REGISTRADO",
+
   };
 
   // -------- Transferencias (todas las .fondeo-form existentes) --------
@@ -407,10 +416,10 @@ function build_aprobacion_snapshot(){
       documentoPrincipal: __collectDropDoc($p),
       documentosAdicionales: __collectDynamicDocs($p),
         // ⬇⬇⬇  SOLO documentos de la OPERACIÓN (por transferencia)
-      sustentoOpPrincipal: snap.transferencias[i].sustentoOpPrincipal,
-      documentosAdicionalesOperacion: snap.transferencias[i].documentosAdicionalesOperacion,
+      sustentoOpPrincipal: snap?.transferencias?.[i]?.sustentoOpPrincipal ?? null,
+      documentosAdicionalesOperacion: snap?.transferencias?.[i]?.documentosAdicionalesOperacion ?? [],
+      estado: snap?.transferencias?.[i]?.estado ?? "REGISTRADO",
 
-      estado: snap.transferencias[i].estado || "REGISTRADO",
     };
     transferencias.push(transfer);
   });
@@ -1077,4 +1086,14 @@ function todasTransferenciasInstruidas(opId) {
 
   // revisa si TODAS están en INSTRUIDO
   return trfs.every(t => (t.estado || "").trim().toUpperCase() === "INSTRUIDO");
+}
+
+
+function __getListaAprobacion(KEY = "aprobacion_inst_corto_plazo"){
+  let lista;
+  try { lista = JSON.parse(localStorage.getItem(KEY) || "[]"); }
+  catch { lista = []; }
+  if (!Array.isArray(lista)) lista = [];
+  // elimina nulos y “huecos”
+  return lista.filter(x => x && typeof x === 'object' && typeof x.opId === 'string' && x.opId.trim());
 }
