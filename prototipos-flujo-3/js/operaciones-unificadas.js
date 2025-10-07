@@ -392,6 +392,13 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
   // Submit base
   $("#formLlamado_base").on("submit", function(e){
     e.preventDefault();
+
+    
+    if(!todasTransferenciasInstruidas("INV-7000")){
+      toastr.warning("Todas las transferencias deben estar aprobadas.");
+      return false;
+    }
+
     Swal.fire({
       title: "¿Confirmar instrucción?",
       text: "Se registrará la instrucción del instrumento.",
@@ -404,7 +411,9 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
     }).then(res => {
       if (!res.isConfirmed) return;
       Swal.fire({ icon:"success", title:"¡Instrucción registrada!", confirmButtonColor:"#16a34a" });
+      actualizarEstadoAprobacion("INV-7000", "base", "APROBADO");
       aprobacion_inst_corto_plazo_upsert();
+      aplicarUIEstados("INV-7000");
     });
   });
 }
@@ -466,7 +475,9 @@ function addFondeoTab(){
     }).then(res => {
       if (!res.isConfirmed) return;
       Swal.fire({ icon:"success", title:"¡Transferencia registrada!", confirmButtonColor:"#16a34a" });
+      actualizarEstadoAprobacion("INV-7000", "transferencia", "APROBADO", fondeoCount);
       aprobacion_inst_corto_plazo_upsert();
+      aplicarUIEstados("INV-7000", fondeoCount);
     });
   });
 
@@ -843,6 +854,8 @@ function load_aprobacion_inst_corto_plazo(opId) {
         : (Array.isArray(base.sustentoOpAdicionales) ? base.sustentoOpAdicionales : [])
     );
 
+    aplicarUIEstados("INV-7000");
+
 
     // -------- Transferencias (crear tantas como existan y setear campos) --------
     const arr = Array.isArray(snap.transferencias) ? snap.transferencias : [];
@@ -877,6 +890,8 @@ function load_aprobacion_inst_corto_plazo(opId) {
       __setSelect2Value($p.find(".cuenta_destino"), t.cuentaDestinoId, t.cuentaDestinoTxt);
 
           $p.find('.comision').val(t.comision);
+
+              aplicarUIEstados("INV-7000", i + 1);
 
       // Documentos previos (voucher + adicionales anteriores, solo lectura)
 __renderPrevDocsListTrf($p, t);
@@ -1349,6 +1364,7 @@ function bloquearCamposSoloLectura($panel) {
   $panel.find("input[type='file']").prop("disabled", false); // permitir uploads PDF
   $panel.find("#newDocumentName_op").prop("disabled", false); // permitir uploads PDF
   $panel.find(".remove-btn").prop("disabled", false); // permitir uploads PDF
+  $panel.find(".newDocumentName_op_trf").prop("disabled", false); // permitir uploads PDF
 
   // 3️⃣ Deshabilitar botones excepto los de sustento
   //$panel.find("button").prop("disabled", true);
@@ -1434,22 +1450,22 @@ function aplicarUIEstados(opId, idx = null){
     const panelSel = `#tab-fondeo-${idx}`;
     const TABBTN_TRF = `#tabs a[href="#tab-fondeo-${idx}"]`;
 
-    const BTN_TRF_REG = `${panelSel} .btn-trf-registrar`;
-    const BTN_TRF_DEL = `${panelSel} .btn-trf-eliminar`;
+    const BTN_TRF_REG = `${panelSel} .btn-registrar`;
+    const BTN_TRF_CARTA = `${panelSel} .btn-carta`;
 
     // Reset
-    show(BTN_TRF_REG); show(BTN_TRF_DEL);
+    show(BTN_TRF_REG); show(BTN_TRF_CARTA);
     unmarkDone(TABBTN_TRF);
 
     if (estado === 'INSTRUIDO'){
       // En REGISTRADO: dejar registrar visible
       show(BTN_TRF_REG);
-      show(BTN_TRF_DEL);
+      show(BTN_TRF_CARTA);
     } else if (estado === 'APROBADO'){
       // En INSTRUIDO: marcar tab y ocultar acciones
       markDone(TABBTN_TRF);
       hide(BTN_TRF_REG);
-      hide(BTN_TRF_DEL);
+      hide(BTN_TRF_CARTA);
     }
     return;
   }
@@ -1457,7 +1473,8 @@ function aplicarUIEstados(opId, idx = null){
   // ===== Operación principal (cuando NO se pasa idx) =====
   const estadoBase = (snap.base?.estado || "").trim().toUpperCase();
   const TABBTN_BASE = '#tabs a[href="#tab-instruir"]';
-  const BTN_BASE_REG = '#tab-instruir .btn-base-registrar';
+  const BTN_BASE_REG = '#tab-instruir .btn-registrar';
+  const BTN_TRF_CARTA = `#tab-instruir .btn-carta`;
   const BTN_ADD_TRF  = '#btnAddFondeo';
 
   // Reset base
@@ -1467,12 +1484,12 @@ function aplicarUIEstados(opId, idx = null){
   if (estadoBase === 'INSTRUIDO'){
     // Puedes seguir registrando y agregando transferencias
     show(BTN_BASE_REG);
-    show(BTN_ADD_TRF);
+    show(BTN_TRF_CARTA);
   } else if (estadoBase === 'APROBADO'){
     // Tab checkeado y sin botones de acción
     markDone(TABBTN_BASE);
     hide(BTN_BASE_REG);
-    hide(BTN_ADD_TRF);
+    hide(BTN_TRF_CARTA);
   }
 
   // ===== Transferencias (todas) =====

@@ -157,6 +157,21 @@
             background: #218838;
         }
 
+                .add-document-btn-op-trf {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .add-document-btn-op-trf:hover {
+            background: #218838;
+        }
+
         .remove-btn {
             background: #dc3545;
             color: white;

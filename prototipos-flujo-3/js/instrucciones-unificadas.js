@@ -230,11 +230,12 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
 
   // Submit base
   $("#formLlamado_base").on("submit", function(e){
-    if(!todasTransferenciasInstruidas("INV-7000")){
+    e.preventDefault();
+
+        if(!todasTransferenciasInstruidas("INV-7000")){
       toastr.warning("Todas las transferencias deben estar instruidas.");
       return false;
     }
-    e.preventDefault();
     Swal.fire({
       title: "¿Confirmar instrucción?",
       text: "Se registrará la instrucción de la inversión.",
@@ -1020,6 +1021,15 @@ function aplicarUIEstados(opId, idx = null){
       hide(BTN_TRF_REG);
       hide(BTN_TRF_DEL);
     }
+
+     else if (estado === 'APROBADO'){
+      // En INSTRUIDO: marcar tab y ocultar acciones
+      markDone(TABBTN_TRF);
+      hide(BTN_TRF_REG);
+      hide(BTN_TRF_DEL);
+    }
+
+
     return;
   }
 
@@ -1038,6 +1048,12 @@ function aplicarUIEstados(opId, idx = null){
     show(BTN_BASE_REG);
     show(BTN_ADD_TRF);
   } else if (estadoBase === 'INSTRUIDO'){
+    // Tab checkeado y sin botones de acción
+    markDone(TABBTN_BASE);
+    hide(BTN_BASE_REG);
+    hide(BTN_ADD_TRF);
+  }
+  else if (estadoBase === 'APROBADO'){
     // Tab checkeado y sin botones de acción
     markDone(TABBTN_BASE);
     hide(BTN_BASE_REG);
@@ -1064,6 +1080,12 @@ function aplicarUIEstados(opId, idx = null){
       show(BTN_TRF_REG);
       show(BTN_TRF_DEL);
     } else if (estado === 'INSTRUIDO'){
+      markDone(TABBTN_TRF);
+      hide(BTN_TRF_REG);
+      hide(BTN_TRF_DEL);
+    }
+
+    else if (estado === 'APROBADO'){
       markDone(TABBTN_TRF);
       hide(BTN_TRF_REG);
       hide(BTN_TRF_DEL);
