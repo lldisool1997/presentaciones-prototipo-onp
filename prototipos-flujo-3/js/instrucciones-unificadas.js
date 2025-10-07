@@ -1061,3 +1061,20 @@ function aplicarUIEstados(opId, idx = null){
     }
   });
 }
+
+/**
+ * Retorna true si todas las transferencias del snapshot están en estado "INSTRUIDO".
+ * Retorna false si hay al menos una transferencia con otro estado.
+ */
+function todasTransferenciasInstruidas(opId) {
+  const KEY = "aprobacion_inst_corto_plazo";
+  const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
+  const snap = lista.find(x => x && x.opId === opId);
+  if (!snap) return false;
+
+  const trfs = Array.isArray(snap.transferencias) ? snap.transferencias : [];
+  if (trfs.length === 0) return true; // si no hay transferencias, consideramos que está todo listo
+
+  // revisa si TODAS están en INSTRUIDO
+  return trfs.every(t => (t.estado || "").trim().toUpperCase() === "INSTRUIDO");
+}
