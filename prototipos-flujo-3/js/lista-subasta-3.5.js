@@ -73,6 +73,94 @@
     "pCompraCupon": "4.4961",
     "ecoInstrument": ""
   },
+      {
+    "entidad": "fdo-consolidado",
+    "accion": "aprobar",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Certificado BCRP",
+    "estado": "REGISTRADO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Certificado BCRP",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "29/09/2025",
+    "cataApertura": "",
+    "cataCancelacion": "",
+    "moneda": "PEN",
+    "valorNominal": "17,642,500.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": ""
+  },
+        {
+    "entidad": "fdo-consolidado",
+    "accion": "aprobar-instruccion",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Certificado BCRP",
+    "estado": "INSTRUIDO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Certificado BCRP",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "29/09/2025",
+    "cataApertura": "",
+    "cataCancelacion": "",
+    "moneda": "PEN",
+    "valorNominal": "17,642,500.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": ""
+  },
+    {
+    "entidad": "fdo-consolidado",
+    "accion": "instruir",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Certificado BCRP",
+    "estado": "APROBADO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Certificado BCRP",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "23/02/2026",
+    "cataApertura": "BANBIF",
+    "cataCancelacion": "Grupo Breca",
+    "moneda": "PEN",
+    "valorNominal": "150,000,000.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": "A+"
+  },
+      {
+    "entidad": "fdo-consolidado",
+    "accion": "cancelar",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Certificado BCRP",
+    "estado": "INSTRUIDO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Certificado BCRP",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "23/02/2026",
+    "cataApertura": "BANBIF",
+    "cataCancelacion": "Grupo Breca",
+    "moneda": "PEN",
+    "valorNominal": "150,000,000.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": "A+"
+  },
     {
     "entidad": "fdo-consolidado",
     "accion": "aprobar",
@@ -301,6 +389,19 @@
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionDIN('${inv.invPrincipal}')">
+              Instruir habilitación de cuenta
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
+
+                                                         ${
+                                inv.estado === "REGISTRADO" && getAreaParam() === "DIN" && inv.producto == "Certificado BCRP"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionDINBCRP('${inv.invPrincipal}')">
               Instruir habilitación de cuenta
             </button>
           </div>`
@@ -680,6 +781,14 @@ function irAInstruccionCuentaRemunerada(inversionId){
     }
   }
 
+    function irARegistroAprobacionDINBCRP(inversionId){
+    if(inversionId){
+      window.location.href = `instrucciones-unificadas-bcrp.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "instrucciones-unificadas-bcrp.html";
+    }
+  }
+
     function irARegistroAprobacionTesoreria(inversionId){
     if(inversionId){
 
@@ -826,6 +935,15 @@ window.irABackOffice = irABackOffice;
     const inst = getInstruParam();
     if(inst == "cta-remunerada"){
       $('#tipoInstrumento').val("Cuenta remunerada")
+    }
+    else if(inst == "bcrp"){
+      $('#tipoInstrumento').val("Certificado BCRP")
+    }
+    else if(inst == "depo-corto"){
+      $('#tipoInstrumento').val("Depósito de corto plazo")
+    }
+    else if(inst == "papel-comercial"){
+      $('#tipoInstrumento').val("Papel Comercial")
     }
     else if(inst){
       $('#tipoInstrumento').val("Operación cambiaria")

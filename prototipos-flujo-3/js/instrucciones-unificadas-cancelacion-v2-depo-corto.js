@@ -435,11 +435,11 @@ function build_aprobacion_snapshot(){
 
 /**
  * Guardar en localStorage SOLO si no existe (carga inicial).
- * Key: "cancelacion_inst_corto_plazo"
+ * Key: "cancelacion_inst_corto_plazo_depo_corto"
  */
 function aprobacion_inst_corto_plazo(){
   try {
-    const KEY = "cancelacion_inst_corto_plazo";
+    const KEY = "cancelacion_inst_corto_plazo_depo_corto";
     const snap = build_aprobacion_snapshot();
 
     let lista = [];
@@ -463,11 +463,11 @@ function aprobacion_inst_corto_plazo(){
 
 /**
  * Upsert del snapshot: si no existe lo crea, si existe lo reemplaza (manteniendo created_at).
- * Key: "cancelacion_inst_corto_plazo"
+ * Key: "cancelacion_inst_corto_plazo_depo_corto"
  */
 function aprobacion_inst_corto_plazo_upsert() {
   try {
-    const KEY = "cancelacion_inst_corto_plazo";
+    const KEY = "cancelacion_inst_corto_plazo_depo_corto";
     const snap = build_aprobacion_snapshot();
 
     let lista = [];
@@ -647,7 +647,7 @@ function __setBaseDropFileName(fileName) {
  */
 function load_aprobacion_inst_corto_plazo(opId) {
   try {
-    const KEY = "cancelacion_inst_corto_plazo";
+    const KEY = "cancelacion_inst_corto_plazo_depo_corto";
     const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
     if (!Array.isArray(lista) || !lista.length) return;
 
@@ -941,7 +941,7 @@ function __collectDynamicDocsFrom(scopeSelector){
  * @param {number} [idx] - Solo si es transferencia: índice (1, 2, 3, ...)
  */
 function actualizarEstadoAprobacion(opId, tipo, nuevoEstado, idx){
-  const KEY = "cancelacion_inst_corto_plazo";
+  const KEY = "cancelacion_inst_corto_plazo_depo_corto";
   let lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const i = lista.findIndex(x => x && x.opId === opId);
   if (i === -1) return console.warn("❌ No existe la operación", opId);
@@ -978,13 +978,13 @@ function actualizarEstadoAprobacion(opId, tipo, nuevoEstado, idx){
 
 /**
  * Aplica UI según estado para operación principal y transferencias.
- * Lee de localStorage clave "cancelacion_inst_corto_plazo".
+ * Lee de localStorage clave "cancelacion_inst_corto_plazo_depo_corto".
  * Reglas:
  *  - BASE:   REGISTRADO -> mostrar Modificar/Agregar ; INSTRUIDO -> marcar tab y ocultar todo
  *  - TRANSF: REGISTRADO -> mostrar Registrar         ; INSTRUIDO -> marcar tab y ocultar todo
  */
 function aplicarUIEstados(opId, idx = null){
-  const KEY = "cancelacion_inst_corto_plazo";
+  const KEY = "cancelacion_inst_corto_plazo_depo_corto";
   const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const snap = lista.find(x => x && x.opId === opId);
   if (!snap) return;
@@ -1098,7 +1098,7 @@ function aplicarUIEstados(opId, idx = null){
  * Retorna false si hay al menos una transferencia con otro estado.
  */
 function todasTransferenciasInstruidas(opId) {
-  const KEY = "cancelacion_inst_corto_plazo";
+  const KEY = "cancelacion_inst_corto_plazo_depo_corto";
   const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const snap = lista.find(x => x && x.opId === opId);
   if (!snap) return false;
@@ -1111,7 +1111,7 @@ function todasTransferenciasInstruidas(opId) {
 }
 
 
-function __getListaAprobacion(KEY = "cancelacion_inst_corto_plazo"){
+function __getListaAprobacion(KEY = "cancelacion_inst_corto_plazo_depo_corto"){
   let lista;
   try { lista = JSON.parse(localStorage.getItem(KEY) || "[]"); }
   catch { lista = []; }

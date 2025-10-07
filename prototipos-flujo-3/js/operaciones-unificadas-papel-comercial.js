@@ -535,7 +535,7 @@ function build_aprobacion_snapshot(){
   const codigoInversion = $(".info-value").first().text().trim();                 // Visual en cabecera
   const comision = __parseMontoToNumber(($("#comision").val() || "").trim());
 
-    const KEY = "aprobacion_inst_corto_plazo";
+    const KEY = "aprobacion_inst_corto_plazo_papel_comercial";
     const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
     if (!Array.isArray(lista) || !lista.length) return;
 
@@ -617,11 +617,11 @@ const base = {
 
 /**
  * Guardar en localStorage SOLO si no existe (carga inicial).
- * Key: "aprobacion_inst_corto_plazo"
+ * Key: "aprobacion_inst_corto_plazo_papel_comercial"
  */
 function aprobacion_inst_corto_plazo(){
   try {
-    const KEY = "aprobacion_inst_corto_plazo";
+    const KEY = "aprobacion_inst_corto_plazo_papel_comercial";
     const snap = build_aprobacion_snapshot();
 
     let lista = [];
@@ -645,11 +645,11 @@ function aprobacion_inst_corto_plazo(){
 
 /**
  * Upsert del snapshot: si no existe lo crea, si existe lo reemplaza (manteniendo created_at).
- * Key: "aprobacion_inst_corto_plazo"
+ * Key: "aprobacion_inst_corto_plazo_papel_comercial"
  */
 function aprobacion_inst_corto_plazo_upsert() {
   try {
-    const KEY = "aprobacion_inst_corto_plazo";
+    const KEY = "aprobacion_inst_corto_plazo_papel_comercial";
     const snap = build_aprobacion_snapshot();
 
     let lista = [];
@@ -828,7 +828,7 @@ function __setBaseDropFileName(fileName) {
  */
 function load_aprobacion_inst_corto_plazo(opId) {
   try {
-    const KEY = "aprobacion_inst_corto_plazo";
+    const KEY = "aprobacion_inst_corto_plazo_papel_comercial";
     const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
     if (!Array.isArray(lista) || !lista.length) return;
 
@@ -1387,7 +1387,7 @@ function desbloquearCamposGlobales(){
  * @param {number} [idx] - Solo si es transferencia: índice (1, 2, 3, ...)
  */
 function actualizarEstadoAprobacion(opId, tipo, nuevoEstado, idx){
-  const KEY = "aprobacion_inst_corto_plazo";
+  const KEY = "aprobacion_inst_corto_plazo_papel_comercial";
   let lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const i = lista.findIndex(x => x && x.opId === opId);
   if (i === -1) return console.warn("❌ No existe la operación", opId);
@@ -1424,13 +1424,13 @@ function actualizarEstadoAprobacion(opId, tipo, nuevoEstado, idx){
 
 /**
  * Aplica UI según estado para operación principal y transferencias.
- * Lee de localStorage clave "aprobacion_inst_corto_plazo".
+ * Lee de localStorage clave "aprobacion_inst_corto_plazo_papel_comercial".
  * Reglas:
  *  - BASE:   REGISTRADO -> mostrar Modificar/Agregar ; INSTRUIDO -> marcar tab y ocultar todo
  *  - TRANSF: REGISTRADO -> mostrar Registrar         ; INSTRUIDO -> marcar tab y ocultar todo
  */
 function aplicarUIEstados(opId, idx = null){
-  const KEY = "aprobacion_inst_corto_plazo";
+  const KEY = "aprobacion_inst_corto_plazo_papel_comercial";
   const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const snap = lista.find(x => x && x.opId === opId);
   if (!snap) return;
@@ -1524,7 +1524,7 @@ function aplicarUIEstados(opId, idx = null){
  * Retorna false si hay al menos una transferencia con otro estado.
  */
 function todasTransferenciasInstruidas(opId) {
-  const KEY = "aprobacion_inst_corto_plazo";
+  const KEY = "aprobacion_inst_corto_plazo_papel_comercial";
   const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const snap = lista.find(x => x && x.opId === opId);
   if (!snap) return false;
@@ -1537,7 +1537,7 @@ function todasTransferenciasInstruidas(opId) {
 }
 
 
-function __getListaAprobacion(KEY = "aprobacion_inst_corto_plazo"){
+function __getListaAprobacion(KEY = "aprobacion_inst_corto_plazo_papel_comercial"){
   let lista;
   try { lista = JSON.parse(localStorage.getItem(KEY) || "[]"); }
   catch { lista = []; }
