@@ -56,6 +56,7 @@ function applyEstadoBadges(data){
     $('#btnGenerarCarta').addClass('hidden');
     $('#btnInstruir').addClass('hidden');
     $('#oc_btn_add_doc').addClass('hidden');
+    $('input, select').prop("disabled", true)
   }
 
   // Transferencias
@@ -72,13 +73,14 @@ function applyEstadoBadges(data){
       $panel.find('.trf-btn-confirmar').addClass('hidden');
       $panel.find('.trf-btn-carta').addClass('hidden');
       $panel.find('.trf-btn-add-doc').addClass('hidden');
+            $panel.find('input, select').prop("disabled", true)
     }
   });
 
   function addCheck($btn){
     $btn.addClass('is-done');
     if (!$btn.find('.oc-tab-check').length){
-      $btn.append(' <span class="oc-tab-check" aria-label="confirmado">✓</span>');
+      $btn.append('');
     }
   }
 }
