@@ -11,12 +11,12 @@
     "entidad": "fdo-consolidado",
     "accion": "aprobar",
     "unidad": "fcr-macrofondo",
-    "tipo": "Instrumento de corto plazo",
+    "tipo": "Depósito a plazo",
     "estado": "REGISTRADO",
     "inversionNum": "7000",
     "invPrincipal": "7000",
     "codFCR": "INV-7000",
-    "producto": "Instrumento de corto plazo",
+    "producto": "Depósito a plazo",
     "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
     "fechaCompra": "29/09/2025",
     "fechaEmision": "29/09/2025",
@@ -33,12 +33,12 @@
     "entidad": "fdo-consolidado",
     "accion": "aprobar-instruccion",
     "unidad": "fcr-macrofondo",
-    "tipo": "Instrumento de corto plazo",
+    "tipo": "Depósito a plazo",
     "estado": "INSTRUIDO",
     "inversionNum": "7000",
     "invPrincipal": "7000",
     "codFCR": "INV-7000",
-    "producto": "Instrumento de corto plazo",
+    "producto": "Depósito a plazo",
     "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
     "fechaCompra": "29/09/2025",
     "fechaEmision": "29/09/2025",
@@ -187,12 +187,12 @@
     "entidad": "fdo-consolidado",
     "accion": "cancelar",
     "unidad": "fcr-macrofondo",
-    "tipo": "Instrumento de corto plazo",
+    "tipo": "Depósito a plazo",
     "estado": "INSTRUIDO",
     "inversionNum": "7000",
     "invPrincipal": "7000",
     "codFCR": "INV-7000",
-    "producto": "Instrumento de corto plazo",
+    "producto": "Depósito a plazo",
     "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
     "fechaCompra": "29/09/2025",
     "fechaEmision": "29/09/2025",
@@ -253,12 +253,12 @@
     "entidad": "fdo-consolidado",
     "accion": "instruir",
     "unidad": "fcr-macrofondo",
-    "tipo": "Instrumento de corto plazo",
+    "tipo": "Depósito a plazo",
     "estado": "APROBADO",
     "inversionNum": "7000",
     "invPrincipal": "7000",
     "codFCR": "INV-7000",
-    "producto": "Instrumento de corto plazo",
+    "producto": "Depósito a plazo",
     "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
     "fechaCompra": "29/09/2025",
     "fechaEmision": "29/09/2025",
@@ -275,7 +275,7 @@
     "entidad": "fdo-consolidado",
     "accion": "revisar",
     "unidad": "fcr-macrofondo",
-    "tipo": "Instrumento de corto plazo",
+    "tipo": "Depósito a plazo",
     "estado": "CANCELADO",
     "inversionNum": "7000",
     "invPrincipal": "7000",
@@ -293,6 +293,184 @@
     "pCompraCupon": "4.4961",
     "ecoInstrument": "ALTERNATIVOS"
   },
+  {
+  "entidad": "fdo-consolidado",
+  "accion": "aprobar",
+  "unidad": "fcr-macrofondo",
+  "tipo": "Depósito de corto plazo",
+  "estado": "REGISTRADO",
+  "inversionNum": "8000",
+  "invPrincipal": "8000",
+  "codFCR": "INV-8000",
+  "producto": "Depósito de corto plazo",
+  "numeroDeposito": "BANCO NACIONAL DEL PERU",
+  "fechaCompra": "29/09/2025",
+  "fechaEmision": "29/09/2025",
+  "fechaVencimiento": "29/12/2025",
+  "cataApertura": "",
+  "cataCancelacion": "",
+  "moneda": "PEN",
+  "valorNominal": "5,000,000.00",
+  "compraSpotCupon": "3.25",
+  "pCompraCupon": "3.2115",
+  "ecoInstrument": ""
+},
+{
+  "entidad": "fdo-consolidado",
+  "accion": "aprobar-instruccion",
+  "unidad": "fcr-macrofondo",
+  "tipo": "Depósito de corto plazo",
+  "estado": "INSTRUIDO",
+  "inversionNum": "8000",
+  "invPrincipal": "8000",
+  "codFCR": "INV-8000",
+  "producto": "Depósito de corto plazo",
+  "numeroDeposito": "BANCO NACIONAL DEL PERU",
+  "fechaCompra": "29/09/2025",
+  "fechaEmision": "29/09/2025",
+  "fechaVencimiento": "29/12/2025",
+  "cataApertura": "",
+  "cataCancelacion": "",
+  "moneda": "PEN",
+  "valorNominal": "5,000,000.00",
+  "compraSpotCupon": "3.25",
+  "pCompraCupon": "3.2115",
+  "ecoInstrument": ""
+},
+{
+  "entidad": "fdo-consolidado",
+  "accion": "instruir",
+  "unidad": "fcr-macrofondo",
+  "tipo": "Depósito de corto plazo",
+  "estado": "APROBADO",
+  "inversionNum": "8000",
+  "invPrincipal": "8000",
+  "codFCR": "INV-8000",
+  "producto": "Depósito de corto plazo",
+  "numeroDeposito": "BANCO NACIONAL DEL PERU",
+  "fechaCompra": "29/09/2025",
+  "fechaEmision": "29/09/2025",
+  "fechaVencimiento": "29/12/2025",
+  "cataApertura": "BBVA",
+  "cataCancelacion": "Grupo Santander",
+  "moneda": "PEN",
+  "valorNominal": "10,000,000.00",
+  "compraSpotCupon": "3.35",
+  "pCompraCupon": "3.3115",
+  "ecoInstrument": "A"
+},
+{
+  "entidad": "fdo-consolidado",
+  "accion": "cancelar",
+  "unidad": "fcr-macrofondo",
+  "tipo": "Depósito de corto plazo",
+  "estado": "INSTRUIDO",
+  "inversionNum": "8000",
+  "invPrincipal": "8000",
+  "codFCR": "INV-8000",
+  "producto": "Depósito de corto plazo",
+  "numeroDeposito": "BANCO NACIONAL DEL PERU",
+  "fechaCompra": "29/09/2025",
+  "fechaEmision": "29/09/2025",
+  "fechaVencimiento": "29/12/2025",
+  "cataApertura": "BBVA",
+  "cataCancelacion": "Grupo Santander",
+  "moneda": "PEN",
+  "valorNominal": "10,000,000.00",
+  "compraSpotCupon": "3.35",
+  "pCompraCupon": "3.3115",
+  "ecoInstrument": "A"
+}
+,
+{
+  "entidad": "fdo-consolidado",
+  "accion": "aprobar",
+  "unidad": "fcr-macrofondo",
+  "tipo": "Papel Comercial",
+  "estado": "REGISTRADO",
+  "inversionNum": "9000",
+  "invPrincipal": "9000",
+  "codFCR": "INV-9000",
+  "producto": "Papel Comercial",
+  "numeroDeposito": "BBVA CONTINENTAL",
+  "fechaCompra": "29/09/2025",
+  "fechaEmision": "29/09/2025",
+  "fechaVencimiento": "29/09/2026",
+  "cataApertura": "",
+  "cataCancelacion": "",
+  "moneda": "PEN",
+  "valorNominal": "10,000,000.00",
+  "compraSpotCupon": "5.12",
+  "pCompraCupon": "5.0345",
+  "ecoInstrument": ""
+},
+{
+  "entidad": "fdo-consolidado",
+  "accion": "aprobar-instruccion",
+  "unidad": "fcr-macrofondo",
+  "tipo": "Papel Comercial",
+  "estado": "INSTRUIDO",
+  "inversionNum": "9000",
+  "invPrincipal": "9000",
+  "codFCR": "INV-9000",
+  "producto": "Papel Comercial",
+  "numeroDeposito": "BBVA CONTINENTAL",
+  "fechaCompra": "29/09/2025",
+  "fechaEmision": "29/09/2025",
+  "fechaVencimiento": "29/09/2026",
+  "cataApertura": "",
+  "cataCancelacion": "",
+  "moneda": "PEN",
+  "valorNominal": "10,000,000.00",
+  "compraSpotCupon": "5.12",
+  "pCompraCupon": "5.0345",
+  "ecoInstrument": ""
+},
+{
+  "entidad": "fdo-consolidado",
+  "accion": "instruir",
+  "unidad": "fcr-macrofondo",
+  "tipo": "Papel Comercial",
+  "estado": "APROBADO",
+  "inversionNum": "9000",
+  "invPrincipal": "9000",
+  "codFCR": "INV-9000",
+  "producto": "Papel Comercial",
+  "numeroDeposito": "BBVA CONTINENTAL",
+  "fechaCompra": "29/09/2025",
+  "fechaEmision": "29/09/2025",
+  "fechaVencimiento": "29/09/2026",
+  "cataApertura": "Banco de Crédito",
+  "cataCancelacion": "Grupo Interbank",
+  "moneda": "PEN",
+  "valorNominal": "15,000,000.00",
+  "compraSpotCupon": "5.25",
+  "pCompraCupon": "5.1458",
+  "ecoInstrument": "A+"
+},
+{
+  "entidad": "fdo-consolidado",
+  "accion": "cancelar",
+  "unidad": "fcr-macrofondo",
+  "tipo": "Papel Comercial",
+  "estado": "INSTRUIDO",
+  "inversionNum": "9000",
+  "invPrincipal": "9000",
+  "codFCR": "INV-9000",
+  "producto": "Papel Comercial",
+  "numeroDeposito": "BBVA CONTINENTAL",
+  "fechaCompra": "29/09/2025",
+  "fechaEmision": "29/09/2025",
+  "fechaVencimiento": "29/09/2026",
+  "cataApertura": "Banco de Crédito",
+  "cataCancelacion": "Grupo Interbank",
+  "moneda": "PEN",
+  "valorNominal": "15,000,000.00",
+  "compraSpotCupon": "5.25",
+  "pCompraCupon": "5.1458",
+  "ecoInstrument": "A+"
+}
+
   
 ]
 
@@ -349,7 +527,7 @@
                                  ` `
                             }
           ${
-                                inv.estado === "INSTRUIDO" && inv.accion === 'cancelar' && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
+                                inv.estado === "INSTRUIDO" && inv.accion === 'cancelar' && getAreaParam() === "Tesoreria" && inv.producto == "Depósito a plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroCancelacion('${inv.invPrincipal}')">
@@ -361,7 +539,7 @@
                                  ` `
                             }
                                       ${
-                                inv.estado === "INSTRUIDO" && inv.accion === 'aprobar-instruccion' && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
+                                inv.estado === "INSTRUIDO" && inv.accion === 'aprobar-instruccion' && getAreaParam() === "Tesoreria" && inv.producto == "Depósito a plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
               <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionTesoreria('${inv.invPrincipal}')">
@@ -373,7 +551,7 @@
                                  ` `
                             }
                              ${
-                                inv.estado === "APROBADO" && getAreaParam() === "DIN" && inv.producto == "Instrumento de corto plazo"
+                                inv.estado === "APROBADO" && getAreaParam() === "DIN" && inv.producto == "Depósito a plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroInstruccion('${inv.invPrincipal}')">
@@ -385,7 +563,7 @@
                                  ` `
                             }
                              ${
-                                inv.estado === "REGISTRADO" && getAreaParam() === "DIN" && inv.producto == "Instrumento de corto plazo"
+                                inv.estado === "REGISTRADO" && getAreaParam() === "DIN" && inv.producto == "Depósito a plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionDIN('${inv.invPrincipal}')">
@@ -397,18 +575,6 @@
                                  ` `
                             }
 
-                                                         ${
-                                inv.estado === "REGISTRADO" && getAreaParam() === "DIN" && inv.producto == "Certificado BCRP"
-                                ? 
-                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
-             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionDINBCRP('${inv.invPrincipal}')">
-              Instruir habilitación de cuenta
-            </button>
-          </div>`
-                                :
-                                
-                                 ` `
-                            }
                             
 
                                                        ${
@@ -451,7 +617,7 @@
                                  ` `
                             }
             ${
-                                inv.estado === "REGISTRADO" && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
+                                inv.estado === "REGISTRADO" && getAreaParam() === "Tesoreria" && inv.producto == "Depósito a plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
               <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionTesoreria('${inv.invPrincipal}')">
@@ -463,7 +629,7 @@
                                  ` `
                             }
            ${
-                                inv.estado !== "APROBADO" && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
+                                inv.estado !== "APROBADO" && getAreaParam() === "Tesoreria" && inv.producto == "Depósito a plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
 
@@ -472,6 +638,153 @@
                                 
                                  `  `
                             }
+
+
+                            
+                                                         ${
+                                inv.estado === "REGISTRADO" && getAreaParam() === "DIN" && inv.producto == "Certificado BCRP"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionDINBCRP('${inv.invPrincipal}')">
+              Instruir Habilitación de Cuenta
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
+
+                            
+                                                         ${
+                                inv.estado === "INSTRUIDO" && inv.accion === 'aprobar-instruccion' && getAreaParam() === "Tesoreria" && inv.producto == "Certificado BCRP"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroInstruccionTesoreriaBCRP('${inv.invPrincipal}')">
+              Registrar Operación
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
+
+                            
+                                                         ${
+                                inv.estado === "APROBADO" && getAreaParam() === "DIN" && inv.producto == "Certificado BCRP"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroCancelacionDINBCRP('${inv.invPrincipal}')">
+              Instruir Cancelación
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
+
+                            
+                                                         ${
+                                inv.estado === "INSTRUIDO" && inv.accion === 'cancelar' && getAreaParam() === "Tesoreria" && inv.producto == "Certificado BCRP"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroCancelacionTesoreriaBCRP('${inv.invPrincipal}')">
+              Registrar Operación
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
+
+                            ${ 
+  inv.estado === "REGISTRADO" && getAreaParam() === "DIN" && inv.producto == "Depósito de corto plazo" 
+  ? 
+  `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+      <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionDIPC('${inv.invPrincipal}')">
+        Instruir Habilitación de Cuenta
+      </button>
+    </div>` 
+  : ` `
+}
+
+${ 
+  inv.estado === "INSTRUIDO" && inv.accion === 'aprobar-instruccion' && getAreaParam() === "Tesoreria" && inv.producto == "Depósito de corto plazo" 
+  ? 
+  `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+      <button class="btn btn-action btn-llamado-registro" onclick="irARegistroInstruccionTesoreriaDIPC('${inv.invPrincipal}')">
+        Registrar Operación
+      </button>
+    </div>` 
+  : ` `
+}
+
+${ 
+  inv.estado === "APROBADO" && getAreaParam() === "DIN" && inv.producto == "Depósito de corto plazo" 
+  ? 
+  `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+      <button class="btn btn-action btn-llamado-registro" onclick="irARegistroCancelacionDIPC('${inv.invPrincipal}')">
+        Instruir Cancelación
+      </button>
+    </div>` 
+  : ` `
+}
+
+${ 
+  inv.estado === "INSTRUIDO" && inv.accion === 'cancelar' && getAreaParam() === "Tesoreria" && inv.producto == "Depósito de corto plazo" 
+  ? 
+  `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+      <button class="btn btn-action btn-llamado-registro" onclick="irARegistroCancelacionTesoreriaDIPC('${inv.invPrincipal}')">
+        Registrar Operación
+      </button>
+    </div>` 
+  : ` `
+}
+
+${ 
+  inv.estado === "REGISTRADO" && getAreaParam() === "DIN" && inv.producto == "Papel Comercial" 
+  ? 
+  `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+      <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionPapelComercial('${inv.invPrincipal}')">
+        Instruir Habilitación de Cuenta
+      </button>
+    </div>` 
+  : ` `
+}
+
+${ 
+  inv.estado === "INSTRUIDO" && inv.accion === 'aprobar-instruccion' && getAreaParam() === "Tesoreria" && inv.producto == "Papel Comercial" 
+  ? 
+  `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+      <button class="btn btn-action btn-llamado-registro" onclick="irARegistroInstruccionTesoreriaPapelComercial('${inv.invPrincipal}')">
+        Registrar Operación
+      </button>
+    </div>` 
+  : ` `
+}
+
+${ 
+  inv.estado === "APROBADO" && getAreaParam() === "DIN" && inv.producto == "Papel Comercial" 
+  ? 
+  `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+      <button class="btn btn-action btn-llamado-registro" onclick="irARegistroCancelacionPapelComercial('${inv.invPrincipal}')">
+        Instruir Cancelación
+      </button>
+    </div>` 
+  : ` `
+}
+
+${ 
+  inv.estado === "INSTRUIDO" && inv.accion === 'cancelar' && getAreaParam() === "Tesoreria" && inv.producto == "Papel Comercial" 
+  ? 
+  `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+      <button class="btn btn-action btn-llamado-registro" onclick="irARegistroCancelacionTesoreriaPapelComercial('${inv.invPrincipal}')">
+        Registrar Operación
+      </button>
+    </div>` 
+  : ` `
+}
+
+
         </td>
       `;
       $tb.append(tr);
@@ -781,14 +1094,6 @@ function irAInstruccionCuentaRemunerada(inversionId){
     }
   }
 
-    function irARegistroAprobacionDINBCRP(inversionId){
-    if(inversionId){
-      window.location.href = `instrucciones-unificadas-bcrp.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
-    }else{
-      window.location.href = "instrucciones-unificadas-bcrp.html";
-    }
-  }
-
     function irARegistroAprobacionTesoreria(inversionId){
     if(inversionId){
 
@@ -805,6 +1110,104 @@ function irAInstruccionCuentaRemunerada(inversionId){
       window.location.href = "generar-carta-aprobacion.html";
     }
   }
+
+  //BCRP
+      function irARegistroAprobacionDINBCRP(inversionId){
+    if(inversionId){
+      window.location.href = `instrucciones-unificadas-bcrp.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "instrucciones-unificadas-bcrp.html";
+    }
+  }
+      function irARegistroInstruccionTesoreriaBCRP(inversionId){
+    if(inversionId){
+      window.location.href = `operaciones-unificadas-bcrp.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "operaciones-unificadas-bcrp.html";
+    }
+  }
+      function irARegistroCancelacionDINBCRP(inversionId){
+    if(inversionId){
+      window.location.href = `instrucciones-unificadas-cancelacion-v2-bcrp.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "instrucciones-unificadas-cancelacion-v2-bcrp.html";
+    }
+  }
+      function irARegistroCancelacionTesoreriaBCRP(inversionId){
+    if(inversionId){
+      window.location.href = `operaciones-unificadas-cancelacion-v2-bcrp.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "operaciones-unificadas-cancelacion-v2-bcrp.html";
+    }
+  }
+
+  //Depósito a corto plazo
+  function irARegistroAprobacionDIPC(inversionId) {
+  if (inversionId) {
+    window.location.href = `instrucciones-unificadas-depo-corto.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+  } else {
+    window.location.href = "instrucciones-unificadas-depo-corto.html";
+  }
+}
+
+function irARegistroInstruccionTesoreriaDIPC(inversionId) {
+  if (inversionId) {
+    window.location.href = `instrucciones-unificadas-depo-corto.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+  } else {
+    window.location.href = "instrucciones-unificadas-depo-corto.html";
+  }
+}
+
+function irARegistroCancelacionDIPC(inversionId) {
+  if (inversionId) {
+    window.location.href = `operaciones-unificadas-cancelacion-v2-depo-corto.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+  } else {
+    window.location.href = "operaciones-unificadas-cancelacion-v2-depo-corto.html";
+  }
+}
+
+function irARegistroCancelacionTesoreriaDIPC(inversionId) {
+  if (inversionId) {
+    window.location.href = `operaciones-unificadas-cancelacion-v2-depo-corto.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+  } else {
+    window.location.href = "operaciones-unificadas-cancelacion-v2-depo-corto.html";
+  }
+}
+
+
+  //Papeles comerciales
+
+  function irARegistroAprobacionPapelComercial(inversionId) {
+  if (inversionId) {
+    window.location.href = `instrucciones-unificadas-papel-comercial.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+  } else {
+    window.location.href = "instrucciones-unificadas-papel-comercial.html";
+  }
+}
+
+function irARegistroInstruccionTesoreriaPapelComercial(inversionId) {
+  if (inversionId) {
+    window.location.href = `operaciones-unificadas-papel-comercial.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+  } else {
+    window.location.href = "operaciones-unificadas-papel-comercial.html";
+  }
+}
+
+function irARegistroCancelacionPapelComercial(inversionId) {
+  if (inversionId) {
+    window.location.href = `instrucciones-unificadas-cancelacion-v2-papel-comercial.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+  } else {
+    window.location.href = "instrucciones-unificadas-cancelacion-v2-papel-comercial.html";
+  }
+}
+
+function irARegistroCancelacionTesoreriaPapelComercial(inversionId) {
+  if (inversionId) {
+    window.location.href = `operaciones-unificadas-cancelacion-v2-papel-comercial.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+  } else {
+    window.location.href = "operaciones-unificadas-cancelacion-v2-papel-comercial.html";
+  }
+}
 
   
  function irARegistroDeCartaRecepcion(inversionId){
@@ -949,7 +1352,7 @@ window.irABackOffice = irABackOffice;
       $('#tipoInstrumento').val("Operación cambiaria")
     }
     else{
-      $('#tipoInstrumento').val("Instrumento de corto plazo")
+      $('#tipoInstrumento').val("Depósito a plazo")
     }
     // Inputs de texto -> al escribir
     $("#inversionNum, #numeroDeposito").on("input", applyFilters);
