@@ -244,12 +244,9 @@
 
            <div class="section-header">4. Sustentos documentario de la instrucción</div>
 <div class="p-5 rounded-md bg-gray-50 border border-slate-200">
-  <ul id="prev_docs_list" class="list-disc list-inside text-sm text-slate-700">
+  <div id="prev_docs_list" class="list-disc list-inside text-sm text-slate-700 flex flex-row gap-2">
     <!-- Se llena desde JS -->
-  </ul>
-  <p class="text-xs text-slate-500 mt-2">
-    Estos documentos provienen de la etapa anterior y no pueden ser modificados aquí.
-  </p>
+  </div>
 </div>
 
 <div class="section-header mt-6">5. Sustento documentario de la operación</div>
@@ -286,13 +283,14 @@
         <div class="flex justify-end gap-3">
   <a href="#" class="btn-secondary">Cancelar</a>
   <button type="button"
+        id="agregar-carta-btn"
         class="btn-info btnCartaOp"
         data-url-operacion="generar-carta-aprobacion.html" 
         data-param="panel">                         
   Agregar Carta
 </button>
 
-  <button type="submit" class="btn-primary">Confirmar</button>
+  <button type="submit" id="confirmar-principal" class="btn-primary">Confirmar</button>
 </div>
 
 

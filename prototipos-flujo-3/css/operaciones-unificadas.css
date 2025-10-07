@@ -61,7 +61,7 @@
   display:inline-block; padding:.6rem 1rem; border-bottom:2px solid transparent;
   color:#6b7280; font-weight:500;
 }
-.tab-link.active{ color:#2563eb; border-color:#2563eb; font-weight:600; }
+.tab-link.active{ color:white; border-color:#2563eb; font-weight:600; background-color: #2563eb; border-radius: 12px 12px 0px 0px;}
 .tab-panel{ display:block; }
 .tab-panel.hidden{ display:none; }
 

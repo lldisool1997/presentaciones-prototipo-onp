@@ -87,6 +87,48 @@ function createDocumentField(panelId, docName, isCustom=false){
 
 // Bind delegados comunes a toda la página (una sola vez)
 function bindDelegatesOnce(){
+
+$(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", function(){
+  // Make sure input isn't disabled in read-only mode
+  $(this).prop("disabled", false);
+
+  const $group    = $(this).closest(".file-upload-group");
+  const $fileArea = $group.find(".file-upload-area").first();
+  const panelId   = $(this).closest(".tab-panel").attr("id");
+  const fieldId   = $(this).data("field");
+  const file      = this.files && this.files[0];
+
+  const v = validatePdf(file);
+  if(!v.ok){
+    this.value = "";
+    if (panelId && fieldId) {
+      filesUploadedByPanel[panelId] = filesUploadedByPanel[panelId] || {};
+      filesUploadedByPanel[panelId][fieldId] = false
+    }
+    $fileArea
+      .removeClass('ring-2 ring-green-600 border-green-600')
+      .addClass('ring-2 ring-red-400 border-red-400')
+      .html('<div class="upload-text text-red-600">⌫ '+v.msg+'</div><div class="upload-text text-gray-500 text-sm mt-1">PDF</div>');
+    return;
+  }
+
+  if (panelId && fieldId) {
+    filesUploadedByPanel[panelId] = filesUploadedByPanel[panelId] || {};
+    filesUploadedByPanel[panelId][fieldId] = true;
+  }
+
+  $fileArea
+    .removeClass('ring-2 ring-red-400 border-red-400')
+    .html('<div class="file-name">📎 '+file.name+'</div><div class="upload-text text-green-600 text-sm">Archivo cargado correctamente</div>');
+
+  checkFormCompletion(panelId);
+
+  if (typeof aprobacion_inst_corto_plazo_upsert === "function") {
+    aprobacion_inst_corto_plazo_upsert();
+  }
+});
+
+
   if (window.__unifiedBinds) return;
   window.__unifiedBinds = true;
 
@@ -156,9 +198,9 @@ $(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", f
   });
 
   // Add-document (delegado)
-  $(document).on("click", ".add-document-btn", function(){
-
-      // ⬇⬇⬇ evita que el handler genérico corra cuando es para operación
+  $(document).off("click.addDocBase", ".add-document-btn").on("click.addDocBase", ".add-document-btn", function(){
+  if ($(this).data("target") === "op") return;
+  // ⬇⬇⬇ evita que el handler genérico corra cuando es para operación
   if ($(this).data("target") === "op") return;
 
 
@@ -305,7 +347,7 @@ function checkFormCompletion(panelId){
   const keys = Object.keys(map);
   if (!keys.length){ $submit.prop("disabled", false); return; }
   const ok = keys.every(k => !!map[k]);
-  $submit.prop("disabled", !ok);
+  //$submit.prop("disabled", !ok);
 }
 
 // Inicializar el panel base (Instruir)
@@ -441,15 +483,23 @@ function __getSelectText($sel){
   return (opt && opt.length) ? (opt.text() || null) : ($sel.val() || null);
 }
 
-function __collectDynamicDocs($scope){
-  // Documentos dinámicos (inputs .file-dyn agregados con "Agregar Documento")
+// Recolecta nombres de inputs dinámicos (solo en el contenedor indicado)
+function __collectDynamicDocsFrom(scopeSelector){
+  const $scope = (scopeSelector instanceof $) ? scopeSelector : $(scopeSelector);
   const docs = [];
   $scope.find('input.file-dyn').each(function(){
     const f = this.files && this.files[0] ? this.files[0].name : null;
     if (f) docs.push(f);
+    else {
+      // si ya pintaste el nombre en la UI (sin File real), úsalo como fallback visual
+      const $area = $(this).closest('.file-upload-group').find('.file-upload-area .file-name');
+      const txt = $area.text().trim().replace(/^📎\s*/,'');
+      if (txt) docs.push(txt);
+    }
   });
   return docs;
 }
+
 
 function __collectDropDoc($scope){
   // Documento principal del drop (clase .file + .fileName en fondeo; #file_base en instruir)
@@ -475,22 +525,27 @@ function build_aprobacion_snapshot(){
   const comision = __parseMontoToNumber(($("#comision").val() || "").trim());
 
   // -------- Operación principal (tab-instruir) --------
-  const $base = $("#tab-instruir");
-  const base = {
-    tipo: "operacion_principal",
-    opId,
-    codigoInversion,
-    codigoInversion,
-    comision,
-    bancoDestinoId: $("#banco_destino_base").val() || null,
-    bancoDestinoTxt: __getSelectText($("#banco_destino_base")),
-    cuentaDestinoId: $("#cuenta_destino_base").val() || null,
-    cuentaDestinoTxt: __getSelectText($("#cuenta_destino_base")),
-    documentoPrincipal: __collectBaseDropDoc(),
-    documentosAdicionales: __collectDynamicDocs($base),
-    sustentoOpPrincipal: __collectOpDropDoc(),
-    sustentoOpAdicionales: __collectDynamicDocs($("#tab-instruir-op")),
-  };
+ // -------- Operación principal (tab-instruir) --------
+const $base = $("#tab-instruir");
+const base = {
+  tipo: "operacion_principal",
+  opId,
+  codigoInversion,
+  comision,
+  bancoDestinoId: $("#banco_destino_base").val() || null,
+  bancoDestinoTxt: __getSelectText($("#banco_destino_base")),
+  cuentaDestinoId: $("#cuenta_destino_base").val() || null,
+  cuentaDestinoTxt: __getSelectText($("#cuenta_destino_base")),
+
+  // ⬇⬇⬇  SOLO documentos de INSTRUCCIÓN (no operación)
+  documentoPrincipal: __collectBaseDropDoc(),
+  documentosAdicionales: __collectDynamicDocsFrom("#tab-instruir .documentFields"),
+
+  // ⬇⬇⬇  SOLO documentos de OPERACIÓN (base)
+  sustentoOpPrincipal: __collectOpDropDoc(),
+  documentosAdicionalesOperacion: __collectDynamicDocsFrom("#tab-instruir-op .documentFields"),
+};
+
 
 
   // -------- Transferencias (todas las .fondeo-form existentes) --------
@@ -504,26 +559,30 @@ function build_aprobacion_snapshot(){
     const montoStr = ($p.find(".monto").val() || "").trim();
     const comisionStr = ($p.find(".comision").val() || "").trim();
     const transfer = {
-      tipo: "transferencia",
-      idx: i + 1,
-      moneda,
-      monto: __parseMontoToNumber(montoStr),
-      comision: __parseMontoToNumber(comisionStr),
-      montoRaw: montoStr || null,
-      bancoCargoId: $p.find(".banco").val() || null,
-      bancoCargoTxt: __getSelectText($p.find(".banco")),
-      cuentaCargoId: $p.find(".cuenta").val() || null,
-      cuentaCargoTxt: __getSelectText($p.find(".cuenta")),
-      bancoDestinoId: $p.find(".banco_destino").val() || null,
-      bancoDestinoTxt: __getSelectText($p.find(".banco_destino")),
-      cuentaDestinoId: $p.find(".cuenta_destino").val() || null,
-      cuentaDestinoTxt: __getSelectText($p.find(".cuenta_destino")),
-      documentoPrincipal: __collectDropDoc($p),
-      documentosAdicionales: __collectDynamicDocs($p),
-      sustentoOpPrincipal: __collectOpDropDocTrf($p),
-      sustentoOpAdicionales: __collectDynamicDocs($p.find(".documentFields_op_trf")),
+  tipo: "transferencia",
+  idx: i + 1,
+  moneda,
+  monto: __parseMontoToNumber(montoStr),
+  comision: __parseMontoToNumber(comisionStr),
+  montoRaw: montoStr || null,
+  bancoCargoId: $p.find(".banco").val() || null,
+  bancoCargoTxt: __getSelectText($p.find(".banco")),
+  cuentaCargoId: $p.find(".cuenta").val() || null,
+  cuentaCargoTxt: __getSelectText($p.find(".cuenta")),
+  bancoDestinoId: $p.find(".banco_destino").val() || null,
+  bancoDestinoTxt: __getSelectText($p.find(".banco_destino")),
+  cuentaDestinoId: $p.find(".cuenta_destino").val() || null,
+  cuentaDestinoTxt: __getSelectText($p.find(".cuenta_destino")),
 
-    };
+  // ⬇⬇⬇  SOLO documentos de la INSTRUCCIÓN de esta transferencia
+  documentoPrincipal: __collectDropDoc($p),                   // voucher (drop)
+  documentosAdicionales: __collectDynamicDocsFrom($p.find(".documentFields")), // si usas ese contenedor para instrucción
+
+  // ⬇⬇⬇  SOLO documentos de la OPERACIÓN (por transferencia)
+  sustentoOpPrincipal: __collectOpDropDocTrf($p),
+  documentosAdicionalesOperacion: __collectDynamicDocsFrom($p.find(".documentFields_op_trf")), // OPERACIÓN (transferencia)
+};
+
     transferencias.push(transfer);
   });
 
@@ -767,7 +826,13 @@ function load_aprobacion_inst_corto_plazo(opId) {
     __setBaseDropFileName(base.documentoPrincipal);
 
     // Documentos dinámicos
-    __renderDynamicDocsByNames("tab-instruir", base.documentosAdicionales);
+    __renderDynamicDocsByNames(
+      "tab-instruir-op",
+      Array.isArray(base.documentosAdicionalesOperacion)
+        ? base.documentosAdicionalesOperacion
+        : (Array.isArray(base.sustentoOpAdicionales) ? base.sustentoOpAdicionales : [])
+    );
+
 
     // -------- Transferencias (crear tantas como existan y setear campos) --------
     const arr = Array.isArray(snap.transferencias) ? snap.transferencias : [];
@@ -811,14 +876,28 @@ __setOpDropFileNameTrf($p, t.sustentoOpPrincipal);
 
 if (Array.isArray(t.sustentoOpAdicionales)) {
   t.sustentoOpAdicionales.forEach(name => {
+   const opExtrasTrf = Array.isArray(t.documentosAdicionalesOperacion)
+  ? t.documentosAdicionalesOperacion
+  : (Array.isArray(t.sustentoOpAdicionales) ? t.sustentoOpAdicionales : []);
+
+if (opExtrasTrf.length) {
+  opExtrasTrf.forEach(name => {
     createDocumentField(panelId, name, true);
     const $last = $p.find(`#field_${panelId}_doc_${docCounterByPanel[panelId]}`);
-    $p.find(".documentFields_op_trf").append($last);
+
+    // Apendea SIEMPRE al contenedor de OPERACIÓN por transferencia
+    let $cont = $p.find(".documentFields_op_trf");
+    if (!$cont.length) $cont = $p.find(".documentFields"); // fallback por si falta en HTML
+    $cont.append($last);
+
     $last.find(".file-upload-area").html(
-      `<div class="file-name">📎 ${name}</div><div class="upload-text text-green-600 text-sm">Archivo previamente adjuntado</div>`
+      `<div class="file-name">📎 ${name}</div>
+       <div class="upload-text text-green-600 text-sm">Archivo previamente adjuntado</div>`
     );
   });
 }
+      });
+    }
 
     });
 
@@ -840,6 +919,8 @@ bloquearCamposSoloLectura($("#tab-instruir"));
 $(".tab-panel[id^='tab-fondeo-']").each(function() {
   bloquearCamposSoloLectura($(this));
 });
+
+desbloquearCamposGlobales();
 
     console.log(`[aprobación][load] snapshot cargado para ${opId}.`);
   } catch (err) {
@@ -907,19 +988,28 @@ $(document).on("change", ".file_op_trf", function(e){
 });
 
 // Agregar documento adicional de operación por transferencia
-$(document).on("click", ".add-document-btn-op-trf", function(){
+// Operación por transferencia: crea + apendea en .documentFields_op_trf
+$(document).off("click.addDocOpTrf", ".add-document-btn-op-trf")
+.on("click.addDocOpTrf", ".add-document-btn-op-trf", function(){
   const $panel = $(this).closest(".tab-panel");
   const name = ($panel.find(".newDocumentName_op_trf").val() || "").trim();
   if(!name){ toastr.warning("Ingresa un nombre para el documento."); return; }
 
   const panelId = $panel.attr("id");
-  // crea un campo dinámico "normal" y lo movemos al contenedor de operación
   createDocumentField(panelId, name, true);
-  const lastIdx = docCounterByPanel[panelId];
-  const $last = $panel.find(`#field_${panelId}_doc_${lastIdx}`);
-  $panel.find(".documentFields_op_trf").append($last);
+
+  const $last = $panel.find(`#field_${panelId}_doc_${docCounterByPanel[panelId]}`);
+  let $cont = $panel.find(".documentFields_op_trf");
+  if (!$cont.length) $cont = $panel.find(".documentFields");
+  $cont.append($last);
+
   $panel.find(".newDocumentName_op_trf").val("");
+
+  if (typeof aprobacion_inst_corto_plazo_upsert === "function") {
+    aprobacion_inst_corto_plazo_upsert();
+  }
 });
+
 
 // ====== Operación principal (tab-instruir) ======
 function __collectOpDropDoc() {
@@ -938,16 +1028,35 @@ function __renderPrevDocsList(base) {
   const $ul = $("#prev_docs_list").empty();
   const items = [];
   if (base?.documentoPrincipal) items.push(base.documentoPrincipal);
-  if (Array.isArray(base?.documentosAdicionales)) items.push(...base.documentosAdicionales);
+  if (Array.isArray(base?.documentosAdicionales)) items.push(...(base.documentosAdicionales || []));
   if (!items.length) return $ul.append('<li class="text-slate-500">No hay documentos previos.</li>');
-  items.forEach(n => $ul.append(`<li>${n}</li>`));
+  items.forEach(n => $ul.append(`
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 w-1/3">
+        <div class="flex items-center justify-between">
+          <div class="font-semibold text-slate-700">${n}</div>
+          <div class="text-xs rounded-full px-2 py-1 bg-green-100 text-green-700">Adjuntado</div>
+        </div>
+        <div class="mt-3 text-sm text-slate-700">
+          <div class="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-3 py-2">
+            <div>📄 <b>colocaciones.pdf</b> <span class="text-slate-500">(0.39 MB)</span></div>
+            <div class="flex gap-2">
+              <button class="btn-ver bg-slate-600 hover:bg-slate-700 text-white text-sm font-semibold px-3 py-1.5 rounded-md"
+                      data-kind="pdf"
+                      data-url="https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf">
+                Ver
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `));
 }
 
 // ====== Transferencia: helpers per-panel ======
 function __collectOpDropDocTrf($panel){
-  const $inp = $panel.find(".file_op_trf").first();
-  if ($inp.length && $inp[0].files && $inp[0].files[0]) return $inp[0].name || $inp[0].files[0].name;
-  const name = $panel.find(".fileName_op_trf").first().text().trim();
+  const $inp = $panel.find('.file_op_trf').first();
+  if ($inp.length && $inp[0].files && $inp[0].files[0]) return $inp[0].files[0].name;
+  const name = $panel.find('.fileName_op_trf').first().text().trim();
   return name || null;
 }
 function __setOpDropFileNameTrf($panel, fileName){
@@ -960,7 +1069,7 @@ function __renderPrevDocsListTrf($panel, trf){
   const $ul = $panel.find(".prev_docs_list_trf").empty();
   const items = [];
   if (trf?.documentoPrincipal) items.push(trf.documentoPrincipal);
-  if (Array.isArray(trf?.documentosAdicionales)) items.push(...trf.documentosAdicionales);
+  if (Array.isArray(trf?.documentosAdicionales)) items.push(...(trf.documentosAdicionales || []));
   if (!items.length) return $ul.append('<li class="text-slate-500">No hay documentos previos.</li>');
   items.forEach(n => $ul.append(`<li>${n}</li>`));
 }
@@ -1207,11 +1316,19 @@ function bloquearCamposSoloLectura($panel) {
 
   // 2️⃣ Rehabilitar campos permitidos (comisión y sustentos nuevos)
   $panel.find(".comision").prop("disabled", false);        // campos de comisión
+  $panel.find("#comision").prop("disabled", false);        // campos de comisión
   $panel.find("input[type='file']").prop("disabled", false); // permitir uploads PDF
   $panel.find("#newDocumentName_op").prop("disabled", false); // permitir uploads PDF
+  $panel.find(".remove-btn").prop("disabled", false); // permitir uploads PDF
 
   // 3️⃣ Deshabilitar botones excepto los de sustento
-  $panel.find("button").prop("disabled", true);
+  //$panel.find("button").prop("disabled", true);
   $panel.find(".add-document-btn, .add-document-btn-op-trf").prop("disabled", false); // “Agregar Sustento”
   $panel.find(".btn-ver").prop("disabled", false); // visor de PDF/Excel
+}
+
+function desbloquearCamposGlobales(){
+  // Deshabilitar todos los inputs, selects y textareas
+  //$("#confirmar-principal").prop("disabled", false);
+  //$("#agregar-carta-btn").prop("disabled", false);
 }
