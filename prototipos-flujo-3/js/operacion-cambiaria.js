@@ -18,6 +18,141 @@ const CUENTAS = {
 
 /* =====================  HELPERS UI  ===================== */
 
+// ====== ESTADO + CHECK EN TABS ======
+const ESTADOS_OK = new Set(['confirmado','registrado','enviado','aprobado']);
+
+function setEstado(scope, tabId, nuevoEstado){
+  const data = loadFromStorage() || {};
+  if (scope === 'operacion') {
+    data.operacion = data.operacion || {};
+    data.operacion.estado = nuevoEstado;
+  } else if (scope === 'transferencia') {
+    const m = /tab-trf-(\d+)/.exec(tabId);
+    const idx = m ? (parseInt(m[1],10) - 1) : -1;
+    if (idx >= 0) {
+      data.transferencias = Array.isArray(data.transferencias) ? data.transferencias : [];
+      data.transferencias[idx] = data.transferencias[idx] || {};
+      data.transferencias[idx].estado = nuevoEstado;
+    }
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  applyEstadoBadges(data);
+  return data;
+}
+
+
+function applyEstadoBadges(data){
+  // limpia checks
+  $('.oc-tab').removeClass('is-done').find('.oc-tab-check').remove();
+  // resetea visibilidad de botones (por si vuelves de un estado no-final)
+  $('#btnInstruir').removeClass('hidden');
+  $('#transfer-panels .oc-panel .trf-btn-confirmar').removeClass('hidden');
+
+  // Operación
+  if (data?.operacion?.estado && ESTADOS_OK.has(data.operacion.estado)) {
+    addCheck($('#tabbtn-operacion'));
+    // ocultar botón Confirmar de Operación
+    $('#btnGenerarCarta').addClass('hidden');
+    $('#btnInstruir').addClass('hidden');
+  }
+
+  // Transferencias
+  $('.oc-tab[data-kind="trf"]').each(function(){
+    const $tabBtn = $(this);
+    const panelId = $tabBtn.data('tab');            // ej: 'tab-trf-2'
+    const m = /tab-trf-(\d+)/.exec(panelId);
+    const idx = m ? (parseInt(m[1],10) - 1) : -1;
+
+    if (idx >= 0 && data?.transferencias?.[idx]?.estado && ESTADOS_OK.has(data.transferencias[idx].estado)) {
+      addCheck($tabBtn);
+      // ocultar botón Confirmar de esa transferencia
+      const $panel = $('#'+panelId);
+      $panel.find('.trf-btn-confirmar').addClass('hidden');
+      $panel.find('.trf-btn-carta').addClass('hidden');
+    }
+  });
+
+  function addCheck($btn){
+    $btn.addClass('is-done');
+    if (!$btn.find('.oc-tab-check').length){
+      $btn.append('');
+    }
+  }
+}
+
+
+
+// ====== Última carta generada (helpers) ======
+function formatFechaLima(iso){
+  if (!iso) return '--/--/---- --:--';
+  try {
+    return new Date(iso).toLocaleString('es-PE', {
+      timeZone: 'America/Lima', hour12: false,
+      year:'numeric', month:'2-digit', day:'2-digit',
+      hour:'2-digit', minute:'2-digit', second:'2-digit'
+    });
+  } catch { return '--/--/---- --:--'; }
+}
+
+/**
+ * Inserta (si no existe) o actualiza el bloque “Última carta generada”
+ * bajo la subsección de Sustento del scope dado.
+ * @param {$} $anchorSubsection - la .subsection que contiene los sustentos
+ * @param {string} isoTs - fecha ISO
+ * @param {string} suffix - sufijo único (ej: 'operacion' o el id del panel)
+ */
+function renderUltimaCarta($anchorSubsection, isoTs, suffix){
+  const secId  = `ultima-carta-${suffix}`;
+  const spanId = `fechaCarta-${suffix}`;
+
+  if (!$anchorSubsection.find(`#${secId}`).length){
+    $anchorSubsection.append(`
+      <section id="${secId}" class="mt-6 p-4 border rounded-lg bg-white shadow">
+        <h2 class="text-lg font-semibold text-gray-800 mb-2">📄 Última carta generada</h2>
+        <p class="text-sm text-gray-600">
+          Fecha y hora:
+          <span id="${spanId}" class="font-medium text-gray-900">--/--/---- --:--</span>
+        </p>
+      </section>
+    `);
+  }
+  $anchorSubsection.find(`#${spanId}`).text(formatFechaLima(isoTs));
+}
+
+
+// --- MERGE helpers para no perder 'carta_*' ni metadata de docs ---
+function mergeDocLists(prev = [], next = []) {
+  // next (lo que está en la UI) manda en nombres y archivos,
+  // pero preservamos last_carta_fecha del doc previo si existía.
+  const byNamePrev = new Map(prev.map(d => [d?.nombre, d || {}]));
+  return (next || []).map(d => {
+    const p = byNamePrev.get(d?.nombre) || {};
+    const last_carta_fecha = p.last_carta_fecha || d.last_carta_fecha;
+    return { ...d, last_carta_fecha };
+  });
+}
+
+function mergeOperacion(prevOp = {}, newOp = {}) {
+  const merged = { ...prevOp, ...newOp };
+  // preserva flags/fecha de carta si el nuevo no los trae
+  merged.carta_generada = newOp.carta_generada ?? prevOp.carta_generada;
+  merged.carta_fecha    = newOp.carta_fecha    ?? prevOp.carta_fecha;
+  // docs
+  merged.docs_by_area    = mergeDocLists(prevOp.docs_by_area, newOp.docs_by_area);
+  merged.docs_adic_files = merged.docs_by_area; // compat
+  return merged;
+}
+
+function mergeTransfer(prevT = {}, newT = {}) {
+  const merged = { ...prevT, ...newT };
+  merged.carta_generada = newT.carta_generada ?? prevT.carta_generada;
+  merged.carta_fecha    = newT.carta_fecha    ?? prevT.carta_fecha;
+  merged.docs_by_area    = mergeDocLists(prevT.docs_by_area, newT.docs_by_area);
+  merged.docs_adic_files = merged.docs_by_area;
+  return merged;
+}
+
+
 // arriba, junto a tus globals
 let IS_RESTORING = false;
 
@@ -283,6 +418,7 @@ function restoreFromStorage(){
   populateOperacion(data.operacion);
   (data.transferencias || []).forEach(t => addTransferTab(t));
   IS_RESTORING = false;                // <- desactívalo
+    applyEstadoBadges(data); // <<< pinta checks según estados guardados
 
   if (window.toastr) toastr.info('Se restauró un borrador local');
 }
