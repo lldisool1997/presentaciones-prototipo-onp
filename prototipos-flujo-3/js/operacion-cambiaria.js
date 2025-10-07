@@ -56,6 +56,7 @@ function applyEstadoBadges(data){
     $('#btnInstruir').addClass('hidden');
     $('#oc_btn_add_doc').addClass('hidden');
     $('#btnAddTransferencia').addClass('hidden');
+    $('input, select').prop("disabled", true)
     
   }
 
@@ -74,6 +75,7 @@ function applyEstadoBadges(data){
       $panel.find('.trf-btn-carta').addClass('hidden');
       $panel.find('.trf-btn-add-doc').addClass('hidden');
       $panel.find('.btnEliminarTransferencia').addClass('hidden');
+      $panel.find('input, select').prop("disabled", true)
     }
   });
 
