@@ -31,6 +31,28 @@
   },
     {
     "entidad": "fdo-consolidado",
+    "accion": "aprobar-instruccion",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Instrumento de corto plazo",
+    "estado": "INSTRUIDO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Instrumento de corto plazo",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "23/02/2026",
+    "cataApertura": "BANBIF",
+    "cataCancelacion": "Grupo Breca",
+    "moneda": "PEN",
+    "valorNominal": "150,000,000.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": "A+"
+  },
+    {
+    "entidad": "fdo-consolidado",
     "accion": "aprobar",
     "unidad": "fcr-macrofondo",
     "tipo": "Operación cambiaria",
@@ -239,11 +261,23 @@
                                  ` `
                             }
           ${
-                                inv.estado === "INSTRUIDO" && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
+                                inv.estado === "INSTRUIDO" && inv.accion === 'cancelar' && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irARegistroCancelacion('${inv.invPrincipal}')">
               Cancelación
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
+                                      ${
+                                inv.estado === "INSTRUIDO" && inv.accion === 'aprobar-instruccion' && getAreaParam() === "Tesoreria" && inv.producto == "Instrumento de corto plazo"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+              <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionTesoreria('${inv.invPrincipal}')">
+              Registrar Operación
             </button>
           </div>`
                                 :
