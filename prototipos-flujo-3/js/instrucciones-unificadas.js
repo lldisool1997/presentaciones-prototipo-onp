@@ -352,6 +352,13 @@ function build_aprobacion_snapshot(){
   const opId = $("#inv_id_base").val() || $(".info-value").first().text().trim(); // INV-xxxx
   const codigoInversion = $(".info-value").first().text().trim();                 // Visual en cabecera
 
+      const KEY = "aprobacion_inst_corto_plazo";
+    const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
+    if (!Array.isArray(lista) || !lista.length) return;
+
+    const snap = lista.find(x => x && x.opId === opId);
+    if (!snap) return;
+
   // -------- Operación principal (tab-instruir) --------
   const $base = $("#tab-instruir");
   const base = {
@@ -364,6 +371,12 @@ function build_aprobacion_snapshot(){
     cuentaDestinoTxt: __getSelectText($("#cuenta_destino_base")),
     documentoPrincipal: __collectBaseDropDoc(),
     documentosAdicionales: __collectDynamicDocs($base),
+    sustentoOpPrincipal: __collectOpDropDoc(),
+    documentosAdicionalesOperacion: __collectDynamicDocsFrom("#tab-instruir-op .documentFields"),
+      // ⬇⬇⬇  SOLO documentos de OPERACIÓN (base)
+    sustentoOpPrincipal: snap.base.sustentoOpPrincipal,
+    documentosAdicionalesOperacion: snap.base.documentosAdicionalesOperacion,
+    estado: snap.base.estado
   };
 
   // -------- Transferencias (todas las .fondeo-form existentes) --------
@@ -391,6 +404,11 @@ function build_aprobacion_snapshot(){
       cuentaDestinoTxt: __getSelectText($p.find(".cuenta_destino")),
       documentoPrincipal: __collectDropDoc($p),
       documentosAdicionales: __collectDynamicDocs($p),
+        // ⬇⬇⬇  SOLO documentos de la OPERACIÓN (por transferencia)
+      sustentoOpPrincipal: snap.transferencias[i].sustentoOpPrincipal,
+      documentosAdicionalesOperacion: snap.transferencias[i].documentosAdicionalesOperacion,
+
+      estado: snap.transferencias[i].estado,
     };
     transferencias.push(transfer);
   });
@@ -868,4 +886,29 @@ function ordenarTabs(modo = 1) {
   $('#tabs a[href^="#tab-fondeo-"]').each(function (i) {
     $(this).text(`Transferencia Bancaria ${i + 1}`);
   });
+}
+
+// ---- Operación: leer/mostrar archivo del drop (#file_op / #fileName_op)
+function __collectOpDropDoc() {
+  const inp = document.getElementById("file_op");
+  if (inp && inp.files && inp.files[0]) return inp.files[0].name;
+  const txt = $("#fileName_op").text().trim();
+  return txt || null;
+}
+
+// Recolecta nombres de inputs dinámicos (solo en el contenedor indicado)
+function __collectDynamicDocsFrom(scopeSelector){
+  const $scope = (scopeSelector instanceof $) ? scopeSelector : $(scopeSelector);
+  const docs = [];
+  $scope.find('input.file-dyn').each(function(){
+    const f = this.files && this.files[0] ? this.files[0].name : null;
+    if (f) docs.push(f);
+    else {
+      // si ya pintaste el nombre en la UI (sin File real), úsalo como fallback visual
+      const $area = $(this).closest('.file-upload-group').find('.file-upload-area .file-name');
+      const txt = $area.text().trim().replace(/^📎\s*/,'');
+      if (txt) docs.push(txt);
+    }
+  });
+  return docs;
 }

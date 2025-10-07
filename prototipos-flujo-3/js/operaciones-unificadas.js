@@ -524,7 +524,13 @@ function build_aprobacion_snapshot(){
   const codigoInversion = $(".info-value").first().text().trim();                 // Visual en cabecera
   const comision = __parseMontoToNumber(($("#comision").val() || "").trim());
 
-  // -------- Operación principal (tab-instruir) --------
+    const KEY = "aprobacion_inst_corto_plazo";
+    const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
+    if (!Array.isArray(lista) || !lista.length) return;
+
+    const snap = lista.find(x => x && x.opId === opId);
+    if (!snap) return;
+
  // -------- Operación principal (tab-instruir) --------
 const $base = $("#tab-instruir");
 const base = {
@@ -538,12 +544,14 @@ const base = {
   cuentaDestinoTxt: __getSelectText($("#cuenta_destino_base")),
 
   // ⬇⬇⬇  SOLO documentos de INSTRUCCIÓN (no operación)
-  documentoPrincipal: __collectBaseDropDoc(),
-  documentosAdicionales: __collectDynamicDocsFrom("#tab-instruir .documentFields"),
+  documentoPrincipal: snap.base.documentoPrincipal,
+  documentosAdicionales: snap.base.documentosAdicionales,
 
   // ⬇⬇⬇  SOLO documentos de OPERACIÓN (base)
   sustentoOpPrincipal: __collectOpDropDoc(),
   documentosAdicionalesOperacion: __collectDynamicDocsFrom("#tab-instruir-op .documentFields"),
+
+  estado: snap.base.estado,
 };
 
 
@@ -575,12 +583,14 @@ const base = {
   cuentaDestinoTxt: __getSelectText($p.find(".cuenta_destino")),
 
   // ⬇⬇⬇  SOLO documentos de la INSTRUCCIÓN de esta transferencia
-  documentoPrincipal: __collectDropDoc($p),                   // voucher (drop)
-  documentosAdicionales: __collectDynamicDocsFrom($p.find(".documentFields")), // si usas ese contenedor para instrucción
+  documentoPrincipal: snap.transferencias[i].documentoPrincipal,                   // voucher (drop)
+  documentosAdicionales: snap.transferencias[i].documentosAdicionales, // si usas ese contenedor para instrucción
 
   // ⬇⬇⬇  SOLO documentos de la OPERACIÓN (por transferencia)
   sustentoOpPrincipal: __collectOpDropDocTrf($p),
   documentosAdicionalesOperacion: __collectDynamicDocsFrom($p.find(".documentFields_op_trf")), // OPERACIÓN (transferencia)
+
+  estado: snap.transferencias[i].estado,
 };
 
     transferencias.push(transfer);
@@ -1071,7 +1081,26 @@ function __renderPrevDocsListTrf($panel, trf){
   if (trf?.documentoPrincipal) items.push(trf.documentoPrincipal);
   if (Array.isArray(trf?.documentosAdicionales)) items.push(...(trf.documentosAdicionales || []));
   if (!items.length) return $ul.append('<li class="text-slate-500">No hay documentos previos.</li>');
-  items.forEach(n => $ul.append(`<li>${n}</li>`));
+  items.forEach(n => $ul.append(`
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 w-1/3">
+        <div class="flex items-center justify-between">
+          <div class="font-semibold text-slate-700">${n}</div>
+          <div class="text-xs rounded-full px-2 py-1 bg-green-100 text-green-700">Adjuntado</div>
+        </div>
+        <div class="mt-3 text-sm text-slate-700">
+          <div class="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-3 py-2">
+            <div>📄 <b>colocaciones.pdf</b> <span class="text-slate-500">(0.39 MB)</span></div>
+            <div class="flex gap-2">
+              <button class="btn-ver bg-slate-600 hover:bg-slate-700 text-white text-sm font-semibold px-3 py-1.5 rounded-md"
+                      data-kind="pdf"
+                      data-url="https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf">
+                Ver
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `));
 }
 
 
