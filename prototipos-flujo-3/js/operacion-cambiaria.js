@@ -54,6 +54,8 @@ function applyEstadoBadges(data){
     // ocultar botón Confirmar de Operación
     $('#btnGenerarCarta').addClass('hidden');
     $('#btnInstruir').addClass('hidden');
+    $('#oc_btn_add_doc').addClass('hidden');
+    
   }
 
   // Transferencias
@@ -69,6 +71,7 @@ function applyEstadoBadges(data){
       const $panel = $('#'+panelId);
       $panel.find('.trf-btn-confirmar').addClass('hidden');
       $panel.find('.trf-btn-carta').addClass('hidden');
+      $panel.find('.trf-btn-add-doc').addClass('hidden');
     }
   });
 
