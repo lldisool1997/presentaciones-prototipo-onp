@@ -233,7 +233,7 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
     e.preventDefault();
     Swal.fire({
       title: "¿Confirmar instrucción?",
-      text: "Se registrará la instrucción del instrumento.",
+      text: "Se registrará la instrucción de la inversión.",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Sí, instruir",
@@ -243,6 +243,7 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
     }).then(res => {
       if (!res.isConfirmed) return;
       Swal.fire({ icon:"success", title:"¡Instrucción registrada!", confirmButtonColor:"#16a34a" });
+      actualizarEstadoAprobacion("INV-7000", "base", "INSTRUIDO");
       aprobacion_inst_corto_plazo_upsert();
     });
   });
@@ -305,6 +306,7 @@ function addFondeoTab(){
     }).then(res => {
       if (!res.isConfirmed) return;
       Swal.fire({ icon:"success", title:"Transferencia registrada", confirmButtonColor:"#16a34a" });
+      actualizarEstadoAprobacion("INV-7000", "transferencia", "INSTRUIDO", fondeoCount);
       aprobacion_inst_corto_plazo_upsert();
     });
   });
@@ -376,7 +378,7 @@ function build_aprobacion_snapshot(){
       // ⬇⬇⬇  SOLO documentos de OPERACIÓN (base)
     sustentoOpPrincipal: snap.base.sustentoOpPrincipal,
     documentosAdicionalesOperacion: snap.base.documentosAdicionalesOperacion,
-    estado: snap.base.estado
+    estado: snap.base.estado || "REGISTRADO"
   };
 
   // -------- Transferencias (todas las .fondeo-form existentes) --------
@@ -408,7 +410,7 @@ function build_aprobacion_snapshot(){
       sustentoOpPrincipal: snap.transferencias[i].sustentoOpPrincipal,
       documentosAdicionalesOperacion: snap.transferencias[i].documentosAdicionalesOperacion,
 
-      estado: snap.transferencias[i].estado,
+      estado: snap.transferencias[i].estado || "REGISTRADO",
     };
     transferencias.push(transfer);
   });
@@ -499,6 +501,7 @@ $(function(){
 
   // 2) Intentamos leer y pintar la data guardada (si existe)
   load_aprobacion_inst_corto_plazo(__opId);
+
 
 
   // Tabs inicial: mostrar instruir
@@ -653,6 +656,8 @@ function load_aprobacion_inst_corto_plazo(opId) {
     // Documentos dinámicos
     __renderDynamicDocsByNames("tab-instruir", base.documentosAdicionales);
 
+    aplicarUIEstados("INV-7000");
+
     // -------- Transferencias (crear tantas como existan y setear campos) --------
     const arr = Array.isArray(snap.transferencias) ? snap.transferencias : [];
     if (arr.length) {
@@ -690,6 +695,9 @@ function load_aprobacion_inst_corto_plazo(opId) {
 
       // Documentos dinámicos del panel
       __renderDynamicDocsByNames(panelId, t.documentosAdicionales);
+
+      
+    aplicarUIEstados("INV-7000", i + 1);
     });
 
     // Deja activo el tab base o el último que prefieras
@@ -697,6 +705,7 @@ function load_aprobacion_inst_corto_plazo(opId) {
     $(`#tabs a[href="#tab-instruir"]`).addClass("active");
     $(".tab-panel").addClass("hidden");
     $("#tab-instruir").removeClass("hidden");
+
 
     console.log(`[aprobación][load] snapshot cargado para ${opId}.`);
   } catch (err) {
@@ -911,4 +920,144 @@ function __collectDynamicDocsFrom(scopeSelector){
     }
   });
   return docs;
+}
+
+/**
+ * Cambia el estado de la operación principal o de una transferencia específica.
+ *
+ * @param {string} opId - ID de la operación (ej. "INV-7000")
+ * @param {"base"|"transferencia"} tipo - Qué vas a actualizar: "base" o "transferencia"
+ * @param {string} nuevoEstado - Nuevo estado a asignar
+ * @param {number} [idx] - Solo si es transferencia: índice (1, 2, 3, ...)
+ */
+function actualizarEstadoAprobacion(opId, tipo, nuevoEstado, idx){
+  const KEY = "aprobacion_inst_corto_plazo";
+  let lista = JSON.parse(localStorage.getItem(KEY) || "[]");
+  const i = lista.findIndex(x => x && x.opId === opId);
+  if (i === -1) return console.warn("❌ No existe la operación", opId);
+
+  const snap = lista[i];
+  if (tipo === "base"){
+    snap.base = snap.base || {};
+    snap.base.estado = nuevoEstado;
+    console.log(`✅ Estado base de ${opId} → ${nuevoEstado}`);
+  }
+  else if (tipo === "transferencia"){
+    if (!idx){ 
+      console.warn("⚠️ Falta idx de transferencia"); 
+      return; 
+    }
+    snap.transferencias = snap.transferencias || [];
+    const t = snap.transferencias.find(tr => tr.idx === idx);
+    if (!t){ 
+      console.warn(`⚠️ No existe transferencia con idx ${idx} en ${opId}`); 
+      return; 
+    }
+    t.estado = nuevoEstado;
+    console.log(`✅ Estado transferencia ${idx} de ${opId} → ${nuevoEstado}`);
+  }
+  else {
+    console.warn("⚠️ Tipo inválido, usa 'base' o 'transferencia'");
+    return;
+  }
+
+  snap.updated_at = new Date().toISOString();
+  lista[i] = snap;
+  localStorage.setItem(KEY, JSON.stringify(lista));
+}
+
+/**
+ * Aplica UI según estado para operación principal y transferencias.
+ * Lee de localStorage clave "aprobacion_inst_corto_plazo".
+ * Reglas:
+ *  - BASE:   REGISTRADO -> mostrar Modificar/Agregar ; INSTRUIDO -> marcar tab y ocultar todo
+ *  - TRANSF: REGISTRADO -> mostrar Registrar         ; INSTRUIDO -> marcar tab y ocultar todo
+ */
+function aplicarUIEstados(opId, idx = null){
+  const KEY = "aprobacion_inst_corto_plazo";
+  const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
+  const snap = lista.find(x => x && x.opId === opId);
+  if (!snap) return;
+
+  // Helpers
+  const show = sel => $(sel).show();
+  const hide = sel => $(sel).hide();
+  const markDone = (sel) => { const $a = $(sel); if ($a.length) $a.addClass('is-done'); };
+  const unmarkDone = (sel) => { const $a = $(sel); if ($a.length) $a.removeClass('is-done'); };
+
+  // === Si piden una transferencia específica ===
+  if (idx !== null && idx !== undefined) {
+    const trf = (snap.transferencias || []).find(t => t.idx === idx);
+    if (!trf) return;
+
+    const estado = (trf.estado || "").trim().toUpperCase();
+    const panelSel = `#tab-fondeo-${idx}`;
+    const TABBTN_TRF = `#tabs a[href="#tab-fondeo-${idx}"]`;
+
+    const BTN_TRF_REG = `${panelSel} .btn-trf-registrar`;
+    const BTN_TRF_DEL = `${panelSel} .btn-trf-eliminar`;
+
+    // Reset
+    show(BTN_TRF_REG); show(BTN_TRF_DEL);
+    unmarkDone(TABBTN_TRF);
+
+    if (estado === 'REGISTRADO'){
+      // En REGISTRADO: dejar registrar visible
+      show(BTN_TRF_REG);
+      show(BTN_TRF_DEL);
+    } else if (estado === 'INSTRUIDO'){
+      // En INSTRUIDO: marcar tab y ocultar acciones
+      markDone(TABBTN_TRF);
+      hide(BTN_TRF_REG);
+      hide(BTN_TRF_DEL);
+    }
+    return;
+  }
+
+  // ===== Operación principal (cuando NO se pasa idx) =====
+  const estadoBase = (snap.base?.estado || "").trim().toUpperCase();
+  const TABBTN_BASE = '#tabs a[href="#tab-instruir"]';
+  const BTN_BASE_REG = '#tab-instruir .btn-base-registrar';
+  const BTN_ADD_TRF  = '#btnAddFondeo';
+
+  // Reset base
+  show(BTN_BASE_REG); show(BTN_ADD_TRF);
+  unmarkDone(TABBTN_BASE);
+
+  if (estadoBase === 'REGISTRADO'){
+    // Puedes seguir registrando y agregando transferencias
+    show(BTN_BASE_REG);
+    show(BTN_ADD_TRF);
+  } else if (estadoBase === 'INSTRUIDO'){
+    // Tab checkeado y sin botones de acción
+    markDone(TABBTN_BASE);
+    hide(BTN_BASE_REG);
+    hide(BTN_ADD_TRF);
+  }
+
+  // ===== Transferencias (todas) =====
+  const trfs = Array.isArray(snap.transferencias) ? snap.transferencias : [];
+  trfs.forEach(t => {
+    const i = t.idx;
+    const estado = (t.estado || "").trim().toUpperCase();
+
+    const panelSel = `#tab-fondeo-${i}`;
+    const TABBTN_TRF = `#tabs a[href="#tab-fondeo-${i}"]`;
+
+    const BTN_TRF_REG = `${panelSel} .btn-trf-registrar`;
+    const BTN_TRF_DEL = `${panelSel} .btn-trf-eliminar`;
+
+    // Reset
+    show(BTN_TRF_REG); show(BTN_TRF_DEL);
+    unmarkDone(TABBTN_TRF);
+
+    if (estado === 'REGISTRADO'){
+      show(BTN_TRF_REG);
+      show(BTN_TRF_DEL);
+    } else if (estado === 'INSTRUIDO'){
+      markDone(TABBTN_TRF);
+      hide(BTN_TRF_REG);
+      hide(BTN_TRF_DEL);
+    }
+  });
 }

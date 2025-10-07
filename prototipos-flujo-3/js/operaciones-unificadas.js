@@ -1361,3 +1361,48 @@ function desbloquearCamposGlobales(){
   //$("#confirmar-principal").prop("disabled", false);
   //$("#agregar-carta-btn").prop("disabled", false);
 }
+
+
+/**
+ * Cambia el estado de la operación principal o de una transferencia específica.
+ *
+ * @param {string} opId - ID de la operación (ej. "INV-7000")
+ * @param {"base"|"transferencia"} tipo - Qué vas a actualizar: "base" o "transferencia"
+ * @param {string} nuevoEstado - Nuevo estado a asignar
+ * @param {number} [idx] - Solo si es transferencia: índice (1, 2, 3, ...)
+ */
+function actualizarEstadoAprobacion(opId, tipo, nuevoEstado, idx){
+  const KEY = "aprobacion_inst_corto_plazo";
+  let lista = JSON.parse(localStorage.getItem(KEY) || "[]");
+  const i = lista.findIndex(x => x && x.opId === opId);
+  if (i === -1) return console.warn("❌ No existe la operación", opId);
+
+  const snap = lista[i];
+  if (tipo === "base"){
+    snap.base = snap.base || {};
+    snap.base.estado = nuevoEstado;
+    console.log(`✅ Estado base de ${opId} → ${nuevoEstado}`);
+  }
+  else if (tipo === "transferencia"){
+    if (!idx){ 
+      console.warn("⚠️ Falta idx de transferencia"); 
+      return; 
+    }
+    snap.transferencias = snap.transferencias || [];
+    const t = snap.transferencias.find(tr => tr.idx === idx);
+    if (!t){ 
+      console.warn(`⚠️ No existe transferencia con idx ${idx} en ${opId}`); 
+      return; 
+    }
+    t.estado = nuevoEstado;
+    console.log(`✅ Estado transferencia ${idx} de ${opId} → ${nuevoEstado}`);
+  }
+  else {
+    console.warn("⚠️ Tipo inválido, usa 'base' o 'transferencia'");
+    return;
+  }
+
+  snap.updated_at = new Date().toISOString();
+  lista[i] = snap;
+  localStorage.setItem(KEY, JSON.stringify(lista));
+}

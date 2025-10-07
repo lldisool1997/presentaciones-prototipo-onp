@@ -188,3 +188,43 @@
   #excelToolbar{ display:flex; gap:.5rem; align-items:center; margin-bottom:.5rem;}
   #sheetPicker{ border:1px solid #e2e8f0; border-radius:.5rem; padding:.25rem .5rem; }
   table.dataTable tbody tr:hover { background:#f8fafc; }
+
+  /* === Tab marcado como completado === */
+.tab-link.is-done{
+  position: relative;
+  color: #16a34a; /* verde para inactivo */
+  font-weight: 600;
+}
+
+.tab-link.is-done::after{
+  content: "✔";
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 0.9rem;
+  line-height: 1;
+  color: currentColor; /* usa el color del tab */
+}
+
+/* Cuando el tab está activo (fondo azul y texto blanco en tu CSS) */
+.tab-link.active.is-done{
+  color: #fff; /* respeta tu active */
+}
+
+.tab-link.active.is-done::after{
+  color: #fff; /* check blanco sobre fondo azul */
+}
+
+/* check verde visible también cuando el tab está activo */
+.tab-link.is-done::after {
+  color: #16a34a; /* verde fuerte */
+}
+
+/* si el tab está activo (texto blanco sobre fondo azul), fuerza color distinto */
+.tab-link.active.is-done::after {
+  color: #bbf7d0; /* verde claro visible sobre azul */
+  text-shadow: 0 0 2px rgba(0,0,0,0.4);
+}
+.tab-link.is-done::after {
+  content: "✅";
+  margin-left: 4px;
+}
