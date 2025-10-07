@@ -47,9 +47,111 @@
 
       <div class="border-b-2 border-[#3396d8] mb-4">
         <h1 class="text-xl font-semibold text-ink flex items-center">
-            <span class="border-l-4 border-[#3396d8] pl-2">Registro de la operación cambiaria</span>
+            <span class="border-l-4 border-[#3396d8] pl-2">Registro de la cuenta remunerada</span>
         </h1>
        </div>
+
+               <!-- Cards Grid -->
+        <div class="cards-grid">
+            <!-- Card 1: Lista de Inversiones -->
+            <!--<div class="card">
+                <div class="card-icon">📋</div>
+                <h2>Lista de Inversiones</h2>
+                <p>Prototipo de consulta de inversiones registradas con navegación hacia generación de
+                    cupones.</p>
+
+                <a href="listado.html" class="btn">Abrir Lista de Inversiones</a>
+            </div>-->
+
+            <!-- Card 2: Generación de Cuponera -->
+            <!--<div class="card">
+                <div class="card-icon">⚙️</div>
+                <h2>Generación de Cuponera</h2>
+                <p>Prototipo para generar cronogramas de pagos con diferentes tipos de tasa: nominal, efectiva, variable
+                    y VAC.</p>
+
+                <a href="generacion-cuponera.html" class="btn">Abrir Generación de Cuponera</a>
+            </div>-->
+
+             <!-- Card 2: Generación de Cuponera -->
+            <div class="card">
+                <div class="card-icon">📄</div>
+                 <div class="flex items-center gap-2 mb-3">
+                    <h2 class="!m-0">Registrar Inversión</h2>
+                    <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
+                    DIN
+                    </span>
+                </div>
+                <p>DIN registra una nueva inversión financiera.</p>
+                <p>(Sugerencia para el ejemplo) <br>
+                  Clase de Activo: <b>Caja e instrumentos de corto plazo</b> <br>
+                  Mercado: <b>Local</b> <br>
+                  Subcategoría: <b>Depósitos en el Sistema Financiero</b> <br>
+                  Tipo de Inversión: <b>Cuenta Remunerada</b> <br>
+                </p>
+
+                <p class="mt-auto">
+                <button onclick="abrirVideo('registro-instrumento.mp4')"
+                  class="px-4 py-2 mt-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  Ver Video Instructivo
+                </button>
+              </p>
+
+                
+
+                <a href="registro-instrumento.html?area=DIN" class="btn mt-auto">Registrar una inversión</a>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🔔</div>
+                <div class="flex items-center gap-2 mb-3">
+                    <h2 class="!m-0">Menú de Notificaciones</h2>
+                    <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
+                    Tesorería
+                    </span>
+                     <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
+                    OGR
+                    </span>
+                </div>
+                <p>Tesorería y OGR reciben la notificación del registro de la inversión.</p>
+
+                 <p class="mt-auto">
+                <button onclick="abrirVideo('paso-2.mp4')"
+                  class="px-4 py-2 mt-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  Ver Video Instructivo
+                </button>
+              </p>
+
+                <a href="menu-notificacion-demo.html?id_notificacion=2" class="btn">Ver notificación de registro de la inversión</a>
+            </div>
+
+           <!--             <div class="card">
+                <div class="card-icon">📄</div>
+                <div class="flex items-center gap-2 mb-3">
+                    <h2 class="!m-0">Lista de Inversiones</h2>
+                    <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
+                    Tesorería
+                    </span>
+                </div>
+                <p>Tesorería aprueba el instrumento de inversión.</p>
+
+                <a href="listado-subasta.html?area=Tesoreria" class="btn mt-auto">Aprobar un Instrumento</a>
+            </div>-->
+
+
+
+
+
+
+
+        </div>
+
+              <div class="border-b-2 border-[#3396d8] mb-4">
+        <h1 class="text-xl font-semibold text-ink flex items-center">
+            <span class="border-l-4 border-[#3396d8] pl-2">Instrucción y cancelación de cuenta remunerada</span>
+        </h1>
+       </div>
+
 
         <!-- Cards Grid -->
         <div class="cards-grid">
@@ -77,12 +179,12 @@
             <div class="card">
                 <div class="card-icon">📄</div>
                  <div class="flex items-center gap-2 mb-3">
-                    <h2 class="!m-0">Registrar instrucción de cuenta remunerada</h2>
+                    <h2 class="!m-0">Instrucción de la inversión</h2>
                     <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">
                     DIN
                     </span>
                 </div>
-                <p>DIN registra una nueva instrucción para cuenta remunerada.</p>
+                <p>DIN registra una nueva instrucción para la cuenta remunerada.</p>
 
 
                 <p class="mt-auto">
@@ -94,7 +196,7 @@
 
                 
 
-                <a href="registro-cuenta-remunerada.html" class="btn mt-auto">Registrar cuenta remunerada</a>
+                <a href="listado-subasta-3.5.html?area=DIN&accion=aprobar&inst=cta-remunerada" class="btn mt-auto">Instruir cuenta remunerada</a>
             </div>
 
             <div class="card">
@@ -108,7 +210,7 @@
                     OGR
                     </span>
                 </div>
-                <p>Tesorería y OGR reciben la notificación de la cuenta remunerada.</p>
+                <p>Tesorería y OGR reciben la notificación de la instrucción de la cuenta remunerada.</p>
 
                  <p class="mt-auto">
                 <button onclick="abrirVideo('paso-2.mp4')"
@@ -144,7 +246,7 @@
 
                 
 
-                <a href="listado-transferencias.html?area=Tesoreria&accion=aprobar&inst=ope-camb" class="btn mt-auto">Registrar operación</a>
+                <a href="listado-subasta-3.5.html?area=Tesoreria&accion=cancelar&inst=cta-remunerada" class="btn mt-auto">Registrar operación</a>
             </div>
 
                 <div class="card">
@@ -168,7 +270,7 @@
               </p>
 
                 <a href="menu-notificacion-demo.html?id_notificacion=2" class="btn">
-                  Ver notificación del registro de la transacción
+                  Ver notificación del registro de la cuenta remunerada
                 </a>
             </div>
 

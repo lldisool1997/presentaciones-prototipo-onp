@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Instrucciones Unificadas</title>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -39,8 +43,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
 
-  <link rel="stylesheet" href="css/operaciones-unificadas.css">
-  <script src="js/operaciones-unificadas.js" defer></script>
+  <link rel="stylesheet" href="css/instrucciones-unificadas.css">
+  <script src="js/instrucciones-unificadas-cancelacion-v2.js" defer></script>
 </head>
 <body class="bg-gray-100 text-ink">
   <!-- Área badge -->
@@ -51,7 +55,7 @@
 
   <main class="max-w-screen-2xl mx-auto px-4 py-6">
     <header class="header rounded-2xl rounded-b-none">
-      <h1>Aprobar inversión</h1>
+      <h1>Cancelación de la inversión</h1>
     </header>
 
     <!-- Info de la inversión (común) -->
@@ -92,7 +96,7 @@
         </div>
       </div>
 
-            <div class=" mb-4">
+      <div class=" mb-4">
              <div class="flex items-center">
             <div class="section-header w-full">2. Documentos de la inversión</div>
           </div>
@@ -163,15 +167,20 @@
 
         </div>
 
+        
+          <div class="section-header">3. Registro de la instrucción</div>
 
-          <div class="section-header">3. Información de la instrucción</div>
       <!-- Tabs header -->
       <div class="flex items-center justify-between mb-2 mt-2">
         <ul id="tabs" class="tabs-list">
           <li class="mr-2">
-            <a href="#tab-instruir" class="tab-link active">Aprobar</a>
+            <a href="#tab-instruir" class="tab-link active">Instruir a Back Office</a>
           </li>
         </ul>
+        <button id="btnAddFondeo"
+          class="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-800">
+          Agregar transferencia a banco
+        </button>
       </div>
 
       <!-- Panels -->
@@ -204,96 +213,48 @@
               <div class="grid sm:grid-cols-2 gap-4 mt-4">
                 <div>
                   <label class="mini-label">Banco destino <span class="text-rose-600">*</span></label>
-                  <select id="banco_destino_base" class="select2 w-full" disabled></select>
+                  <select id="banco_destino_base" class="select2 w-full"></select>
                 </div>
                 <div>
                   <label class="mini-label">Cuenta destino <span class="text-rose-600">*</span></label>
-                  <select id="cuenta_destino_base" class="select2 w-full" disabled></select>
+                  <select id="cuenta_destino_base" class="select2 w-full"></select>
                 </div>
               </div>
             </section>
 
-            <div class="section-header">3. Registro de la comisión</div>
-
-                        <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div class="grid sm:grid-cols-4 gap-4">
-  <div>
-    <label class="mini-label">Monto</label>
-    <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-           value="150,000,000.00" disabled>
-  </div>
-  <!--<div>
-    <label class="mini-label">Interés (4.59%)</label>
-    <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-           value="6,885,000.00" disabled>
-  </div>-->
-  <div>
-    <label class="mini-label">Comisión</label>
-    <input id="comision" type="text"
-           class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-white font-semibold"
-           placeholder="Ej. 50,000.00">
-  </div>
-  <div>
-    <label class="mini-label">Total Neto</label>
-    <input id="totalNeto" class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-           value="150,000,000.00" disabled>
-  </div>
+            <div class="section-header">4. Sustento documentario</div>
+            <div class="p-5 rounded-md bg-gray-100">
+              <div class="text-center justify-center">
+                <label class="text-sm font-semibold mb-1">Documento sustento</label>
+                <div id="drop_base" class="dropzone w-[30%] m-auto">
+                  <input id="file_base" type="file" accept=".pdf,.png,.jpg,.jpeg" required class="hidden">
+                  <div class="flex items-center text-center text-sm">
+                    <div class="text-center w-full">
+                      <div class="font-semibold">📄 Seleccionar archivo</div>
+                      <div class="text-gray-500">PDF</div>
+                    </div>
+                  </div>
+                  <div id="fileName_base" class="mt-2 text-blue-700 font-medium hidden"></div>
+                </div>
+              </div>
+              <div>
+                <div id="documentFields_base" class="documentFields mt-4 flex flex-row gap-3"></div>
+              </div>
+              <div class="config-section">
+                <h4>🔧 Configuración avanzada</h4>
+                <p class="muted-par">Agregue documentos adicionales para el área seleccionada:</p>
+                <div class="flex items-center gap-2">
+                  <input type="text" id="newDocumentName_base" placeholder="Nombre del nuevo documento"
+                         class="input-basic w-[280px]">
+                  <button type="button" class="add-document-btn" data-target="base">+ Agregar Documento</button>
+                </div>
+              </div>
             </div>
 
-            </section>
-
-           <div class="section-header">4. Sustentos documentario de la instrucción</div>
-<div class="p-5 rounded-md bg-gray-50 border border-slate-200">
-  <div id="prev_docs_list" class="list-disc list-inside text-sm text-slate-700 flex flex-row gap-2">
-    <!-- Se llena desde JS -->
-  </div>
-</div>
-
-<div class="section-header mt-6">5. Sustento documentario de la operación</div>
-<div id="tab-instruir-op" class="p-5 rounded-md bg-gray-100">
-  <div class="text-center justify-center">
-    <label class="text-sm font-semibold mb-1">Documento sustento</label>
-    <div id="drop_op" class="dropzone w-[30%] m-auto rounded-sm border-2 border-dashed border-gray-300 bg-muted p-4">
-      <input id="file_op" type="file" accept=".pdf,.png,.jpg,.jpeg" class="hidden">
-      <div class="flex items-center text-center text-sm">
-        <div class="text-center w-full">
-          <div class="font-semibold">📄 Seleccionar archivo</div>
-          <div class="text-gray-500">PDF/Imagen</div>
-        </div>
-      </div>
-      <div id="fileName_op" class="mt-2 text-blue-700 font-medium hidden"></div>
-    </div>
-  </div>
-
-  <div>
-    <div id="documentFields_op" class="documentFields mt-4 flex flex-row gap-3"></div>
-  </div>
-
-  <div class="config-section">
-    <h4>🔧 Agregar documentos adicionales</h4>
-    <p class="muted-par">Adjunta sustentos complementarios para esta operación:</p>
-    <div class="flex items-center gap-2">
-      <input type="text" id="newDocumentName_op" placeholder="Nombre del nuevo documento" class="input-basic w-[280px]">
-      <button type="button" class="add-document-btn" data-target="op">+ Agregar Documento</button>
-    </div>
-  </div>
-</div>
-
-
-        <div class="flex justify-end gap-3">
-  <a href="#" class="btn-secondary">Cancelar</a>
-  <button type="button"
-        id="agregar-carta-btn"
-        class="btn-info btnCartaOp btn-carta"
-        data-url-operacion="generar-carta-aprobacion.html" 
-        data-param="panel">                         
-  Agregar Carta
-</button>
-
-  <button type="submit" id="confirmar-principal" class="btn-primary btn-registrar">Confirmar</button>
-</div>
-
-
+            <div class="flex justify-end gap-3">
+              <a href="#" class="btn-secondary">Cancelar</a>
+              <button type="submit" class="btn-primary btn-base-registrar">Instruir</button>
+            </div>
           </form>
         </div>
       </div><!-- /panels -->
@@ -368,7 +329,7 @@
   <!-- Template Fondeo Banco (se clona dinámicamente) -->
   <template id="tpl-fondeo">
     <div class="tab-panel">
-      <div class="section-header cabecera-transferencia"></div>
+      <div class="section-header"></div>
       <form class="space-y-5 fondeo-form" novalidate>
         <input type="hidden" class="inv_id"/>
         <div class="grid md:grid-cols-8 gap-4">
@@ -380,7 +341,7 @@
             </select>
           </div>
           <div class="col-span-2">
-            <label class="block text-sm font-semibold mb-1" disabled>Monto</label>
+            <label class="block text-sm font-semibold mb-1">Monto</label>
             <input type="text" inputmode="decimal" required
                    class="monto w-full rounded-xl border-2 border-gray-300 p-2.5 text-[15px]"
                    placeholder="Ej. 1,310,067.70">
@@ -390,12 +351,12 @@
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-semibold mb-1">Banco cuenta de cargo</label>
-            <select class="banco w-full" disabled></select>
+            <select class="banco w-full"></select>
             <p class="text-xs text-gray-500 mt-1">Selecciona el banco desde donde se realizará el aporte.</p>
           </div>
           <div>
             <label class="block text-sm font-semibold mb-1">Nro cuenta bancaria</label>
-            <select class="cuenta w-full" disabled></select>
+            <select class="cuenta w-full"></select>
             <p class="text-xs text-gray-500 mt-1">Selecciona la cuenta desde donde se realizará el aporte.</p>
           </div>
         </div>
@@ -403,97 +364,60 @@
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-semibold mb-1">Banco cuenta destino</label>
-            <select class="banco_destino w-full" disabled></select>
+            <select class="banco_destino w-full"></select>
             <p class="text-xs text-gray-500 mt-1">Selecciona el banco destino del aporte.</p>
           </div>
           <div>
             <label class="block text-sm font-semibold mb-1">Nro cuenta destino</label>
             <div class="flex gap-2">
-              <select class="cuenta_destino w-full" disabled></select>
+              <select class="cuenta_destino w-full"></select>
             </div>
           </div>
         </div>
 
-          <div class="section-header">3. Registro de la comisión</div>
-           <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div class="grid sm:grid-cols-4 gap-4">
-  <div>
-    <label class="mini-label">Monto</label>
-    <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-           value="150,000,000.00" disabled>
-  </div>
-  <div>
-    <label class="mini-label">Comisión</label>
-    <input type="text"
-           class="comision w-full rounded-xl border-2 border-gray-200 p-2.5 bg-white font-semibold"
-           placeholder="Ej. 50,000.00">
-  </div>
-  <div>
-    <label class="mini-label">Total Neto</label>
-    <input class="totalNeto w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-           value="150,000,000.00" disabled>
-  </div>
+        <div class="p-5 rounded-md bg-gray-100">
+          <div class="text-center justify-center">
+            <label class=" text-sm font-semibold mb-1">Documento sustento</label>
+            <div class="drop rounded-sm border-2 border-dashed border-gray-300 bg-muted p-4 w-[30%] m-auto">
+              <input type="file" accept=".pdf" required class="file hidden">
+              <div class="flex items-center text-center text-sm">
+                <div class="text-center w-full">
+                  <div class="font-semibold">📄 Seleccionar archivo</div>
+                  <div class="text-gray-500">PDF</div>
+                </div>
+              </div>
+              <div class="fileName mt-2 text-blue-700 font-medium hidden"></div>
             </div>
-
-            </section>
-          <!-- 4. Sustentos previos (solo lectura) -->
-<div class="section-header">4. Sustentos documentario de la instrucción</div>
-<div class="p-4 rounded-md bg-gray-50 border border-slate-200">
-  <div class="flex flex-row gap-2 prev_docs_list_trf list-disc list-inside text-sm text-slate-700">
-    <!-- Se llena por JS: voucher previo + docs adicionales previos -->
-  </div>
-  <!--<p class="text-xs text-slate-500 mt-2">
-    Estos documentos provienen de la etapa anterior y no pueden ser modificados aquí.
-  </p>-->
-</div>
-
-<!-- 5. Sustento documentario de la operación (de esta transferencia) -->
-<div class="section-header mt-6">5. Sustento documentario de la operación</div>
-<div class="p-5 rounded-md bg-gray-100">
-  <div class="text-center justify-center">
-    <label class="text-sm font-semibold mb-1">Documento sustento</label>
-    <div class="drop_op_trf rounded-sm border-2 border-dashed border-gray-300 bg-muted p-4 w-[30%] m-auto">
-      <input type="file" accept=".pdf,.png,.jpg,.jpeg" class="file_op_trf hidden">
-      <div class="flex items-center text-center text-sm">
-        <div class="text-center w-full">
-          <div class="font-semibold">📄 Seleccionar archivo</div>
-          <div class="text-gray-500">PDF/Imagen</div>
+          </div>
+          <div>
+            <div class="documentFields mt-4 flex flex-row gap-3"></div>
+          </div>
+          <div class="config-section">
+            <h4>🔧 Configuración avanzada</h4>
+            <p class="muted-par">Agregue documentos adicionales para el área seleccionada:</p>
+            <div class="flex items-center gap-2">
+              <input type="text" class="newDocumentName input-basic w-[280px]" placeholder="Nombre del nuevo documento">
+              <button type="button" class="add-document-btn">+ Agregar Documento</button>
+            </div>
+          </div>
         </div>
+
+         <div class="flex items-center justify-end">
+
+
+      <div class="flex gap-3">
+        <a href="#" class="btn-secondary">Cancelar</a>
+              <button type="button" class="btn-secondary btn-delete-transfer btn-trf-eliminar">
+        Eliminar transferencia
+      </button>
+        <button type="submit" class="btn-success btn-trf-registrar">Guardar</button>
       </div>
-      <div class="fileName_op_trf mt-2 text-blue-700 font-medium hidden"></div>
     </div>
-  </div>
-
-  <div>
-    <div class="documentFields_op_trf documentFields mt-4 flex flex-row gap-3"></div>
-  </div>
-
-  <div class="config-section">
-    <h4>🔧 Agregar documentos adicionales</h4>
-    <p class="muted-par">Adjunta sustentos complementarios para esta transferencia:</p>
-    <div class="flex items-center gap-2">
-      <input type="text" class="newDocumentName_op_trf input-basic w-[280px]" placeholder="Nombre del nuevo documento">
-      <button type="button" class="add-document-btn-op-trf">+ Agregar Documento</button>
-    </div>
-  </div>
-</div>
-
-              <div class="flex justify-end gap-3">
-  <a href="#" class="btn-secondary">Cancelar</a>
- <button type="button"
-        class="btn-info btnCarta btn-carta"
-        data-url-transferencia="generar-carta-transferencia-fondos.html"
-        data-param="panel">                                  
-  Agregar Carta
-</button>
-
-  <button type="submit" class="btn-primary btn-registrar">Confirmar</button>
-</div>
       </form>
     </div>
   </template>
-
-    <div id="modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+    <!-- Modal -->
+  <div id="modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
     <div class="bg-white w-11/12 max-w-6xl rounded-lg overflow-hidden shadow-xl">
       <div class="flex justify-between items-center bg-slate-700 text-white px-4 py-2">
         <h2 id="modalTitle" class="text-sm font-semibold">Vista previa</h2>

@@ -51,6 +51,28 @@
     "pCompraCupon": "4.4961",
     "ecoInstrument": ""
   },
+    {
+    "entidad": "fdo-consolidado",
+    "accion": "aprobar",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Cuenta remunerada",
+    "estado": "REGISTRADO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Cuenta remunerada",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "29/09/2025",
+    "cataApertura": "",
+    "cataCancelacion": "",
+    "moneda": "PEN",
+    "valorNominal": "17,642,500.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": ""
+  },
   {
     "entidad": "fdo-consolidado",
     "accion": "cancelar",
@@ -83,6 +105,28 @@
     "invPrincipal": "7000",
     "codFCR": "INV-7000",
     "producto": "Operación cambiaria",
+    "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
+    "fechaCompra": "29/09/2025",
+    "fechaEmision": "29/09/2025",
+    "fechaVencimiento": "23/02/2026",
+    "cataApertura": "BANBIF",
+    "cataCancelacion": "Grupo Breca",
+    "moneda": "PEN",
+    "valorNominal": "150,000,000.00",
+    "compraSpotCupon": "4.59",
+    "pCompraCupon": "4.4961",
+    "ecoInstrument": "A+"
+  },
+   {
+    "entidad": "fdo-consolidado",
+    "accion": "cancelar",
+    "unidad": "fcr-macrofondo",
+    "tipo": "Cuenta remunerada",
+    "estado": "INSTRUIDO",
+    "inversionNum": "7000",
+    "invPrincipal": "7000",
+    "codFCR": "INV-7000",
+    "producto": "Cuenta remunerada",
     "numeroDeposito": "BANCO INTERAMERICANO DE FINA",
     "fechaCompra": "29/09/2025",
     "fechaEmision": "29/09/2025",
@@ -230,12 +274,40 @@
                                 
                                  ` `
                             }
+                            
 
                                                        ${
                                 inv.estado === "REGISTRADO" && getAreaParam() === "Tesoreria" && inv.producto == "Operación cambiaria"
                                 ? 
                                 `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
             <button class="btn btn-action btn-llamado-registro" onclick="irAInstruccionOpeCambiaria('${inv.invPrincipal}')">
+              Confirmar
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
+
+                    
+                                                       ${
+                                inv.estado === "REGISTRADO" && getAreaParam() === "DIN" && inv.producto == "Cuenta remunerada"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+            <button class="btn btn-action btn-llamado-registro" onclick="irAInstruccionCuentaRemunerada('${inv.invPrincipal}')">
+              Confirmar
+            </button>
+          </div>`
+                                :
+                                
+                                 ` `
+                            }
+
+                                      ${
+                                inv.estado === "INSTRUIDO" && getAreaParam() === "Tesoreria" && inv.producto == "Cuenta remunerada"
+                                ? 
+                                `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
+            <button class="btn btn-action btn-llamado-registro" onclick="irACancelacionCuentaRemunerada('${inv.invPrincipal}')">
               Confirmar
             </button>
           </div>`
@@ -537,6 +609,23 @@ function irAInstruccionOpeCambiaria(inversionId){
     }
   }
 
+    
+function irAInstruccionCuentaRemunerada(inversionId){
+    if(inversionId){
+      window.location.href = `cta-remunerada-instruccion.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "cta-remunerada-instruccion.html";
+    }
+  }
+
+  function irACancelacionCuentaRemunerada(inversionId){
+    if(inversionId){
+      window.location.href = `cta-remunerada-cancelacion.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+    }else{
+      window.location.href = "cta-remunerada-cancelacion.html";
+    }
+  }
+
   function irARegistrodeFondeoTesoreria(inversionId){
     if(inversionId){
             let subaccion = "";
@@ -585,17 +674,17 @@ function irAInstruccionOpeCambiaria(inversionId){
 
     function irARegistroCancelacion(inversionId){
     if(inversionId){
-      window.location.href = `operaciones-unificadas-cancelacion.html?area=DIN&accion=accion&&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `operaciones-unificadas-cancelacion-v2.html?area=DIN&accion=accion&&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
-      window.location.href = "operaciones-unificadas-cancelacion.html";
+      window.location.href = "operaciones-unificadas-cancelacion-v2.html";
     }
   }
 
     function irARegistroInstruccion(inversionId){
     if(inversionId){
-      window.location.href = `instrucciones-unificadas-cancelacion.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
+      window.location.href = `instrucciones-unificadas-cancelacion-v2.html?area=DIN&inv_id=${encodeURIComponent(inversionId)}`;
     }else{
-      window.location.href = "instrucciones-unificadas-cancelacion.html";
+      window.location.href = "instrucciones-unificadas-cancelacion-v2.html";
     }
   }
 
@@ -701,11 +790,13 @@ window.irABackOffice = irABackOffice;
   // =============== INIT ===============
   $(function(){
     const inst = getInstruParam();
-    if(inst){
+    if(inst == "cta-remunerada"){
+      $('#tipoInstrumento').val("Cuenta remunerada")
+    }
+    else if(inst){
       $('#tipoInstrumento').val("Operación cambiaria")
     }
     else{
-      
       $('#tipoInstrumento').val("Instrumento de corto plazo")
     }
     // Inputs de texto -> al escribir
