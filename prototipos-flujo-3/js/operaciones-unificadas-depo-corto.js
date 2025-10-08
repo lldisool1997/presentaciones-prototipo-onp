@@ -354,6 +354,7 @@ function checkFormCompletion(panelId){
 function initBasePanel(){
   // Select2
   initBancoCuenta($("#banco_destino_base"), $("#cuenta_destino_base"));
+      initBancoCuenta($("#banco_origen_base"), $("#cuenta_origen_base"));
 
   // Crear contenedor documentos base y dos ejemplos
   //createDocumentField("tab-instruir", "Carta de instrucción (PDF)");
