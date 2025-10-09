@@ -503,8 +503,10 @@ function initTransferPanel($panel){
 
   // total dinámico
   function recalc(){ 
-    const f = parseMoney($panel.find('.trf-fondo').val());
+    const f = parseMoney($panel.find('.txt-monto').val());
+    $panel.find('.trf-fondo').val(formatMoney(f));
     const c = parseMoney($panel.find('.trf-comision').val());
+
     $panel.find('.trf-total').val(formatMoney(f + c));
   }
   $panel.on('input', '.trf-fondo, .trf-comision', ()=>{ recalc(); saveToStorage(false); });

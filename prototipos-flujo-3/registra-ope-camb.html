@@ -68,7 +68,7 @@
               <div class="grid md:grid-cols-6 gap-4">
                 <div>
                   <label class="lbl">Moneda Origen</label>
-                  <select id="oc_moneda_origen" class="inp">
+                  <select id="oc_moneda_origen" class="inp" required>
                     <option value="PEN">PEN</option>
                     <option value="USD">USD</option>
                   </select>
@@ -76,17 +76,19 @@
 
                 <div class="md:col-span-2">
                   <label class="lbl">Importe Origen</label>
-                  <input id="oc_importe_origen" type="text" class="inp" placeholder="100,000,000.00" inputmode="decimal">
+                  <input id="oc_importe_origen" type="text" class="inp" placeholder="100,000,000.00" inputmode="decimal"
+                   required>
                 </div>
 
                 <div>
                   <label class="lbl">Tipo de Cambio</label>
-                  <input id="oc_tipo_cambio" type="text" class="inp" placeholder="3.454554" inputmode="decimal">
+                  <input id="oc_tipo_cambio" type="text" class="inp" placeholder="3.454554" inputmode="decimal"
+                   required>
                 </div>
 
                 <div>
                   <label class="lbl">Moneda Destino</label>
-                  <select id="oc_moneda_destino" class="inp">
+                  <select id="oc_moneda_destino" class="inp" required>
                     <option value="USD">USD</option>
                     <option value="PEN">PEN</option>
                   </select>
@@ -94,36 +96,37 @@
 
                 <div>
                   <label class="lbl">Importe Destino</label>
-                  <input id="oc_importe_destino" readonly type="text" class="inp" placeholder="100,000,000.00" inputmode="decimal">
+                  <input id="oc_importe_destino" readonly type="text" class="inp"
+                   placeholder="100,000,000.00" inputmode="decimal" required>
                 </div>
               </div>
 
               <div class="grid md:grid-cols-2 gap-4 mt-3">
                 <div>
                   <label class="lbl">Banco cuenta cargo</label>
-                  <select id="oc_banco_cargo" class="sel2" style="width:100%"></select>
+                  <select id="oc_banco_cargo" class="sel2" style="width:100%" required></select>
                 </div>
                 <div>
                   <label class="lbl">Nro Cuenta Bancaria</label>
-                  <select id="oc_cuenta_cargo" class="sel2" style="width:100%"></select>
+                  <select id="oc_cuenta_cargo" class="sel2" style="width:100%" required></select>
                 </div>
               </div>
 
               <div class="grid md:grid-cols-2 gap-4 mt-3">
                 <div>
                   <label class="lbl">Banco cuenta destino</label>
-                  <select id="oc_banco_destino" class="sel2" style="width:100%"></select>
+                  <select id="oc_banco_destino" class="sel2" style="width:100%" required></select>
                 </div>
                 <div>
                   <label class="lbl">Nro Cuenta Destino</label>
-                  <select id="oc_cuenta_destino" class="sel2" style="width:100%"></select>
+                  <select id="oc_cuenta_destino" class="sel2" style="width:100%" required></select>
                 </div>
               </div>
 
               <div class="grid md:grid-cols-3 gap-4 mt-3">
                 <div>
                   <label class="lbl">Fecha de cambio</label>
-                  <input id="oc_fecha" type="date" class="inp">
+                  <input id="oc_fecha" type="date" class="inp" required>
                 </div>
               </div>
             </div>
@@ -154,26 +157,26 @@
           <div class="grid gap-4 md:grid-cols-2">
             <div>
               <label class="lbl">Moneda</label>
-              <select class="inp sel-moneda" >
+              <select class="inp sel-moneda" required>
                 <option value="PEN">PEN</option>
                 <option value="USD">USD</option>
               </select>
             </div>
             <div>
               <label class="lbl">Monto</label>
-              <input type="text" class="inp txt-monto" placeholder="Ej. 1,310,067.70" inputmode="decimal">
+              <input type="text" class="inp txt-monto" placeholder="Ej. 1,310,067.70" inputmode="decimal" required>
             </div>
           </div>
 
           <div class="grid gap-4 md:grid-cols-2 mt-3">
             <div>
               <label class="lbl">Banco cuenta de cargo</label>
-              <select class="sel2 sel-banco-cargo" style="width:100%"></select>
+              <select class="sel2 sel-banco-cargo" style="width:100%" required></select>
               <p class="help">Selecciona el banco desde donde se realizará el aporte.</p>
             </div>
             <div>
               <label class="lbl">Nro cuenta bancaria</label>
-              <select class="sel2 sel-cuenta-cargo" style="width:100%"></select>
+              <select class="sel2 sel-cuenta-cargo" style="width:100%" required></select>
               <p class="help">Selecciona la cuenta desde donde se realizará el aporte.</p>
             </div>
           </div>
@@ -181,7 +184,7 @@
           <div class="grid gap-4 md:grid-cols-2 mt-3">
             <div>
               <label class="lbl">Banco cuenta destino</label>
-              <select class="sel2 sel-banco-destino" style="width:100%"></select>
+              <select class="sel2 sel-banco-destino" style="width:100%" required></select>
               <p class="help">Selecciona el banco destino del aporte.</p>
             </div>
             <div>

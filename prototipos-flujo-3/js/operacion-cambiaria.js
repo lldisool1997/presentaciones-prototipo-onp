@@ -19,7 +19,7 @@ const CUENTAS = {
 /* =====================  HELPERS UI  ===================== */
 
 // ====== ESTADO + CHECK EN TABS ======
-const ESTADOS_OK = new Set(['confirmado','registrado','enviado','aprobado']);
+const ESTADOS_OK = new Set(['confirmado','registrado','enviado','aprobado', 'instruido']);
 
 function setEstado(scope, tabId, nuevoEstado){
   const data = loadFromStorage() || {};
@@ -357,8 +357,10 @@ function initTransferPanel($panel){
 
   // confirmar (demo) + guardar
   $panel.find('.trf-btn-confirmar').on('click', ()=>{
+
     saveToStorage();
-    Swal.fire({icon:'success',title:'Transferencia confirmada (guardada localmente)',timer:1200,showConfirmButton:false});
+    setEstado('transferencia', $panel.attr('id'), 'instruido'); // estado + check en su tab
+    Swal.fire({icon:'success',title:'Transferencia confirmada',timer:1200,showConfirmButton:false});
   });
 }
 
@@ -394,8 +396,15 @@ function initGlobal(){
   // Confirmar Operación = guardar todo
   $('#formOperacion').on('submit', function(e){
     e.preventDefault();
+
+    if(!todasTransferenciasInstruidas()){
+      toastr.warning("Todas las transferencias deben estar aprobadas.");
+      return false;
+    }
+
     saveToStorage();
-    Swal.fire({icon:'success',title:'Operación confirmada (guardada localmente)',timer:1200,showConfirmButton:false});
+    setEstado('operacion', 'tab-operacion', 'instruido'); // marca estado + check
+    Swal.fire({icon:'success',title:'Operación confirmada',timer:1200,showConfirmButton:false});
   });
 
   $('#oc_importe_origen, #oc_tipo_cambio').on('change', function(e){
@@ -446,3 +455,18 @@ $(function(){
   }
 
 });
+
+/**
+ * Retorna true si todas las transferencias del snapshot están en estado "INSTRUIDO".
+ * Retorna false si hay al menos una transferencia con otro estado.
+ */
+function todasTransferenciasInstruidas() {
+  const KEY = STORAGE_KEY;
+  const snap = JSON.parse(localStorage.getItem(KEY) || "[]");
+
+  const trfs = Array.isArray(snap.transferencias) ? snap.transferencias : [];
+  if (trfs.length === 0) return true; // si no hay transferencias, consideramos que está todo listo
+
+  // revisa si TODAS están en INSTRUIDO
+  return trfs.every(t => (t.estado || "").trim() === "instruido");
+}
