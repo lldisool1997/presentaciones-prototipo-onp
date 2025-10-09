@@ -393,7 +393,7 @@ function populateOperacion(op){
   if (op.fecha) $('#oc_fecha').val(op.fecha);
 
   // comisión/total
-  if (typeof op.fondo === 'number')    $('#oc_fondo').val(formatMoney(op.fondo));
+  if (typeof op.fondo === 'number')    $('#oc_fondo').val(formatMoney(op.importe_origen));
   if (typeof op.comision === 'number') $('#oc_comision').val(formatMoney(op.comision));
   if (typeof op.total === 'number')    $('#oc_total').val(formatMoney(op.total));
 
