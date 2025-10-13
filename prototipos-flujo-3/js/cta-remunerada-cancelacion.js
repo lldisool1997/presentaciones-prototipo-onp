@@ -1454,6 +1454,7 @@ function bloquearCamposSoloLectura($panel) {
   //$panel.find("#tasa_tea_tna").prop("disabled", false); // permitir uploads PDF
   $panel.find("#tasa-pizarra").prop("disabled", false); // permitir uploads PDF
   $panel.find("#interesesTxt").prop("disabled", false); // permitir uploads PDF
+  $panel.find("#fecha_operacion").prop("disabled", false); // permitir uploads PDF
 
   // 3️⃣ Deshabilitar botones excepto los de sustento
   //$panel.find("button").prop("disabled", true);
@@ -1705,7 +1706,7 @@ function buildInteresDataConMovimientos({ start, end, tea, saldoInicial, moneda 
 
   for (const fecha of days) {
     const mov = Number(movMap[fecha] || 0);
-    const interesDia = saldoAyer * iDiaria; // interés sobre saldo del día anterior
+    const interesDia = (saldoAyer + mov) * iDiaria; // interés sobre saldo del día anterior
     const saldoHoy = saldoAyer + mov;       // movimiento impacta el saldo del día
 
     rows.push({
