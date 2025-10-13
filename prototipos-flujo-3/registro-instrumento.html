@@ -1629,9 +1629,14 @@
 
         const documentRequirements = {
             "general": [
-                "Colocaciones e inversiones de fondos públicos",
+                "Informe de Riesgos",
+                "Informe Legal",
+                 "Acta de Comité de Inversiones",
+                 /*
+                 "Colocaciones e inversiones de fondos públicos",
                 "Subasta de Adjudicación",
                  "Colocación Subasta",
+                 */
             ],
         };
 
@@ -2787,12 +2792,12 @@
                             //         "step": "0.01"
                             //     }
                             // },
-                            // {
-                            //     "label": "Banco cuenta cargo",
-                            //     "type": "select",
-                            //     "options": [],
-                            //     "special": "bank_account"
-                            // },
+                            {
+                               "label": "Banco cuenta cargo",
+                               "type": "select",
+                             "options": [],
+                               "special": "bank_account"
+                            },
                             {
                                 "label": "N° de Cuenta Bancaria",
                                 "type": "select",
@@ -11682,7 +11687,7 @@
 
 
           documents.forEach((docName, index) => {
-                if (index === 2) {
+                if (index === 3) {
                     // el tercero (posición 2 porque empieza en 0) será Excel
                     createExcelField(docName, `${currentArea}_${index}`);
                 } else {
