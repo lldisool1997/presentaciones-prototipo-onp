@@ -1142,7 +1142,7 @@ function __buildCartaUrl({ panelId, operacionUrl, transferenciaUrl, paramName })
 
   // construimos a pelo la URL con el query param
   const sep = baseUrl.includes("?") ? "&" : "?";
-  return `${baseUrl}${sep}${encodeURIComponent(key)}=${encodeURIComponent(panelId)}&area=Tesoreria`;
+  return `${baseUrl}${sep}${encodeURIComponent(key)}=${encodeURIComponent(panelId)}&area=Tesoreria&storage_key_carta=aprobacion_inst_corto_plazo`;
 }
 
 
