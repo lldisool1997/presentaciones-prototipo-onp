@@ -804,6 +804,30 @@ function __renderDynamicDocsByNames(panelId, names) {
   });
 }
 
+// ------ Helper: crea campos dinámicos por cada documento adicional (solo muestra nombre) ------
+function __renderCards(panelId, cartas) {
+  if (!Array.isArray(cartas) || !cartas.length) return;
+  cartas.forEach((carta) => {
+    $p = $(`#${panelId} .section-cards`);
+    if ($p.length) {
+       let fecha = new Date(carta.fechaISO).toLocaleString("es-PE");
+      const $card = $(`
+               <section class="mt-6 p-4 border rounded-lg bg-white shadow">
+              <h2 class="text-lg font-semibold text-gray-800 mb-2">
+                📄 Carta Generada
+              </h2>
+              <p class="text-sm text-gray-600">
+                Fecha y hora: 
+                <span  class="font-medium text-gray-900">${fecha}</span>
+              </p>
+            </section>
+      `);
+      $p.append($card);
+    }
+  });
+}
+
+
 // ---- Tab principal: leer el archivo del drop (#file_base / #fileName_base)
 function __collectBaseDropDoc() {
   const inp = document.getElementById("file_base");
@@ -854,6 +878,13 @@ function load_aprobacion_inst_corto_plazo(opId) {
         : (Array.isArray(base.sustentoOpAdicionales) ? base.sustentoOpAdicionales : [])
     );
 
+    __renderCards(
+      "tab-instruir",
+      Array.isArray(base.cartas)
+        ? base.cartas
+        : (Array.isArray(base.cartas) ? base.cartas : [])
+    );
+
     aplicarUIEstados("INV-7000");
 
 
@@ -899,11 +930,21 @@ __renderPrevDocsListTrf($p, t);
 // Documentos NUEVOS de la operación
 __setOpDropFileNameTrf($p, t.sustentoOpPrincipal);
 
+    __renderCards(
+      `tab-fondeo-${fondeoCount}`,
+      Array.isArray(t.cartas)
+        ? t.cartas
+        : (Array.isArray(t.cartas) ? t.cartas : [])
+    );
+
+
 if (Array.isArray(t.sustentoOpAdicionales)) {
   t.sustentoOpAdicionales.forEach(name => {
    const opExtrasTrf = Array.isArray(t.documentosAdicionalesOperacion)
   ? t.documentosAdicionalesOperacion
   : (Array.isArray(t.sustentoOpAdicionales) ? t.sustentoOpAdicionales : []);
+
+
 
 if (opExtrasTrf.length) {
   opExtrasTrf.forEach(name => {
