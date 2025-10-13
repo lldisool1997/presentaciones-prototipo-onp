@@ -1622,3 +1622,107 @@ $(document).on('click','#btnInteres', function(){
     saldoInicial: 1_000_000.00 // <- aquí el saldo inicial
   });
 });
+
+
+// === Fórmula Templates Registry (clean, single) ===
+// Simula venir de un registro externo. Si luego quieres usar fetch('/api/formulas/...'), lo cambiamos fácil.
+const FORMULA_TEMPLATES = {
+  "interes_compuesto_fcr": {
+    meta: {
+      name: "Interés Compuesto",
+      code: "FIN-INT-COMP-001",
+      version: "v1.2.0",
+      updatedAt: "2025-09-28 14:35",
+      updatedBy: "Analista Backoffice · FIN",
+      source: "Registro de Fórmulas"
+    },
+    variables: [
+      { sym: "P", desc: "Principal o capital inicial" },
+      { sym: "i", desc: "Tasa nominal anual (decimal) o efectiva anual (i_eff)" },
+      { sym: "m", desc: "Número de capitalizaciones por año (si aplica)" },
+      { sym: "n", desc: "Plazo en años" },
+      { sym: "I", desc: "Interés generado" },
+      { sym: "F", desc: "Valor futuro" }
+    ],
+    // única fórmula aplicada al caso
+    formula: {
+      label: "Valor futuro (capitalización m veces por año)",
+      latex: "F = P\\,\\left(1 + \\frac{i}{m}\\right)^{m n} \\quad\\Rightarrow\\quad I = F - P",
+      notes: "Si trabajas con TEA, reemplaza i/m por i_eff y m·n por n:  F = P(1 + i_{\\text{eff}})^n."
+    }
+  }
+};
+
+function renderFormulaTemplate(key){
+  const tpl = FORMULA_TEMPLATES[key];
+
+  const headerEl = document.getElementById('formulaHeader');
+  const varsEl   = document.getElementById('formulaVars');
+  const latexEl  = document.getElementById('formulaLatex');
+  const labelEl  = document.getElementById('formulaLabel');
+  const notesEl  = document.getElementById('formulaNotes');
+  const codeEl   = document.getElementById('tplCode');
+  const verEl    = document.getElementById('tplVersion');
+  const updAtEl  = document.getElementById('tplUpdatedAt');
+  const updByEl  = document.getElementById('tplUpdatedBy');
+
+  if (!tpl){
+    if (headerEl) headerEl.textContent = "Fórmula no disponible";
+    if (varsEl)   varsEl.innerHTML = '';
+    if (latexEl)  latexEl.innerHTML = '<div class="text-sm text-red-600">No se encontró el template solicitado.</div>';
+    if (labelEl)  labelEl.textContent = '';
+    if (notesEl)  notesEl.textContent = '';
+    if (codeEl)   codeEl.textContent = '';
+    if (verEl)    verEl.textContent = '';
+    if (updAtEl)  updAtEl.textContent = '';
+    if (updByEl)  updByEl.textContent = '';
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+    return;
+  }
+
+  if (headerEl) headerEl.textContent = `Plantilla: ${tpl.meta?.name || 'Fórmula'}`;
+  if (codeEl)   codeEl.textContent   = tpl.meta?.code ? `ID: ${tpl.meta.code}` : '';
+  if (verEl)    verEl.textContent    = tpl.meta?.version || '';
+  if (updAtEl)  updAtEl.textContent  = tpl.meta?.updatedAt || '';
+  if (updByEl)  updByEl.textContent  = tpl.meta?.updatedBy || '';
+
+  if (varsEl){
+    varsEl.innerHTML = (tpl.variables || [])
+      .map(v => `<li><b>${v.sym}</b>: ${v.desc}</li>`)
+      .join("");
+  }
+
+  if (labelEl) labelEl.textContent = tpl.formula?.label || 'Fórmula aplicada a este caso';
+  if (latexEl){
+    const latex = tpl.formula?.latex || '';
+    latexEl.innerHTML = `$$${latex}$$`;
+  }
+  if (notesEl) notesEl.textContent = tpl.formula?.notes || '';
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+// Open/Close helpers (single)
+function closeFormulaModal(){ 
+  const m = document.getElementById('formulaModal'); 
+  if (!m) return; 
+  m.classList.add('hidden'); 
+  m.classList.remove('flex'); 
+}
+
+$(document).on('click', '#btnFormula', function(){
+  const m = document.getElementById('formulaModal'); 
+  if (!m) return; 
+  const key = this.getAttribute('data-formula-key') || 'interes_compuesto_fcr';
+  renderFormulaTemplate(key);
+  m.classList.remove('hidden'); 
+  m.classList.add('flex'); 
+});
+
+$(document).on('click', '#closeFormulaBtn, #closeFormulaX', closeFormulaModal);
+$(document).on('click', '#formulaModal', function(e){
+  if (e.target === this) closeFormulaModal();
+});
+$(document).on('keydown', function(e){
+  if (e.key === 'Escape') closeFormulaModal();
+});
