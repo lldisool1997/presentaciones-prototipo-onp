@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <title>Sistema de Gestión de Bonos - Búsqueda de Cupones</title> -->
+    <title>Búsqueda de Cupones</title>
+
+
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* Profile Info */
+        .profile-info {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #005C97 0%, #004a7c 100%);
+            color: white;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Content Wrapper */
+        .content-wrapper {
+            padding: 30px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            color: #2c3e50;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            margin-top: 30px;
+            padding-left: 15px;
+            border-left: 4px solid #1976d2;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .section-header:first-of-type {
+            margin-top: 0;
+        }
+
+        /* Search Form */
+        .search-form {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+        }
+
+        .date-range {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #2980b9 0%, #1f5f8b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #7f8c8d 0%, #6c7b7d 100%);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: linear-gradient(135deg, #229954 0%, #1e8449 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.8em;
+        }
+
+        .btn-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-start;
+        }
+
+        /* Mass Cancel Button */
+        .mass-cancel-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .selection-info {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Table */
+        .table-container2 {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            max-width: 100%;
+
+            scrollbar-width: thin;
+            scrollbar-color: #888 #f1f1f1;
+        }
+
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+            min-width: 1900px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 0.8em;
+            vertical-align: middle;
+        }
+
+        .td-left {
+            text-align: left;
+        }
+
+        .td-right {
+            text-align: right;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e3f2fd;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.7em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-aprobado {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-registrado {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-contabilizado {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelado {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Results info */
+        .results-info {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+
+        .results-count {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 900px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #005C97 0%, #004a7c 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            table-layout: auto;
+            /* Cambiar de fixed a auto */
+            min-width: 700px;
+            /* Fuerza un ancho mínimo */
+        }
+
+
+
+        .modal-table th {
+            background: #f8f9fa;
+            color: #2c3e50;
+            padding: 12px;
+            border: 1px solid #ddd;
+            font-size: 0.85em;
+        }
+
+        .modal-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            font-size: 0.85em;
+        }
+
+        /* .modal-table th,
+        .modal-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            font-size: 0.85em;
+            text-align: center;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+        .modal-table th {
+            background: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+        } */
+
+        /* Anchos específicos para cada columna */
+        /* .modal-table th:nth-child(1),
+        .modal-table td:nth-child(1) {
+            width: 12%;
+        }
+
+        .modal-table th:nth-child(2),
+        .modal-table td:nth-child(2) {
+            width: 15%;
+        }
+
+        .modal-table th:nth-child(3),
+        .modal-table td:nth-child(3) {
+            width: 18%;
+        }
+
+        .modal-table th:nth-child(4),
+        .modal-table td:nth-child(4) {
+            width: 18%;
+            text-align: right;
+        }
+
+        .modal-table th:nth-child(5),
+        .modal-table td:nth-child(5) {
+            width: 18%;
+            text-align: right;
+        }
+
+        .modal-table th:nth-child(6),
+        .modal-table td:nth-child(6) {
+            width: 19%;
+            text-align: right;
+        } */
+
+        .totals-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .total-row.grand-total {
+            font-size: 1.1em;
+            color: #27ae60;
+            border-top: 2px solid #27ae60;
+            padding-top: 10px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            table {
+                font-size: 0.75em;
+            }
+
+            th,
+            td {
+                padding: 8px 6px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .date-range {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-actions {
+                justify-content: center;
+            }
+
+            .mass-cancel-section {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            table {
+                font-size: 0.7em;
+            }
+
+            th,
+            td {
+                padding: 6px 4px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .content-wrapper {
+                padding: 15px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 2% auto;
+            }
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Toastr custom styles */
+        .toast-success {
+            background-color: #27ae60 !important;
+        }
+
+        .toast-info {
+            background-color: #3498db !important;
+        }
+
+        /* Checkbox styling */
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #3498db;
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Profile Info -->
+            <div class="profile-info">
+                Perfil: TE
+            </div>
+
+            <!-- Header -->
+            <div class="header">
+                <!-- <h1>Sistema de Gestión de Bonos – Búsqueda de Cupones</h1> -->
+                <h1>Búsqueda de Cupones</h1>
+
+            </div>
+
+            <!-- Content Wrapper -->
+            <div class="content-wrapper">
+
+                <!-- SECCIÓN 1: Filtros de búsqueda -->
+                <div class="section-header">1. Filtros de Búsqueda</div>
+                <div class="search-form">
+                    <!-- <div class="form-grid">
+                        <div class="form-group">
+                            <label for="inversionNum">Inversión #:</label>
+                            <input type="text" id="inversionNum" class="form-control" placeholder="Ej: 248931">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipoInstrumento">Tipo de Instrumento:</label>
+                            <select id="tipoInstrumento" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="BONOS SOBERANOS">Bonos Soberanos</option>
+                                <option value="BONOS CORPORTATIVOS">Bonos Corporativos</option>
+                                <option value="ACTIVOS TITULIZADOS">Activos Titulizados</option>
+                                <option value="ACT. TITUL. GARANTIZADOS POR EL ESTADO">Act. Titul. Garantizados por el
+                                    Estado</option>
+                                <option value="ACT. TITUL GARANTIZADOS POR EL ESTADO">Act. Titul Garantizados por el
+                                    Estado</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="isinFilter">ISIN:</label>
+                            <input type="text" id="isinFilter" class="form-control" placeholder="Ej: SB12AGO26">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="estadoFilter">Estado:</label>
+                            <select id="estadoFilter" class="form-control">
+                                <option value="">Seleccionar</option>
+                                <option value="APROBADO">Aprobado</option>
+                                <option value="CANCELADO">Cancelado</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>Rango de Fechas de cupón:</label>
+                            <div class="date-range">
+                                <input type="date" id="fechaInicio" class="form-control">
+                                <input type="date" id="fechaFin" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="btn-actions">
+                                <button class="btn btn-primary" onclick="buscarCupones()">Buscar</button>
+                                <button class="btn btn-secondary" onclick="resetearFiltros()">Resetear</button>
+                            </div>
+                        </div>
+                    </div> -->
+
+
+
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="inversionNum">Inversión #:</label>
+                            <input type="text" id="inversionNum" class="form-control" placeholder="Ej: 248931">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipoInstrumento">Tipo de Instrumento:</label>
+                            <select id="tipoInstrumento" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="BONOS SOBERANOS">Bonos Soberanos</option>
+                                <option value="BONOS CORPORTATIVOS">Bonos Corporativos</option>
+                                <option value="ACTIVOS TITULIZADOS">Activos Titulizados</option>
+                                <option value="ACT. TITUL. GARANTIZADOS POR EL ESTADO">Act. Titul. Garantizados por el
+                                    Estado</option>
+                                <option value="ACT. TITUL GARANTIZADOS POR EL ESTADO">Act. Titul Garantizados por el
+                                    Estado</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="isinFilter">ISIN:</label>
+                            <input type="text" id="isinFilter" class="form-control" placeholder="Ej: SB12AGO26">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="estadoFilter">Estado:</label>
+                            <select id="estadoFilter" class="form-control">
+                                <option value="">Seleccionar</option>
+                                <option value="APROBADO">Aprobado</option>
+                                <option value="CANCELADO">Cancelado</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Rango de Fechas de cupón:</label>
+                            <div class="date-range">
+                                <input type="date" id="fechaInicio" class="form-control">
+                                <input type="date" id="fechaFin" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones en fila separada -->
+                    <div class="btn-actions">
+                        <button class="btn btn-primary" onclick="buscarCupones()">Buscar</button>
+                        <button class="btn btn-secondary" onclick="resetearFiltros()">Resetear</button>
+                    </div>
+
+
+
+                </div>
+
+                <!-- SECCIÓN 2: Resultados de la búsqueda -->
+                <div class="section-header">2. Resultados de la Búsqueda</div>
+
+                <div class="results-info">
+                    <span class="results-count" id="resultsCount">Mostrando 8 registros encontrados</span>
+                </div>
+
+                <!-- Mass Cancel Section -->
+                <div class="mass-cancel-section">
+                    <div class="selection-info" id="selectionInfo">
+                        Selecciona 2 o más registros del mismo ISIN y fecha de vencimiento para cancelación masiva
+                    </div>
+                    <button class="btn btn-success" id="massCancel" onclick="abrirModalCancelacionMasiva()" disabled>
+                        Cancelar Masivo
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table id="resultTable">
+                        <thead>
+                            <tr>
+                                <th width="40px">N°</th>
+
+                                <th width="50px">
+                                    <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                                </th>
+                                <th>Estado</th>
+                                <th>INV#</th>
+                                <th>Inv. Principal</th>
+                                <th>ISIN</th>
+                                <th>Producto</th>
+                                <th>Número Depósito</th>
+                                <th>Fecha Emisión</th>
+                                <th>Fecha Compra</th>
+                                <th>Fecha Vencimiento</th>
+                                <th>Fecha Inicio cupón</th>
+                                <th>Fecha Fin cupón</th>
+                                <th>Carta Apertura</th>
+                                <th>Carta Cancelación</th>
+                                <th>Moneda</th>
+                                <th>Valor Nominal</th>
+                                <th>Compra Spot/Cargo</th>
+                                <th>P.Compra/Cupon%</th>
+                                <th>Tipo Instrumento</th>
+                                <th>Descripción</th>
+                                <th>Periodicidad</th>
+                                <th>Plazo</th>
+                                <th>Categoría Riesgo</th>
+                                <th>Código Emisor</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Los datos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cancelación Masiva -->
+    <div id="modalCancelacionMasiva" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Cancelación Masiva de Cupones</h2>
+                <span class="close" onclick="cerrarModalCancelacionMasiva()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h3 style="margin-bottom: 20px; color: #2c3e50;">Registros Seleccionados</h3>
+                <div style="overflow-x: auto; margin-bottom: 20px;">
+                    <table class="modal-table" id="modalTable">
+                        <thead>
+                            <tr>
+                                <th>INV#</th>
+                                <th>ISIN</th>
+                                <th>Fecha Fin Cupón</th>
+                                <th>Interés</th>
+                                <th>Amortización</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalTableBody">
+                            <!-- Se llenarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="totals-section">
+                    <h4 style="margin-bottom: 15px; color: #2c3e50;">Total Consolidado</h4>
+                    <div class="total-row">
+                        <span>Total Intereses:</span>
+                        <span id="totalIntereses">S/ 0.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Total Amortizaciones:</span>
+                        <span id="totalAmortizaciones">S/ 0.00</span>
+                    </div>
+                    <div class="total-row grand-total">
+                        <span>Total General:</span>
+                        <span id="totalGeneral">S/ 0.00</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cuentaBancaria">Cuenta Bancaria:</label>
+                    <select id="cuentaBancaria" class="form-control">
+                        <option value="">Seleccionar cuenta...</option>
+                        <option value="001-123456789">BCP - 001-123456789</option>
+                        <option value="002-987654321">BBVA - 002-987654321</option>
+                        <option value="003-456789123">Interbank - 003-456789123</option>
+                        <option value="004-789123456">Scotiabank - 004-789123456</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaCancelacion">Fecha de Cancelación:</label>
+                    <input type="date" id="fechaCancelacion" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="cerrarModalCancelacionMasiva()">Cancelar</button>
+                <button class="btn btn-success" onclick="confirmarCancelacionMasiva()">Confirmar Cancelación
+                    Masiva</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery and Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        // Configuración de Toastr
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        // Datos de ejemplo con montos de interés y amortización
+        const datosEjemplo = [
+            {
+                estado: 'APROBADO',
+                invNum: '248931',
+                invPrincipal: '248931',
+                isin: 'CHIRA12U',
+                product: 'AT10008',
+                numeroDeposito: 'CHIRA12U',
+                fechaEmision: '01/04/2025',
+                fechaCompra: '01/04/2025',
+                fechaVencimiento: '01/07/2027',
+                fechaInicioCupon: '15/12/2025',
+                fechaFinCupon: '15/03/2026',
+                cartaApertura: '',
+                cartaCancelacion: '',
+                moneda: 'Local',
+                valorNominal: '2,272,878.32',
+                compraSpot: '',
+                compraCupon: '100.00',
+                tipoInstrumento: 'ACTIVOS TITULIZADOS',
+                descripcion: 'BONO DE TITULIZACIÓN CONCESIONARIA LA CHIRA',
+                periodicidad: 'Trimestral',
+                plazo: '01',
+                categoriaRiesgo: 'AAA',
+                codigoEmisor: '513',
+                interes: 45457.57,
+                amortizacion: 0.00
+            },
+            {
+                estado: 'APROBADO',
+                invNum: '219017',
+                invPrincipal: '219012',
+                isin: 'XS0876182736',
+                product: 'AG10002',
+                numeroDeposito: 'XS0876182736',
+                fechaEmision: '01/04/2025',
+                fechaCompra: '01/04/2025',
+                fechaVencimiento: '01/07/2035',
+                fechaInicioCupon: '16/12/2025',
+                fechaFinCupon: '16/03/2026',
+                cartaApertura: '',
+                cartaCancelacion: '',
+                moneda: 'Local',
+                valorNominal: '12,465,000.00',
+                compraSpot: '',
+                compraCupon: '116.81',
+                tipoInstrumento: 'ACT. TITUL. GARANTIZADOS POR EL ESTADO',
+                descripcion: 'TABOADA FINANCIA LTD SERIES 2011-3 NOTES',
+                periodicidad: 'Trimestral',
+                plazo: '01',
+                categoriaRiesgo: 'AAA',
+                codigoEmisor: 'E52',
+                interes: 249300.00,
+                amortizacion: 0.00
+            },
+            {
+                estado: 'APROBADO',
+                invNum: '249176',
+                invPrincipal: '248576',
+                isin: 'XS68761233',
+                product: 'AG10002',
+                numeroDeposito: 'XS68761233',
+                fechaEmision: '01/04/2025',
+                fechaCompra: '01/04/2025',
+                fechaVencimiento: '01/07/2028',
+                fechaInicioCupon: '17/12/2025',
+                fechaFinCupon: '17/03/2026',
+                cartaApertura: '',
+                cartaCancelacion: '',
+                moneda: 'Local',
+                valorNominal: '53,500,000.00',
+                compraSpot: '',
+                compraCupon: '100.00',
+                tipoInstrumento: 'ACT. TITUL GARANTIZADOS POR EL ESTADO',
+                descripcion: 'TABOADA FINANCIA LTD SERIES 2011-1 NOTES',
+                periodicidad: 'Trrimestral',
+                plazo: 'C',
+                categoriaRiesgo: 'AAA',
+                codigoEmisor: 'E52',
+                interes: 1070000.00,
+                amortizacion: 0.00
+            },
+
+
+            {
+                estado: 'APROBADO',
+                invNum: '248118',
+                invPrincipal: '1001',
+                isin: 'SB12AGO26',
+                product: 'A20009',
+                numeroDeposito: 'SB12AGO26',
+                fechaEmision: '01/07/2021',
+                fechaCompra: '15/07/2023',
+                fechaVencimiento: '01/03/2030',
+                fechaInicioCupon: '20/09/2025',
+                fechaFinCupon: '20/03/2026',
+                cartaApertura: '',
+                cartaCancelacion: '',
+                moneda: 'Soles',
+                valorNominal: '203,330.67',
+                compraSpot: '',
+                compraCupon: '99.60',
+                tipoInstrumento: 'BONOS SOBERANOS',
+                descripcion: 'BONO SOBERANO REPÚBLICA DEL PERÚ',
+                periodicidad: 'Semestral',
+                plazo: '01',
+                categoriaRiesgo: '',
+                codigoEmisor: 'E78',
+                interes: 6099.92,
+                amortizacion: 0.00
+            },
+            {
+                estado: 'APROBADO',
+                invNum: '247898',
+                invPrincipal: '1001',
+                isin: 'SB12AGO26',
+                product: 'A20010',
+                numeroDeposito: 'SB12AGO26',
+
+                fechaEmision: '01/07/2021',
+                fechaCompra: '01/06/2022',
+                fechaVencimiento: '01/03/2030',
+                fechaInicioCupon: '20/09/2025',
+                fechaFinCupon: '20/03/2026',
+                cartaApertura: '',
+                cartaCancelacion: '',
+                moneda: 'Soles',
+                valorNominal: '25,203,330.67',
+                compraSpot: '',
+                compraCupon: '100.00',
+                tipoInstrumento: 'BONOS SOBERANOS',
+                descripcion: 'BONO SOBERANO REPÚBLICA DEL PERÚ',
+                periodicidad: 'Semestral',
+                plazo: '01',
+                categoriaRiesgo: '',
+                codigoEmisor: 'E74',
+                interes: 756099.92,
+                amortizacion: 0.00
+            },
+
+            {
+                estado: 'CANCELADO',
+                invNum: '2002',
+                invPrincipal: '2001',
+                isin: 'SB20SEP29',
+
+                product: 'A20009',
+                numeroDeposito: 'SB20SEP29',
+                fechaEmision: '20/09/2025',
+                fechaCompra: '20/09/2025',
+                fechaVencimiento: '20/09/2029',
+                fechaInicioCupon: '20/09/2025',
+                fechaFinCupon: '20/03/2026',
+
+
+                cartaApertura: '',
+                cartaCancelacion: '',
+                moneda: 'Soles',
+                valorNominal: '1,000,000.00',
+                compraSpot: '',
+                compraCupon: '100.00',
+
+                tipoInstrumento: 'BONOS SOBERANOS',
+                descripcion: 'BONO SOBERANO REPÚBLICA DEL PERÚ',
+
+                periodicidad: 'Semestral',
+                plazo: '01',
+                categoriaRiesgo: 'A+',
+                codigoEmisor: 'E78',
+                interes: 256099.92,
+                amortizacion: 0.00
+            },
+
+
+            {
+                estado: 'APROBADO',
+                invNum: '23911',
+                invPrincipal: '8554',
+                isin: 'LUSUR3BC4A',
+                product: 'BC10091',
+                numeroDeposito: 'LUSUR3BC4A',
+                fechaCompra: '14/01/2025',
+                fechaEmision: '14/01/2025',
+                fechaVencimiento: '14/07/2035',
+                fechaInicioCupon: '25/09/2025',
+                fechaFinCupon: '25/03/2026',
+                cartaApertura: '',
+                cartaCancelacion: '',
+                moneda: 'Local',
+                valorNominal: '8,465,000.00',
+                compraSpot: '',
+                compraCupon: '100.00',
+                tipoInstrumento: 'BONOS CORPORTATIVOS',
+                descripcion: 'LUZ DEL SUR 3er Prog E-4/S.A.',
+                periodicidad: 'Semestral',
+                plazo: '01',
+                categoriaRiesgo: '',
+                codigoEmisor: 'E05',
+                interes: 169300.00,
+                amortizacion: 0.00
+            }
+        ];
+
+        let datosActuales = [...datosEjemplo];
+        let registrosSeleccionados = [];
+
+        // Función para formatear números
+        function formatNumber(number) {
+            return new Intl.NumberFormat('es-PE', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(number);
+        }
+
+        // Función para cargar datos en la tabla
+        function cargarDatos(datos) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (datos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="26" class="no-results">No se encontraron resultados con los criterios especificados</td></tr>';
+                document.getElementById('resultsCount').textContent = 'No se encontraron registros';
+                return;
+            }
+
+            datos.forEach((item, index) => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${index + 1}</td>   
+                    <td><input type="checkbox" id="check_${index}" value="${index}" onchange="toggleSelection(${index})"></td>
+                    <td><span class="status-badge status-${item.estado.toLowerCase()}">${item.estado}</span></td>
+                    <td>${item.invNum}</td>
+                    <td>${item.invPrincipal}</td>
+                    <td>${item.isin}</td>
+                    <td>${item.product}</td>
+                    <td>${item.numeroDeposito}</td>
+                    <td>${item.fechaEmision}</td>
+                    <td>${item.fechaCompra}</td>
+                    <td>${item.fechaVencimiento}</td>
+                    <td>${item.fechaInicioCupon}</td>
+                    <td>${item.fechaFinCupon}</td>
+                    <td>${item.cartaApertura}</td>
+                    <td>${item.cartaCancelacion}</td>
+                    <td>${item.moneda}</td>
+                    <td class="td-right">${item.valorNominal}</td>
+                    <td class="td-left">${item.compraSpot}</td>
+                    <td class="td-left">${item.compraCupon}</td>
+                    <td class="td-left">${item.tipoInstrumento}</td>
+                    <td class="td-left">${item.descripcion}</td>
+                    <td>${item.periodicidad}</td>
+                    <td>${item.plazo}</td>
+                    <td>${item.categoriaRiesgo}</td>
+                    <td>${item.codigoEmisor}</td>
+                    
+                    <td>
+  ${item.estado === 'APROBADO'
+                        ? `<button class="btn btn-info" onclick="abrirVentanaCancelacion('${item.invNum}')">Cancelar</button>`
+                        : ''}
+</td>
+
+
+
+                `;
+            });
+
+            document.getElementById('resultsCount').textContent = `Mostrando ${datos.length} registro${datos.length !== 1 ? 's' : ''} encontrado${datos.length !== 1 ? 's' : ''}`;
+        }
+
+        // Función de búsqueda
+        function buscarCupones() {
+            const inversionNum = document.getElementById('inversionNum').value.trim();
+            const tipoInstrumento = document.getElementById('tipoInstrumento').value;
+            const isinFilter = document.getElementById('isinFilter').value.trim();
+            const fechaInicio = document.getElementById('fechaInicio').value;
+            const fechaFin = document.getElementById('fechaFin').value;
+            const estadoFilter = document.getElementById('estadoFilter').value;
+
+
+            let datosFiltrados = [...datosEjemplo];
+
+            // Filtrar por número de inversión
+            if (inversionNum) {
+                datosFiltrados = datosFiltrados.filter(item =>
+                    item.invNum.includes(inversionNum) ||
+                    item.invPrincipal.includes(inversionNum)
+                );
+            }
+
+            // Filtrar por tipo de instrumento
+            if (tipoInstrumento) {
+                datosFiltrados = datosFiltrados.filter(item =>
+                    item.tipoInstrumento === tipoInstrumento
+                );
+            }
+
+            // Filtrar por ISIN
+            if (isinFilter) {
+                datosFiltrados = datosFiltrados.filter(item =>
+                    item.isin.toLowerCase().includes(isinFilter.toLowerCase())
+                );
+            }
+
+            // Filtrar por estado
+            if (estadoFilter) {
+                datosFiltrados = datosFiltrados.filter(item =>
+                    item.estado === estadoFilter
+                );
+            }
+
+            // Filtrar por rango de fechas
+            if (fechaInicio || fechaFin) {
+                datosFiltrados = datosFiltrados.filter(item => {
+                    const fechaCompra = convertirFecha(item.fechaCompra);
+                    const fechaVenc = convertirFecha(item.fechaVencimiento);
+
+                    let cumpleInicio = true;
+                    let cumpleFin = true;
+
+                    if (fechaInicio) {
+                        const inicio = new Date(fechaInicio);
+                        cumpleInicio = fechaCompra >= inicio || fechaVenc >= inicio;
+                    }
+
+                    if (fechaFin) {
+                        const fin = new Date(fechaFin);
+                        cumpleFin = fechaCompra <= fin || fechaVenc <= fin;
+                    }
+
+                    return cumpleInicio && cumpleFin;
+                });
+            }
+
+            datosActuales = datosFiltrados;
+            cargarDatos(datosFiltrados);
+            resetearSelecciones();
+
+            // Mostrar mensaje de búsqueda
+            if (inversionNum || tipoInstrumento || isinFilter || fechaInicio || fechaFin) {
+                // toastr.info('Búsqueda realizada correctamente');
+            }
+        }
+
+        // Función auxiliar para convertir fecha DD/MM/YYYY a objeto Date
+        function convertirFecha(fechaStr) {
+            const [dia, mes, año] = fechaStr.split('/');
+            return new Date(año, mes - 1, dia);
+        }
+
+        // Función para resetear filtros
+        function resetearFiltros() {
+            document.getElementById('inversionNum').value = '';
+            document.getElementById('tipoInstrumento').value = '';
+            document.getElementById('isinFilter').value = '';
+            document.getElementById('fechaInicio').value = '';
+            document.getElementById('fechaFin').value = '';
+
+            document.getElementById('estadoFilter').value = '';
+
+            datosActuales = [...datosEjemplo];
+            cargarDatos(datosActuales);
+            resetearSelecciones();
+
+            toastr.info('Filtros restablecidos');
+        }
+
+        // Función para ver detalle del cupón (simulación de redirección)
+        // function verDetalleCupon(invNum) {
+        //     toastr.success(`Redirigiendo a cancelar el cupón INV# ${invNum}...`);
+
+        //     setTimeout(() => {
+        //         console.log(`Navegando a la pantalla de cancelar el cupón INV# ${invNum}`);
+        //         // window.location.href = `tipos-cancelacion.html?inv=${invNum}`;
+        //     }, 1500);
+
+        //     window.location.href = "tipos-cancelacion.html?invNum=" + invNum;
+        // }
+
+        // Función para seleccionar/deseleccionar todos
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="check_"]');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+                const index = parseInt(checkbox.value);
+                if (selectAll.checked) {
+                    if (!registrosSeleccionados.includes(index)) {
+                        registrosSeleccionados.push(index);
+                    }
+                } else {
+                    const pos = registrosSeleccionados.indexOf(index);
+                    if (pos > -1) {
+                        registrosSeleccionados.splice(pos, 1);
+                    }
+                }
+            });
+
+            actualizarEstadoCancelacionMasiva();
+        }
+
+        // Función para manejar selección individual
+        function toggleSelection(index) {
+            const checkbox = document.getElementById(`check_${index}`);
+
+            if (checkbox.checked) {
+                if (!registrosSeleccionados.includes(index)) {
+                    registrosSeleccionados.push(index);
+                }
+            } else {
+                const pos = registrosSeleccionados.indexOf(index);
+                if (pos > -1) {
+                    registrosSeleccionados.splice(pos, 1);
+                }
+            }
+
+            // Actualizar checkbox "Seleccionar todo"
+            const totalCheckboxes = document.querySelectorAll('input[type="checkbox"][id^="check_"]').length;
+            const selectAll = document.getElementById('selectAll');
+            selectAll.checked = registrosSeleccionados.length === totalCheckboxes;
+
+            actualizarEstadoCancelacionMasiva();
+        }
+
+        // Función para actualizar estado del botón de cancelación masiva
+        function actualizarEstadoCancelacionMasiva() {
+            const btnMassCancel = document.getElementById('massCancel');
+            const selectionInfo = document.getElementById('selectionInfo');
+
+            if (registrosSeleccionados.length < 2) {
+                btnMassCancel.disabled = true;
+                selectionInfo.textContent = 'Selecciona 2 o más registros del mismo ISIN y fecha de vencimiento para cancelación masiva';
+                return;
+            }
+
+            // Validar que todos tengan el mismo ISIN y fecha fin cupón
+            const primerRegistro = datosActuales[registrosSeleccionados[0]];
+            const mismosParametros = registrosSeleccionados.every(index => {
+                const registro = datosActuales[index];
+                return registro.isin === primerRegistro.isin &&
+                    registro.fechaFinCupon === primerRegistro.fechaFinCupon;
+            });
+
+            if (mismosParametros) {
+                btnMassCancel.disabled = false;
+                selectionInfo.textContent = `${registrosSeleccionados.length} registros seleccionados (ISIN: ${primerRegistro.isin}, Vencimiento: ${primerRegistro.fechaFinCupon})`;
+            } else {
+                btnMassCancel.disabled = true;
+                selectionInfo.textContent = 'La cancelación masiva solo aplica a cupones de la misma emisión (ISIN) y fecha de vencimiento del cupón';
+                toastr.warning('La cancelación masiva solo aplica a cupones de la misma emisión (ISIN) y fecha de vencimiento del cupón.');
+            }
+        }
+
+        // Función para resetear selecciones
+        function resetearSelecciones() {
+            registrosSeleccionados = [];
+            const selectAll = document.getElementById('selectAll');
+            selectAll.checked = false;
+
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][id^="check_"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            actualizarEstadoCancelacionMasiva();
+        }
+
+        // Función para abrir modal de cancelación masiva
+        function abrirModalCancelacionMasiva() {
+            const modal = document.getElementById('modalCancelacionMasiva');
+            const modalTableBody = document.getElementById('modalTableBody');
+
+            // Limpiar tabla del modal
+            modalTableBody.innerHTML = '';
+
+            let totalIntereses = 0;
+            let totalAmortizaciones = 0;
+
+            // Llenar tabla con registros seleccionados
+            registrosSeleccionados.forEach(index => {
+                const registro = datosActuales[index];
+                const total = registro.interes + registro.amortizacion;
+
+                totalIntereses += registro.interes;
+                totalAmortizaciones += registro.amortizacion;
+
+                const row = modalTableBody.insertRow();
+                row.innerHTML = `
+                    <td>${registro.invNum}</td>
+                    <td>${registro.isin}</td>
+                    <td>${registro.fechaFinCupon}</td>
+                    <td class="td-right">S/ ${formatNumber(registro.interes)}</td>
+                    <td class="td-right">S/ ${formatNumber(registro.amortizacion)}</td>
+                    <td class="td-right">S/ ${formatNumber(total)}</td>
+                `;
+            });
+
+            // Actualizar totales
+            document.getElementById('totalIntereses').textContent = `S/ ${formatNumber(totalIntereses)}`;
+            document.getElementById('totalAmortizaciones').textContent = `S/ ${formatNumber(totalAmortizaciones)}`;
+            document.getElementById('totalGeneral').textContent = `S/ ${formatNumber(totalIntereses + totalAmortizaciones)}`;
+
+            // Resetear cuenta bancaria
+            document.getElementById('cuentaBancaria').value = '';
+
+            // Establecer fecha de hoy por defecto
+            const hoy = new Date();
+            const fechaHoy = hoy.toISOString().split('T')[0];
+            document.getElementById('fechaCancelacion').value = fechaHoy;
+
+            modal.style.display = 'block';
+        }
+
+        // Función para cerrar modal
+        function cerrarModalCancelacionMasiva() {
+            const modal = document.getElementById('modalCancelacionMasiva');
+            modal.style.display = 'none';
+        }
+
+        // Función para confirmar cancelación masiva
+        function confirmarCancelacionMasiva2() {
+            const cuentaBancaria = document.getElementById('cuentaBancaria').value;
+            const fechaCancelacion = document.getElementById('fechaCancelacion').value;
+
+            if (!cuentaBancaria) {
+                toastr.error('Debe seleccionar una cuenta bancaria');
+                return;
+            }
+
+            // / GUARDAR LA CANTIDAD ANTES DE RESETEAR
+            const cantidadCancelados = registrosSeleccionados.length;
+
+
+            if (!fechaCancelacion) {
+                toastr.error('Debe seleccionar una fecha de cancelación');
+                return;
+            }
+
+            // Simular cancelación masiva
+            registrosSeleccionados.forEach(index => {
+                datosActuales[index].estado = 'CANCELADO';
+            });
+
+            // Recargar tabla
+            cargarDatos(datosActuales);
+
+            // Cerrar modal
+            cerrarModalCancelacionMasiva();
+
+            // Resetear selecciones
+            resetearSelecciones();
+
+            toastr.success(`Cancelación masiva exitosa. ${registrosSeleccionados.length} cupones han sido cancelados.`);
+        }
+
+        function confirmarCancelacionMasiva() {
+            const cuentaBancaria = document.getElementById('cuentaBancaria').value;
+            const fechaCancelacion = document.getElementById('fechaCancelacion').value;
+
+            if (!cuentaBancaria) {
+                toastr.error('Debe seleccionar una cuenta bancaria');
+                return;
+            }
+
+            if (!fechaCancelacion) {
+                toastr.error('Debe seleccionar una fecha de cancelación');
+                return;
+            }
+
+            // GUARDAR LA CANTIDAD ANTES DE RESETEAR
+            const cantidadCancelados = registrosSeleccionados.length;
+
+            // Simular cancelación masiva
+            registrosSeleccionados.forEach(index => {
+                datosActuales[index].estado = 'CANCELADO';
+            });
+
+            // Recargar tabla
+            cargarDatos(datosActuales);
+
+            // Cerrar modal
+            cerrarModalCancelacionMasiva();
+
+            // Resetear selecciones
+            resetearSelecciones();
+
+            // USAR LA VARIABLE GUARDADA EN LUGAR DE registrosSeleccionados.length
+            toastr.success(`Cancelación masiva exitosa. ${cantidadCancelados} cupones han sido cancelados.`);
+        }
+
+        // // Cerrar modal al hacer clic fuera de él
+        // window.onclick = function (event) {
+        //     const modal = document.getElementById('modalCancelacionMasiva');
+        //     if (event.target === modal) {
+        //         cerrarModalCancelacionMasiva();
+        //     }
+        // }
+
+        // Agregar al final del script existente, junto con el otro window.onclick
+        window.onclick = function (event) {
+            const modalCancelacionMasiva = document.getElementById('modalCancelacionMasiva');
+            const modalCancelacionCupon = document.getElementById('modalCancelacionCupon');
+
+            if (event.target === modalCancelacionMasiva) {
+                cerrarModalCancelacionMasiva();
+            }
+
+            if (event.target === modalCancelacionCupon) {
+                cerrarModalCancelacion();
+            }
+        }
+
+
+
+        // Inicialización al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            cargarDatos(datosActuales);
+
+            // Event listeners para búsqueda en tiempo real por Enter
+            document.getElementById('inversionNum').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    buscarCupones();
+                }
+            });
+
+            document.getElementById('isinFilter').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    buscarCupones();
+                }
+            });
+
+            // Establecer fechas por defecto (último mes)
+            // const hoy = new Date(2025, 7, 15);
+            // const haceMes = new Date(2025, 6, 1);
+
+            const hoy = new Date(2026, 2, 30);
+            const haceMes = new Date(2026, 2, 15);
+
+            document.getElementById('fechaFin').value = hoy.toISOString().split('T')[0];
+            document.getElementById('fechaInicio').value = haceMes.toISOString().split('T')[0];
+        });
+
+
+
+        // Variable global para almacenar el número de inversión
+        let inversionSeleccionada = '';
+
+        // Función para abrir modal de cancelación
+        function abrirVentanaCancelacion(invNum) {
+            inversionSeleccionada = invNum;
+            document.getElementById('invNumModal').textContent = invNum;
+
+            // Limpiar formulario
+            document.getElementById('tipoCancelacion').value = '';
+            document.getElementById('sustentoArchivo').value = '';
+            document.getElementById('justificacionTexto').value = '';
+
+            // Mostrar modal
+            document.getElementById('modalCancelacionCupon').style.display = 'block';
+        }
+
+        // Función para cerrar modal
+        function cerrarModalCancelacion() {
+            document.getElementById('modalCancelacionCupon').style.display = 'none';
+            inversionSeleccionada = '';
+        }
+
+        // Función para continuar con la cancelación
+        function continuarCancelacion() {
+            const tipo = document.getElementById('tipoCancelacion').value;
+            const sustento = document.getElementById('sustentoArchivo').files[0];
+            const justificacion = document.getElementById('justificacionTexto').value.trim();
+
+            // Validaciones
+            if (!tipo) {
+                toastr.error('Debe seleccionar un tipo de cancelación');
+                return;
+            }
+
+            if (!sustento) {
+                toastr.error('Debe adjuntar un archivo de sustento');
+                return;
+            }
+
+            if (!justificacion) {
+                toastr.error('Debe ingresar una justificación');
+                return;
+            }
+
+            // Crear parámetros para el query string
+            const params = new URLSearchParams({
+                invNum: inversionSeleccionada,
+                tipo: tipo,
+                sustento: sustento.name,
+                justificacion: justificacion
+            });
+
+            // Redirigir a tipos-cancelacion.html
+            // window.location.href = `6-tipos-cancelacion-ejemplo.html?${params.toString()}`;
+            window.open(`6-tipos-cancelacion-ejemplo.html?${params.toString()}`, '_blank');
+
+        }
+
+
+    </script>
+
+    <!-- Modal de Cancelación de Cupón -->
+    <div id="modalCancelacionCupon" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Cancelación de Cupón - INV# <span id="invNumModal"></span></h2>
+                <span class="close" onclick="cerrarModalCancelacion()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group full-width" style="margin-bottom: 20px;">
+                    <label class="form-label">Tipo de Cancelación:</label>
+                    <select id="tipoCancelacion" class="form-control">
+                        <option value="">Seleccionar tipo...</option>
+                        <option value="regular">Cancelación Regular</option>
+                        <option value="parcial">Cancelación Parcial</option>
+                        <option value="anticipada">Cancelación Anticipada</option>
+                        <option value="moneda_distinta">Cancelación en Moneda Distinta</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width" style="margin-bottom: 20px;">
+                    <label class="form-label">Sustento (Archivo):</label>
+                    <input type="file" id="sustentoArchivo" class="form-control"
+                        accept=".pdf,.doc,.docx,.jpg,.png,.xlsx">
+                    <small style="color: #666; font-size: 0.8em;">Formatos permitidos: PDF, DOC, DOCX, JPG, PNG,
+                        XLSX</small>
+                </div>
+
+                <div class="form-group full-width" style="margin-bottom: 20px;">
+                    <label class="form-label">Justificación:</label>
+                    <textarea id="justificacionTexto" class="form-control" rows="4"
+                        placeholder="Ingrese la justificación para la cancelación del cupón..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="cerrarModalCancelacion()">Cancelar</button>
+                <button class="btn btn-success" onclick="continuarCancelacion()">Continuar con Cancelación</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

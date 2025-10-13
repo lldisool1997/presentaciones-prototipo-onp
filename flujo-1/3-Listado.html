@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Inversiones - Sistema de Gestión de Bonos</title>
+
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* Profile Info */
+        .profile-info {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #005C97 0%, #004a7c 100%);
+            color: white;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Content Wrapper */
+        .content-wrapper {
+            padding: 30px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            color: #2c3e50;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 4px solid #1976d2;
+            border-bottom: 2px solid #3498db;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .filters-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+
+        select,
+        input {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus,
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #1f5f8b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.8em;
+            border-radius: 5px;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .btn-cuponera {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-cuponera:hover {
+            background: #219a52;
+            transform: translateY(-1px);
+        }
+
+        /* Table */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1500px;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 15px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+
+        .text-left {
+            text-align: left !important;
+        }
+
+        .text-right {
+            text-align: right !important;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e3f2fd;
+            cursor: pointer;
+        }
+
+        /* Fila seleccionada */
+        tr.selected {
+            background-color: #cce5ff !important;
+            border-left: 4px solid #1976d2;
+        }
+
+        tr.selected td {
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-registrado {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+
+        .status-cancelado {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-aprobado {
+            background: #d7ebf8;
+            color: #1f1c72;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Checkbox styles */
+        input[type="checkbox"] {
+            margin: 0;
+        }
+
+        @media (max-width: 1200px) {
+            .filters-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filters-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            table {
+                font-size: 0.7em;
+            }
+
+            .actions-cell {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .profile-info {
+                position: static;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+        }
+
+        .expand-icon {
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #3498db;
+            transition: transform 0.3s ease;
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+        }
+
+        .expand-icon:hover {
+            background-color: #e3f2fd;
+            border-radius: 3px;
+        }
+
+        .child-row {
+            background-color: #f8f9fa !important;
+        }
+
+        .child-row td {
+            padding: 0 !important;
+        }
+
+        .sub-table {
+            width: 100%;
+            margin: 10px;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+
+        .sub-table th {
+            background: #e9ecef;
+            color: #495057;
+            padding: 8px;
+            font-size: 0.75em;
+        }
+
+        .sub-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .no-children-message {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            max-width: 1200px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #005C97 0%, #004a7c 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .modal-content {
+            padding: 30px;
+        }
+
+        .modal-section {
+            margin-bottom: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+
+        .info-value {
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            color: #495057;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            margin-top: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #005C97;
+            border-bottom-color: #005C97;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .document-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .btn-aprobar {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-aprobar:hover {
+            background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+            transform: translateY(-2px);
+        }
+
+        .btn-cerrar {
+            background: #6c757d;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cerrar:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .status-generado {
+            background: #e1d5f7;
+            color: #6f42c1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Profile Info -->
+            <div class="profile-info">
+                Perfil: OGR
+            </div>
+
+            <!-- Header -->
+            <div class="header">
+                <h1>Listado de Inversiones Financieras</h1>
+            </div>
+
+            <!-- Content Wrapper -->
+            <div class="content-wrapper">
+                <!-- Filters Section -->
+                <div class="filters-section" style="background-color: #f8f9fa;">
+                    <!-- Primera fila de filtros -->
+                    <div class="filters-row" style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label for="entidad">Entidad:</label>
+                            <select id="entidad">
+                                <option value="">Todas las entidades</option>
+                                <option value="fdo-consolidado" selected>Fondo Consolidado de Reservas Previsionales –
+                                    FCR
+                                </option>
+                                <option value="fcr-macrofondo">FCR-MACROFONDO</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="unidadNegocio">Unidad de Negocio:</label>
+                            <select id="unidadNegocio">
+                                <option value="">Todas las unidades</option>
+                                <option value="fcr-macrofondo" selected>FCR-MACROFONDO</option>
+                                <option value="bonos-corporativos">BONOS CORPORATIVOS</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipoInstrumento">Tipo Instrumento:</label>
+                            <select id="tipoInstrumento">
+                                <option value="">Todos los tipos</option>
+                                <option value="bonos-corporativos" selected>BONOS SOBERANO</option>
+
+                                <option value="bonos-corporativos">BONOS CORPORATIVOS</option>
+                                <option value="depositos-plazo">Depósitos a Plazo</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inversionNum">Inv. Principal:</label>
+                            <input type="text" id="inversionNum" placeholder="Número de inversión">
+                        </div>
+                    </div>
+
+                    <!-- Segunda fila de filtros -->
+                    <div class="filters-row" style="margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label for="numeroDeposito">Inversión #:</label>
+                            <input type="text" id="numeroDeposito" placeholder="Número de depósito">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="estado">Estado:</label>
+                            <select id="estado">
+                                <option value="">Todos los estados</option>
+                                <!-- <option value="cancelado">Cancelado</option>
+                                <option value="aprobado">Aprobado</option>
+                                <option value="registrado">Registrado</option> -->
+
+                                <option value="registrado">Registrado</option>
+                                <option value="registrado">Generado</option>
+
+                                <option value="aprobado">Aprobado</option>
+                                <option value="cancelado">Cancelado</option>
+
+                            </select>
+                        </div>
+
+                        <!-- Checkboxes para fechas -->
+                        <!-- <div class="form-group">
+                            <label>Fechas:</label>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="checkFechaCompra"> F. Compra
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="checkFechaEmision"> F. Emisión
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                                    <input type="checkbox" id="checkFechaVencim"> F. Vencim.
+                                </label>
+                            </div>
+                        </div> -->
+                    </div>
+
+                    <!-- Tercera fila - botones -->
+                    <div class="filters-row">
+                        <button class="btn btn-primary" onclick="filtrarInversiones()">Buscar</button>
+                        <!-- <button class="btn btn-primary" onclick="generarCupon()"
+                            style="background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);">Generar
+                            Cupón</button> -->
+                    </div>
+                </div>
+
+                <!-- Section Header -->
+                <div class="section-header">Inversiones Registradas</div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+
+
+                                <th style="width: 40px;"></th>
+                                <th>Estado</th>
+                                <th>Inversión #</th>
+                                <th>Inv. Principal</th>
+                                <th>Producto</th>
+                                <th>Número Depósito</th>
+                                <th>Fecha Compra</th>
+                                <th>Fecha Emisión</th>
+                                <th>Fecha Vencim.</th>
+                                <th>Carta Apertura</th>
+                                <th>Carta Cancelación</th>
+                                <th>Moneda</th>
+                                <th>Valor Nominal</th>
+                                <th>Compra Spot Cupón</th>
+                                <th>P.Compra/Cupón%</th>
+                                <th>Tipo Instrumento</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inversionesBody">
+                            <!-- Las filas se generarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery and Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        // Configuración de Toastr
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+
+
+
+        const inversiones = [
+
+            {
+                estado: 'APROBADO',
+                inversionNum: '2001',
+                invPrincipal: '2001',
+                producto: 'BS-20SEP2029',
+                numeroDeposito: 'SOBERANO-BS20SEP29',
+                fechaCompra: '20/09/2025',
+                fechaEmision: '20/09/2025',
+                fechaVencimiento: '20/09/2029',
+                cataApertura: '22/09/2025',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            }
+
+            ,
+            {
+                estado: 'GENERADO',
+                inversionNum: '1001',
+                invPrincipal: '1001',
+                producto: 'BS-12AGO2026',
+                numeroDeposito: 'SOBERANO-BS12AGO26',
+                fechaCompra: '01/07/2021',    // igual a fecha emisión porque es primario
+                fechaEmision: '01/07/2021',
+                fechaVencimiento: '01/07/2026',
+                cataApertura: '03/07/2021',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            },
+
+
+            {
+                estado: 'CANCELADO',
+                inversionNum: '1002',
+                invPrincipal: '1001',
+                producto: 'BS-12AGO2026',
+                numeroDeposito: 'SOBERANO-BS12AGO26',
+                fechaCompra: '01/07/2021',    // igual a fecha emisión porque es primario
+                fechaEmision: '01/07/2021',
+                fechaVencimiento: '01/01/2022',
+                cataApertura: '03/07/2021',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            },
+            // Cupones trimestrales generados
+            {
+                estado: 'CANCELADO',
+                inversionNum: '1003',
+                invPrincipal: '1001',
+                producto: 'BS-12AGO2026',
+                numeroDeposito: 'SOBERANO-BS12AGO26',
+                fechaCompra: '01/01/2022',    // igual a fecha emisión porque es primario
+                fechaEmision: '01/01/2022',
+                fechaVencimiento: '01/07/2022',
+                cataApertura: '03/07/2021',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            },
+            {
+                estado: 'CANCELADO',
+                inversionNum: '1004',
+                invPrincipal: '1001',
+                producto: 'BS-12AGO2026',
+                numeroDeposito: 'SOBERANO-BS12AGO26',
+                fechaCompra: '01/07/2022',    // igual a fecha emisión porque es primario
+                fechaEmision: '01/07/2022',
+                fechaVencimiento: '01/01/2023',
+                cataApertura: '03/07/2021',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            },
+            {
+                estado: 'CANCELADO',
+                inversionNum: '1005',
+                invPrincipal: '1001',
+                producto: 'BS-12AGO2026',
+                numeroDeposito: 'SOBERANO-BS12AGO26',
+                fechaCompra: '01/01/2023',    // igual a fecha emisión porque es primario
+                fechaEmision: '01/01/2023',
+                fechaVencimiento: '01/07/2023',
+                cataApertura: '03/07/2021',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            },
+            {
+                estado: 'CANCELADO',
+                inversionNum: '1006',
+                invPrincipal: '1001',
+                producto: 'BS-12AGO2026',
+                numeroDeposito: 'SOBERANO-BS12AGO26',
+                fechaCompra: '01/07/2023',    // igual a fecha emisión porque es primario
+                fechaEmision: '01/07/2023',
+                fechaVencimiento: '01/01/2024',
+                cataApertura: '03/07/2021',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            },
+            {
+                estado: 'CANCELADO',
+                inversionNum: '1007',
+                invPrincipal: '1001',
+                producto: 'BS-12AGO2026',
+                numeroDeposito: 'SOBERANO-BS12AGO26',
+                fechaCompra: '01/01/2024',    // igual a fecha emisión porque es primario
+                fechaEmision: '01/01/2024',
+                fechaVencimiento: '01/07/2024',
+                cataApertura: '03/07/2021',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            },
+            {
+                estado: 'CANCELADO',
+                inversionNum: '1008',
+                invPrincipal: '1001',
+                producto: 'BS-12AGO2026',
+                numeroDeposito: 'SOBERANO-BS12AGO26',
+                fechaCompra: '01/07/2024',    // igual a fecha emisión porque es primario
+                fechaEmision: '01/07/2024',
+                fechaVencimiento: '01/01/2025',
+                cataApertura: '03/07/2021',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            },
+            {
+                estado: 'CANCELADO',
+                inversionNum: '1009',
+                invPrincipal: '1001',
+                producto: 'BS-12AGO2026',
+                numeroDeposito: 'SOBERANO-BS12AGO26',
+                fechaCompra: '01/01/2025',    // igual a fecha emisión porque es primario
+                fechaEmision: '01/01/2025',
+                fechaVencimiento: '01/07/2025',
+                cataApertura: '03/07/2021',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            },
+
+
+            {
+                estado: 'REGISTRADO',
+                inversionNum: '1010',
+                invPrincipal: '1001',
+                producto: 'BS-12AGO2026',
+                numeroDeposito: 'SOBERANO-BS12AGO26',
+                fechaCompra: '01/07/2025',
+                fechaEmision: '01/07/2025',
+                fechaVencimiento: '01/01/2026',
+                cataApertura: '03/07/2021',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            },
+            {
+                estado: 'REGISTRADO',
+                inversionNum: '1011',
+                invPrincipal: '1001',
+                producto: 'BS-12AGO2026',
+                numeroDeposito: 'SOBERANO-BS12AGO26',
+                fechaCompra: '01/01/2026',
+                fechaEmision: '01/01/2026',
+                fechaVencimiento: '01/07/2026',
+                cataApertura: '03/07/2021',
+                cataCancelacion: 'Local',
+                moneda: 'Local',
+                valorNominal: '1,000,000.00',
+                compraSpotCupon: '',
+                pCompraCupon: '100.00',
+                ecoInstrument: 'BONOS SOBERANO'
+            }
+        ]
+
+        // Variable para almacenar la fila seleccionada
+        let filaSeleccionada = null;
+
+        function agruparInversiones() {
+            const grupos = {};
+            inversiones.forEach(inv => {
+                if (!grupos[inv.invPrincipal]) {
+                    grupos[inv.invPrincipal] = {
+                        padre: null,
+                        hijos: []
+                    };
+                }
+
+                if (inv.inversionNum === inv.invPrincipal) {
+                    grupos[inv.invPrincipal].padre = inv;
+                } else {
+                    grupos[inv.invPrincipal].hijos.push(inv);
+                }
+            });
+            return grupos;
+        }
+
+        function toggleExpansion(invPrincipal, iconElement) {
+            const childRow = document.getElementById('child-' + invPrincipal);
+            const isExpanded = childRow.style.display !== 'none';
+
+            if (isExpanded) {
+                childRow.style.display = 'none';
+                iconElement.textContent = '+';
+                iconElement.style.transform = 'rotate(0deg)';
+            } else {
+                childRow.style.display = 'table-row';
+                iconElement.textContent = '−';
+                iconElement.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function generarTablaInversiones() {
+            const tbody = document.getElementById('inversionesBody');
+            tbody.innerHTML = '';
+
+            const grupos = agruparInversiones();
+
+            Object.keys(grupos).forEach((invPrincipal, index) => {
+                const grupo = grupos[invPrincipal];
+                const padre = grupo.padre;
+                const hijos = grupo.hijos;
+
+                if (!padre) return;
+
+                // Fila del padre
+                const row = tbody.insertRow();
+
+                // Event listener para seleccionar fila (evitando el botón de expansión)
+                row.addEventListener('click', function (e) {
+                    if (!e.target.classList.contains('expand-icon')) {
+                        seleccionarFila(row, index, padre);
+                    }
+                });
+
+                row.innerHTML = `
+            <td>
+                <span class="expand-icon" onclick="toggleExpansion('${padre.invPrincipal}', this)">+</span>
+            </td>
+            <td><span class="status-badge status-${padre.estado.toLowerCase()}">${padre.estado}</span></td>
+            <td>${padre.inversionNum}</td>
+            <td>${padre.invPrincipal}</td>
+            <td class="text-left">${padre.producto}</td>
+            <td class="text-left">${padre.numeroDeposito}</td>
+            <td>${padre.fechaCompra}</td>
+            <td>${padre.fechaEmision}</td>
+            <td>${padre.fechaVencimiento}</td>
+            <td>${padre.cataApertura}</td>
+            <td>${padre.cataCancelacion}</td>
+            <td class="text-right">${padre.moneda}</td>
+            <td class="text-left">${padre.valorNominal}</td>
+            <td>${padre.compraSpotCupon}</td>
+            <td>${padre.pCompraCupon}</td>
+            <td>${padre.ecoInstrument}</td>
+            
+    <div class="actions-cell">
+        ${generarBotonSegunEstado(padre, hijos.length > 0)}
+    </div>
+</td>
+</td>
+        `;
+
+                // Fila de hijos (oculta por defecto)
+                const childRow = tbody.insertRow();
+                childRow.id = 'child-' + padre.invPrincipal;
+                childRow.className = 'child-row';
+                childRow.style.display = 'none';
+
+                if (hijos.length > 0) {
+                    childRow.innerHTML = `
+    <td colspan="17">
+        <table class="sub-table">
+            <thead>
+                <tr>
+                    <th>Estado</th>
+                    <th>Inversión #</th>
+                    <th>Fecha Inicio Cupón</th>
+                    <th>Fecha Fin Cupón</th>
+                    <th>Valor Nominal</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${hijos.map(hijo => `
+                    <tr>
+                        <td><span class="status-badge status-${hijo.estado.toLowerCase()}">${hijo.estado}</span></td>
+                        <td>${hijo.inversionNum}</td>
+                        <td>${hijo.fechaCompra}</td>
+                        <td>${hijo.fechaVencimiento}</td>
+                        <td>${hijo.valorNominal}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </td>
+`;
+                } else {
+                    childRow.innerHTML = `
+                <td colspan="17">
+                    <div class="no-children-message">No hay cupones registrados</div>
+                </td>
+            `;
+                }
+            });
+        }
+        function seleccionarFila(row, index, inversion) {
+            // Quitar selección anterior
+            if (filaSeleccionada) {
+                filaSeleccionada.classList.remove('selected');
+            }
+
+            // Seleccionar nueva fila
+            row.classList.add('selected');
+            filaSeleccionada = row;
+
+            // Mostrar información de la fila seleccionada
+            const grupos = agruparInversiones();
+            const grupo = grupos[inversion.invPrincipal];
+            const tieneCupones = grupo && grupo.hijos.length > 0;
+
+            const mensaje = `Registro principal seleccionado: ${inversion.inversionNum} - ${tieneCupones ? 'Tiene ' + grupo.hijos.length + ' cupones' : 'Sin cupones generados'}`;
+
+            toastr.info(mensaje);
+        }
+
+        // Función para generar cupón
+        function generarCupon() {
+            toastr.info('Generando cupón...');
+            // Aquí iría la lógica para generar cupón
+            setTimeout(() => {
+                toastr.success('Cupón generado correctamente');
+            }, 1000);
+        }
+        // Función para generar cuponera (navegar a la otra pantalla)
+
+
+        function verCuponera(inversionNum) {
+            toastr.info(`Navegando a ver cuponera de inversión ${inversionNum}`);
+            // Aquí irá la navegación real
+            window.location.href = `ver-cuponera.html?inversion=${inversionNum}`;
+        }
+
+        function generarNuevaCuponera(inversionNum) {
+            toastr.info(`Navegando a generar cuponera de inversión ${inversionNum}`);
+            // Aquí irá la navegación real
+            // window.location.href = `3.1-generacion-cuponera.html?inversion=${inversionNum}`;
+
+            window.open(`3.1-generacion-cuponera.html?inversion=${inversionNum}`, '_blank');
+
+        }
+
+
+        function determinarBotonAccion(inversion, tieneCupones) {
+            // Lógica para determinar qué botón mostrar según estado y cupones
+        }
+
+
+        // Función para filtrar inversiones
+        function filtrarInversiones() {
+            const entidad = document.getElementById('entidad').value;
+            const estado = document.getElementById('estado').value;
+            const tipoInstrumento = document.getElementById('tipoInstrumento').value;
+
+            toastr.info('Aplicando filtros...');
+
+            // Aquí iría la lógica de filtrado real
+            setTimeout(() => {
+                toastr.success('Filtros aplicados correctamente');
+            }, 500);
+        }
+
+        // Inicializar tabla al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            generarTablaInversiones();
+        });
+
+
+        // Variable global para almacenar la inversión actual
+        let inversionActual = null;
+
+        function abrirModalAprobacion(inversion) {
+            inversionActual = inversion;
+
+            // Resetear documentos adicionales
+            documentosAdicionales = [];
+
+            // Llenar la información general
+            llenarInformacionGeneral(inversion);
+
+            // Llenar documentos
+            llenarDocumentosGeneral();
+            configurarDocumentosTesoreria();
+            configurarSeccionJustificacion();
+
+            // Mostrar el modal
+            document.getElementById('modalAprobacion').style.display = 'flex';
+
+            toastr.info('Modal de aprobación abierto');
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalAprobacion').style.display = 'none';
+            inversionActual = null;
+        }
+
+        function cambiarTab(tabName) {
+            // Remover clase active de todos los tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+            // Activar el tab seleccionado
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+
+        function llenarInformacionGeneral(inversion) {
+            const container = document.getElementById('infoGeneral');
+
+            // Mapeo de los campos basado en el HTML de registro
+            const campos = [
+                { label: 'Código del instrumento', value: 'INV-40459532' },
+                { label: 'Unidad de negocio', value: 'FCR-LEY N° 28046' },
+                { label: 'Plazo de vencimiento', value: 'Se calculará automáticamente' },
+                { label: 'Emisor', value: 'REPUBLICA DEL PERU' },
+                { label: 'Clasificación de riesgos', value: 'BBB+' },
+                { label: 'Grupo económico', value: 'Grupo Romero' },
+                { label: 'ISIN', value: inversion.producto || 'PE0324005A57' },
+                { label: 'Nemónico', value: 'SBPER' },
+                { label: 'Moneda', value: 'PEN' },
+                { label: 'Cantidad', value: '1,000.00' },
+                { label: 'Valor unitario', value: '1,000.00' },
+                { label: 'Valor nominal adquirido', value: inversion.valorNominal || '1,000,000.00' },
+                { label: 'Periodicidad del cupón', value: 'Semestral' },
+                { label: 'Cupón (%)', value: '6.5000' },
+                { label: 'Tipo de amortización', value: 'Amortizable' },
+                { label: 'Fecha de emisión', value: inversion.fechaEmision || '20/09/2025' },
+                { label: 'Fecha Liquidación', value: '21/09/2025' },
+                { label: 'Fecha de vencimiento', value: inversion.fechaVencimiento || '20/09/2029' },
+                { label: 'Plazo en años', value: '4' },
+                { label: 'Banco cuenta de cargo', value: 'BANCO DE CRÉDITO' },
+                { label: 'N° de Cuenta Bancaria', value: 'N° 193-13814691-0-31' },
+                { label: 'Tipo de custodia', value: 'Local' },
+                { label: 'Nombre de custodia', value: 'Banco Scotiabank' },
+                { label: 'Tipo de Mercado', value: 'Primario' }
+            ];
+
+            container.innerHTML = campos.map(campo => `
+        <div class="info-field">
+            <div class="info-label">${campo.label}</div>
+            <div class="info-value">${campo.value}</div>
+        </div>
+    `).join('');
+        }
+        function llenarDocumentosGeneral() {
+            const container = document.getElementById('tab-general');
+
+            // Documentos que ya están cargados (simulando que vienen del registro)
+            const documentosGenerales = [
+                'Informe de Riesgos',
+                'Informe Legal',
+                'Acta de Comité de Inversiones'
+            ];
+
+            container.innerHTML = `
+        <div style="margin-bottom: 20px;">
+            <h4 style="color: #005C97; margin-bottom: 15px;">Documentos ya cargados:</h4>
+            ${documentosGenerales.map(doc => `
+                <div class="document-item">
+                    <span style="color: #28a745;">📄</span>
+                    <span style="flex: 1;">${doc}</span>
+                    <button class="btn btn-action" style="background: #17a2b8; color: white;" 
+                            onclick="descargarDocumento('${doc}')">Descargar</button>
+                </div>
+            `).join('')}
+        </div>
+    `;
+        }
+
+        // Array global para almacenar documentos adicionales
+        let documentosAdicionales = [];
+
+        function configurarDocumentosTesoreria() {
+            const container = document.getElementById('tab-tesoreria');
+
+            container.innerHTML = `
+        <div>
+            <h4 style="color: #005C97; margin-bottom: 15px;">Documentos requeridos para aprobación:</h4>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                    Confirmación de compra
+                </label>
+                <div style="border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer;"
+                     onclick="triggerFileUpload('confirmacion-compra')">
+                    <input type="file" id="confirmacion-compra" style="display: none;" 
+                           accept=".pdf" onchange="handleFileUpload(this, 'Confirmación de compra')">
+                    <span id="status-confirmacion" style="color: #666;">📄 Seleccionar archivo PDF</span>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                    Constancia de Confirmación de Venta de Entidad Financiera
+                </label>
+                <div style="border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer;"
+                     onclick="triggerFileUpload('constancia-venta')">
+                    <input type="file" id="constancia-venta" style="display: none;" 
+                           accept=".pdf" onchange="handleFileUpload(this, 'Constancia de venta')">
+                    <span id="status-constancia" style="color: #666;">📄 Seleccionar archivo PDF</span>
+                </div>
+            </div>
+
+            <!-- Contenedor para documentos adicionales -->
+            <div id="documentos-adicionales-container">
+                <!-- Los documentos adicionales se agregarán aquí dinámicamente -->
+            </div>
+            
+            <!-- Configuración Avanzada -->
+            <div style="margin-top: 30px; border-top: 2px solid #e9ecef; padding-top: 20px;">
+                <h4 style="color: #005C97; margin-bottom: 15px;">⚙️ Configuración Avanzada</h4>
+                <div style="display: flex; gap: 10px; align-items: end; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">
+                            Etiqueta del documento:
+                        </label>
+                        <input type="text" id="nueva-etiqueta" placeholder="Ej: Autorización especial" 
+                               style="width: 100%; padding: 8px; border: 2px solid #e0e0e0; border-radius: 5px;">
+                    </div>
+                    <button type="button" onclick="agregarDocumentoAdicional()" 
+                            style="background: #17a2b8; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: 600; cursor: pointer;">
+                        + Agregar Documento
+                    </button>
+                </div>
+                <small style="color: #6c757d; font-style: italic;">
+                    Los documentos agregados serán requeridos para completar la aprobación.
+                </small>
+            </div>
+        </div>
+    `;
+        }
+        function triggerFileUpload(inputId) {
+            document.getElementById(inputId).click();
+        }
+
+        function handleFileUpload(input, docName) {
+            const statusId = input.id === 'confirmacion-compra' ? 'status-confirmacion' : 'status-constancia';
+            const statusElement = document.getElementById(statusId);
+
+            if (input.files.length > 0) {
+                const fileName = input.files[0].name;
+                if (fileName.toLowerCase().endsWith('.pdf')) {
+                    statusElement.innerHTML = `<span style="color: #28a745;">✅ ${fileName}</span>`;
+                    statusElement.parentElement.style.borderColor = '#28a745';
+                    statusElement.parentElement.style.backgroundColor = '#f8fff8';
+                } else {
+                    statusElement.innerHTML = `<span style="color: #dc3545;">❌ Solo archivos PDF</span>`;
+                    input.value = '';
+                }
+            }
+        }
+
+        function descargarDocumento(nombreDoc) {
+            toastr.success(`Descargando: ${nombreDoc}`);
+            // Aquí iría la lógica real de descarga
+        }
+
+
+        function aprobarInversion() {
+            if (!inversionActual) return;
+
+            // Validar documentos básicos
+            const confirmacion = document.getElementById('confirmacion-compra').files.length > 0;
+            const constancia = document.getElementById('constancia-venta').files.length > 0;
+            const justificacion = document.getElementById('justificacion').value.trim();
+
+            if (!confirmacion || !constancia || !justificacion) {
+                toastr.error('Debe cargar todos los documentos básicos y completar la justificación');
+                return;
+            }
+
+            // Validar documentos adicionales
+            for (let doc of documentosAdicionales) {
+                if (!doc.archivo) {
+                    toastr.error(`Debe cargar el documento: ${doc.etiqueta}`);
+                    return;
+                }
+            }
+
+            // Cambiar el estado en el array de datos
+            const index = inversiones.findIndex(inv => inv.inversionNum === inversionActual.inversionNum);
+            if (index !== -1) {
+                inversiones[index].estado = 'APROBADO';
+            }
+
+            // Regenerar la tabla para reflejar el cambio
+            generarTablaInversiones();
+
+            // Mostrar mensaje de éxito
+            toastr.success(`Inversión ${inversionActual.inversionNum} ha sido APROBADA exitosamente`);
+
+            // Cerrar el modal automáticamente después de aprobar
+            setTimeout(() => {
+                cerrarModal();
+            }, 1500);
+        }
+
+        function configurarSeccionJustificacion() {
+            const container = document.getElementById('seccionJustificacion');
+
+            container.innerHTML = `
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                Justificación de la operación
+            </label>
+            <textarea id="justificacion" rows="4" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; resize: vertical;"
+                      placeholder="Ingrese la justificación para esta operación..."></textarea>
+        </div>
+    `;
+        }
+
+
+        function agregarDocumentoAdicional() {
+            const etiquetaInput = document.getElementById('nueva-etiqueta');
+            const etiqueta = etiquetaInput.value.trim();
+
+            if (!etiqueta) {
+                toastr.error('Debe ingresar una etiqueta para el documento');
+                return;
+            }
+
+            // Verificar que no exista ya
+            if (documentosAdicionales.some(doc => doc.etiqueta === etiqueta)) {
+                toastr.error('Ya existe un documento con esa etiqueta');
+                return;
+            }
+
+            const docId = 'doc-adicional-' + Date.now();
+            const nuevoDoc = {
+                id: docId,
+                etiqueta: etiqueta,
+                archivo: null
+            };
+
+            documentosAdicionales.push(nuevoDoc);
+
+            // Renderizar el nuevo documento
+            renderizarDocumentosAdicionales();
+
+            // Limpiar input
+            etiquetaInput.value = '';
+
+            toastr.success(`Documento "${etiqueta}" agregado`);
+        }
+
+        function renderizarDocumentosAdicionales() {
+            const container = document.getElementById('documentos-adicionales-container');
+
+            container.innerHTML = documentosAdicionales.map(doc => `
+        <div style="margin-bottom: 20px; position: relative;" id="container-${doc.id}">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                ${doc.etiqueta}
+                <button type="button" onclick="eliminarDocumentoAdicional('${doc.id}')" 
+                        style="background: #dc3545; color: white; border: none; padding: 2px 8px; border-radius: 3px; font-size: 12px; margin-left: 10px; cursor: pointer;">
+                    ✕
+                </button>
+            </label>
+            <div style="border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer;"
+                 onclick="triggerFileUpload('${doc.id}')">
+                <input type="file" id="${doc.id}" style="display: none;" 
+                       accept=".pdf" onchange="handleFileUploadAdicional(this, '${doc.etiqueta}')">
+                <span id="status-${doc.id}" style="color: #666;">📄 Seleccionar archivo PDF</span>
+            </div>
+        </div>
+    `).join('');
+        }
+
+        function eliminarDocumentoAdicional(docId) {
+            documentosAdicionales = documentosAdicionales.filter(doc => doc.id !== docId);
+            renderizarDocumentosAdicionales();
+            toastr.info('Documento eliminado');
+        }
+
+        function handleFileUploadAdicional(input, etiqueta) {
+            const statusElement = document.getElementById(`status-${input.id}`);
+            const doc = documentosAdicionales.find(d => d.id === input.id);
+
+            if (input.files.length > 0) {
+                const fileName = input.files[0].name;
+                if (fileName.toLowerCase().endsWith('.pdf')) {
+                    statusElement.innerHTML = `<span style="color: #28a745;">✅ ${fileName}</span>`;
+                    statusElement.parentElement.style.borderColor = '#28a745';
+                    statusElement.parentElement.style.backgroundColor = '#f8fff8';
+                    if (doc) doc.archivo = input.files[0];
+                } else {
+                    statusElement.innerHTML = `<span style="color: #dc3545;">❌ Solo archivos PDF</span>`;
+                    input.value = '';
+                    if (doc) doc.archivo = null;
+                }
+            }
+        }
+
+
+
+
+        // Variable para el modal de detalle
+        let inversionActualDetalle = null;
+
+        function abrirModalDetalle(inversion) {
+            inversionActualDetalle = inversion;
+
+            // Llenar la información del modal de detalle
+            llenarInformacionGeneralDetalle(inversion);
+            llenarDocumentosGeneralDetalle();
+            configurarDocumentosTesoreriaDetalle();
+            configurarSeccionJustificacionDetalle();
+
+            // Mostrar el modal de detalle
+            document.getElementById('modalDetalle').style.display = 'flex';
+
+            toastr.info('Mostrando detalles de la inversión aprobada');
+        }
+
+        function cerrarModalDetalle() {
+            document.getElementById('modalDetalle').style.display = 'none';
+            inversionActualDetalle = null;
+        }
+
+        function cambiarTabDetalle(tabName) {
+            // Remover clase active de todos los tabs del modal de detalle
+            document.querySelectorAll('#modalDetalle .tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('#modalDetalle .tab-pane').forEach(pane => pane.classList.remove('active'));
+
+            // Activar el tab seleccionado
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName + '-detalle').classList.add('active');
+        }
+
+        function llenarInformacionGeneralDetalle(inversion) {
+            const container = document.getElementById('infoGeneralDetalle');
+
+            const campos = [
+                { label: 'Código del instrumento', value: 'INV-40459532' },
+                { label: 'Unidad de negocio', value: 'FCR-LEY N° 28046' },
+                { label: 'Plazo de vencimiento', value: 'Se calculará automáticamente' },
+                { label: 'Emisor', value: 'REPUBLICA DEL PERU' },
+                { label: 'Clasificación de riesgos', value: 'BBB+' },
+                { label: 'Grupo económico', value: 'Grupo Romero' },
+                { label: 'ISIN', value: inversion.producto || 'PE0324005A57' },
+                { label: 'Nemónico', value: 'SBPER' },
+                { label: 'Moneda', value: 'PEN' },
+                { label: 'Cantidad', value: '1,000.00' },
+                { label: 'Valor unitario', value: '1,000.00' },
+                { label: 'Valor nominal adquirido', value: inversion.valorNominal || '1,000,000.00' },
+                { label: 'Periodicidad del cupón', value: 'Semestral' },
+                { label: 'Cupón (%)', value: '6.5000' },
+                { label: 'Tipo de amortización', value: 'Amortizable' },
+                { label: 'Fecha de emisión', value: inversion.fechaEmision || '20/09/2025' },
+                { label: 'Fecha Liquidación', value: '21/09/2025' },
+                { label: 'Fecha de vencimiento', value: inversion.fechaVencimiento || '20/09/2029' },
+                { label: 'Plazo en años', value: '4' },
+                { label: 'Banco cuenta de cargo', value: 'BANCO DE CRÉDITO' },
+                { label: 'N° de Cuenta Bancaria', value: 'N° 193-13814691-0-31' },
+                { label: 'Tipo de custodia', value: 'Local' },
+                { label: 'Nombre de custodia', value: 'Banco Scotiabank' },
+                { label: 'Tipo de Mercado', value: 'Primario' }
+            ];
+
+            container.innerHTML = campos.map(campo => `
+        <div class="info-field">
+            <div class="info-label">${campo.label}</div>
+            <div class="info-value" style="background: #f8f9fa; border: 1px solid #e9ecef; color: #6c757d;">${campo.value}</div>
+        </div>
+    `).join('');
+        }
+
+        function llenarDocumentosGeneralDetalle() {
+            const container = document.getElementById('tab-general-detalle');
+
+            const documentosGenerales = [
+                'Informe de Riesgos',
+                'Informe Legal',
+                'Acta de Comité de Inversiones'
+            ];
+
+            container.innerHTML = `
+        <div>
+            <h4 style="color: #005C97; margin-bottom: 15px;">Documentos generales:</h4>
+            ${documentosGenerales.map(doc => `
+                <div class="document-item">
+                    <span style="color: #28a745;">📄</span>
+                    <span style="flex: 1;">${doc}</span>
+                    <button class="btn btn-action" style="background: #17a2b8; color: white;" 
+                            onclick="descargarDocumento('${doc}')">Descargar</button>
+                </div>
+            `).join('')}
+        </div>
+    `;
+        }
+
+        function configurarDocumentosTesoreriaDetalle() {
+            const container = document.getElementById('tab-tesoreria-detalle');
+
+            const documentosTesoreria = [
+                'Confirmación de compra',
+                'Constancia de Confirmación de Venta de Entidad Financiera'
+            ];
+
+            container.innerHTML = `
+        <div>
+            <h4 style="color: #005C97; margin-bottom: 15px;">Documentos de tesorería:</h4>
+            ${documentosTesoreria.map(doc => `
+                <div class="document-item">
+                    <span style="color: #28a745;">📄</span>
+                    <span style="flex: 1;">${doc}</span>
+                    <button class="btn btn-action" style="background: #17a2b8; color: white;" 
+                            onclick="descargarDocumento('${doc}')">Descargar</button>
+                </div>
+            `).join('')}
+        </div>
+    `;
+        }
+
+        function configurarSeccionJustificacionDetalle() {
+            const container = document.getElementById('seccionJustificacionDetalle');
+
+            const justificacionGuardada = "Esta inversión fue aprobada debido a que cumple con todos los criterios de riesgo establecidos por el comité de inversiones. El emisor tiene una calificación crediticia adecuada y el plazo se ajusta a nuestros objetivos de portafolio.";
+
+            container.innerHTML = `
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                Justificación de la operación
+            </label>
+            <div style="padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; background: #f8f9fa; color: #6c757d; min-height: 100px;">
+                ${justificacionGuardada}
+            </div>
+        </div>
+    `;
+        }
+
+
+
+
+        function generarBotonSegunEstado(inversion, tieneCupones) {
+            if (tieneCupones && inversion.estado === 'GENERADO') {
+                return `<button class="btn btn-action btn-cuponera" onclick="verCuponera('${inversion.inversionNum}')">VER CUPONERA</button>`;
+            }
+
+            if (!tieneCupones && inversion.estado === 'APROBADO') {
+                return `<button class="btn btn-action btn-cuponera" onclick="generarNuevaCuponera('${inversion.inversionNum}')">GENERAR CUPONERA</button>`;
+            }
+
+            return '';
+        }
+
+    </script>
+
+    <!-- Modal de Aprobación -->
+    <div id="modalAprobacion" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Aprobación de Inversión</h2>
+                <span class="modal-close" onclick="cerrarModal()">&times;</span>
+            </div>
+            <div class="modal-content">
+                <!-- Sección 1: Información General -->
+                <div class="modal-section">
+                    <div class="section-header">1. Información general de la inversión</div>
+                    <div id="infoGeneral" class="info-grid">
+                        <!-- Los campos se llenarán dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Sección 2: Sustento Documentario -->
+                <div class="modal-section">
+                    <div class="section-header">2. Sustento documentario</div>
+                    <div class="tabs-container">
+                        <div class="tabs">
+                            <button class="tab active" onclick="cambiarTab('general')">General</button>
+                            <button class="tab" onclick="cambiarTab('tesoreria')">Tesorería</button>
+                        </div>
+                        <div class="tab-content">
+                            <div id="tab-general" class="tab-pane active">
+                                <!-- Documentos ya cargados para descarga -->
+                            </div>
+                            <div id="tab-tesoreria" class="tab-pane">
+                                <!-- Campos de carga de documentos -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 3: Justificación de Aprobación -->
+                <div class="modal-section">
+                    <div class="section-header">3. Justificación de aprobación</div>
+                    <div id="seccionJustificacion">
+                        <!-- Campo de justificación -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-aprobar" onclick="aprobarInversion()">APROBAR</button>
+                <button class="btn btn-cerrar" onclick="cerrarModal()"
+                    style="background: #6c757d; color: white; margin-left: 10px;">CERRAR</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal de Detalle -->
+    <div id="modalDetalle" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Detalle de Inversión Aprobada</h2>
+                <span class="modal-close" onclick="cerrarModalDetalle()">&times;</span>
+            </div>
+            <div class="modal-content">
+                <!-- Sección 1: Información General -->
+                <div class="modal-section">
+                    <div class="section-header">1. Información general de la inversión</div>
+                    <div id="infoGeneralDetalle" class="info-grid">
+                        <!-- Los campos se llenarán dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Sección 2: Sustento Documentario -->
+                <div class="modal-section">
+                    <div class="section-header">2. Sustento documentario</div>
+                    <div class="tabs-container">
+                        <div class="tabs">
+                            <button class="tab active" onclick="cambiarTabDetalle('general')">General</button>
+                            <button class="tab" onclick="cambiarTabDetalle('tesoreria')">Tesorería</button>
+                        </div>
+                        <div class="tab-content">
+                            <div id="tab-general-detalle" class="tab-pane active">
+                                <!-- Documentos para descarga -->
+                            </div>
+                            <div id="tab-tesoreria-detalle" class="tab-pane">
+                                <!-- Documentos de tesorería para descarga -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 3: Justificación de Aprobación -->
+                <div class="modal-section">
+                    <div class="section-header">3. Justificación de aprobación</div>
+                    <div id="seccionJustificacionDetalle">
+                        <!-- Campo de justificación readonly -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cerrar" onclick="cerrarModalDetalle()"
+                    style="background: #6c757d; color: white;">CERRAR</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

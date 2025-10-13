@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <title>Sistema de Gestión de Bonos - Cuponera</title> -->
+    <title>Cancelación de pago del cupón</title>
+
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* Profile Info */
+        .profile-info {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #005C97 0%, #004a7c 100%);
+            color: white;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Content Wrapper */
+        .content-wrapper {
+            padding: 30px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            color: #2c3e50;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            margin-top: 30px;
+            padding-left: 15px;
+            border-left: 4px solid #1976d2;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .section-header:first-of-type {
+            margin-top: 0;
+        }
+
+        /* Cards for Subsections */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            border: 1px solid #e3e8ed;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .card-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-column {
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .info-value {
+            color: #555;
+            font-size: 1em;
+        }
+
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive para formularios compactos */
+        @media (max-width: 1024px) {
+            .card-body div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+
+        .form-control {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9em;
+            background: white;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Concepts Table */
+        .concepts-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .concepts-table th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .concepts-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .concepts-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .concepts-table .amount-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: right;
+            font-family: monospace;
+        }
+
+        /* Movements Table */
+        .movements-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .movements-table th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .movements-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+        }
+
+        .movements-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #1f5f8b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #219a52 0%, #1e8449 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #e67e22 0%, #d68910 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #7f8c8d 0%, #6c7b7d 100%);
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-total {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-parcial {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+        }
+
+        /* Toastr custom styles */
+        .toast-success {
+            background-color: #27ae60 !important;
+        }
+
+        .toast-warning {
+            background-color: #f39c12 !important;
+        }
+
+        .toast-info {
+            background-color: #3498db !important;
+        }
+
+
+        .btn-disabled {
+            opacity: 0.6;
+            cursor: not-allowed !important;
+            pointer-events: none;
+        }
+
+        /* Clase para ocultar secciones */
+        .card.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Profile Info -->
+            <div class="profile-info">
+                Perfil: TE
+            </div>
+
+            <!-- Header -->
+            <div class="header">
+                <!-- <h1>Sistema de Gestión de Bonos - Cuponera</h1> -->
+                <h1>Cancelación de pago del cupón</h1>
+
+            </div>
+
+            <!-- Content Wrapper -->
+            <div class="content-wrapper">
+
+                <!-- SECCIÓN 1: Información del Instrumento -->
+                <div class="section-header">1. Información del Instrumento</div>
+                <div class="info-grid">
+                    <!-- Columna 1 -->
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Entidad:</div>
+                            <div class="info-value">Fondo Consolidado de Reservas Previsionales – FCR</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Descripción del Instrumento:</div>
+                            <div class="info-value">BS-20SEP2029</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Unidad de Negocio:</div>
+                            <div class="info-value">FCR-MACROFONDO</div>
+                        </div>
+                    </div>
+
+                    <!-- Columna 2 -->
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Estado:</div>
+                            <div class="info-value">GENERADO</div>
+                        </div>
+                        <div class="info-item">
+                            <!-- <div class="info-label">Inversión #:</div> -->
+                            <!-- <div class="info-value">6120</div> -->
+                            <div class="info-label">Inversión #:</div>
+                            <div class="info-value" id="inversionNumero">2001</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tipo Instrumento:</div>
+                            <div class="info-value">BONOS SOBERANO</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Categoría Riesgo:</div>
+                            <div class="info-value">AA++</div>
+                        </div>
+                    </div>
+
+                    <!-- Columna 3 -->
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Periodicidad:</div>
+                            <div class="info-value">Semestral</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Plazo Calificación:</div>
+                            <div class="info-value">Largo</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Valor Nominal:</div>
+                            <div class="info-value" id="valorNominalDisplay">1,000,000.00</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tasa Nominal:</div>
+                            <div class="info-value" id="tasaNominalDisplay">8.0625%</div>
+                        </div>
+                    </div>
+
+                    <!-- Columna 4 -->
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Tasa Efectiva:</div>
+                            <div class="info-value" id="tasaEfectivaDisplay">8.309557%</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Fecha Emisión:</div>
+                            <div class="info-value">20/09/2025</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Fecha Vencimiento:</div>
+                            <div class="info-value">20/09/2029</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 2: Gestión de Pagos del Cupón -->
+                <div class="section-header">2. Gestión de Pagos del Cupón</div>
+
+
+
+                <!-- Estado Global del Cupón -->
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <span class="status-badge status-parcial" id="estadoGlobalCupon">Estado del Cupón: APROBADO</span>
+                </div>
+
+                <!-- Subsección 2.1 – Cancelación Regular -->
+                <!-- <div class="card"> -->
+                <div class="card" id="cardRegular">
+                    <div class="card-header">
+                        <h3 class="card-title">2.1 – Cancelación Regular</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Parámetros de la Cancelación -->
+                        <div style="background: #f7f7f7; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+                            <h4 style="color: #005C97; font-weight: bold; margin-bottom: 15px; font-size: 1em;">
+                                Parámetros de la Cancelación</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Cuenta
+                                        Bancaria</label>
+                                    <select class="form-control" id="cuentaBancariaRegular">
+                                        <option value="">Seleccionar cuenta...</option>
+                                        <option value="cuenta1">Cuenta Corriente - BBVA 0011-0200-0200345678</option>
+                                        <option value="cuenta2">Cuenta Corriente - BCP 191-2345678-0-90</option>
+                                        <option value="cuenta3">Cuenta Corriente - Interbank 898-3012345678</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Fecha de
+                                        Cancelación</label>
+                                    <input type="date" class="form-control" id="fechaCancelacionRegular">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group full-width">
+                            <label class="form-label">Conceptos del Cupón</label>
+                            <table class="concepts-table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;">Concepto</th>
+                                        <th style="text-align: center;">Monto Total (OGR)</th>
+                                        <th style="text-align: center;">Monto Editable</th>
+                                        <th style="text-align: center;">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Amortización</td>
+                                        <td
+                                            style="text-align: center; padding-right: 15px; font-family: monospace; color: #666;">
+                                            5,000,000.00</td>
+                                        <td><input type="text" class="amount-input numeric-input"
+                                                id="amortizacionRegular" value="5,000,000.00"></td>
+                                        <td style="text-align: center;">
+                                            <span class="status-badge status-parcial"
+                                                id="estadoAmortizacionRegular">Pendiente</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Interés</td>
+                                        <td
+                                            style="text-align: center; padding-right: 15px; font-family: monospace; color: #666;">
+                                            493,593.75</td>
+                                        <td><input type="text" class="amount-input numeric-input" id="interesRegular"
+                                                value="493,593.75"></td>
+                                        <td style="text-align: center;">
+                                            <span class="status-badge status-parcial"
+                                                id="estadoInteresRegular">Pendiente</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Inflación - Amortización</td>
+                                        <td
+                                            style="text-align: center; padding-right: 15px; font-family: monospace; color: #666;">
+                                            125,000.00</td>
+                                        <td><input type="text" class="amount-input numeric-input"
+                                                id="inflacionAmortizacionRegular" value="125,000.00"></td>
+                                        <td style="text-align: center;">
+                                            <span class="status-badge status-parcial"
+                                                id="estadoInflacionAmortizacionRegular">Pendiente</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Inflación - Interés</td>
+                                        <td
+                                            style="text-align: center; padding-right: 15px; font-family: monospace; color: #666;">
+                                            12,339.84</td>
+                                        <td><input type="text" class="amount-input numeric-input"
+                                                id="inflacionInteresRegular" value="12,339.84"></td>
+                                        <td style="text-align: center;">
+                                            <span class="status-badge status-parcial"
+                                                id="estadoInflacionInteresRegular">Pendiente</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="btn btn-success" id="cancelarCuponCompleto">
+                                Cancelar Cupón Completo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subsección 2.2 – Cancelación Parcial -->
+                <div class="card" id="cardParcial">
+                    <div class="card-header">
+                        <h3 class="card-title">2.2 – Cancelación Parcial</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Tabla de Conceptos del Cupón para referenciavisual -->
+                        <!-- Tabla de Conceptos del Cupón para referencia visual -->
+                        <div class="form-group full-width">
+                            <label class="form-label">Conceptos del Cupón - Referencia para Tesorería</label>
+                            <table class="concepts-table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;">Concepto</th>
+                                        <th style="text-align: center;">Monto Total (OGR)</th>
+                                        <th style="text-align: center;">Monto Restante</th>
+                                        <th style="text-align: center;">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Amortización</td>
+                                        <td
+                                            style="text-align: center; padding-right: 15px; font-family: monospace; color: #666;">
+                                            5,000,000.00</td>
+                                        <td style="text-align: center; padding-right: 15px; font-family: monospace; color: #007bff; font-weight: bold;"
+                                            id="restanteAmortizacionParcial22">5,000,000.00</td>
+                                        <td style="text-align: center;">
+                                            <span class="status-badge status-parcial"
+                                                id="estadoAmortizacionParcial">Pendiente</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Interés</td>
+                                        <td
+                                            style="text-align: center; padding-right: 15px; font-family: monospace; color: #666;">
+                                            493,593.75</td>
+                                        <td style="text-align: center; padding-right: 15px; font-family: monospace; color: #007bff; font-weight: bold;"
+                                            id="restanteInteresParcial22">493,593.75</td>
+                                        <td style="text-align: center;">
+                                            <span class="status-badge status-parcial"
+                                                id="estadoInteresParcial">Pendiente</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Inflación - Amortización</td>
+                                        <td
+                                            style="text-align: center; padding-right: 15px; font-family: monospace; color: #666;">
+                                            125,000.00</td>
+                                        <td style="text-align: center; padding-right: 15px; font-family: monospace; color: #007bff; font-weight: bold;"
+                                            id="restanteInflacionAmortizacionParcial22">125,000.00</td>
+                                        <td style="text-align: center;">
+                                            <span class="status-badge status-parcial"
+                                                id="estadoInflacionAmortizacionParcial">Pendiente</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Inflación - Interés</td>
+                                        <td
+                                            style="text-align: center; padding-right: 15px; font-family: monospace; color: #666;">
+                                            12,339.84</td>
+                                        <td style="text-align: center; padding-right: 15px; font-family: monospace; color: #007bff; font-weight: bold;"
+                                            id="restanteInflacionInteresParcial22">12,339.84</td>
+                                        <td style="text-align: center;">
+                                            <span class="status-badge status-parcial"
+                                                id="estadoInflacionInteresParcial">Pendiente</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Detalle del Pago Parcial -->
+                        <div style="background: #f7f7f7; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+                            <h4 style="color: #005C97; font-weight: bold; margin-bottom: 15px; font-size: 1em;">Detalle
+                                del Pago Parcial</h4>
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                                <div class="form-group">
+                                    <label class="form-label"
+                                        style="color: #005C97; font-weight: bold;">Concepto</label>
+                                    <select class="form-control" id="conceptoParcial">
+                                        <option value="">Seleccionar concepto...</option>
+                                        <option value="amortizacion">Amortización</option>
+                                        <option value="interes">Interés</option>
+                                        <option value="inflacion-amortizacion">Inflación - Amortización</option>
+                                        <option value="inflacion-interes">Inflación - Interés</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label " style="color: #005C97; font-weight: bold;">Monto
+                                        (S/)</label>
+                                    <input type="text" class="form-control numeric-input" id="montoParcial"
+                                        placeholder="0.00" style="text-align: right; font-family: monospace;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Fecha de
+                                        Pago</label>
+                                    <input type="date" class="form-control" id="fechaPagoParcial">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Cuenta
+                                        Bancaria</label>
+                                    <select class="form-control" id="cuentaBancariaParcial">
+                                        <option value="">Seleccionar cuenta...</option>
+                                        <option value="cuenta1">Cuenta Corriente - BBVA 0011-0200-0200345678</option>
+                                        <option value="cuenta2">Cuenta Corriente - BCP 191-2345678-0-90</option>
+                                        <option value="cuenta3">Cuenta Corriente - Interbank 898-3012345678</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="btn btn-warning" id="registrarPagoParcial">
+                                Registrar Pago Parcial
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subsección 2.3 – Cancelación Anticipada -->
+                <div class="card" id="cardAnticipada">
+                    <div class="card-header">
+                        <h3 class="card-title">2.3 – Cancelación Anticipada</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Parámetros de la Cancelación Anticipada -->
+                        <div style="background: #f7f7f7; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+                            <h4 style="color: #005C97; font-weight: bold; margin-bottom: 15px; font-size: 1em;">
+                                Parámetros de la Cancelación Anticipada</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Fecha de
+                                        Cancelación Anticipada</label>
+                                    <input type="date" class="form-control" id="fechaCancelacionAnticipada">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Cuenta
+                                        Bancaria</label>
+                                    <select class="form-control" id="cuentaBancariaAnticipada">
+                                        <option value="">Seleccionar cuenta...</option>
+                                        <option value="cuenta1">Cuenta Corriente - BBVA 0011-0200-0200345678</option>
+                                        <option value="cuenta2">Cuenta Corriente - BCP 191-2345678-0-90</option>
+                                        <option value="cuenta3">Cuenta Corriente - Interbank 898-3012345678</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Amortización
+                                        Total (S/)</label>
+                                    <input type="text" class="form-control numeric-input"
+                                        id="amortizacionTotalAnticipada" value="19,500,000.00"
+                                        style="text-align: right; font-family: monospace;;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label " style="color: #005C97; font-weight: bold;">Intereses
+                                        Prorrateados (S/)</label>
+                                    <input type="text" class="form-control numeric-input"
+                                        id="interesesProrrateoAnticipada" value="246,796.88"
+                                        style="text-align: right; font-family: monospace;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Consent Fee
+                                        (S/)</label>
+                                    <input type="text" class="form-control numeric-input" id="consentFeeAnticipada"
+                                        placeholder="0.00" style="text-align: right; font-family: monospace;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Valor de
+                                        Rescate (S/)</label>
+                                    <input type="text" class="form-control numeric-input" id="valorRescateAnticipada"
+                                        placeholder="0.00" style="text-align: right; font-family: monospace;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="btn btn-danger" id="cancelarCuponeraAnticipada">
+                                Cancelar cuponera anticipadamente
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subsección 2.4 – Cancelación en Moneda Distinta -->
+                <!-- Subsección 2.4 – Cancelación en Moneda Distinta -->
+
+                <!-- Subsección 2.4 – Cancelación en Moneda Distinta -->
+                <!-- Subsección 2.4 – Cancelación en Moneda Distinta -->
+                <!-- Subsección 2.4 – Cancelación en Moneda Distinta -->
+                <div class="card" id="cardMonedaDistinta">
+                    <div class="card-header">
+                        <h3 class="card-title">2.4 – Cancelación en Moneda Distinta</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Parámetros Generales -->
+                        <div style="background: #f7f7f7; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+                            <h4 style="color: #005C97; font-weight: bold; margin-bottom: 15px; font-size: 1em;">
+                                Parámetros Generales</h4>
+                            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px;">
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Fecha de
+                                        Cancelación</label>
+                                    <input type="date" class="form-control" id="fechaCancelacionMonedaDistinta">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Cuenta
+                                        Bancaria</label>
+                                    <select class="form-control" id="cuentaBancariaMonedaDistinta">
+                                        <option value="">Seleccionar cuenta...</option>
+                                        <option value="cuenta_usd1">Cuenta USD - BBVA 0011-0200-0200345679</option>
+                                        <option value="cuenta_usd2">Cuenta USD - BCP 191-2345678-1-91</option>
+                                        <option value="cuenta_usd3">Cuenta USD - Interbank 898-3012345679</option>
+                                        <option value="cuenta_eur1">Cuenta EUR - BBVA 0011-0200-0200345680</option>
+                                        <option value="cuenta_eur2">Cuenta EUR - BCP 191-2345678-2-92</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Moneda del
+                                        Cupón</label>
+                                    <input type="text" class="form-control" value="PEN" readonly
+                                        style="text-align: center; background-color: #f8f9fa;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Moneda de
+                                        Pago</label>
+                                    <select class="form-control" id="monedaPagoGeneral">
+                                        <option value="PEN">PEN - Soles Peruanos</option>
+                                        <option value="USD" selected>USD - Dólares Americanos</option>
+                                        <option value="EUR">EUR - Euros</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" style="color: #005C97; font-weight: bold;">Tipo de Cambio
+                                        (PEN → Moneda de Pago)</label>
+                                    <input type="text" class="form-control numeric-input" id="tipoCambioGeneral"
+                                        placeholder="0.00000" style="text-align: right; font-family: monospace;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detalle de Conceptos -->
+                        <div style="background: #f7f7f7; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+                            <h4 style="color: #005C97; font-weight: bold; margin-bottom: 15px; font-size: 1em;">
+                                Detalle de Conceptos</h4>
+
+                            <!-- Bloque Amortización -->
+                            <div
+                                style="background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd;">
+                                <h5 style="color: #2c3e50; font-weight: bold; margin-bottom: 15px; font-size: 0.95em;">
+                                    Amortización</h5>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                                    <div class="form-group">
+                                        <label class="form-label">Monto Origen (S/)</label>
+                                        <input type="text" class="form-control numeric-input"
+                                            id="montoOrigenAmortizacionMonedaDistinta" value="5,000,000.00"
+                                            style="text-align: right; font-family: monospace;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Monto Convertido (en moneda de pago)</label>
+                                        <input type="text" class="form-control"
+                                            id="montoConvertidoAmortizacionMonedaDistinta" placeholder="0.00"
+                                            style="text-align: right; font-family: monospace; background-color: #f8f9fa;"
+                                            readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bloque Intereses -->
+                            <div
+                                style="background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd;">
+                                <h5 style="color: #2c3e50; font-weight: bold; margin-bottom: 15px; font-size: 0.95em;">
+                                    Intereses</h5>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                                    <div class="form-group">
+                                        <label class="form-label">Monto Origen (S/)</label>
+                                        <input type="text" class="form-control numeric-input"
+                                            id="montoOrigenInteresesMonedaDistinta" value="493,593.75"
+                                            style="text-align: right; font-family: monospace;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Monto Convertido (en moneda de pago)</label>
+                                        <input type="text" class="form-control"
+                                            id="montoConvertidoInteresesMonedaDistinta" placeholder="0.00"
+                                            style="text-align: right; font-family: monospace; background-color: #f8f9fa;"
+                                            readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bloque Inflación - Amortización -->
+                            <div
+                                style="background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd;">
+                                <h5 style="color: #2c3e50; font-weight: bold; margin-bottom: 15px; font-size: 0.95em;">
+                                    Inflación - Amortización</h5>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                                    <div class="form-group">
+                                        <label class="form-label">Monto Origen (S/)</label>
+                                        <input type="text" class="form-control numeric-input"
+                                            id="montoOrigenInflacionAmortizacionMonedaDistinta" value="125,000.00"
+                                            style="text-align: right; font-family: monospace;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Monto Convertido (en moneda de pago)</label>
+                                        <input type="text" class="form-control"
+                                            id="montoConvertidoInflacionAmortizacionMonedaDistinta" placeholder="0.00"
+                                            style="text-align: right; font-family: monospace; background-color: #f8f9fa;"
+                                            readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bloque Inflación - Interés -->
+                            <div
+                                style="background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid #ddd;">
+                                <h5 style="color: #2c3e50; font-weight: bold; margin-bottom: 15px; font-size: 0.95em;">
+                                    Inflación - Interés</h5>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                                    <div class="form-group">
+                                        <label class="form-label">Monto Origen (S/)</label>
+                                        <input type="text" class="form-control numeric-input"
+                                            id="montoOrigenInflacionInteresMonedaDistinta" value="12,339.84"
+                                            style="text-align: right; font-family: monospace;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Monto Convertido (en moneda de pago)</label>
+                                        <input type="text" class="form-control"
+                                            id="montoConvertidoInflacionInteresMonedaDistinta" placeholder="0.00"
+                                            style="text-align: right; font-family: monospace; background-color: #f8f9fa;"
+                                            readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="btn btn-primary" id="cancelarCuponMonedaDistinta">
+                                Cancelar Cupón en Moneda Distinta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Subsección 2.4 – Movimientos Registrados -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">2.4 – Movimientos Registrados</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="movimientosContainer">
+                            <!-- Tabla se mostrará aquí cuando haya datos -->
+                            <div class="empty-state" id="emptyMovimientos">
+                                <p>No hay movimientos registrados para este cupón.</p>
+                            </div>
+
+                            <!-- Tabla oculta inicialmente -->
+                            <table class="movements-table" id="movimientosTable" style="display: none;">
+                                <thead>
+                                    <tr>
+                                        <th>Concepto</th>
+                                        <th>Fecha</th>
+                                        <th>Monto (S/)</th>
+                                        <th>Cuenta Bancaria</th>
+                                        <th>Estado del Movimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="movimientosTableBody">
+                                    <!-- Los movimientos se insertarán aquí dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery and Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
+
+    <!-- <script>
+        // Configuración básica de toastr
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "timeOut": 5000
+        };
+
+        // Inicialización básica cuando el documento esté listo
+        $(document).ready(function () {
+            // Configurar fecha actual por defecto
+            const today = new Date().toISOString().split('T')[0];
+            $('#fechaCancelacionRegular').val(today);
+            $('#fechaPagoParcial').val(today);
+
+            // Placeholder para futuras funciones
+            console.log('Sistema de Gestión de Cupones inicializado');
+        });
+    </script> -->
+
+    <script>
+        // Configuración básica de toastr
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "timeOut": 5000
+        };
+
+        // Configuración de AutoNumeric para máscaras numéricas
+        const numericConfig = {
+            digitGroupSeparator: ',',
+            decimalCharacter: '.',
+            decimalPlaces: 2,
+            decimalPlacesRawValue: 2,
+            allowDecimalPadding: true,
+            unformatOnSubmit: false,
+            currencySymbol: '',
+            currencySymbolPlacement: 'p',
+            selectOnFocus: false,
+            modifyValueOnWheel: false,
+            watchExternalChanges: false
+        };
+
+        // Función para calcular valor de rescate automáticamente
+
+
+
+        //cancelacion 1
+
+        // Agregar al final del script existente, antes del cierre de $(document).ready
+
+        // Variables para almacenar movimientos
+        let movimientosRegistrados = [];
+        // Variables para controlar el estado de cancelación
+        let cuponCanceladoRegular = false;
+
+
+        // Función para actualizar estado de conceptos a "Pagado"
+        function actualizarEstadosConceptosRegular() {
+            $('#estadoAmortizacionRegular').removeClass('status-parcial').addClass('status-total').text('Pagado');
+            $('#estadoInteresRegular').removeClass('status-parcial').addClass('status-total').text('Pagado');
+            $('#estadoInflacionAmortizacionRegular').removeClass('status-parcial').addClass('status-total').text('Pagado');
+            $('#estadoInflacionInteresRegular').removeClass('status-parcial').addClass('status-total').text('Pagado');
+        }
+
+        // Función para actualizar estado global del cupón
+        function actualizarEstadoGlobalCupon() {
+            $('#estadoGlobalCupon').removeClass('status-parcial').addClass('status-total').text('Estado del Cupón: CANCELADO');
+        }
+
+        // Función para agregar movimientos a la tabla
+        function agregarMovimientosRegular(fecha, cuentaBancaria) {
+            const conceptos = [
+                { nombre: 'Amortización', monto: $('#amortizacionRegular').val() },
+                { nombre: 'Interés', monto: $('#interesRegular').val() },
+                { nombre: 'Inflación - Amortización', monto: $('#inflacionAmortizacionRegular').val() },
+                { nombre: 'Inflación - Interés', monto: $('#inflacionInteresRegular').val() }
+            ];
+
+            conceptos.forEach(concepto => {
+                const movimiento = {
+                    concepto: concepto.nombre,
+                    fecha: fecha,
+                    monto: concepto.monto,
+                    cuentaBancaria: cuentaBancaria,
+                    estado: 'Pagado'
+                };
+                movimientosRegistrados.push(movimiento);
+            });
+
+            actualizarTablaMovimientos();
+        }
+
+        // Función para actualizar la tabla de movimientos
+        function actualizarTablaMovimientos() {
+            const tableBody = $('#movimientosTableBody');
+            const emptyState = $('#emptyMovimientos');
+            const table = $('#movimientosTable');
+
+            if (movimientosRegistrados.length === 0) {
+                emptyState.show();
+                table.hide();
+                return;
+            }
+
+            emptyState.hide();
+            table.show();
+            tableBody.empty();
+
+            movimientosRegistrados.forEach(movimiento => {
+                const row = `
+            <tr>
+                <td>${movimiento.concepto}</td>
+                <td>${movimiento.fecha}</td>
+                <td style="text-align: right; font-family: monospace;">${movimiento.monto}</td>
+                <td>${movimiento.cuentaBancaria}</td>
+                <td style="text-align: center;">
+                    <span class="status-badge status-total">${movimiento.estado}</span>
+                </td>
+            </tr>
+        `;
+                tableBody.append(row);
+            });
+        }
+
+
+        // Función para validar montos editables de Cancelación Regular
+        function validarMontosRegular() {
+            const campos = [
+                { id: '#amortizacionRegular', nombre: 'Amortización' },
+                { id: '#interesRegular', nombre: 'Interés' },
+                { id: '#inflacionAmortizacionRegular', nombre: 'Inflación - Amortización' },
+                { id: '#inflacionInteresRegular', nombre: 'Inflación - Interés' }
+            ];
+
+            for (let campo of campos) {
+                const valor = $(campo.id).val().trim();
+
+                // Verificar si está vacío
+                if (!valor) {
+                    toastr.error('Los montos deben tener un valor numérico válido');
+                    return false;
+                }
+
+                // Obtener valor numérico usando AutoNumeric
+                let valorNumerico;
+                try {
+                    valorNumerico = AutoNumeric.getNumber(campo.id);
+                } catch (e) {
+                    // Si falla AutoNumeric, intentar parseFloat eliminando comas
+                    valorNumerico = parseFloat(valor.replace(/,/g, ''));
+                }
+
+                // Verificar si es un número válido y mayor o igual a 0
+                if (isNaN(valorNumerico) || valorNumerico < 0) {
+                    toastr.error('Los montos deben tener un valor numérico válido');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Función para deshabilitar botones de otras subsecciones
+        function deshabilitarOtrasSubsecciones() {
+            // Deshabilitar botones de otras subsecciones
+            $('#registrarPagoParcial').prop('disabled', true).addClass('btn-disabled');
+            $('#cancelarCuponeraAnticipada').prop('disabled', true).addClass('btn-disabled');
+            $('#cancelarCuponMonedaDistinta').prop('disabled', true).addClass('btn-disabled');
+
+            // Deshabilitar el propio botón de cancelación regular
+            $('#cancelarCuponCompleto').prop('disabled', true).addClass('btn-disabled');
+        }
+
+        // Event listener mejorado para el botón "Cancelar Cupón Completo"
+        $('#cancelarCuponCompleto').click(function () {
+            // Verificar si el cupón ya fue cancelado
+            if (cuponCanceladoRegular) {
+                toastr.warning('Este cupón ya fue cancelado');
+                return;
+            }
+
+            const cuentaBancaria = $('#cuentaBancariaRegular').val();
+            const fechaCancelacion = $('#fechaCancelacionRegular').val();
+
+            // Validaciones básicas
+            if (!cuentaBancaria || !fechaCancelacion) {
+                toastr.error('Debe seleccionar cuenta bancaria y fecha de cancelación');
+                return;
+            }
+
+            // Validar montos editables
+            if (!validarMontosRegular()) {
+                return; // El error ya fue mostrado en la función de validación
+            }
+
+            // Obtener el texto de la cuenta bancaria seleccionada
+            const textoCuentaBancaria = $('#cuentaBancariaRegular option:selected').text();
+
+            // Actualizar estados
+            actualizarEstadosConceptosRegular();
+            actualizarEstadoGlobalCupon();
+
+            // Agregar movimientos
+            agregarMovimientosRegular(fechaCancelacion, textoCuentaBancaria);
+
+            // Deshabilitar otras subsecciones y el propio botón
+            deshabilitarOtrasSubsecciones();
+
+            // Marcar como cancelado
+            cuponCanceladoRegular = true;
+
+            // Mostrar mensaje de éxito
+            toastr.success('Cancelación regular registrada con éxito');
+        });
+
+        //fin caso 1
+
+
+        //inicio caso 2
+
+        //inicio caso 2 - VERSIÓN CORREGIDA
+
+        // Variables para controlar el estado de cancelación parcial
+        let pagosParciales = {
+            'amortizacion': 0,
+            'interes': 0,
+            'inflacion-amortizacion': 0,
+            'inflacion-interes': 0
+        };
+        let hayPagosParciales = false;
+
+        // Mapeo de conceptos con sus montos OGR para validación
+        const montosOGRParcial = {
+            'amortizacion': 5000000.00,
+            'interes': 493593.75,
+            'inflacion-amortizacion': 125000.00,
+            'inflacion-interes': 12339.84
+        };
+
+        // Mapeo de conceptos para mostrar en la tabla
+        const nombreConceptosParcial = {
+            'amortizacion': 'Amortización',
+            'interes': 'Interés',
+            'inflacion-amortizacion': 'Inflación - Amortización',
+            'inflacion-interes': 'Inflación - Interés'
+        };
+
+        // Mapeo de IDs de estado para cada concepto
+        const estadoConceptosParcial = {
+            'amortizacion': '#estadoAmortizacionParcial',
+            'interes': '#estadoInteresParcial',
+            'inflacion-amortizacion': '#estadoInflacionAmortizacionParcial',
+            'inflacion-interes': '#estadoInflacionInteresParcial'
+        };
+
+        // Mapeo de IDs de monto restante para la tabla de la sección 2.2
+        const montoRestanteConceptosParcial22 = {
+            'amortizacion': '#restanteAmortizacionParcial22',
+            'interes': '#restanteInteresParcial22',
+            'inflacion-amortizacion': '#restanteInflacionAmortizacionParcial22',
+            'inflacion-interes': '#restanteInflacionInteresParcial22'
+        };
+
+        // Función para actualizar monto restante en la tabla de la sección 2.2
+        function actualizarMontoRestanteParcial22(concepto) {
+            const montoOGR = montosOGRParcial[concepto];
+            const acumulado = pagosParciales[concepto] || 0;
+            const restante = Math.max(0, montoOGR - acumulado);
+
+            const elementoRestante = $(montoRestanteConceptosParcial22[concepto]);
+            elementoRestante.text(restante.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+            // Cambiar color según el estado
+            if (restante <= 0) {
+                elementoRestante.css('color', '#28a745'); // Verde para completado
+            } else {
+                elementoRestante.css('color', '#007bff'); // Azul para pendiente
+            }
+        }
+
+        // Función para verificar si todos los conceptos están pagados y actualizar estado global
+        function verificarYActualizarEstadoGlobalCupon() {
+            const todosPagados = Object.keys(montosOGRParcial).every(concepto => {
+                const acumulado = pagosParciales[concepto] || 0;
+                const montoOGR = montosOGRParcial[concepto];
+                return acumulado >= montoOGR;
+            });
+
+            if (todosPagados) {
+                $('#estadoGlobalCupon').removeClass('status-parcial').addClass('status-total').text('Estado del Cupón: CANCELADO');
+            }
+        }
+
+        // FUNCIÓN PRINCIPAL - Esta es la única que debe existir
+        function actualizarEstadoConceptoParcial(concepto) {
+            const montoOGR = montosOGRParcial[concepto];
+            const acumulado = pagosParciales[concepto] || 0;
+            const estadoElemento = $(estadoConceptosParcial[concepto]);
+
+            if (acumulado >= montoOGR) {
+                estadoElemento.removeClass('status-parcial').addClass('status-total').text('Pagado');
+            } else if (acumulado > 0) {
+                estadoElemento.removeClass('status-total').addClass('status-parcial').text('Parcial');
+            } else {
+                estadoElemento.removeClass('status-total').addClass('status-parcial').text('Pendiente');
+            }
+
+            // Actualizar monto restante en la tabla de la sección 2.2
+            actualizarMontoRestanteParcial22(concepto);
+
+            // Verificar estado global del cupón
+            verificarYActualizarEstadoGlobalCupon();
+        }
+
+        // Función para validar formulario de pago parcial
+        function validarFormularioParcial() {
+            const concepto = $('#conceptoParcial').val();
+            const fechaPago = $('#fechaPagoParcial').val();
+            const cuentaBancaria = $('#cuentaBancariaParcial').val();
+
+            if (!concepto || !fechaPago || !cuentaBancaria) {
+                toastr.error('Debe completar todos los campos para registrar el pago parcial');
+                return false;
+            }
+
+            let montoNumerico;
+            try {
+                montoNumerico = AutoNumeric.getNumber('#montoParcial');
+            } catch (e) {
+                toastr.error('El monto debe ser un valor numérico válido');
+                return false;
+            }
+
+            if (isNaN(montoNumerico) || montoNumerico <= 0) {
+                toastr.error('El monto debe ser mayor a cero');
+                return false;
+            }
+
+            const montoOGR = montosOGRParcial[concepto];
+            const acumuladoActual = pagosParciales[concepto] || 0;
+            const saldoPendiente = montoOGR - acumuladoActual;
+
+            if (montoNumerico > saldoPendiente) {
+                toastr.error(`El monto no puede exceder el saldo pendiente de S/ ${saldoPendiente.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
+                return false;
+            }
+
+            return true;
+        }
+
+        // Función para agregar movimiento parcial
+        function agregarMovimientoParcial(concepto, fecha, monto, cuentaBancaria) {
+            const montoOGR = montosOGRParcial[concepto];
+            const acumuladoTotal = pagosParciales[concepto];
+            const estado = acumuladoTotal >= montoOGR ? 'Pagado' : 'Parcial';
+
+            const movimiento = {
+                concepto: nombreConceptosParcial[concepto],
+                fecha: fecha,
+                monto: monto.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+                cuentaBancaria: cuentaBancaria,
+                estado: estado
+            };
+
+            movimientosRegistrados.push(movimiento);
+            actualizarTablaMovimientos();
+        }
+
+        // Función para deshabilitar otros botones después de pago parcial
+        function deshabilitarOtrosBotonesParcial() {
+            $('#cancelarCuponCompleto').prop('disabled', true).addClass('btn-disabled');
+            $('#cancelarCuponeraAnticipada').prop('disabled', true).addClass('btn-disabled');
+            $('#cancelarCuponMonedaDistinta').prop('disabled', true).addClass('btn-disabled');
+        }
+
+        // Función para verificar si hay pagos parciales antes de otras acciones
+        function verificarPagosParciales() {
+            if (hayPagosParciales) {
+                toastr.warning('El cupón ya tiene pagos parciales registrados');
+                return true;
+            }
+            return false;
+        }
+
+        // Event listener para el botón "Registrar Pago Parcial"
+        $('#registrarPagoParcial').click(function () {
+            if (!validarFormularioParcial()) {
+                return;
+            }
+
+            const concepto = $('#conceptoParcial').val();
+            const montoIngresado = AutoNumeric.getNumber('#montoParcial');
+            const fechaPago = $('#fechaPagoParcial').val();
+            const cuentaBancaria = $('#cuentaBancariaParcial option:selected').text();
+
+            // PRIMERO: Acumular el pago
+            pagosParciales[concepto] = (pagosParciales[concepto] || 0) + montoIngresado;
+
+            // SEGUNDO: Actualizar estado del concepto y monto restante
+            actualizarEstadoConceptoParcial(concepto);
+
+            // TERCERO: Agregar movimiento
+            agregarMovimientoParcial(concepto, fechaPago, montoIngresado, cuentaBancaria);
+
+            hayPagosParciales = true;
+            deshabilitarOtrosBotonesParcial();
+
+            $('#conceptoParcial').val('');
+            AutoNumeric.set('#montoParcial', 0);
+            $('#cuentaBancariaParcial').val('');
+
+            toastr.success('Pago parcial registrado con éxito');
+        });
+
+        //fin caso 2
+
+        //fin caso 2
+
+
+
+        //inicio caso 3
+
+        // Variables para controlar el estado de cancelación anticipada
+        let cuponCanceladoAnticipada = false;
+
+        // Función para validar formulario de cancelación anticipada
+        // Función para validar formulario de cancelación anticipada
+        function validarFormularioAnticipada() {
+            const fechaCancelacion = $('#fechaCancelacionAnticipada').val();
+            const cuentaBancaria = $('#cuentaBancariaAnticipada').val();
+
+            if (!fechaCancelacion || !cuentaBancaria) {
+                toastr.error('Debe completar todos los campos para la cancelación anticipada');
+                return false;
+            }
+
+            // Validar que todos los 4 campos tengan valores mayores a 0
+            const campos = [
+                { id: '#amortizacionTotalAnticipada', nombre: 'Amortización Total' },
+                { id: '#interesesProrrateoAnticipada', nombre: 'Intereses Prorrateados' },
+                { id: '#consentFeeAnticipada', nombre: 'Consent Fee' },
+                { id: '#valorRescateAnticipada', nombre: 'Valor de Rescate' }
+            ];
+
+            for (let campo of campos) {
+                const valor = $(campo.id).val().trim();
+
+                // Verificar si está vacío
+                if (!valor) {
+                    toastr.error('Debe completar todos los campos para la cancelación anticipada');
+                    return false;
+                }
+
+                let valorNumerico;
+                try {
+                    valorNumerico = AutoNumeric.getNumber(campo.id);
+                } catch (e) {
+                    toastr.error('El monto debe ser un valor numérico válido');
+                    return false;
+                }
+
+                // Verificar que sea un número válido y MAYOR a 0 (no igual a 0)
+                if (isNaN(valorNumerico) || valorNumerico <= 0) {
+                    toastr.error('El monto debe ser un valor numérico válido');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        // Función para actualizar estado global del cupón a cancelado
+        function actualizarEstadoGlobalCuponAnticipada() {
+            $('#estadoGlobalCupon').removeClass('status-parcial').addClass('status-total').text('Estado del Cupón: CANCELADO');
+        }
+
+        // Función para agregar movimientos de cancelación anticipada
+        function agregarMovimientosAnticipada(fecha, cuentaBancaria) {
+            const conceptos = [
+                { nombre: 'Amortización', campo: '#amortizacionTotalAnticipada' },
+                { nombre: 'Intereses', campo: '#interesesProrrateoAnticipada' },
+                { nombre: 'Consent Fee', campo: '#consentFeeAnticipada' },
+                { nombre: 'Valor de Rescate', campo: '#valorRescateAnticipada' }
+            ];
+
+            conceptos.forEach(concepto => {
+                const monto = AutoNumeric.getNumber(concepto.campo);
+                if (monto > 0) {
+                    const movimiento = {
+                        concepto: concepto.nombre,
+                        fecha: fecha,
+                        monto: monto.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+                        cuentaBancaria: cuentaBancaria,
+                        estado: 'Pagado'
+                    };
+                    movimientosRegistrados.push(movimiento);
+                }
+            });
+
+            actualizarTablaMovimientos();
+        }
+
+        // Función para deshabilitar otros botones después de cancelación anticipada
+        function deshabilitarOtrosBotonesAnticipada() {
+            $('#cancelarCuponCompleto').prop('disabled', true).addClass('btn-disabled');
+            $('#registrarPagoParcial').prop('disabled', true).addClass('btn-disabled');
+            $('#cancelarCuponMonedaDistinta').prop('disabled', true).addClass('btn-disabled');
+            $('#cancelarCuponeraAnticipada').prop('disabled', true).addClass('btn-disabled');
+        }
+
+        // Función para verificar si ya hay cancelación anticipada
+        function verificarCancelacionAnticipada() {
+            if (cuponCanceladoAnticipada) {
+                toastr.warning('El cupón ya fue cancelado anticipadamente');
+                return true;
+            }
+            return false;
+        }
+
+        // Event listener para el botón "Cancelar cuponera anticipadamente"
+        $('#cancelarCuponeraAnticipada').click(function () {
+            // Verificar si ya fue cancelado anticipadamente
+            if (cuponCanceladoAnticipada) {
+                toastr.warning('El cupón ya fue cancelado anticipadamente');
+                return;
+            }
+
+            // Validar formulario
+            if (!validarFormularioAnticipada()) {
+                return;
+            }
+
+            const fechaCancelacion = $('#fechaCancelacionAnticipada').val();
+            const cuentaBancaria = $('#cuentaBancariaAnticipada option:selected').text();
+
+            // Actualizar estado global del cupón
+            actualizarEstadoGlobalCuponAnticipada();
+
+            // Agregar movimientos
+            agregarMovimientosAnticipada(fechaCancelacion, cuentaBancaria);
+
+            // Deshabilitar otros botones
+            deshabilitarOtrosBotonesAnticipada();
+
+            // Marcar como cancelado anticipadamente
+            cuponCanceladoAnticipada = true;
+
+            // Mostrar mensajes de éxito
+            toastr.success('Cancelación anticipada registrada con éxito');
+            toastr.info('La inversión principal actualizó su fecha de vencimiento al día de la cancelación anticipada');
+        });
+
+        // Actualizar verificaciones en otros botones para incluir cancelación anticipada
+        $('#cancelarCuponCompleto').click(function (e) {
+            if (verificarCancelacionAnticipada()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        $('#registrarPagoParcial').click(function (e) {
+            if (verificarCancelacionAnticipada()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        $('#cancelarCuponMonedaDistinta').click(function (e) {
+            if (verificarCancelacionAnticipada()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        //fin caso 3
+
+
+
+        //inicio caso 4 - Cancelación en Moneda Distinta
+
+        // Variables para controlar el estado de cancelación en moneda distinta
+        let cuponCanceladoMonedaDistinta = false;
+
+        // Mapeo de conceptos para cancelación en moneda distinta
+        const conceptosMonedaDistinta = [
+            { id: '#montoOrigenAmortizacionMonedaDistinta', convertido: '#montoConvertidoAmortizacionMonedaDistinta', nombre: 'Amortización' },
+            { id: '#montoOrigenInteresesMonedaDistinta', convertido: '#montoConvertidoInteresesMonedaDistinta', nombre: 'Intereses' },
+            { id: '#montoOrigenInflacionAmortizacionMonedaDistinta', convertido: '#montoConvertidoInflacionAmortizacionMonedaDistinta', nombre: 'Inflación - Amortización' },
+            { id: '#montoOrigenInflacionInteresMonedaDistinta', convertido: '#montoConvertidoInflacionInteresMonedaDistinta', nombre: 'Inflación - Interés' }
+        ];
+
+        // Función para habilitar/deshabilitar tipo de cambio según moneda seleccionada
+        function gestionarTipoCambioMonedaDistinta() {
+            const monedaPago = $('#monedaPagoGeneral').val();
+            const tipoCambioField = $('#tipoCambioGeneral');
+
+            if (monedaPago === 'PEN') {
+                tipoCambioField.prop('disabled', true).val('');
+                toastr.warning('Debe seleccionar una moneda distinta a la del cupón para usar esta opción');
+
+                // Limpiar montos convertidos
+                conceptosMonedaDistinta.forEach(concepto => {
+                    $(concepto.convertido).val('');
+                });
+            } else {
+                tipoCambioField.prop('disabled', false);
+            }
+        }
+
+        // Función para calcular montos convertidos automáticamente
+        function calcularMontosConvertidosMonedaDistinta() {
+            const tipoCambio = parseFloat($('#tipoCambioGeneral').val().replace(/,/g, ''));
+            const monedaPago = $('#monedaPagoGeneral').val();
+
+            if (isNaN(tipoCambio) || tipoCambio <= 0 || monedaPago === 'PEN') {
+                // Limpiar campos convertidos si no hay tipo de cambio válido
+                conceptosMonedaDistinta.forEach(concepto => {
+                    $(concepto.convertido).val('');
+                });
+                return;
+            }
+
+            conceptosMonedaDistinta.forEach(concepto => {
+                let montoOrigen;
+                try {
+                    montoOrigen = AutoNumeric.getNumber(concepto.id);
+                } catch (e) {
+                    montoOrigen = parseFloat($(concepto.id).val().replace(/,/g, ''));
+                }
+
+                if (!isNaN(montoOrigen) && montoOrigen >= 0) {
+                    const montoConvertido = montoOrigen / tipoCambio;
+                    const montoFormateado = montoConvertido.toLocaleString('es-PE', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                    $(concepto.convertido).val(montoFormateado);
+                } else {
+                    $(concepto.convertido).val('');
+                }
+            });
+        }
+
+        // Función para validar formulario de cancelación en moneda distinta
+        function validarFormularioMonedaDistinta() {
+            const fechaCancelacion = $('#fechaCancelacionMonedaDistinta').val();
+            const cuentaBancaria = $('#cuentaBancariaMonedaDistinta').val();
+            const monedaPago = $('#monedaPagoGeneral').val();
+
+            if (!fechaCancelacion || !cuentaBancaria) {
+                toastr.error('Debe completar todos los campos para la cancelación en moneda distinta');
+                return false;
+            }
+
+            if (monedaPago === 'PEN') {
+                toastr.error('Debe seleccionar una moneda distinta a la del cupón para usar esta opción');
+                return false;
+            }
+
+            // Validar tipo de cambio
+            const tipoCambio = parseFloat($('#tipoCambioGeneral').val().replace(/,/g, ''));
+            if (isNaN(tipoCambio) || tipoCambio <= 0) {
+                toastr.error('Debe ingresar un tipo de cambio válido mayor a cero');
+                return false;
+            }
+
+            // Validar cada monto origen
+            for (let concepto of conceptosMonedaDistinta) {
+                let montoOrigen;
+                try {
+                    montoOrigen = AutoNumeric.getNumber(concepto.id);
+                } catch (e) {
+                    montoOrigen = parseFloat($(concepto.id).val().replace(/,/g, ''));
+                }
+
+                if (isNaN(montoOrigen) || montoOrigen < 0) {
+                    toastr.error('Todos los montos origen deben ser valores numéricos válidos');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Función para actualizar estado global del cupón
+        function actualizarEstadoGlobalCuponMonedaDistinta() {
+            $('#estadoGlobalCupon').removeClass('status-parcial').addClass('status-total').text('Estado del Cupón: CANCELADO');
+        }
+
+        // Función para agregar movimientos de cancelación en moneda distinta
+        function agregarMovimientosMonedaDistinta(fecha, cuentaBancaria) {
+            const monedaPago = $('#monedaPagoGeneral').val();
+            const tipoCambio = parseFloat($('#tipoCambioGeneral').val().replace(/,/g, ''));
+
+            conceptosMonedaDistinta.forEach(concepto => {
+                let montoOrigen;
+                try {
+                    montoOrigen = AutoNumeric.getNumber(concepto.id);
+                } catch (e) {
+                    montoOrigen = parseFloat($(concepto.id).val().replace(/,/g, ''));
+                }
+
+                if (montoOrigen > 0) {
+                    const montoConvertido = montoOrigen * tipoCambio;
+                    const montoOrigenFormateado = montoOrigen.toLocaleString('es-PE', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                    const montoConvertidoFormateado = montoConvertido.toLocaleString('es-PE', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+
+                    const movimiento = {
+                        concepto: concepto.nombre,
+                        fecha: fecha,
+                        monto: `${montoOrigenFormateado} (${monedaPago} ${montoConvertidoFormateado})`,
+                        cuentaBancaria: cuentaBancaria,
+                        estado: 'Pagado'
+                    };
+                    movimientosRegistrados.push(movimiento);
+                }
+            });
+
+            actualizarTablaMovimientos();
+        }
+
+        // Función para deshabilitar otros botones después de cancelación en moneda distinta
+        function deshabilitarOtrosBotonesMonedaDistinta() {
+            $('#cancelarCuponCompleto').prop('disabled', true).addClass('btn-disabled');
+            $('#registrarPagoParcial').prop('disabled', true).addClass('btn-disabled');
+            $('#cancelarCuponeraAnticipada').prop('disabled', true).addClass('btn-disabled');
+            $('#cancelarCuponMonedaDistinta').prop('disabled', true).addClass('btn-disabled');
+        }
+
+        // Función para verificar si ya hay cancelación en moneda distinta
+        function verificarCancelacionMonedaDistinta() {
+            if (cuponCanceladoMonedaDistinta) {
+                toastr.warning('El cupón ya fue cancelado en moneda distinta');
+                return true;
+            }
+            return false;
+        }
+
+        // Event listener para el botón "Cancelar Cupón en Moneda Distinta"
+        $('#cancelarCuponMonedaDistinta').click(function () {
+            // Verificar si ya fue cancelado en moneda distinta
+            if (cuponCanceladoMonedaDistinta) {
+                toastr.warning('El cupón ya fue cancelado en moneda distinta');
+                return;
+            }
+
+            // Validar formulario
+            if (!validarFormularioMonedaDistinta()) {
+                return;
+            }
+
+            const fechaCancelacion = $('#fechaCancelacionMonedaDistinta').val();
+            const cuentaBancaria = $('#cuentaBancariaMonedaDistinta option:selected').text();
+
+            // Actualizar estado global del cupón
+            actualizarEstadoGlobalCuponMonedaDistinta();
+
+            // Agregar movimientos
+            agregarMovimientosMonedaDistinta(fechaCancelacion, cuentaBancaria);
+
+            // Deshabilitar otros botones
+            deshabilitarOtrosBotonesMonedaDistinta();
+
+            // Marcar como cancelado en moneda distinta
+            cuponCanceladoMonedaDistinta = true;
+
+            // Mostrar mensaje de éxito
+            toastr.success('Cancelación en moneda distinta registrada con éxito');
+        });
+
+        // Verificación en otros botones para incluir cancelación en moneda distinta
+        $('#cancelarCuponCompleto').click(function (e) {
+            if (verificarCancelacionMonedaDistinta()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        $('#registrarPagoParcial').click(function (e) {
+            if (verificarCancelacionMonedaDistinta()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        $('#cancelarCuponeraAnticipada').click(function (e) {
+            if (verificarCancelacionMonedaDistinta()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        //fin caso 4
+
+
+
+
+
+        $(document).ready(function () {
+            // Configurar fecha actual por defecto
+            const today = new Date().toISOString().split('T')[0];
+            $('#fechaCancelacionRegular').val(today);
+            $('#fechaPagoParcial').val(today);
+            $('#fechaCancelacionAnticipada').val(today);
+
+            // Seleccionar cuenta por defecto para cancelación anticipada
+            $('#cuentaBancariaAnticipada').val('cuenta1');
+
+
+
+
+            // **AGREGAR ESTAS 3 LÍNEAS NUEVAS:**
+            $('#fechaCancelacionMonedaDistinta').val(today);
+            gestionarTipoCambioMonedaDistinta();
+
+            // Event listeners para cancelación en moneda distinta
+            $('#monedaPagoGeneral').on('change', function () {
+                gestionarTipoCambioMonedaDistinta();
+            });
+
+            $('#tipoCambioGeneral').on('input blur', function () {
+                calcularMontosConvertidosMonedaDistinta();
+            });
+
+            conceptosMonedaDistinta.forEach(concepto => {
+                $(concepto.id).on('input blur', function () {
+                    calcularMontosConvertidosMonedaDistinta();
+                });
+            });
+
+
+
+
+
+
+
+
+
+            // Inicializar AutoNumeric en todos los campos numéricos
+            $('.numeric-input').each(function () {
+                if (!$(this).hasClass('autonumeric-input')) {
+                    try {
+                        new AutoNumeric(this, numericConfig);
+                    } catch (e) {
+                        console.warn('Error inicializando AutoNumeric:', this, e);
+                    }
+                }
+            });
+
+            // Inicializar tabla de movimientos
+            actualizarTablaMovimientos();
+
+            // Agregar verificación a botón de cancelación regular
+            $('#cancelarCuponCompleto').click(function (e) {
+                if (verificarPagosParciales()) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Agregar verificación a botón de cancelación anticipada
+            $('#cancelarCuponeraAnticipada').click(function (e) {
+                if (verificarPagosParciales()) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Agregar verificación a botón de cancelación en moneda distinta
+            $('#cancelarCuponMonedaDistinta').click(function (e) {
+                if (verificarPagosParciales()) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            console.log('Sistema de Gestión de Cupones inicializado con máscaras numéricas');
+
+            setTimeout(procesarParametrosURL, 500);
+
+        });
+
+
+        // Script para manejar parámetros del query string y navegación automática
+        function procesarParametrosURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const invNum = urlParams.get('invNum');
+            const tipo = urlParams.get('tipo');
+            const sustento = urlParams.get('sustento');
+            const justificacion = urlParams.get('justificacion');
+
+            console.log('Parámetros recibidos:', { invNum, tipo, sustento, justificacion });
+            console.log('URL completa:', window.location.href);
+
+            if (invNum) {
+                const elementoInversion = document.getElementById('inversionNumero');
+                if (elementoInversion) {
+                    elementoInversion.textContent = invNum;
+                    console.log('Número de inversión actualizado a:', invNum);
+                }
+                toastr.info(`Procesando cancelación para INV# ${invNum}`);
+            }
+
+            if (sustento && justificacion) {
+                //nilton
+                // toastr.info(`Archivo sustento: ${sustento}`);
+                // setTimeout(() => {
+                //     toastr.info(`Justificación: ${justificacion.substring(0, 50)}...`);
+                // }, 1000);
+            }
+
+            // AQUÍ ESTÁ LA CLAVE - añadir debug
+            if (tipo) {
+                console.log('Tipo de cancelación detectado:', tipo);
+                navegarASeccionTipo(tipo);
+            } else {
+                console.log('No se detectó tipo de cancelación, mostrando todas las secciones');
+            }
+        }
+        function navegarASeccionTipo(tipo) {
+            console.log('navegarASeccionTipo llamado con tipo:', tipo);
+
+            let seccionTarget = null;
+            let botonEnfocar = null;
+            let mensajeSeccion = '';
+
+            // Mapeo directo tipo -> ID de tarjeta
+            const mapeoSecciones = {
+                'regular': 'cardRegular',
+                'parcial': 'cardParcial',
+                'anticipada': 'cardAnticipada',
+                'moneda_distinta': 'cardMonedaDistinta'
+            };
+
+            // Obtener todas las tarjetas de cancelación por ID
+            const todasLasSeccionesCancelacion = Object.values(mapeoSecciones).map(id => document.getElementById(id));
+
+            console.log('Secciones encontradas:', todasLasSeccionesCancelacion.map(s => s ? s.id : 'NO ENCONTRADA'));
+
+            // Ocultar todas las secciones de cancelación
+            todasLasSeccionesCancelacion.forEach(seccion => {
+                if (seccion) {
+                    seccion.classList.add('hidden');
+                    console.log(`Sección ${seccion.id} ocultada`);
+                }
+            });
+
+            // Configurar según el tipo
+            if (mapeoSecciones[tipo]) {
+                seccionTarget = document.getElementById(mapeoSecciones[tipo]);
+
+                switch (tipo) {
+                    case 'regular':
+                        botonEnfocar = document.getElementById('cancelarCuponCompleto');
+                        mensajeSeccion = 'Sección 2.1 - Cancelación Regular';
+                        break;
+                    case 'parcial':
+                        botonEnfocar = document.getElementById('registrarPagoParcial');
+                        mensajeSeccion = 'Sección 2.2 - Cancelación Parcial';
+                        break;
+                    case 'anticipada':
+                        botonEnfocar = document.getElementById('cancelarCuponeraAnticipada');
+                        mensajeSeccion = 'Sección 2.3 - Cancelación Anticipada';
+                        break;
+                    case 'moneda_distinta':
+                        botonEnfocar = document.getElementById('cancelarCuponMonedaDistinta');
+                        mensajeSeccion = 'Sección 2.4 - Cancelación en Moneda Distinta';
+                        break;
+                }
+            } else {
+                console.log('Tipo no reconocido:', tipo, 'mostrando todas las secciones');
+                todasLasSeccionesCancelacion.forEach(seccion => {
+                    if (seccion) {
+                        seccion.classList.remove('hidden');
+                        console.log(`Sección ${seccion.id} mostrada`);
+                    }
+                });
+                toastr.warning('Tipo de cancelación no reconocido');
+                return;
+            }
+
+            if (seccionTarget) {
+                // console.log('Mostrando sección target:', seccionTarget.id);
+                seccionTarget.classList.remove('hidden');
+
+                // Scroll y efectos visuales
+                seccionTarget.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+
+                seccionTarget.style.border = '3px solid #3498db';
+                seccionTarget.style.boxShadow = '0 0 20px rgba(52, 152, 219, 0.5)';
+
+                setTimeout(() => {
+                    seccionTarget.style.border = '';
+                    seccionTarget.style.boxShadow = '';
+                }, 3000);
+
+                //nbilton comenhtado
+                // setTimeout(() => {
+                //     toastr.success(`Mostrando únicamente: ${mensajeSeccion}`);
+                // }, 500);
+
+                if (botonEnfocar) {
+                    setTimeout(() => {
+                        botonEnfocar.focus();
+                    }, 1000);
+                }
+            } else {
+                console.log('ERROR: No se encontró la sección para tipo:', tipo);
+            }
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>

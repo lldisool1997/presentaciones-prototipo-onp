@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Bonos - Cuponera</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .profile-info {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #005C97 0%, #004a7c 100%);
+            color: white;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-wrapper {
+            padding: 30px;
+        }
+
+        .section-header {
+            color: #2c3e50;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            margin-top: 30px;
+            padding-left: 15px;
+            border-left: 4px solid #1976d2;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .section-header:first-of-type {
+            margin-top: 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-column {
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .info-value {
+            color: #555;
+            font-size: 1em;
+        }
+
+        .parameters {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .parameters-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.hidden {
+            display: none;
+        }
+
+        label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+
+        select,
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus,
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        select:disabled {
+            background-color: #f5f5f5;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #1f5f8b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.8em;
+            border-radius: 5px;
+        }
+
+        .btn-disabled {
+            background: #bdc3c7 !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            overflow-x: auto;
+            /* ← AGREGAR ESTA LÍNEA */
+
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        td {
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e3f2fd;
+        }
+
+        .total-row {
+            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .total-row td {
+            border-top: 2px solid #34495e;
+            padding: 15px 10px;
+        }
+
+        .editable-input {
+            border: 1px solid #ddd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9em;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .editable-input {
+            border: 1px solid #ddd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            width: 100%;
+            min-width: 120px;
+            /* Para todos los campos editables */
+            text-align: center;
+            font-size: 0.9em;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Anchos mínimos específicos para diferentes columnas */
+        table {
+            min-width: 1200px;
+            /* Ancho mínimo de toda la tabla */
+        }
+
+        th,
+        td {
+            min-width: 80px;
+            white-space: nowrap;
+            /* Evita que el texto se corte */
+        }
+
+        /* Columnas específicas con más espacio */
+        th:nth-child(3),
+        td:nth-child(3) {
+            /* Fecha Vencimiento */
+            min-width: 140px;
+        }
+
+        th:nth-child(5),
+        td:nth-child(5) {
+            /* IRD Actual (cuando aparece) */
+            min-width: 130px;
+        }
+
+        th:nth-child(6),
+        td:nth-child(6) {
+            /* Tasa Variable (cuando aparece) */
+            min-width: 110px;
+        }
+
+        th:nth-child(7),
+        td:nth-child(7) {
+            /* Amortización */
+            min-width: 120px;
+        }
+
+        th:nth-child(8),
+        td:nth-child(8) {
+            /* Interés */
+            min-width: 120px;
+        }
+
+
+
+        .editable-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        .readonly-value {
+            color: #666;
+            font-style: italic;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-aprobado {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-registrado {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .export-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        @media (max-width: 1200px) {
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .parameters-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .parameters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .actions-cell {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="main-container">
+            <div class="profile-info">Perfil: OGR</div>
+
+            <div class="header">
+                <!-- <h1>Sistema de Gestión de Bonos - Cuponera</h1> -->
+                <h1>Gestión de Cuponera </h1>
+
+            </div>
+
+            <div class="content-wrapper">
+                <div class="section-header">1. Información del Instrumento</div>
+                <div class="info-grid">
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Entidad:</div>
+                            <div class="info-value">Fondo Consolidado de Reservas Previsionales – FCR</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Descripción:</div>
+                            <div class="info-value">BS-20SEP2029</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Unidad de Negocio:</div>
+                            <div class="info-value">FCR-MACROFONDO</div>
+                        </div>
+                    </div>
+
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Estado:</div>
+                            <div class="info-value">APROBADO</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Inversión #:</div>
+                            <div class="info-value">2001</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tipo Instrumento:</div>
+                            <div class="info-value">BONO SOBERANO</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Categoría Riesgo:</div>
+                            <div class="info-value">AA++</div>
+                        </div>
+                    </div>
+
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Periodicidad:</div>
+                            <div class="info-value">Semestral</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Plazo Calificación:</div>
+                            <div class="info-value">Largo</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Valor Nominal:</div>
+                            <div class="info-value">1,000,000.00</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tasa Nominal:</div>
+                            <div class="info-value">8.0625%</div>
+                        </div>
+                    </div>
+
+                    <div class="info-column">
+                        <div class="info-item">
+                            <div class="info-label">Tasa Efectiva:</div>
+                            <div class="info-value">8.309557%</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Fecha Emisión:</div>
+                            <div class="info-value">20/09/2025</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Fecha Vencimiento:</div>
+                            <div class="info-value">20/09/2029</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-header">2. Información particular para actualizar el bono</div>
+                <div class="parameters">
+                    <!-- <div class="parameters-grid">
+                        <div class="form-group">
+                            <label for="periodicidad">Periodicidad:</label>
+                            <select id="periodicidad">
+                                <option value="Trimestral" selected>Trimestral</option>
+                                <option value="Semestral">Semestral</option>
+                                <option value="Anual">Anual</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modalidadPago">Modalidad de Pago:</label>
+                            <select id="modalidadPago">
+                                <option value="Al vencimiento" selected>Al vencimiento</option>
+                                <option value="Amortizable">Amortizable</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="baseCalculo">Base de Cálculo:</label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <select id="baseCalculoPrimero" style="flex: 1;">
+                                    <option value="30" selected>30</option>
+                                    <option value="actual">Actual</option>
+                                </select>
+                                <span style="font-weight: bold; font-size: 1.2em;">/</span>
+                                <select id="baseCalculoSegundo" style="flex: 1;">
+                                    <option value="360" selected>360</option>
+                                    <option value="365">365</option>
+                                    <option value="actual">Actual</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipoTasa">Tipo de Tasa:</label>
+                            <select id="tipoTasa">
+                                <option value="Tasa nominal" selected>Tasa nominal</option>
+                                <option value="Tasa efectiva">Tasa efectiva</option>
+                                <option value="Tasa variable">Tasa variable</option>
+                                <option value="Tasa VAC">Tasa VAC</option>
+                            </select>
+                        </div>
+                    </div> -->
+
+
+                    <div class="parameters-grid" style="grid-template-columns: repeat(4, 1fr);">
+                        <div class="form-group">
+                            <label for="periodicidad">Periodicidad:</label>
+                            <select id="periodicidad">
+                                <option value="Trimestral">Trimestral</option>
+                                <option value="Semestral" selected>Semestral</option>
+                                <option value="Anual">Anual</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modalidadPago">Modalidad de Pago:</label>
+                            <select id="modalidadPago">
+                                <option value="Al vencimiento">Al vencimiento</option>
+                                <option value="Amortizable" selected>Amortizable</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="baseCalculo">Base de Cálculo:</label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <select id="baseCalculoPrimero" style="flex: 1;">
+                                    <option value="30" selected>30</option>
+                                    <option value="actual">Actual</option>
+                                </select>
+                                <span style="font-weight: bold; font-size: 1.2em;">/</span>
+                                <select id="baseCalculoSegundo" style="flex: 1;">
+                                    <option value="360" selected>360</option>
+                                    <option value="365">365</option>
+                                    <option value="actual">Actual</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipoTasa">Tipo de Tasa:</label>
+                            <select id="tipoTasa" onchange="toggleTasaVariable()">
+                                <option value="Tasa nominal" selected>Tasa nominal</option>
+                                <option value="Tasa efectiva">Tasa efectiva</option>
+                                <option value="Tasa variable">Tasa variable</option>
+                                <option value="Tasa VAC">Tasa VAC</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="campoTasaVariable" style="display: none;">
+                            <label for="tasaVariable">Tasa Variable (%):</label>
+                            <input type="number" id="tasaVariable" step="0.000001" min="0" max="100"
+                                placeholder="Ej: 7.5">
+                        </div>
+
+                        <div class="form-group" id="campoIRDInicial" style="display: none;">
+                            <label for="irdInicial">IRD Inicial:</label>
+                            <!-- <input type="number" id="irdInicial" step="0.0000000001" min="0" placeholder="Ej: 100.500"> -->
+                            <input type="number" id="irdInicial" step="0.0000000001" min="0" placeholder="Ej: 100.500"
+                                oninput="limitarDecimales(this, 10)">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="section-header">3. Cronograma de pagos (Cuponera)</div>
+
+                <!-- <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="generarCuponera()">Generar</button>
+                    <button class="btn btn-secondary" onclick="recalcularCuponera()">Recalcular</button>
+                    <button class="btn btn-success" onclick="grabarCuponera()">Grabar</button>
+                    <button class="btn btn-info" onclick="editarCuponera()">Editar</button>
+                </div> -->
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="generarCuponera()">Generar</button>
+                    <button class="btn btn-secondary" onclick="recalcularCuponera()">Recalcular</button>
+                    <button class="btn btn-success" onclick="aprobarTodo()">Aprobar Todo</button>
+                    <button class="btn btn-info" onclick="revertirTodo()">Revertir Todo</button>
+                </div>
+
+                <div class="table-container">
+                    <table id="cuponesTable">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Vencimiento</th>
+                                <th>Días</th>
+                                <th>Amortización</th>
+                                <th>Interés/Ganancia</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuponesBody">
+                            <tr>
+                                <td colspan="9" style="text-align: center; color: #666; padding: 20px;">No hay cupones
+                                    generados. Presione "Generar" para crear la cuponera.</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="4"><strong>TOTALES</strong></td>
+                                <td id="totalAmortizacion"><strong>0.00</strong></td>
+                                <td id="totalInteres"><strong>0.00</strong></td>
+                                <td id="totalGeneral"><strong>0.00</strong></td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="export-options">
+                    <button class="btn btn-info" onclick="generarPDF()">Generar PDF</button>
+                    <button class="btn btn-success" onclick="exportarExcel()">Exportar Excel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        // Configuración de Toastr
+        toastr.options = {
+            "closeButton": true,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000"
+        };
+
+        // Datos iniciales - CONSTANTES DEL INSTRUMENTO
+        const VALOR_NOMINAL = 1000000.00;
+        const TASA_NOMINAL = 8.0625;
+        const TASA_EFECTIVA = 8.309557;
+        // const FECHA_EMISION = new Date('2025-01-24');
+        // const FECHA_VENCIMIENTO = new Date('2026-07-24');
+        // const FECHA_EMISION = new Date(2021, 6, 1);    // 1 julio 2021
+        // const FECHA_VENCIMIENTO = new Date(2026, 6, 1); // 1 julio 2026
+
+        const FECHA_EMISION = new Date(2025, 8, 20);    // 1 julio 2021
+        const FECHA_VENCIMIENTO = new Date(2029, 8, 20); // 1 julio 2026
+
+
+        // Variables globales
+        let cupones = [];
+        let cuponerGenerada = false;
+        let cuponesEnEdicion = new Set(); // Almacena números de cupones en modo edición
+
+
+        // ========================================
+        // FUNCIONES AUXILIARES COMUNES
+        // ========================================
+
+
+        function parseDate(dateStr) {
+            const [day, month, year] = dateStr.split('/');
+            return new Date(year, month - 1, day);
+        }
+
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        function formatNumber(number) {
+            return new Intl.NumberFormat('es-PE', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(number);
+        }
+
+        function obtenerBaseCalculo() {
+            const primero = document.getElementById('baseCalculoPrimero').value;
+            const segundo = document.getElementById('baseCalculoSegundo').value;
+            return `${primero}/${segundo}`;
+        }
+
+        function calcularDiasActual(fechaInicio, fechaVencimiento) {
+            const inicio = parseDate(fechaInicio);
+            const fin = parseDate(fechaVencimiento);
+            const diffTime = Math.abs(fin - inicio);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        function calcularDiasFijos(periodicidad) {
+            switch (periodicidad) {
+                case 'Trimestral': return 90;
+                case 'Semestral': return 180;
+                case 'Anual': return 360;
+                default: return 90;
+            }
+        }
+
+        function obtenerMesesPorPeriodo(periodicidad) {
+            switch (periodicidad) {
+                case 'Trimestral': return 3;
+                case 'Semestral': return 6;
+                case 'Anual': return 12;
+                default: return 3;
+            }
+        }
+
+        function toggleTasaVariable() {
+            const tipoTasa = document.getElementById('tipoTasa').value;
+            const campoTasaVariable = document.getElementById('campoTasaVariable');
+            const campoIRDInicial = document.getElementById('campoIRDInicial');
+
+            if (tipoTasa === 'Tasa variable') {
+                campoTasaVariable.style.display = 'flex';
+                if (campoIRDInicial) campoIRDInicial.style.display = 'none';
+            } else if (tipoTasa === 'Tasa VAC') {
+                campoTasaVariable.style.display = 'none';
+                if (campoIRDInicial) campoIRDInicial.style.display = 'flex';
+            } else {
+                campoTasaVariable.style.display = 'none';
+                if (campoIRDInicial) campoIRDInicial.style.display = 'none';
+            }
+
+            // Desbloquear IRD inicial si cambia de tipo de tasa
+            if (tipoTasa !== 'Tasa VAC') {
+                const irdInput = document.getElementById('irdInicial');
+                if (irdInput) irdInput.disabled = false;
+            }
+        }
+
+        function obtenerTasaVariable() {
+            const tasaInput = document.getElementById('tasaVariable');
+            return tasaInput && tasaInput.value ? parseFloat(tasaInput.value) : 7.0; // default 7%
+        }
+
+        function actualizarTasaCupon(numero, nuevaTasa) {
+            const tasa = parseFloat(nuevaTasa);
+
+            if (isNaN(tasa) || tasa < 0 || tasa > 100) {
+                toastr.error('Tasa inválida. Debe estar entre 0 y 100');
+                generarTabla();
+                return;
+            }
+
+            // Encontrar el índice del cupón actual
+            const cuponIndex = cupones.findIndex(c => c.numero === numero);
+            if (cuponIndex === -1) return;
+
+            // Actualizar la tasa desde este cupón hacia abajo
+            for (let i = cuponIndex; i < cupones.length; i++) {
+                cupones[i].tasa = tasa;
+            }
+
+            // Regenerar tabla para reflejar cambios
+            generarTabla();
+            toastr.success(`Tasa actualizada a ${tasa}% desde cupón ${numero} hacia abajo.`);
+        }
+
+
+        // Variables globales para VAC
+        let irdInicialVAC = null;
+        let periodicidadOriginalVAC = null;
+
+        function obtenerIRDInicial() {
+            const irdInput = document.getElementById('irdInicial');
+            return irdInput && irdInput.value ? parseFloat(irdInput.value) : null;
+        }
+
+        function actualizarIRDActual(numero, nuevoIRD) {
+            const ird = parseFloat(nuevoIRD);
+
+            if (isNaN(ird) || ird < 0) {
+                toastr.error('IRD inválido. Debe ser un número positivo');
+                generarTabla();
+                return;
+            }
+
+            // Encontrar el índice del cupón actual
+            const cuponIndex = cupones.findIndex(c => c.numero === numero);
+            if (cuponIndex === -1) return;
+
+            // Actualizar el IRD desde este cupón hacia abajo
+            for (let i = cuponIndex; i < cupones.length; i++) {
+                cupones[i].irdActual = ird;
+            }
+
+            // Regenerar tabla para reflejar cambios
+            generarTabla();
+            toastr.success(`IRD actualizado a ${ird} desde cupón ${numero} hacia abajo.`);
+        }
+
+
+        function obtenerSaldoVivo1(numeroCupon) {
+            const amortizacionesPagadas = cupones
+                .filter(c => c.numero < numeroCupon)
+                .reduce((sum, c) => sum + c.amortizacion, 0);
+
+            return VALOR_NOMINAL - amortizacionesPagadas;
+        }
+        function obtenerSaldoVivo(numeroCupon) {
+            const amortizacionesPagadas = cupones
+                .filter(c => c.numero <= numeroCupon)  // ← CAMBIAR < por <=
+                .reduce((sum, c) => sum + c.amortizacion, 0);
+
+            return VALOR_NOMINAL - amortizacionesPagadas;
+        }
+        // ========================================
+        // MÓDULO: GESTIÓN DE TIPOS DE TASA
+        // ========================================
+
+        const TipoTasaHandler = {
+
+            // Controlador principal para generar cupones según tipo de tasa
+            generar: function (tipoTasa) {
+                console.log(`Generando cuponera con ${tipoTasa}`);
+
+                switch (tipoTasa) {
+                    case 'Tasa nominal':
+                        return this.generarTasaNominal();
+                    case 'Tasa efectiva':
+                        return this.generarTasaEfectiva();
+                    case 'Tasa variable':
+                        return this.generarTasaVariable();
+                    case 'Tasa VAC':
+                        return this.generarTasaVAC();
+                    default:
+                        throw new Error(`Tipo de tasa no reconocido: ${tipoTasa}`);
+                }
+            },
+
+            // Controlador para recalcular según tipo de tasa
+            recalcular: function (tipoTasa) {
+                console.log(`Recalculando cuponera con ${tipoTasa}`);
+
+                switch (tipoTasa) {
+                    case 'Tasa nominal':
+                        return this.recalcularTasaNominal();
+                    case 'Tasa efectiva':
+                        return this.recalcularTasaEfectiva();
+                    case 'Tasa variable':
+                        return this.recalcularTasaVariable();
+                    case 'Tasa VAC':
+                        return this.recalcularTasaVAC();
+                    default:
+                        throw new Error(`Tipo de tasa no reconocido: ${tipoTasa}`);
+                }
+            },
+
+            // ========================================
+            // LÓGICA ESPECÍFICA: TASA NOMINAL
+            // ========================================
+
+            generarTasaNominal: function () {
+                const periodicidad = document.getElementById('periodicidad').value;
+                const baseCalculo = obtenerBaseCalculo();
+
+                // Limpiar cupones existentes
+                cupones = [];
+
+                const mesesPorPeriodo = obtenerMesesPorPeriodo(periodicidad);
+
+                let fechaActual = new Date(FECHA_EMISION);
+                let numeroActual = 1;
+
+                console.log('2', fechaActual)
+                while (fechaActual < FECHA_VENCIMIENTO) {
+                    console.log('4', fechaActual)
+
+                    const fechaInicio = new Date(fechaActual);
+                    fechaActual = new Date(fechaInicio);
+                    fechaActual.setMonth(fechaActual.getMonth() + mesesPorPeriodo);
+
+                    if (fechaActual > FECHA_VENCIMIENTO) {
+                        fechaActual = new Date(FECHA_VENCIMIENTO);
+                    }
+
+                    const esUltimoCupon = fechaActual >= FECHA_VENCIMIENTO;
+                    const amortizacion = esUltimoCupon ? VALOR_NOMINAL : 0.00;
+
+                    cupones.push({
+                        numero: numeroActual,
+                        fechaInicio: formatDate(fechaInicio),
+                        fechaVencimiento: formatDate(fechaActual),
+                        estado: 'REGISTRADO',
+                        amortizacion: amortizacion,
+                        fechaOriginal: formatDate(fechaActual)
+                    });
+
+                    console.log(cupones)
+
+                    numeroActual++;
+                }
+
+                return {
+                    success: true,
+                    message: `Cuponera generada exitosamente con ${cupones.length} cupones (${periodicidad}, Base: ${baseCalculo}, Tasa: Tasa nominal).`
+                };
+            },
+
+            recalcularTasaNominal: function () {
+                const periodicidad = document.getElementById('periodicidad').value;
+
+                const cuponesRegistrados = cupones.filter(c => c.estado === 'REGISTRADO');
+                if (cuponesRegistrados.length === 0) {
+                    return {
+                        success: false,
+                        message: 'No hay cupones en estado REGISTRADO para recalcular.'
+                    };
+                }
+
+                const hayAprobados = cupones.filter(c => c.estado === 'APROBADO').length > 0;
+
+                // Eliminar solo cupones REGISTRADOS
+                cupones = cupones.filter(c => c.estado !== 'REGISTRADO');
+
+                // Encontrar la fecha más tardía entre cupones no REGISTRADOS
+                let ultimaFecha = null;
+                let ultimoNumero = 0;
+
+                cupones.forEach(cupon => {
+                    const fechaVenc = parseDate(cupon.fechaVencimiento);
+                    if (!ultimaFecha || fechaVenc > ultimaFecha) {
+                        ultimaFecha = fechaVenc;
+                        ultimoNumero = cupon.numero;
+                    }
+                });
+
+                if (!ultimaFecha) {
+                    ultimaFecha = new Date(FECHA_EMISION);
+                    ultimoNumero = 0;
+                }
+
+                const mesesPorPeriodo = obtenerMesesPorPeriodo(periodicidad);
+                let fechaActual = new Date(ultimaFecha);
+                let numeroActual = ultimoNumero + 1;
+                let nuevoCupones = 0;
+
+                while (fechaActual < FECHA_VENCIMIENTO) {
+                    const fechaInicio = new Date(fechaActual);
+                    fechaActual = new Date(fechaInicio);
+                    fechaActual.setMonth(fechaActual.getMonth() + mesesPorPeriodo);
+
+                    if (fechaActual > FECHA_VENCIMIENTO) {
+                        fechaActual = new Date(FECHA_VENCIMIENTO);
+                    }
+
+                    const esUltimoCupon = fechaActual >= FECHA_VENCIMIENTO;
+                    const amortizacion = esUltimoCupon ? VALOR_NOMINAL : 0.00;
+
+                    cupones.push({
+                        numero: numeroActual,
+                        fechaInicio: formatDate(fechaInicio),
+                        fechaVencimiento: formatDate(fechaActual),
+                        estado: 'REGISTRADO',
+                        amortizacion: amortizacion,
+                        fechaOriginal: formatDate(fechaActual)
+                    });
+
+                    numeroActual++;
+                    nuevoCupones++;
+                }
+
+                let mensaje = '';
+                if (hayAprobados) {
+                    mensaje += 'Algunos cupones aprobados no se recalcularon. ';
+                }
+
+                if (nuevoCupones > 0) {
+                    mensaje += `Recálculo completado: Se generaron ${nuevoCupones} cupones con periodicidad ${periodicidad}.`;
+                } else {
+                    mensaje = 'No se generaron nuevos cupones en el recálculo.';
+                }
+
+                return {
+                    success: true,
+                    message: mensaje,
+                    hayAprobados: hayAprobados
+                };
+            },
+
+            // ========================================
+            // LÓGICA ESPECÍFICA: TASA EFECTIVA
+            // ========================================
+
+            generarTasaEfectiva: function () {
+                const periodicidad = document.getElementById('periodicidad').value;
+                const baseCalculo = obtenerBaseCalculo();
+
+                // Limpiar cupones existentes
+                cupones = [];
+
+                const mesesPorPeriodo = obtenerMesesPorPeriodo(periodicidad);
+
+                let fechaActual = new Date(FECHA_EMISION);
+                let numeroActual = 1;
+
+                while (fechaActual < FECHA_VENCIMIENTO) {
+                    const fechaInicio = new Date(fechaActual);
+                    fechaActual = new Date(fechaInicio);
+                    fechaActual.setMonth(fechaActual.getMonth() + mesesPorPeriodo);
+
+                    if (fechaActual > FECHA_VENCIMIENTO) {
+                        fechaActual = new Date(FECHA_VENCIMIENTO);
+                    }
+
+                    const esUltimoCupon = fechaActual >= FECHA_VENCIMIENTO;
+                    const amortizacion = esUltimoCupon ? VALOR_NOMINAL : 0.00;
+
+                    cupones.push({
+                        numero: numeroActual,
+                        fechaInicio: formatDate(fechaInicio),
+                        fechaVencimiento: formatDate(fechaActual),
+                        estado: 'REGISTRADO',
+                        amortizacion: amortizacion,
+                        fechaOriginal: formatDate(fechaActual)
+                    });
+
+                    numeroActual++;
+                }
+
+                return {
+                    success: true,
+                    message: `Cuponera generada exitosamente con ${cupones.length} cupones (${periodicidad}, Base: ${baseCalculo}, Tasa: Tasa efectiva).`
+                };
+            },
+
+            // recalcularTasaEfectiva: function () {
+            //     // TODO: Implementar lógica de recálculo para Tasa Efectiva
+
+            //     return {
+            //         success: false,
+            //         message: 'La lógica de recálculo para Tasa Efectiva aún no está implementada.'
+            //     };
+            // },
+            recalcularTasaEfectiva: function () {
+                const periodicidad = document.getElementById('periodicidad').value;
+
+                const cuponesRegistrados = cupones.filter(c => c.estado === 'REGISTRADO');
+                if (cuponesRegistrados.length === 0) {
+                    return {
+                        success: false,
+                        message: 'No hay cupones en estado REGISTRADO para recalcular.'
+                    };
+                }
+
+                const hayAprobados = cupones.filter(c => c.estado === 'APROBADO').length > 0;
+
+                // Eliminar solo cupones REGISTRADOS
+                cupones = cupones.filter(c => c.estado !== 'REGISTRADO');
+
+                // Encontrar la fecha más tardía entre cupones no REGISTRADOS
+                let ultimaFecha = null;
+                let ultimoNumero = 0;
+
+                cupones.forEach(cupon => {
+                    const fechaVenc = parseDate(cupon.fechaVencimiento);
+                    if (!ultimaFecha || fechaVenc > ultimaFecha) {
+                        ultimaFecha = fechaVenc;
+                        ultimoNumero = cupon.numero;
+                    }
+                });
+
+                if (!ultimaFecha) {
+                    ultimaFecha = new Date(FECHA_EMISION);
+                    ultimoNumero = 0;
+                }
+
+                const mesesPorPeriodo = obtenerMesesPorPeriodo(periodicidad);
+                let fechaActual = new Date(ultimaFecha);
+                let numeroActual = ultimoNumero + 1;
+                let nuevoCupones = 0;
+
+                while (fechaActual < FECHA_VENCIMIENTO) {
+                    const fechaInicio = new Date(fechaActual);
+                    fechaActual = new Date(fechaInicio);
+                    fechaActual.setMonth(fechaActual.getMonth() + mesesPorPeriodo);
+
+                    if (fechaActual > FECHA_VENCIMIENTO) {
+                        fechaActual = new Date(FECHA_VENCIMIENTO);
+                    }
+
+                    const esUltimoCupon = fechaActual >= FECHA_VENCIMIENTO;
+                    const amortizacion = esUltimoCupon ? VALOR_NOMINAL : 0.00;
+
+                    cupones.push({
+                        numero: numeroActual,
+                        fechaInicio: formatDate(fechaInicio),
+                        fechaVencimiento: formatDate(fechaActual),
+                        estado: 'REGISTRADO',
+                        amortizacion: amortizacion,
+                        fechaOriginal: formatDate(fechaActual)
+                    });
+
+                    numeroActual++;
+                    nuevoCupones++;
+                }
+
+                let mensaje = '';
+                if (hayAprobados) {
+                    mensaje += 'Algunos cupones aprobados no se recalcularon. ';
+                }
+
+                if (nuevoCupones > 0) {
+                    mensaje += `Recálculo completado: Se generaron ${nuevoCupones} cupones con periodicidad ${periodicidad}.`;
+                } else {
+                    mensaje = 'No se generaron nuevos cupones en el recálculo.';
+                }
+
+                return {
+                    success: true,
+                    message: mensaje,
+                    hayAprobados: hayAprobados
+                };
+            },
+
+
+
+            // ========================================
+            // LÓGICA ESPECÍFICA: TASA VARIABLE
+            // ========================================
+
+            // ========================================
+            // LÓGICA ESPECÍFICA: TASA VARIABLE
+            // ========================================
+
+            generarTasaVariable: function () {
+                const periodicidad = document.getElementById('periodicidad').value;
+                const baseCalculo = obtenerBaseCalculo();
+                const tasaVariable = obtenerTasaVariable();
+
+                if (!tasaVariable || tasaVariable <= 0) {
+                    return {
+                        success: false,
+                        message: 'Debe ingresar una tasa variable válida mayor a 0.'
+                    };
+                }
+
+                // Limpiar cupones existentes
+                cupones = [];
+
+                const mesesPorPeriodo = obtenerMesesPorPeriodo(periodicidad);
+
+                let fechaActual = new Date(FECHA_EMISION);
+                let numeroActual = 1;
+
+                while (fechaActual < FECHA_VENCIMIENTO) {
+                    const fechaInicio = new Date(fechaActual);
+                    fechaActual = new Date(fechaInicio);
+                    fechaActual.setMonth(fechaActual.getMonth() + mesesPorPeriodo);
+
+                    if (fechaActual > FECHA_VENCIMIENTO) {
+                        fechaActual = new Date(FECHA_VENCIMIENTO);
+                    }
+
+                    const esUltimoCupon = fechaActual >= FECHA_VENCIMIENTO;
+                    const amortizacion = esUltimoCupon ? VALOR_NOMINAL : 0.00;
+
+                    cupones.push({
+                        numero: numeroActual,
+                        fechaInicio: formatDate(fechaInicio),
+                        fechaVencimiento: formatDate(fechaActual),
+                        estado: 'REGISTRADO',
+                        amortizacion: amortizacion,
+                        tasa: tasaVariable, // Agregar tasa al cupón
+                        fechaOriginal: formatDate(fechaActual)
+                    });
+
+                    numeroActual++;
+                }
+
+                return {
+                    success: true,
+                    message: `Cuponera generada exitosamente con ${cupones.length} cupones (${periodicidad}, Base: ${baseCalculo}, Tasa: Variable ${tasaVariable}%).`
+                };
+            },
+
+            recalcularTasaVariable: function () {
+                const periodicidad = document.getElementById('periodicidad').value;
+                const tasaVariable = obtenerTasaVariable();
+
+                if (!tasaVariable || tasaVariable <= 0) {
+                    return {
+                        success: false,
+                        message: 'Debe ingresar una tasa variable válida mayor a 0.'
+                    };
+                }
+
+                const cuponesRegistrados = cupones.filter(c => c.estado === 'REGISTRADO');
+                if (cuponesRegistrados.length === 0) {
+                    return {
+                        success: false,
+                        message: 'No hay cupones en estado REGISTRADO para recalcular.'
+                    };
+                }
+
+                const hayAprobados = cupones.filter(c => c.estado === 'APROBADO').length > 0;
+
+                // Eliminar solo cupones REGISTRADOS
+                cupones = cupones.filter(c => c.estado !== 'REGISTRADO');
+
+                // Encontrar la fecha más tardía entre cupones no REGISTRADOS
+                let ultimaFecha = null;
+                let ultimoNumero = 0;
+
+                cupones.forEach(cupon => {
+                    const fechaVenc = parseDate(cupon.fechaVencimiento);
+                    if (!ultimaFecha || fechaVenc > ultimaFecha) {
+                        ultimaFecha = fechaVenc;
+                        ultimoNumero = cupon.numero;
+                    }
+                });
+
+                if (!ultimaFecha) {
+                    ultimaFecha = new Date(FECHA_EMISION);
+                    ultimoNumero = 0;
+                }
+
+                const mesesPorPeriodo = obtenerMesesPorPeriodo(periodicidad);
+                let fechaActual = new Date(ultimaFecha);
+                let numeroActual = ultimoNumero + 1;
+                let nuevoCupones = 0;
+
+                while (fechaActual < FECHA_VENCIMIENTO) {
+                    const fechaInicio = new Date(fechaActual);
+                    fechaActual = new Date(fechaInicio);
+                    fechaActual.setMonth(fechaActual.getMonth() + mesesPorPeriodo);
+
+                    if (fechaActual > FECHA_VENCIMIENTO) {
+                        fechaActual = new Date(FECHA_VENCIMIENTO);
+                    }
+
+                    const esUltimoCupon = fechaActual >= FECHA_VENCIMIENTO;
+                    const amortizacion = esUltimoCupon ? VALOR_NOMINAL : 0.00;
+
+                    cupones.push({
+                        numero: numeroActual,
+                        fechaInicio: formatDate(fechaInicio),
+                        fechaVencimiento: formatDate(fechaActual),
+                        estado: 'REGISTRADO',
+                        amortizacion: amortizacion,
+                        tasa: tasaVariable, // Usar tasa variable
+                        fechaOriginal: formatDate(fechaActual)
+                    });
+
+                    numeroActual++;
+                    nuevoCupones++;
+                }
+
+                let mensaje = '';
+                if (hayAprobados) {
+                    mensaje += 'Algunos cupones aprobados no se recalcularon. ';
+                }
+
+                if (nuevoCupones > 0) {
+                    mensaje += `Recálculo completado: Se generaron ${nuevoCupones} cupones con tasa variable ${tasaVariable}%.`;
+                } else {
+                    mensaje = 'No se generaron nuevos cupones en el recálculo.';
+                }
+
+                return {
+                    success: true,
+                    message: mensaje,
+                    hayAprobados: hayAprobados
+                };
+            },
+
+            // ========================================
+            // LÓGICA ESPECÍFICA: TASA VAC
+            // ========================================
+
+            // ========================================
+            // LÓGICA ESPECÍFICA: TASA VAC
+            // ========================================
+
+            generarTasaVAC: function () {
+                const periodicidad = document.getElementById('periodicidad').value;
+                const baseCalculo = obtenerBaseCalculo();
+                const irdInicial = obtenerIRDInicial();
+
+                if (!irdInicial || irdInicial <= 0) {
+                    return {
+                        success: false,
+                        message: 'Debe ingresar un IRD Inicial válido mayor a 0.'
+                    };
+                }
+
+                // Guardar IRD inicial globalmente
+                irdInicialVAC = irdInicial;
+                periodicidadOriginalVAC = periodicidad;  // ← NUEVA LÍNEA
+
+                document.getElementById('irdInicial').disabled = true;
+
+
+                // Limpiar cupones existentes
+                cupones = [];
+
+                const mesesPorPeriodo = obtenerMesesPorPeriodo(periodicidad);
+
+                let fechaActual = new Date(FECHA_EMISION);
+                let numeroActual = 1;
+
+                // Contar total de cupones primero
+                let totalCupones = 0;
+                let fechaTemp = new Date(FECHA_EMISION);
+                while (fechaTemp < FECHA_VENCIMIENTO) {
+                    fechaTemp = new Date(fechaTemp);
+                    fechaTemp.setMonth(fechaTemp.getMonth() + mesesPorPeriodo);
+                    if (fechaTemp > FECHA_VENCIMIENTO) {
+                        fechaTemp = new Date(FECHA_VENCIMIENTO);
+                    }
+                    totalCupones++;
+                    if (fechaTemp >= FECHA_VENCIMIENTO) break;
+                }
+
+                // Amortización en partes iguales
+                const amortizacionBase = VALOR_NOMINAL / totalCupones;
+
+                while (fechaActual < FECHA_VENCIMIENTO) {
+                    const fechaInicio = new Date(fechaActual);
+                    fechaActual = new Date(fechaInicio);
+                    fechaActual.setMonth(fechaActual.getMonth() + mesesPorPeriodo);
+
+                    if (fechaActual > FECHA_VENCIMIENTO) {
+                        fechaActual = new Date(FECHA_VENCIMIENTO);
+                    }
+
+                    cupones.push({
+                        numero: numeroActual,
+                        fechaInicio: formatDate(fechaInicio),
+                        fechaVencimiento: formatDate(fechaActual),
+                        estado: 'REGISTRADO',
+                        amortizacion: amortizacionBase,
+                        irdActual: null, // Inicialmente null
+                        inflacionAmortizacion: 0,
+                        inflacionInteres: 0,
+                        fechaOriginal: formatDate(fechaActual)
+                    });
+
+                    numeroActual++;
+                }
+
+                return {
+                    success: true,
+                    message: `Cuponera VAC generada exitosamente con ${cupones.length} cupones (${periodicidad}, Base: ${baseCalculo}, IRD: ${irdInicial}).`
+                };
+            },
+
+            recalcularTasaVAC: function () {
+                const periodicidadActual = document.getElementById('periodicidad').value;
+                const irdInicial = obtenerIRDInicial();
+
+                if (!irdInicial || irdInicial <= 0) {
+                    return {
+                        success: false,
+                        message: 'Debe ingresar un IRD Inicial válido mayor a 0.'
+                    };
+                }
+
+                // Verificar si cambió la periodicidad
+                const cambioPeriodicidad = periodicidadOriginalVAC !== periodicidadActual;
+
+                if (cambioPeriodicidad) {
+                    // CASO 1: Cambió periodicidad - Regenerar estructura completa
+                    return this.regenerarEstructuraVAC(periodicidadActual, irdInicial);
+                } else {
+                    // CASO 2: Solo cambió base de cálculo - Mantener estructura y IRD
+                    return this.recalcularSoloImportesVAC();
+                }
+            },
+
+            // Nueva función: Regenerar estructura completa
+            regenerarEstructuraVAC: function (nuevaPeriodicidad, irdInicial) {
+                const cuponesRegistrados = cupones.filter(c => c.estado === 'REGISTRADO');
+                if (cuponesRegistrados.length === 0) {
+                    return {
+                        success: false,
+                        message: 'No hay cupones en estado REGISTRADO para recalcular.'
+                    };
+                }
+
+                const hayAprobados = cupones.filter(c => c.estado === 'APROBADO').length > 0;
+
+                // Actualizar periodicidad
+                periodicidadOriginalVAC = nuevaPeriodicidad;
+
+                // Eliminar solo cupones REGISTRADOS
+                cupones = cupones.filter(c => c.estado !== 'REGISTRADO');
+
+                // Encontrar la fecha más tardía entre cupones no REGISTRADOS
+                let ultimaFecha = null;
+                let ultimoNumero = 0;
+
+                cupones.forEach(cupon => {
+                    const fechaVenc = parseDate(cupon.fechaVencimiento);
+                    if (!ultimaFecha || fechaVenc > ultimaFecha) {
+                        ultimaFecha = fechaVenc;
+                        ultimoNumero = cupon.numero;
+                    }
+                });
+
+                if (!ultimaFecha) {
+                    ultimaFecha = new Date(FECHA_EMISION);
+                    ultimoNumero = 0;
+                }
+
+                // Regenerar cupones con nueva periodicidad
+                const mesesPorPeriodo = obtenerMesesPorPeriodo(nuevaPeriodicidad);
+                let fechaActual = new Date(ultimaFecha);
+                let numeroActual = ultimoNumero + 1;
+                let nuevoCupones = 0;
+
+                // Contar cupones restantes
+                let totalCuponesRestantes = 0;
+                let fechaTemp = new Date(ultimaFecha);
+                while (fechaTemp < FECHA_VENCIMIENTO) {
+                    fechaTemp = new Date(fechaTemp);
+                    fechaTemp.setMonth(fechaTemp.getMonth() + mesesPorPeriodo);
+                    if (fechaTemp > FECHA_VENCIMIENTO) {
+                        fechaTemp = new Date(FECHA_VENCIMIENTO);
+                    }
+                    totalCuponesRestantes++;
+                    if (fechaTemp >= FECHA_VENCIMIENTO) break;
+                }
+
+                // Calcular amortización restante
+                const amortizacionPagada = cupones.reduce((sum, c) => sum + c.amortizacion, 0);
+                const amortizacionRestante = VALOR_NOMINAL - amortizacionPagada;
+                const amortizacionBase = totalCuponesRestantes > 0 ? amortizacionRestante / totalCuponesRestantes : 0;
+
+                while (fechaActual < FECHA_VENCIMIENTO) {
+                    // const fechaInicio = new Date(fechaActual);
+                    // new Date(2021, 6, 1)
+                    // const fechaInicio = new Date(2021, 6, 1);
+                    const fechaInicio = new Date(fechaActual);
+
+                    fechaActual = new Date(fechaInicio);
+                    fechaActual.setMonth(fechaActual.getMonth() + mesesPorPeriodo);
+
+                    if (fechaActual > FECHA_VENCIMIENTO) {
+                        fechaActual = new Date(FECHA_VENCIMIENTO);
+                    }
+
+                    cupones.push({
+                        numero: numeroActual,
+                        fechaInicio: formatDate(fechaInicio),
+                        fechaVencimiento: formatDate(fechaActual),
+                        estado: 'REGISTRADO',
+                        amortizacion: amortizacionBase,
+                        irdActual: null, // IRD se pierden por cambio de estructura
+                        inflacionAmortizacion: 0,
+                        inflacionInteres: 0,
+                        fechaOriginal: formatDate(fechaActual)
+                    });
+
+                    numeroActual++;
+                    nuevoCupones++;
+                }
+
+                let mensaje = `Periodicidad cambiada a ${nuevaPeriodicidad}. `;
+                if (hayAprobados) {
+                    mensaje += 'Algunos cupones aprobados se mantuvieron. ';
+                }
+                mensaje += `Se regeneraron ${nuevoCupones} cupones (IRD actuales se perdieron por cambio de estructura).`;
+
+                return {
+                    success: true,
+                    message: mensaje,
+                    hayAprobados: hayAprobados
+                };
+            },
+
+            // Nueva función: Solo recalcular importes manteniendo estructura
+            recalcularSoloImportesVAC: function () {
+                // Solo cambió base de cálculo, mantener todo igual
+                // Los cálculos se actualizarán automáticamente en generarTabla()
+
+                return {
+                    success: true,
+                    message: 'Base de cálculo actualizada. Se recalcularon los importes manteniendo estructura e IRD actuales.',
+                    hayAprobados: false
+                };
+            }
+        };
+
+        // ========================================
+        // MÓDULO: CÁLCULO DE INTERESES
+        // ========================================
+
+        const CalculadoraIntereses = {
+
+            // Método principal para calcular interés según tipo de tasa
+            calcular: function (fechaInicio, fechaVencimiento, periodicidad, tipoTasa) {
+                switch (tipoTasa) {
+                    case 'Tasa nominal':
+                        return this.calcularTasaNominal(fechaInicio, fechaVencimiento, periodicidad);
+                    case 'Tasa efectiva':
+                        return this.calcularTasaEfectiva(fechaInicio, fechaVencimiento, periodicidad);
+                    case 'Tasa variable':
+                        return this.calcularTasaVariable(fechaInicio, fechaVencimiento, periodicidad);
+                    case 'Tasa VAC':
+                        return this.calcularTasaVAC(fechaInicio, fechaVencimiento, periodicidad);
+                    default:
+                        return 0;
+                }
+            },
+
+            // calcularTasaNominal: function (fechaInicio, fechaVencimiento, periodicidad) {
+            //     const baseCalculo = obtenerBaseCalculo();
+            //     const denominador = parseInt(baseCalculo.split('/')[1]);
+
+            //     // Siempre usar días reales para el cálculo
+            //     const dias = calcularDiasActual(fechaInicio, fechaVencimiento);
+
+            //     return (VALOR_NOMINAL * TASA_NOMINAL * dias) / (denominador * 100);
+            // },
+
+            calcularTasaNominal: function (fechaInicio, fechaVencimiento, periodicidad) {
+                console.log("EJECUTANDO calcularTasaNominal");
+
+                const baseCalculo = obtenerBaseCalculo();
+                const denominador = parseInt(baseCalculo.split('/')[1]);
+
+                let dias;
+                if (baseCalculo.startsWith('30/')) {
+                    dias = calcularDiasFijos(periodicidad);
+                } else {
+                    dias = calcularDiasActual(fechaInicio, fechaVencimiento);
+                }
+
+                return (VALOR_NOMINAL * TASA_NOMINAL * dias) / (denominador * 100);
+            },
+
+
+            calcularTasaEfectiva: function (fechaInicio, fechaVencimiento, periodicidad) {
+                console.log("EJECUTANDO calcularTasaEfectiva - DEBE SER DIFERENTE A NOMINAL");
+
+                const baseCalculo = obtenerBaseCalculo();
+                const denominador = parseInt(baseCalculo.split('/')[1]);
+
+                let dias;
+                if (baseCalculo.startsWith('30/')) {
+                    dias = calcularDiasFijos(periodicidad);
+                } else {
+                    dias = calcularDiasActual(fechaInicio, fechaVencimiento);
+                }
+
+                console.log("Datos del cálculo:");
+                console.log("- VALOR_NOMINAL:", VALOR_NOMINAL);
+                console.log("- TASA_EFECTIVA:", TASA_EFECTIVA);
+                console.log("- días:", dias);
+                console.log("- denominador:", denominador);
+
+                const tasaDecimal = TASA_EFECTIVA / 100;
+                const exponente = dias / denominador;
+                // PRUEBA MANUAL:
+                console.log("Prueba manual:");
+                console.log("1 + tasaDecimal =", 1 + tasaDecimal);
+                console.log("Math.pow(1.08309557, 0.25) =", Math.pow(1.08309557, 0.25));
+                console.log("Factor manual =", Math.pow(1.08309557, 0.25) - 1);
+                const factor = Math.pow(1 + tasaDecimal, exponente) - 1;
+
+                console.log("- tasaDecimal:", tasaDecimal);
+                console.log("- exponente:", exponente);
+                console.log("- factor:", factor);
+
+                const resultado = VALOR_NOMINAL * factor;
+                console.log("- resultado final:", resultado);
+
+                return resultado;
+            },
+
+            calcularTasaVariable: function (fechaInicio, fechaVencimiento, periodicidad) {
+                const baseCalculo = obtenerBaseCalculo();
+                const denominador = parseInt(baseCalculo.split('/')[1]);
+
+                let dias;
+                if (baseCalculo.startsWith('30/')) {
+                    dias = calcularDiasFijos(periodicidad);
+                } else {
+                    dias = calcularDiasActual(fechaInicio, fechaVencimiento);
+                }
+
+                // Buscar el cupón correspondiente para obtener su tasa específica
+                const cupon = cupones.find(c =>
+                    c.fechaInicio === fechaInicio && c.fechaVencimiento === fechaVencimiento
+                );
+
+                const tasaAUsar = cupon && cupon.tasa ? cupon.tasa : obtenerTasaVariable();
+
+                // Usar la misma fórmula que tasa nominal pero con la tasa del cupón
+                return (VALOR_NOMINAL * tasaAUsar * dias) / (denominador * 100);
+            },
+
+            calcularTasaVAC: function (fechaInicio, fechaVencimiento, periodicidad) {
+                const baseCalculo = obtenerBaseCalculo();
+                const denominador = parseInt(baseCalculo.split('/')[1]);
+
+                let dias;
+                if (baseCalculo.startsWith('30/')) {
+                    dias = calcularDiasFijos(periodicidad);
+                } else {
+                    dias = calcularDiasActual(fechaInicio, fechaVencimiento);
+                }
+
+                // Calcular saldo vivo para este cupón
+                const cupon = cupones.find(c =>
+                    c.fechaInicio === fechaInicio && c.fechaVencimiento === fechaVencimiento
+                );
+
+                if (!cupon) return 0;
+
+                // Sumar todas las amortizaciones de cupones anteriores (ya pagadas)
+                const amortizacionesPagadas = cupones
+                    .filter(c => c.numero < cupon.numero)
+                    .reduce((sum, c) => sum + c.amortizacion, 0);
+
+                // Saldo vivo = Valor nominal - amortizaciones ya pagadas
+                const saldoVivo = VALOR_NOMINAL - amortizacionesPagadas;
+
+                // Calcular interés sobre el saldo vivo
+                return (saldoVivo * TASA_NOMINAL * dias) / (denominador * 100);
+            },
+        };
+
+        // ========================================
+        // FUNCIONES PRINCIPALES DE LA CUPONERA
+        // ========================================
+
+        function generarCuponera() {
+            console.log('Función generarCuponera ejecutada');
+
+            if (cuponerGenerada) {
+                toastr.warning('La cuponera ya ha sido generada. Use "Recalcular" para modificarla.');
+                return;
+            }
+
+            const tipoTasa = document.getElementById('tipoTasa').value;
+
+            try {
+                const resultado = TipoTasaHandler.generar(tipoTasa);
+
+                if (resultado.success) {
+                    cuponerGenerada = true;
+                    document.getElementById('tipoTasa').disabled = true;
+                    generarTabla();
+                    toastr.success(resultado.message);
+                } else {
+                    toastr.warning(resultado.message);
+                }
+            } catch (error) {
+                console.error('Error al generar cuponera:', error);
+                toastr.error('Error al generar la cuponera: ' + error.message);
+            }
+        }
+
+        function recalcularCuponera() {
+            if (!cuponerGenerada) {
+                toastr.warning('Debe generar la cuponera primero.');
+                return;
+            }
+
+            const tipoTasa = document.getElementById('tipoTasa').value;
+
+            try {
+                const resultado = TipoTasaHandler.recalcular(tipoTasa);
+
+                if (resultado.success) {
+                    generarTabla();
+
+                    if (resultado.hayAprobados) {
+                        toastr.warning('Algunos cupones aprobados no se recalcularon.');
+                    }
+
+                    toastr.success(resultado.message);
+                } else {
+                    toastr.info(resultado.message);
+                }
+            } catch (error) {
+                console.error('Error al recalcular cuponera:', error);
+                toastr.error('Error al recalcular la cuponera: ' + error.message);
+            }
+        }
+
+        function generarTabla() {
+            const tbody = document.getElementById('cuponesBody');
+            tbody.innerHTML = '';
+
+            if (cupones.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #666; padding: 20px;">No hay cupones generados. Presione "Generar" para crear la cuponera.</td></tr>';
+                return;
+            }
+
+            const periodicidad = document.getElementById('periodicidad').value;
+            const tipoTasa = document.getElementById('tipoTasa').value;
+
+
+            // Actualizar encabezados de tabla dinámicamente
+            // const tipoTasa = document.getElementById('tipoTasa').value;
+            const mostrarColumnaTasa = tipoTasa === 'Tasa variable';
+            // const mostrarColumnaTasa = tipoTasa === 'Tasa variable';
+            const mostrarColumnasVAC = tipoTasa === 'Tasa VAC';
+
+            // Generar encabezados dinámicamente
+            // Generar encabezados dinámicamente
+            const thead = document.querySelector('#cuponesTable thead tr');
+            let encabezados = `
+<th>N°</th>
+<th>Fecha Inicio</th>
+<th>Fecha Vencimiento</th>
+<th>Días</th>`;
+
+            if (mostrarColumnasVAC) {
+                encabezados += `<th>IRD Actual</th>`;
+            }
+
+            // Agregar columna SALDO VIVO para VAC (después de línea 710 aprox.)
+            // if (mostrarColumnasVAC) {
+            //     encabezados += `<th>Saldo Vivo</th>`;
+            // }
+
+            if (mostrarColumnaTasa) {
+                encabezados += `<th>Tasa (%)</th>`;
+            }
+
+            // encabezados += `<th>Amortización</th>`;
+            encabezados += `<th>Valor Nominal</th>
+<th>Amortización</th>`;
+
+            if (mostrarColumnasVAC) {
+                encabezados += `<th>Inflación Amortización</th>`;
+            }
+
+            encabezados += `<th>Interés/Ganancia</th>`;
+
+            if (mostrarColumnasVAC) {
+                encabezados += `<th>Inflación Interés</th>`;
+            }
+
+            encabezados += `
+<th>Total</th>
+<th>Estado</th>
+<th>Acciones</th>`;
+
+            thead.innerHTML = encabezados;
+
+            // También actualizar la fila de totales
+            // También actualizar la fila de totales
+            // También actualizar la fila de totales
+            const tfoot = document.querySelector('#cuponesTable tfoot tr');
+            let colspanTotal = 5; // +1 por la nueva columna Valor Nominal
+            if (mostrarColumnaTasa) colspanTotal += 1;
+            if (mostrarColumnasVAC) colspanTotal += 1; // Solo IRD
+
+            if (mostrarColumnasVAC) {
+                // Totales específicos para VAC
+                tfoot.innerHTML = `
+    <td colspan="${colspanTotal}"><strong>TOTALES</strong></td>
+    <td id="totalAmortizacion"><strong>0.00</strong></td>
+    <td id="totalInflacionAmortizacion"><strong>0.00</strong></td>
+    <td id="totalInteres"><strong>0.00</strong></td>
+    <td id="totalInflacionInteres"><strong>0.00</strong></td>
+    <td id="totalGeneral"><strong>0.00</strong></td>
+    <td colspan="2"></td>`;
+            } else {
+                // Totales normales para otros tipos de tasa
+                tfoot.innerHTML = `
+    <td colspan="${colspanTotal}"><strong>TOTALES</strong></td>
+    <td id="totalAmortizacion"><strong>0.00</strong></td>
+    <td id="totalInteres"><strong>0.00</strong></td>
+    <td id="totalGeneral"><strong>0.00</strong></td>
+    <td colspan="2"></td>`;
+            }
+            cupones.forEach((cupon, index) => {
+                const dias = calcularDiasActual(cupon.fechaInicio, cupon.fechaVencimiento);
+                const interes = CalculadoraIntereses.calcular(cupon.fechaInicio, cupon.fechaVencimiento, periodicidad, tipoTasa);
+                const esEditable = cupon.estado === 'REGISTRADO';
+
+                // Generar contenido dinámico de las celdas
+                let contenidoCeldas = `
+        <td>${cupon.numero}</td>
+        <td>${cupon.fechaInicio}</td>
+        <td>
+            ${esEditable ?
+                        `<input type="text" class="editable-input" value="${cupon.fechaVencimiento}" 
+                 onblur="actualizarFechaVencimiento(${cupon.numero}, this.value)" 
+                 onkeypress="if(event.key==='Enter') this.blur()">` :
+                        cupon.fechaVencimiento}
+            ${cupon.fechaOriginal !== cupon.fechaVencimiento ?
+                        `<br><small style="color: #666;">Original: ${cupon.fechaOriginal}</small>` : ''}
+        </td>
+        <td>${dias}</td>`;
+
+                // Agregar columna IRD ACTUAL para VAC
+                if (mostrarColumnasVAC) {
+                    const irdActual = cupon.irdActual || '';
+                    contenidoCeldas += `
+        <td>
+            ${esEditable ?
+                            `<input type="number" class="editable-input" value="${irdActual}" step="0.0000000001" min="0"
+                 onblur="actualizarIRDActual(${cupon.numero}, this.value)" 
+                 onkeypress="if(event.key==='Enter') this.blur()" 
+                 oninput="limitarDecimales(this, 10)" placeholder="IRD">` :
+                            (irdActual || '-')}
+        </td>`;
+                }
+
+                // Agregar columna SALDO VIVO para VAC
+                //         if (mostrarColumnasVAC) {
+                //             const saldoVivo = obtenerSaldoVivo(cupon.numero);
+                //             contenidoCeldas += `
+                // <td>
+                //     <span class="readonly-value">${formatNumber(saldoVivo)}</span>
+                // </td>`;
+                //         }
+
+                // Agregar columna TASA para Variable
+                if (mostrarColumnaTasa) {
+                    const tasaCupon = cupon.tasa || obtenerTasaVariable();
+                    contenidoCeldas += `
+        <td>
+            ${esEditable ?
+                            `<input type="number" class="editable-input" value="${tasaCupon}" step="0.000001" min="0" max="100"
+                 onblur="actualizarTasaCupon(${cupon.numero}, this.value)" 
+                 onkeypress="if(event.key==='Enter') this.blur()">` :
+                            tasaCupon + '%'}
+        </td>`;
+                }
+
+                // Columna VALOR NOMINAL
+                let valorNominal;
+                if (tipoTasa === 'Tasa VAC') {
+                    valorNominal = obtenerSaldoVivo(cupon.numero);
+                } else {
+                    valorNominal = VALOR_NOMINAL;
+                }
+                contenidoCeldas += `
+        <td>
+            <span class="readonly-value">${formatNumber(valorNominal)}</span>
+        </td>`;
+
+                // Columna AMORTIZACIÃ"N
+                // Columna AMORTIZACIÓN
+                const esModoEdicion = estaEnModoEdicion(cupon.numero);
+                const puedeEditarConceptos = esEditable && esModoEdicion;
+
+                contenidoCeldas += `
+        <td>
+    ${puedeEditarConceptos ?
+                        `<input type="number" class="editable-input" value="${cupon.amortizacion}" step="0.01" min="0"
+         onblur="actualizarAmortizacionEditada(${cupon.numero}, this.value)" 
+         onkeypress="if(event.key==='Enter') this.blur()">` :
+                        `<span class="readonly-value">${formatNumber(cupon.amortizacion)}</span>`}
+                    </td>`;
+
+                // Agregar columna INFLACIÓN AMORTIZACIÓN para VAC
+                // Agregar columna INFLACIÓN AMORTIZACIÓN para VAC
+                if (mostrarColumnasVAC) {
+                    let inflacionAmort = 0;
+                    if (cupon.irdActual && irdInicialVAC) {
+                        const factorInflacion = (cupon.irdActual / irdInicialVAC) - 1;
+                        inflacionAmort = cupon.amortizacion * factorInflacion;
+                    }
+
+                    const inflacionAmortAMostrar = cupon.inflacionAmortizacionManual !== undefined ?
+                        cupon.inflacionAmortizacionManual : inflacionAmort;
+
+                    contenidoCeldas += `
+<td>
+    ${puedeEditarConceptos ?
+                            `<input type="number" class="editable-input" value="${inflacionAmortAMostrar}" step="0.01"
+         onblur="actualizarInflacionAmortizacion(${cupon.numero}, this.value)" 
+         onkeypress="if(event.key==='Enter') this.blur()">` :
+                            `<span class="readonly-value">${formatNumber(inflacionAmortAMostrar)}</span>`}
+</td>`;
+                }
+
+                // Columna INTERÉS/GANANCIA
+                // Columna INTERÉS/GANANCIA
+                const interesAMostrar = cupon.interesManual !== undefined ? cupon.interesManual : interes;
+                contenidoCeldas += `
+<td>
+    ${puedeEditarConceptos ?
+                        `<input type="number" class="editable-input" value="${interesAMostrar}" step="0.01"
+         onblur="actualizarInteresEditado(${cupon.numero}, this.value)" 
+         onkeypress="if(event.key==='Enter') this.blur()">` :
+                        formatNumber(interesAMostrar)}
+</td>`;
+
+                // Agregar columna INFLACIÓN INTERÉS para VAC
+                // Agregar columna INFLACIÓN INTERÉS para VAC
+                if (mostrarColumnasVAC) {
+                    let inflacionInt = 0;
+                    if (cupon.irdActual && irdInicialVAC) {
+                        const factorInflacion = (cupon.irdActual / irdInicialVAC) - 1;
+                        inflacionInt = interes * factorInflacion;
+                    }
+
+                    const inflacionIntAMostrar = cupon.inflacionInteresManual !== undefined ?
+                        cupon.inflacionInteresManual : inflacionInt;
+
+                    contenidoCeldas += `
+<td>
+    ${puedeEditarConceptos ?
+                            `<input type="number" class="editable-input" value="${inflacionIntAMostrar}" step="0.01"
+         onblur="actualizarInflacionInteres(${cupon.numero}, this.value)" 
+         onkeypress="if(event.key==='Enter') this.blur()">` :
+                            `<span class="readonly-value">${formatNumber(inflacionIntAMostrar)}</span>`}
+</td>`;
+                }
+
+                // Calcular total (incluyendo inflaciones si aplica)
+                // Calcular total (incluyendo inflaciones si aplica)
+                let totalFinal = interesAMostrar + cupon.amortizacion;
+
+                if (mostrarColumnasVAC && cupon.irdActual && irdInicialVAC) {
+                    const factorInflacion = (cupon.irdActual / irdInicialVAC) - 1;
+
+                    // Usar valores manuales si existen
+                    const inflacionAmortAUsar = cupon.inflacionAmortizacionManual !== undefined ?
+                        cupon.inflacionAmortizacionManual : (cupon.amortizacion * factorInflacion);
+                    const inflacionIntAUsar = cupon.inflacionInteresManual !== undefined ?
+                        cupon.inflacionInteresManual : (interesAMostrar * factorInflacion);
+
+                    totalFinal += inflacionAmortAUsar + inflacionIntAUsar;
+                }
+                contenidoCeldas += `
+        <td>${formatNumber(totalFinal)}</td>
+        <td><span class="status-badge status-${cupon.estado.toLowerCase()}">${cupon.estado}</span></td>
+        <td>
+            <div class="actions-cell">
+                ${generarBotonesCupon(cupon)}
+            </div>
+        </td>`;
+
+                const row = tbody.insertRow();
+                row.innerHTML = contenidoCeldas;
+            });
+            calcularTotales();
+        }
+
+        function calcularTotales() {
+            let totalAmortizacion = 0;
+            let totalInteres = 0;
+            let totalGeneral = 0;
+            let totalInflacionAmortizacion = 0;
+            let totalInflacionInteres = 0;
+
+            const periodicidad = document.getElementById('periodicidad').value;
+            const tipoTasa = document.getElementById('tipoTasa').value;
+
+
+
+
+
+
+            cupones.forEach(cupon => {
+                // Usar interés manual si existe, sino usar el calculado
+                const interesCalculado = CalculadoraIntereses.calcular(cupon.fechaInicio, cupon.fechaVencimiento, periodicidad, tipoTasa);
+                const interesAUsar = cupon.interesManual !== undefined ? cupon.interesManual : interesCalculado;
+
+                let totalCupon = interesAUsar + cupon.amortizacion;
+                let inflacionAmort = 0;
+                let inflacionInt = 0;
+
+                // Calcular inflaciones si es VAC y tiene IRD actual
+                if (tipoTasa === 'Tasa VAC' && cupon.irdActual && irdInicialVAC) {
+                    const factorInflacion = (cupon.irdActual / irdInicialVAC) - 1;
+
+                    // Calcular inflaciones automáticas
+                    const inflacionAmortCalculada = cupon.amortizacion * factorInflacion;
+                    const inflacionIntCalculada = interesAUsar * factorInflacion;
+
+                    // Usar inflaciones manuales si existen, sino usar las calculadas
+                    inflacionAmort = cupon.inflacionAmortizacionManual !== undefined ?
+                        cupon.inflacionAmortizacionManual : inflacionAmortCalculada;
+                    inflacionInt = cupon.inflacionInteresManual !== undefined ?
+                        cupon.inflacionInteresManual : inflacionIntCalculada;
+
+                    totalCupon += inflacionAmort + inflacionInt;
+                }
+
+                // Acumular totales usando los valores que realmente se están mostrando
+                totalAmortizacion += cupon.amortizacion;
+                totalInteres += interesAUsar;  // ← CAMBIO: usar interesAUsar en lugar de interes
+                totalInflacionAmortizacion += inflacionAmort;  // ← CAMBIO: usar valor final
+                totalInflacionInteres += inflacionInt;  // ← CAMBIO: usar valor final
+                totalGeneral += totalCupon;
+            });
+
+            // Actualizar totales según el tipo de tasa
+            if (tipoTasa === 'Tasa VAC') {
+                document.getElementById('totalAmortizacion').innerHTML = `<strong>${formatNumber(totalAmortizacion)}</strong>`;
+                document.getElementById('totalInflacionAmortizacion').innerHTML = `<strong>${formatNumber(totalInflacionAmortizacion)}</strong>`;
+                document.getElementById('totalInteres').innerHTML = `<strong>${formatNumber(totalInteres)}</strong>`;
+                document.getElementById('totalInflacionInteres').innerHTML = `<strong>${formatNumber(totalInflacionInteres)}</strong>`;
+                document.getElementById('totalGeneral').innerHTML = `<strong>${formatNumber(totalGeneral)}</strong>`;
+            } else {
+                document.getElementById('totalAmortizacion').innerHTML = `<strong>${formatNumber(totalAmortizacion)}</strong>`;
+                document.getElementById('totalInteres').innerHTML = `<strong>${formatNumber(totalInteres)}</strong>`;
+                document.getElementById('totalGeneral').innerHTML = `<strong>${formatNumber(totalGeneral)}</strong>`;
+            }
+        }
+        function generarBotonesCupon(cupon) {
+            if (cupon.estado === 'APROBADO') {
+                // En estado APROBADO: Solo mostrar REVERTIR (habilitado)
+                return `
+            <button class="btn btn-action btn-secondary" onclick="revertirCupon(${cupon.numero})">Revertir</button>
+        `;
+            } else if (cupon.estado === 'REGISTRADO') {
+                // En estado REGISTRADO: Mostrar APROBAR y EDITAR (ambos habilitados)
+                return `
+            <button class="btn btn-action btn-success" onclick="aprobarCupon(${cupon.numero})">Aprobar</button>
+            <button class="btn btn-action btn-info" onclick="editarCupon(${cupon.numero})">Editar</button>
+        `;
+            }
+        }
+
+        // NUEVA FUNCIÓN: Activar modo edición de conceptos
+        function editarCupon(numero) {
+            const cupon = cupones.find(c => c.numero === numero);
+            if (!cupon || cupon.estado !== 'REGISTRADO') {
+                toastr.error('Solo se pueden editar cupones en estado REGISTRADO');
+                return;
+            }
+
+            cuponesEnEdicion.add(numero);
+            generarTabla();
+            toastr.info(`Modo edición activado para cupón ${numero}. Los conceptos ahora son editables.`);
+        }
+
+        // NUEVA FUNCIÓN: Verificar si un cupón está en modo edición
+        function estaEnModoEdicion(numero) {
+            return cuponesEnEdicion.has(numero);
+        }
+
+        // NUEVA FUNCIÓN: Actualizar amortización editada
+        function actualizarAmortizacionEditada(numero, nuevoValor) {
+            const valor = parseFloat(nuevoValor);
+            if (isNaN(valor) || valor < 0) {
+                toastr.error('El valor de amortización debe ser un número positivo');
+                generarTabla();
+                return;
+            }
+
+            const cupon = cupones.find(c => c.numero === numero);
+            if (cupon) {
+                cupon.amortizacion = valor;
+                // calcularTotales();
+                // generarTabla();     // ← AGREGAR ESTA
+                generarTabla();  // ← CAMBIAR: era calcularTotales()
+
+                toastr.success(`Amortización actualizada para cupón ${numero}`);
+            }
+        }
+
+        // NUEVA FUNCIÓN: Actualizar interés editado (para casos especiales)
+        function actualizarInteresEditado(numero, nuevoValor) {
+            const valor = parseFloat(nuevoValor);
+            if (isNaN(valor)) {
+                toastr.error('El valor de interés debe ser un número válido');
+                generarTabla();
+                return;
+            }
+
+            const cupon = cupones.find(c => c.numero === numero);
+            if (cupon) {
+                cupon.interesManual = valor;
+                generarTabla();  // ← CAMBIAR: era calcularTotales()
+                toastr.success(`Interés actualizado para cupón ${numero}`);
+            }
+        }
+
+        // NUEVA FUNCIÓN: Actualizar inflación amortización (VAC)
+        function actualizarInflacionAmortizacion(numero, nuevoValor) {
+            const valor = parseFloat(nuevoValor);
+            if (isNaN(valor)) {
+                toastr.error('El valor de inflación debe ser un número válido');
+                generarTabla();
+                return;
+            }
+
+            const cupon = cupones.find(c => c.numero === numero);
+            if (cupon) {
+                cupon.inflacionAmortizacionManual = valor;
+                generarTabla();  // ← CAMBIAR: era calcularTotales()
+                toastr.success(`Inflación de amortización actualizada para cupón ${numero}`);
+            }
+        }
+
+        // NUEVA FUNCIÓN: Actualizar inflación interés (VAC)
+        function actualizarInflacionInteres(numero, nuevoValor) {
+            const valor = parseFloat(nuevoValor);
+            if (isNaN(valor)) {
+                toastr.error('El valor de inflación debe ser un número válido');
+                generarTabla();
+                return;
+            }
+
+            const cupon = cupones.find(c => c.numero === numero);
+            if (cupon) {
+                cupon.inflacionInteresManual = valor;
+                generarTabla();  // ← CAMBIAR: era calcularTotales()
+                toastr.success(`Inflación de interés actualizada para cupón ${numero}`);
+            }
+        }
+
+        function actualizarFechaVencimiento(numero, nuevaFecha) {
+            const cuponIndex = cupones.findIndex(c => c.numero === numero);
+            if (cuponIndex === -1) return;
+
+            // Validar formato de fecha
+            const fechaRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+            if (!fechaRegex.test(nuevaFecha)) {
+                toastr.error('Formato de fecha inválido. Use DD/MM/AAAA');
+                generarTabla();
+                return;
+            }
+
+            const fechaParseada = parseDate(nuevaFecha);
+            if (isNaN(fechaParseada.getTime())) {
+                toastr.error('Fecha inválida');
+                generarTabla();
+                return;
+            }
+
+            // Guardar fecha original si no existe
+            if (!cupones[cuponIndex].fechaOriginal) {
+                cupones[cuponIndex].fechaOriginal = cupones[cuponIndex].fechaVencimiento;
+            }
+
+            // Actualizar fecha de vencimiento del cupón actual
+            cupones[cuponIndex].fechaVencimiento = nuevaFecha;
+
+            // Actualizar fecha de inicio del siguiente cupón si existe
+            if (cuponIndex < cupones.length - 1) {
+                cupones[cuponIndex + 1].fechaInicio = nuevaFecha;
+            }
+
+            // Regenerar la tabla para reflejar los cambios
+            generarTabla();
+            toastr.success(`Fecha actualizada. Se recalcularon días y totales.`);
+        }
+
+        function aprobarCupon(numero) {
+            const cupon = cupones.find(c => c.numero === numero);
+            if (cupon) {
+                cupon.estado = 'APROBADO';
+                cuponesEnEdicion.delete(numero); // AGREGAR ESTA LÍNEA
+
+                generarTabla();
+                toastr.success(`Cupón ${numero} aprobado correctamente.`);
+            }
+        }
+
+        function revertirCupon(numero) {
+            const cupon = cupones.find(c => c.numero === numero);
+            if (cupon) {
+                cupon.estado = 'REGISTRADO';
+                generarTabla();
+                toastr.info(`Cupón ${numero} revertido a estado REGISTRADO.`);
+            }
+        }
+
+        function aprobarTodo() {
+            if (!cuponerGenerada) {
+                toastr.warning('Debe generar la cuponera primero.');
+                return;
+            }
+
+            let cuponesAfectados = 0;
+            cupones.forEach(cupon => {
+                if (cupon.estado === 'REGISTRADO') {
+                    cupon.estado = 'APROBADO';
+                    cuponesEnEdicion.delete(cupon.numero); // AGREGAR ESTA LÍNEA
+
+                    cuponesAfectados++;
+                }
+            });
+
+            if (cuponesAfectados > 0) {
+                generarTabla();
+                toastr.success(`${cuponesAfectados} cupones aprobados exitosamente.`);
+            } else {
+                toastr.info('No hay cupones pendientes de aprobar.');
+            }
+        }
+
+        function revertirTodo() {
+            if (!cuponerGenerada) {
+                toastr.warning('Debe generar la cuponera primero.');
+                return;
+            }
+
+            let cuponesAfectados = 0;
+            cupones.forEach(cupon => {
+                if (cupon.estado === 'APROBADO') {
+                    cupon.estado = 'REGISTRADO';
+                    cuponesAfectados++;
+                }
+            });
+
+            if (cuponesAfectados > 0) {
+                generarTabla();
+                toastr.success(`${cuponesAfectados} cupones revertidos a modo edición.`);
+            } else {
+                toastr.info('No hay cupones aprobados para revertir.');
+            }
+        }
+
+        function generarPDF() {
+            toastr.info('Generando PDF... (Funcionalidad en desarrollo)');
+        }
+
+        function exportarExcel() {
+            toastr.info('Exportando a Excel... (Funcionalidad en desarrollo)');
+        }
+
+        // ========================================
+        // INICIALIZACIÓN
+        // ========================================
+
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Documento cargado, inicializando...');
+            generarTabla();
+
+            // Inicializar visibilidad del campo tasa variable
+            toggleTasaVariable();
+        });
+
+        function limitarDecimales(input, maxDecimales) {
+            let valor = input.value;
+            if (valor.includes('.')) {
+                let partes = valor.split('.');
+                if (partes[1] && partes[1].length > maxDecimales) {
+                    input.value = partes[0] + '.' + partes[1].substring(0, maxDecimales);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
