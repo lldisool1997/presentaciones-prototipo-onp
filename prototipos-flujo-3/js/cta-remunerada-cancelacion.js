@@ -767,6 +767,13 @@ $(function(){
   // Carga inicial: guardar operación principal + transferencias existentes (si no existe aún)
   aprobacion_inst_corto_plazo();
 
+    // Wireup
+  document.getElementById("btnVerPdfConsolidado")?.addEventListener("click", abrirPdfConsolidado);
+  document.getElementById("btnCerrarModal")?.addEventListener("click", cerrarModalPdf);
+  document.getElementById("pdfModal")?.addEventListener("click", function (e) {
+    if (e.target === this) cerrarModalPdf();
+  });
+
   // 1) Identificamos la inversión mostrada en pantalla
   const __opId = $("#inv_id_base").val() || $(".info-value").first().text().trim(); // ej. "INV-7000"
 
