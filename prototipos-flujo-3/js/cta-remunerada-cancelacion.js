@@ -1367,6 +1367,7 @@ function bloquearCamposSoloLectura($panel) {
   $panel.find(".newDocumentName_op_trf").prop("disabled", false); // permitir uploads PDF
   //$panel.find("#tasa_tea_tna").prop("disabled", false); // permitir uploads PDF
   $panel.find("#tasa-pizarra").prop("disabled", false); // permitir uploads PDF
+  $panel.find("#interesesTxt").prop("disabled", false); // permitir uploads PDF
 
   // 3️⃣ Deshabilitar botones excepto los de sustento
   //$panel.find("button").prop("disabled", true);

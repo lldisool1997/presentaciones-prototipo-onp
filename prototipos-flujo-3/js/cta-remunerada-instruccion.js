@@ -15,16 +15,93 @@ const BANCOS = [
   { id: "BCP", text: "Banco de Crédito del Perú (BCP)" },
   { id: "Scotiabank", text: "Scotiabank Perú" },
   { id: "BBVA", text: "BBVA Perú" },
-  { id: "Interbank", text: "Interbank" }
+  { id: "Interbank", text: "Interbank" },
+  { id: "Banco de la Nacion", text: "Banco de la Nación" },
+  { id: "UBS SWITZERLAND AG", text: "UBS Switzerland AG" },
+  { id: "BANCO CREDIT AGRICOLE INDOSUEZ SWITZERLAND SA", text: "Crédit Agricole Indosuez Switzerland SA" }
 ];
 
 const CUENTAS_BANCARIAS = [
-  { id: "BCP-PEN-001", banco: "BCP", text: "193-1990153-0-54" },
-  { id: "SCOTIA-PEN-002", banco: "Scotiabank", text: "970-0700108" },
-  { id: "BBVA-PEN-003", banco: "BBVA", text: "0011-0661-02-00040907" },
-  { id: "INTERBANK-PEN-004", banco: "Interbank", text: "200-3067561380" }
-];
+  // ----- BCP -----
+  { id: "BCP-PEN-193-13814691-0-31", banco: "BCP", moneda: "PEN", text: "193-13814691-0-31" },
+  { id: "BCP-PEN-193-1990153-0-54",  banco: "BCP", moneda: "PEN", text: "193-1990153-0-54" },
+  { id: "BCP-PEN-193-14004253-0-09", banco: "BCP", moneda: "PEN", text: "193-14004253-0-09" },
+  { id: "BCP-PEN-193-14004326-0-83", banco: "BCP", moneda: "PEN", text: "193-14004326-0-83" },
+  { id: "BCP-PEN-193-16111242-0-81", banco: "BCP", moneda: "PEN", text: "193-16111242-0-81" },
+  { id: "BCP-PEN-193-16695371-0-09", banco: "BCP", moneda: "PEN", text: "193-16695371-0-09" },
+  { id: "BCP-USD-191-4217521-1-31",  banco: "BCP", moneda: "USD", text: "191-4217521-1-31" },
 
+  // ----- Scotiabank -----
+  { id: "SCOTIA-PEN-00-170-102-005017", banco: "Scotiabank", moneda: "PEN", text: "00-170-102-005017" },
+  { id: "SCOTIA-USD-01-170-102-005118", banco: "Scotiabank", moneda: "USD", text: "01-170-102-005118" },
+  { id: "SCOTIA-PEN-000-8046716",      banco: "Scotiabank", moneda: "PEN", text: "000-8046716" },
+  { id: "SCOTIA-USD-000-8037110",     banco: "Scotiabank", moneda: "USD", text: "000-8037110" },
+  { id: "SCOTIA-USD-170-1122112",     banco: "Scotiabank", moneda: "USD", text: "170-1122112" },
+  { id: "SCOTIA-PEN-970-0700108",     banco: "Scotiabank", moneda: "PEN", text: "970-0700108" },
+  { id: "SCOTIA-PEN-970-0942460",     banco: "Scotiabank", moneda: "PEN", text: "970-0942460" },
+  { id: "SCOTIA-USD-4732923-000-07",  banco: "Scotiabank", moneda: "USD", text: "4732923-000-07" },
+
+  // ----- BBVA -----
+  { id: "BBVA-PEN-0011-0661-02-00040907", banco: "BBVA", moneda: "PEN", text: "0011-0661-02-00040907" },
+  { id: "BBVA-USD-0011-0661-02-00040915", banco: "BBVA", moneda: "USD", text: "0011-0661-02-00040915" },
+
+  // ----- Interbank -----
+  { id: "IBK-PEN-200-3067561380", banco: "Interbank", moneda: "PEN", text: "200-3067561380" },
+  { id: "IBK-USD-200-3068999825", banco: "Interbank", moneda: "USD", text: "200-3068999825" },
+  { id: "IBK-PEN-200-3070593039", banco: "Interbank", moneda: "PEN", text: "200-3070593039" },
+  { id: "IBK-PEN-200-3071337036", banco: "Interbank", moneda: "PEN", text: "200-3071337036" },
+  { id: "IBK-PEN-200-3071337141", banco: "Interbank", moneda: "PEN", text: "200-3071337141" },
+  { id: "IBK-PEN-200-3071337222", banco: "Interbank", moneda: "PEN", text: "200-3071337222" },
+  { id: "IBK-PEN-200-3071337249", banco: "Interbank", moneda: "PEN", text: "200-3071337249" },
+  { id: "IBK-PEN-200-3071337257", banco: "Interbank", moneda: "PEN", text: "200-3071337257" },
+  { id: "IBK-PEN-200-3071337290", banco: "Interbank", moneda: "PEN", text: "200-3071337290" },
+  { id: "IBK-PEN-200-3071337320", banco: "Interbank", moneda: "PEN", text: "200-3071337320" },
+  { id: "IBK-PEN-200-3079380186", banco: "Interbank", moneda: "PEN", text: "200-3079380186" },
+  { id: "IBK-EUR-200-3076993051", banco: "Interbank", moneda: "EUR", text: "200-3076993051" },
+  { id: "IBK-PEN-200-3090250880", banco: "Interbank", moneda: "PEN", text: "200-3090250880" },
+  { id: "IBK-PEN-200-3114431287", banco: "Interbank", moneda: "PEN", text: "200-3114431287" },
+  { id: "IBK-PEN-200-3114431627", banco: "Interbank", moneda: "PEN", text: "200-3114431627" },
+  { id: "IBK-PEN-200-3114431740", banco: "Interbank", moneda: "PEN", text: "200-3114431740" },
+  { id: "IBK-PEN-200-3114431945", banco: "Interbank", moneda: "PEN", text: "200-3114431945" },
+  { id: "IBK-PEN-200-3114432003", banco: "Interbank", moneda: "PEN", text: "200-3114432003" },
+  { id: "IBK-PEN-200-3114432054", banco: "Interbank", moneda: "PEN", text: "200-3114432054" },
+  { id: "IBK-PEN-200-3202186233", banco: "Interbank", moneda: "PEN", text: "200-3202186233" },
+  { id: "IBK-PEN-200-3202185393", banco: "Interbank", moneda: "PEN", text: "200-3202185393" },
+  { id: "IBK-PEN-200-3202185571", banco: "Interbank", moneda: "PEN", text: "200-3202185571" },
+  { id: "IBK-PEN-200-3202185644", banco: "Interbank", moneda: "PEN", text: "200-3202185644" },
+  { id: "IBK-PEN-200-3202185806", banco: "Interbank", moneda: "PEN", text: "200-3202185806" },
+  { id: "IBK-PEN-200-3202186012", banco: "Interbank", moneda: "PEN", text: "200-3202186012" },
+  { id: "IBK-PEN-200-3202186080", banco: "Interbank", moneda: "PEN", text: "200-3202186080" },
+  { id: "IBK-PEN-200-3202186110", banco: "Interbank", moneda: "PEN", text: "200-3202186110" },
+  { id: "IBK-PEN-200-3202186160", banco: "Interbank", moneda: "PEN", text: "200-3202186160" },
+  { id: "IBK-PEN-200-3240319255", banco: "Interbank", moneda: "PEN", text: "200-3240319255" },
+  { id: "IBK-PEN-200-3300753235", banco: "Interbank", moneda: "PEN", text: "200-3300753235" },
+  { id: "IBK-PEN-200-3312203818", banco: "Interbank", moneda: "PEN", text: "200-3312203818" },
+  { id: "IBK-PEN-200-3312207473", banco: "Interbank", moneda: "PEN", text: "200-3312207473" },
+  { id: "IBK-PEN-200-3364664783", banco: "Interbank", moneda: "PEN", text: "200-3364664783" },
+  { id: "IBK-PEN-200-3383342088", banco: "Interbank", moneda: "PEN", text: "200-3383342088" },
+  { id: "IBK-PEN-200-3418021743", banco: "Interbank", moneda: "PEN", text: "200-3418021743" },
+  { id: "IBK-PEN-200-3469529377", banco: "Interbank", moneda: "PEN", text: "200-3469529377" },
+
+  // ----- Banco de la Nación (PEN) -----
+  { id: "BN-PEN-00-000-644935", banco: "Banco de la Nacion", moneda: "PEN", text: "00-000-644935" },
+  { id: "BN-PEN-00-000-341835", banco: "Banco de la Nacion", moneda: "PEN", text: "00-000-341835" },
+  { id: "BN-PEN-00-000-341843", banco: "Banco de la Nacion", moneda: "PEN", text: "00-000-341843" },
+  { id: "BN-PEN-00-000-873241", banco: "Banco de la Nacion", moneda: "PEN", text: "00-000-873241" },
+  { id: "BN-PEN-00-068-219051", banco: "Banco de la Nacion", moneda: "PEN", text: "00-068-219051" },
+  { id: "BN-PEN-00-000-525278", banco: "Banco de la Nacion", moneda: "PEN", text: "00-000-525278" },
+  { id: "BN-PEN-00-068-259169", banco: "Banco de la Nacion", moneda: "PEN", text: "00-068-259169" },
+  { id: "BN-PEN-00-000-874310", banco: "Banco de la Nacion", moneda: "PEN", text: "00-000-874310" },
+  { id: "BN-PEN-00-000-525243", banco: "Banco de la Nacion", moneda: "PEN", text: "00-000-525243" },
+  { id: "BN-PEN-00-068-315956", banco: "Banco de la Nacion", moneda: "PEN", text: "00-068-315956" },
+  { id: "BN-PEN-00-068-315964", banco: "Banco de la Nacion", moneda: "PEN", text: "00-068-315964" },
+  { id: "BN-PEN-00-068-335973", banco: "Banco de la Nacion", moneda: "PEN", text: "00-068-335973" },
+  { id: "BN-PEN-00-068-335981", banco: "Banco de la Nacion", moneda: "PEN", text: "00-068-335981" },
+
+  // ----- Bancos internacionales (USD) -----
+  { id: "UBS-USD-206-579632.60C", banco: "UBS SWITZERLAND AG", moneda: "USD", text: "206-579632.60C" },
+  { id: "CAI-USD-1455110", banco: "BANCO CREDIT AGRICOLE INDOSUEZ SWITZERLAND SA", moneda: "USD", text: "1455110" }
+];
 // Estado por panel
 const filesUploadedByPanel = {};   // panelId -> { fieldId: boolean }
 const docCounterByPanel = {};      // panelId -> incremental
@@ -47,10 +124,13 @@ function initBancoCuenta($banco, $cuenta){
 
   $banco.off("change.init").on("change.init", function(){
     const bancoSel = $(this).val();
-    const cuentas = CUENTAS_BANCARIAS.filter(c => c.banco === bancoSel);
+    // << antes: const moneda = $('#monedaBanco').val() || "PEN";
+    const moneda = $(this).closest('.tab-panel').find('.moneda').val() || "PEN";
+    const cuentas = CUENTAS_BANCARIAS.filter(c => c.banco === bancoSel && c.moneda === moneda);
     $cuenta.empty().select2({ data: cuentas, placeholder:"Selecciona una cuenta...", allowClear:true, width:"100%" });
   });
 }
+
 
 // Crear campo de documento dinámico dentro de un panel
 function createDocumentField(panelId, docName, isCustom=false){
@@ -209,6 +289,29 @@ $("#drop_base").off(".mainDrop").on("click.mainDrop", function (e) {
     input.dispatchEvent(new MouseEvent("click", { bubbles: false, cancelable: true, view: window }));
   }
 });
+
+
+// Antes: $(document).on('change', '#monedaBanco', ...)
+
+// Después:
+$(document).on('change', '.moneda', function () {
+  const $panel = $(this).closest('.tab-panel');
+
+  // Limpia selects del panel actual
+  $panel.find('.banco').val(null).trigger('change');
+  $panel.find('.cuenta').val(null).trigger('change');
+  $panel.find('.banco_destino').val(null).trigger('change');
+  $panel.find('.cuenta_destino').val(null).trigger('change');
+
+  // Si ya hay un banco elegido, re-dispara su change para repoblar cuentas con la nueva moneda
+  const $bancoCargo = $panel.find('.banco');
+  const $bancoDest  = $panel.find('.banco_destino');
+  if ($bancoCargo.val()) $bancoCargo.trigger('change');
+  if ($bancoDest.val())  $bancoDest.trigger('change');
+});
+
+
+
 $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
   e.stopPropagation();
 
