@@ -492,6 +492,7 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
       actualizarEstadoAprobacion("INV-7000", "base", "APROBADO");
       aprobacion_inst_corto_plazo_upsert();
       aplicarUIEstados("INV-7000");
+      abrirPdfConsolidado();
     });
   });
 }
@@ -1805,3 +1806,150 @@ $(document).on('click', '#formulaModal', function(e){
 $(document).on('keydown', function(e){
   if (e.key === 'Escape') closeFormulaModal();
 });
+
+
+//PDF COMPROBANTE
+
+  // Lee todo de localStorage
+  function getAllSnaps(KEY = "aprobacion_inst_cta_remunerada") {
+    try {
+      const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
+      return Array.isArray(lista) ? lista.filter(x => x && x.opId) : [];
+    } catch { return []; }
+  }
+
+  // Genera un único PDF con todas las operaciones y sus transferencias
+  async function buildMergedPdfBlob() {
+    const snaps = getAllSnaps();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: "p", unit: "pt", format: "a4" });
+
+    const W = doc.internal.pageSize.getWidth();
+    const LEFT = 56;
+    const TOP  = 72;
+    const LINE = 20;
+
+    if (snaps.length === 0) {
+      // PDF con aviso si no hay datos
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text("No hay datos para mostrar.", LEFT, TOP);
+      return doc.output("blob");
+    }
+
+    snaps.forEach((snap, idxOp) => {
+      const base = snap?.base || {};
+      const trfs = Array.isArray(snap?.transferencias) ? snap.transferencias : [];
+      const opNum = idxOp + 1;
+
+      // Si no es la primera operación, añade nueva página
+      if (idxOp > 0) doc.addPage();
+
+      // ===== Página 1 de la operación =====
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.text(`Operación ${opNum}`, LEFT, TOP);
+
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "normal");
+
+      let y = TOP + 2*LINE;
+      const linea = (label, value) => {
+        doc.setFont("helvetica", "bold"); doc.text(label, LEFT, y);
+        doc.setFont("helvetica", "normal"); doc.text(String(value ?? "-"), LEFT + 160, y);
+        y += LINE;
+      };
+
+      linea("OP ID:", snap?.opId || "-");
+      linea("Código inversión:", base?.codigoInversion || "-");
+      linea("Moneda destino:", base?.monedaDestinoTxt || base?.monedaDestinoId || "-");
+      linea("Banco destino:", base?.bancoDestinoTxt || base?.bancoDestinoId || "-");
+      linea("Cuenta destino:", base?.cuentaDestinoTxt || base?.cuentaDestinoId || "-");
+      linea("Estado:", (base?.estado || "-"));
+
+      y += LINE/2;
+      doc.setFont("helvetica", "bold");
+      doc.text("Archivos de la operación:", LEFT, y);
+      doc.setFont("helvetica", "normal"); y += LINE;
+
+      if (base?.documentoPrincipal) {
+        doc.text("• Documento principal: " + base.documentoPrincipal, LEFT, y); y += LINE;
+      }
+      (base?.documentosAdicionales || []).forEach(n => {
+        doc.text("• " + n, LEFT, y); y += LINE;
+      });
+
+      // ===== Páginas por transferencia de esta operación =====
+      trfs.forEach((t, idxT) => {
+        doc.addPage();
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(18);
+        doc.text(`Transferencia #${idxT + 1} (Operación ${opNum})`, LEFT, TOP);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+
+        let yy = TOP + 2*LINE;
+        const pl = (label, value) => {
+          doc.setFont("helvetica", "bold"); doc.text(label, LEFT, yy);
+          doc.setFont("helvetica", "normal"); doc.text(String(value ?? "-"), LEFT + 180, yy);
+          yy += LINE;
+        };
+
+        pl("Moneda:", t?.moneda || "-");
+        pl("Monto:", (t?.montoRaw || t?.monto || "-"));
+        pl("Banco (cargo):", t?.bancoCargoTxt || t?.bancoCargoId || "-");
+        pl("Cuenta (cargo):", t?.cuentaCargoTxt || t?.cuentaCargoId || "-");
+        pl("Banco (destino):", t?.bancoDestinoTxt || t?.bancoDestinoId || "-");
+        pl("Cuenta (destino):", t?.cuentaDestinoTxt || t?.cuentaDestinoId || "-");
+        pl("Estado:", t?.estado || "-");
+
+        yy += LINE/2;
+        doc.setFont("helvetica", "bold");
+        doc.text("Archivos de la transferencia:", LEFT, yy);
+        doc.setFont("helvetica", "normal"); yy += LINE;
+
+        if (t?.documentoPrincipal) {
+          doc.text("• Documento principal: " + t.documentoPrincipal, LEFT, yy); yy += LINE;
+        }
+        (t?.documentosAdicionales || []).forEach(n => {
+          doc.text("• " + n, LEFT, yy); yy += LINE;
+        });
+      });
+    });
+
+    return doc.output("blob");
+  }
+
+  // Abre el modal y carga el PDF consolidado
+  async function abrirPdfConsolidado() {
+    const blob = await buildMergedPdfBlob();
+    const url = URL.createObjectURL(blob);
+
+    // Cargar en iframe y botón de descarga
+    const iframe = document.getElementById("pdfViewer");
+    iframe.src = url;
+    const dl = document.getElementById("btnDescargarPdf");
+    dl.href = url;
+
+    // Mostrar modal
+    const modal = document.getElementById("pdfModal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+
+    // Guardar cleanup
+    const cleanup = () => {
+      iframe.src = "about:blank";
+      dl.href = "#";
+      URL.revokeObjectURL(url);
+    };
+    modal._cleanupPdfUrl = cleanup;
+  }
+
+  function cerrarModalPdf() {
+    const modal = document.getElementById("pdfModal");
+    if (modal._cleanupPdfUrl) modal._cleanupPdfUrl();
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+  }

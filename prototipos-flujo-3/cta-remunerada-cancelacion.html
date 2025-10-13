@@ -39,6 +39,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
 
+<!-- jsPDF CDN -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script>
+  window.jsPDF = window.jspdf.jsPDF; // habilita jsPDF globalmente
+</script>
+
 <!-- MathJax for LaTeX rendering (single include) -->
 <script>
   window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
@@ -695,6 +701,23 @@
   </div>
 </div>
 
+<!-- Modal simple -->
+<!-- Modal simple -->
+<div id="pdfModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50">
+  <div class="bg-white w-[90vw] h-[85vh] rounded-lg shadow-lg overflow-hidden flex flex-col">
+    <div class="p-3 border-b flex items-center justify-between">
+      <h3 class="font-semibold">Vista previa PDF consolidado</h3>
+      <div class="flex items-center gap-2">
+        <a id="btnDescargarPdf" href="#" download="instrucciones_consolidado.pdf"
+           class="px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm">Descargar</a>
+        <button id="btnCerrarModal" class="px-2 py-1 rounded border">Cerrar</button>
+      </div>
+    </div>
+    <div class="flex-1">
+      <iframe id="pdfViewer" style="width:100%; height:100%; border:0;"></iframe>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
