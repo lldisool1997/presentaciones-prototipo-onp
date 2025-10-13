@@ -1635,59 +1635,46 @@ function __getListaAprobacion(KEY = "aprobacion_inst_cta_remunerada"){
   return lista.filter(x => x && typeof x === 'object' && typeof x.opId === 'string' && x.opId.trim());
 }
 
-// ===== Utiles =====
-function fmtMoney(n){ return (n ?? 0).toLocaleString('es-PE',{minimumFractionDigits:2, maximumFractionDigits:2}); }
-function ymd(d){ const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
-function addDays(d, n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
-
-// Genera filas: saldo inicial + interés diario (base 360)
-function buildInteresData({ start='2025-09-01', end='2025-09-30', tna=4.51, saldoInicial=1_000_000.00 }){
-  const rows = [];
-  let d = new Date(start);
-  const endD = new Date(end);
-  let saldo = saldoInicial;
-
-  while(d <= endD){
-    const interes = saldo * (tna/100) / 360;     // interés diario
-    rows.push({
-      fecha: ymd(d),
-      tna,
-      saldoDia: saldo,
-      interesDia: interes
-    });
-    saldo += interes;                             // capitalizado día a día
-    d = addDays(d, 1);
-  }
-  return rows;
-}
-
 // Renderiza modal con jQuery + Tailwind
-function openInteresModal({ banco='INTERBANK — 200-3067561380', tea=4.60, tna=4.51, start, end, saldoInicial=1_000_000.00 }={}){
-  event.preventDefault();
+// Ahora acepta 'movimientos' (array) y reemplaza la columna TNA por "Movimiento" que afecta el saldo.
+// Interés diario se calcula con TEA: i_d = (1+TEA)^(1/360)-1, aplicado sobre el saldo del día anterior.
+function openInteresModal({
+  banco = 'INTERBANK — 200-3067561380',
+  tea = 4.60,          // % (visual). Para cálculo, se convierte a decimal
+  tna = 4.51,          // % (visual). No se usa para cálculo; queda solo informativo en el header si lo quieres
+  start,               // 'YYYY-MM-DD'
+  end,                 // 'YYYY-MM-DD'
+  saldoInicial = 1_000_000.00,
+  moneda = 'PEN',
+  movimientos = []     // [{ fecha:'YYYY-MM-DD', desc:'...', mov:+/-number }]
+} = {}) {
+  if (typeof event !== 'undefined' && event?.preventDefault) event.preventDefault();
+
   const $modal = $('#interesModal');
+
   // Meta
   $('#metaBanco').text(banco);
-  $('#metaTEA').text(`${tea.toFixed(2)}%`);
-  $('#metaTNA').text(`${tna.toFixed(2)}%`);
+  $('#metaTEA').text(`${Number(tea).toFixed(2)}%`);
+  $('#metaTNA').text(`${Number(tna).toFixed(2)}%`);
 
-  // Data
-  const data = buildInteresData({ start, end, tna, saldoInicial });
+  // Construir filas con MOVIMIENTO en vez de TNA
+  const data = buildInteresDataConMovimientos({ start, end, tea, saldoInicial, moneda, movimientos });
   const $tbody = $('#tbodyInteres').empty();
 
   let total = 0;
-  data.forEach(r=>{
+  data.forEach(r => {
     total += r.interesDia;
     $tbody.append(
       `<tr class="hover:bg-slate-50">
         <td class="px-3 py-2">${r.fecha}</td>
-        <td class="px-3 py-2">${r.tna.toFixed(2)}%</td>
-        <td class="px-3 py-2 text-right">${fmtMoney(r.saldoDia)}</td>
-        <td class="px-3 py-2 text-right">${fmtMoney(r.interesDia)}</td>
+        <td class="px-3 py-2 text-right">${fmtMoney(r.movimiento, moneda)}</td>
+        <td class="px-3 py-2 text-right">${fmtMoney(r.saldoDia, moneda)}</td>
+        <td class="px-3 py-2 text-right">${fmtMoney(r.interesDia, moneda)}</td>
       </tr>`
     );
   });
 
-  $('#totalInteres').text(fmtMoney(total));
+  $('#totalInteres').text(fmtMoney(total, moneda));
 
   // abrir / cerrar
   $modal.removeClass('hidden').addClass('flex');
@@ -1698,18 +1685,90 @@ function openInteresModal({ banco='INTERBANK — 200-3067561380', tea=4.60, tna=
   });
 }
 
-// ===== Ejemplo rápido =====
+/* ===================== Helpers nuevos ===================== */
+
+// Genera las filas diarias entre start y end (inclusive), aplicando:
+// - interés del día sobre saldo del día anterior (TEA diaria).
+// - movimiento del día afecta el saldo del día (saldo_d = saldo_{d-1} + mov_d).
+function buildInteresDataConMovimientos({ start, end, tea, saldoInicial, moneda = 'PEN', movimientos = [] } = {}) {
+  if (!start || !end) return [];
+
+  const BASE_DIAS = 360;
+  const teaDec = Number(tea) / 100; // a decimal
+  const iDiaria = Math.pow(1 + teaDec, 1 / BASE_DIAS) - 1;
+
+  const days = enumerateDates(start, end);
+  const movMap = toMovimientoMap(movimientos); // fecha -> mov (sumado si hay varios)
+
+  const rows = [];
+  let saldoAyer = Number(saldoInicial) || 0;
+
+  for (const fecha of days) {
+    const mov = Number(movMap[fecha] || 0);
+    const interesDia = saldoAyer * iDiaria; // interés sobre saldo del día anterior
+    const saldoHoy = saldoAyer + mov;       // movimiento impacta el saldo del día
+
+    rows.push({
+      fecha,
+      movimiento: mov,
+      saldoDia: saldoHoy,
+      interesDia
+    });
+
+    saldoAyer = saldoHoy; // siguiente día arranca desde aquí
+  }
+
+  return rows;
+}
+
+// Lista fechas ISO (YYYY-MM-DD) entre start y end (inclusive)
+function enumerateDates(startISO, endISO) {
+  const res = [];
+  const s = new Date(startISO + 'T00:00:00');
+  const e = new Date(endISO + 'T00:00:00');
+  for (let d = s; d <= e; d = new Date(d.getTime() + 86400000)) {
+    res.push(d.toISOString().slice(0, 10));
+  }
+  return res;
+}
+
+// Convierte movimientos a mapa por fecha (si hay varios en el mismo día, se suman)
+function toMovimientoMap(movs = []) {
+  const map = Object.create(null);
+  movs.forEach(m => {
+    const f = (m?.fecha || '').slice(0, 10);
+    if (!f) return;
+    const v = Number(m?.mov || 0);
+    map[f] = (map[f] || 0) + v;
+  });
+  return map;
+}
+
+// Formato monetario
+function fmtMoney(n, currency = 'PEN', locale = 'es-PE') {
+  if (typeof n !== 'number' || !isFinite(n)) return '-';
+  return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(n);
+}
+
+// ===== Ejemplo rápido (botón) =====
 $(document).on('click','#btnInteres', function(){
   openInteresModal({
     banco: 'INTERBANK — 200-3067561380',
-    tea: 4.60,
-    tna: 4.51,
+    tea: 4.60,       // % (visual + cálculo)
+    tna: 4.51,       // % (solo visual en header)
     start: '2025-09-01',
     end  : '2025-09-30',
-    saldoInicial: 1_000_000.00 // <- aquí el saldo inicial
+    saldoInicial: 1_000_000.00,
+    moneda: 'PEN',
+    movimientos: [
+      { fecha: '2025-09-02', desc: 'Depósito',                  mov:  25000 },
+      { fecha: '2025-09-05', desc: 'Transferencia a inversión', mov: -12000 },
+      { fecha: '2025-09-07', desc: 'Rendimiento',               mov:    380 },
+      { fecha: '2025-09-09', desc: 'Comisión',                  mov:    -25 },
+      { fecha: '2025-09-15', desc: 'Depósito adicional',        mov:  10000 },
+    ]
   });
 });
-
 
 // === Fórmula Templates Registry (clean, single) ===
 // Simula venir de un registro externo. Si luego quieres usar fetch('/api/formulas/...'), lo cambiamos fácil.
