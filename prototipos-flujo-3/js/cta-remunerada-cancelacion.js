@@ -1777,27 +1777,27 @@ const FORMULA_TEMPLATES = {
     meta: {
       name: "Interés Compuesto",
       code: "FIN-INT-COMP-001",
-      version: "v1.2.0",
-      updatedAt: "2025-09-28 14:35",
+      version: "v1.2.1",
+      updatedAt: "2025-10-13 16:00",
       updatedBy: "Analista Backoffice · FIN",
       source: "Registro de Fórmulas"
     },
     variables: [
       { sym: "P", desc: "Principal o capital inicial" },
-      { sym: "i", desc: "Tasa nominal anual (decimal) o efectiva anual (i_eff)" },
-      { sym: "m", desc: "Número de capitalizaciones por año (si aplica)" },
-      { sym: "n", desc: "Plazo en años" },
+      { sym: "i", desc: "Tasa efectiva anual (decimal, TEA)" },
+      { sym: "n", desc: "Número de días del periodo" },
       { sym: "I", desc: "Interés generado" },
       { sym: "F", desc: "Valor futuro" }
     ],
-    // única fórmula aplicada al caso
+    // única fórmula aplicada al caso (n en días, conversión comercial 360)
     formula: {
-      label: "Valor futuro (capitalización m veces por año)",
-      latex: "F = P\\,\\left(1 + \\frac{i}{m}\\right)^{m n} \\quad\\Rightarrow\\quad I = F - P",
-      notes: ""
+      label: "Valor futuro (días / año comercial 360)",
+      latex: "F = P\\,\\left(1 + i\\right)^{\\tfrac{n}{360}} \\quad\\Rightarrow\\quad I = F - P",
+      notes: "Se convierte n días a fracción de año comercial: n/360. Si tu política usa año calendario, reemplaza 360 por 365."
     }
   }
 };
+
 
 function renderFormulaTemplate(key){
   const tpl = FORMULA_TEMPLATES[key];
