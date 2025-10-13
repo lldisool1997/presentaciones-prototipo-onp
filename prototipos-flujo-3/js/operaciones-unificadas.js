@@ -1404,6 +1404,7 @@ function bloquearCamposSoloLectura($panel) {
 
   // 2️⃣ Rehabilitar campos permitidos (comisión y sustentos nuevos)
   $panel.find(".comision").prop("disabled", false);        // campos de comisión
+  $panel.find(".fecha_operacion").prop("disabled", false);        // campos de comisión
   $panel.find("#comision").prop("disabled", false);        // campos de comisión
   $panel.find("input[type='file']").prop("disabled", false); // permitir uploads PDF
   $panel.find("#newDocumentName_op").prop("disabled", false); // permitir uploads PDF
