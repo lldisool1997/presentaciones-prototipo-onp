@@ -1794,7 +1794,7 @@ const FORMULA_TEMPLATES = {
     formula: {
       label: "Valor futuro (capitalización m veces por año)",
       latex: "F = P\\,\\left(1 + \\frac{i}{m}\\right)^{m n} \\quad\\Rightarrow\\quad I = F - P",
-      notes: "Si trabajas con TEA, reemplaza i/m por i_eff y m·n por n:  F = P(1 + i_{\\text{eff}})^n."
+      notes: ""
     }
   }
 };
