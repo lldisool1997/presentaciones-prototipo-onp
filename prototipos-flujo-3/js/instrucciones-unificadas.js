@@ -389,6 +389,8 @@ function build_aprobacion_snapshot(){
   documentosAdicionalesOperacion: snap?.base?.documentosAdicionalesOperacion ?? [],
   estado: snap?.base?.estado ?? "REGISTRADO",
 
+    cartas: snap?.base?.cartas || [],
+
   };
 
   // -------- Transferencias (todas las .fondeo-form existentes) --------
@@ -420,6 +422,8 @@ function build_aprobacion_snapshot(){
       sustentoOpPrincipal: snap?.transferencias?.[i]?.sustentoOpPrincipal ?? null,
       documentosAdicionalesOperacion: snap?.transferencias?.[i]?.documentosAdicionalesOperacion ?? [],
       estado: snap?.transferencias?.[i]?.estado ?? "REGISTRADO",
+
+        cartas: snap?.transferencias[i]?.cartas || [],
 
     };
     transferencias.push(transfer);

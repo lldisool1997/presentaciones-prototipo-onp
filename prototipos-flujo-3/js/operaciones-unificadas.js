@@ -561,6 +561,7 @@ const base = {
   // ⬇⬇⬇  SOLO documentos de OPERACIÓN (base)
   sustentoOpPrincipal: __collectOpDropDoc(),
   documentosAdicionalesOperacion: __collectDynamicDocsFrom("#tab-instruir-op .documentFields"),
+  cartas: snap?.base?.cartas || [],
 
   estado: snap.base.estado,
 };
@@ -600,6 +601,8 @@ const base = {
   // ⬇⬇⬇  SOLO documentos de la OPERACIÓN (por transferencia)
   sustentoOpPrincipal: __collectOpDropDocTrf($p),
   documentosAdicionalesOperacion: __collectDynamicDocsFrom($p.find(".documentFields_op_trf")), // OPERACIÓN (transferencia)
+
+  cartas: snap?.transferencias[i]?.cartas || [],
 
   estado: snap.transferencias[i].estado,
 };
@@ -812,7 +815,7 @@ function __renderCards(panelId, cartas) {
     if ($p.length) {
        let fecha = new Date(carta.fechaISO).toLocaleString("es-PE");
       const $card = $(`
-               <section class="mt-6 p-4 border rounded-lg bg-white shadow">
+               <section class="p-4 border rounded-lg bg-white shadow">
               <h2 class="text-lg font-semibold text-gray-800 mb-2">
                 📄 Carta Generada
               </h2>
