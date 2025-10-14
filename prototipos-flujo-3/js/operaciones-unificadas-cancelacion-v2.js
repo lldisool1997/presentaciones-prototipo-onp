@@ -836,7 +836,16 @@ function __renderCards(panelId, cartas) {
     </div>
 
     <!-- Botones pequeños -->
-    <div class="flex items-center gap-2">
+     <div class="flex items-center gap-2">
+      <button
+        type="button"
+        class="px-2 py-1 text-xs rounded-md bg-blue-600 hover:bg-blue-700 text-white"
+        data-action="confirmar"
+      >
+        Subir Carta Firmada
+      </button>
+    </div>
+        <div class="flex items-center gap-2">
       <button
         type="button"
         class="px-2 py-1 text-xs rounded-md bg-emerald-600 hover:bg-emerald-700 text-white"
