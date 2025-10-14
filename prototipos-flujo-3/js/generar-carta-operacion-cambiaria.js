@@ -450,71 +450,98 @@ function firmaCellOperador(url, nombre, cargo1 = '', cargo2 = '') {
     </div>
   `;
 }
-// ========= CARTA: helpers de navegación y storage =========
-// ===== Carta: setear flag y volver =====
-const STORAGE_KEY_CARTA = 'oc_operacion_v1';
-const RETURN_FALLBACK   = 'back-office-ope-camb.html'; // cámbialo si tu back-office tiene otra ruta
 
+
+// ===== Query & Config =====
 function qsGet(k){ return new URLSearchParams(location.search).get(k); }
+const STORAGE_KEY_CARTA = qsGet('storage_key_carta') || 'oc_operacion_v1';
 
+// panel = 'tab-instruccion' (operación)  |  'tab-fondeo-1' (transferencia N)
+const PANEL = qsGet('panel');        // ej: tab-instruccion | tab-fondeo-1
+const AREA  = qsGet('area') || '';   // ej: Tesoreria (opcional)
+const OPID  = qsGet('opId') || qsGet('codigoInversion') || null; // para ubicar la operación en el array
 
-function qsGet(k){ return new URLSearchParams(location.search).get(k); }
+// ===== Utils =====
+function loadState(){
+  try { 
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY_CARTA) || '[]');
+    return Array.isArray(raw) ? raw : [raw]; // normaliza a array
+  } catch { return []; }
+}
+function saveState(arr){
+  localStorage.setItem(STORAGE_KEY_CARTA, JSON.stringify(arr));
+}
 
+function crearCarta(){
+  const fechaISO = new Date().toISOString();
+  const id = `carta_${Date.now()}_${Math.floor(Math.random()*100000)}`;
+  return { id, fechaISO, area: AREA || undefined };
+}
+
+// Busca el índice del item por OPID; si no hay, usa el primero
+function findItemIndex(arr){
+  if (!arr.length) return -1;
+  if (!OPID) return 0; // sin opId: asumimos el primer item
+  const i = arr.findIndex(x => x?.opId === OPID || x?.base?.codigoInversion === OPID);
+  return i >= 0 ? i : 0;
+}
+
+// ===== Core =====
 function marcarCartaGenerada(){
-  const scope = qsGet('scope');        // 'operacion' | 'transferencia'
-  const tabId = qsGet('id');           // 'tab-operacion' | 'tab-trf-1' | ...
-  if (!scope || !tabId) return;
+  if (!PANEL) return;
 
-  const data = JSON.parse(localStorage.getItem(STORAGE_KEY_CARTA) || '{}');
-  const nowISO = new Date().toISOString();
+  const state = loadState();
+  const i = findItemIndex(state);
+  if (i < 0) return;
 
-  if (scope === 'operacion') {
-    data.operacion = data.operacion || {};
-    data.operacion.carta_generada = true;
-    data.operacion.carta_fecha    = nowISO;   // << guarda fecha
-  } else if (scope === 'transferencia') {
-    let idx = -1;
-    const m = /tab-trf-(\d+)/.exec(tabId);
-    if (m) idx = parseInt(m[1], 10) - 1;
-    if ((idx < 0 || !data.transferencias?.[idx]) && Array.isArray(data.transferencias)) {
-      idx = data.transferencias.findIndex(t => t?.id === tabId); // fallback por id
-    }
-    if (idx >= 0) {
-      data.transferencias[idx] = data.transferencias[idx] || {};
-      data.transferencias[idx].carta_generada = true;
-      data.transferencias[idx].carta_fecha    = nowISO; // << guarda fecha
-    }
+  const op = state[i];
+  const carta = crearCarta();
+  const nowISO = carta.fechaISO;
+
+  // Operación principal
+  if (PANEL === 'tab-instruir') {
+    op.base = op.base || {};
+    if (!Array.isArray(op.base.cartas)) op.base.cartas = [];
+    op.base.cartas.push(carta);
+
+    // compat opcional:
+    op.base.carta_generada = true;
+    op.base.carta_fecha    = nowISO;
+
+  } else {
+    alert(PANEL)
+    // Transferencia: tab-fondeo-N => idx N (1-based en tu dato)
+    const m = /^tab-fondeo-(\d+)$/.exec(PANEL);
+    if (!m) return;
+    const idxNum = parseInt(m[1], 10);
+    if (!Array.isArray(op.transferencias)) op.transferencias = [];
+
+    // Busca por idx (propiedad idx de tu estructura) o por posición (idxNum-1) como fallback
+    let tIdx = op.transferencias.findIndex(t => t?.idx === idxNum);
+    if (tIdx < 0) tIdx = idxNum - 1;
+    if (!op.transferencias[tIdx]) op.transferencias[tIdx] = { tipo: 'transferencia', idx: idxNum };
+
+    const t = op.transferencias[tIdx];
+    if (!Array.isArray(t.cartas)) t.cartas = [];
+    t.cartas.push(carta);
+
+    // compat opcional:
+    t.carta_generada = true;
+    t.carta_fecha    = nowISO;
   }
 
-  data.meta = { ...(data.meta||{}), cartaUpdatedAt: nowISO };
-  localStorage.setItem(STORAGE_KEY_CARTA, JSON.stringify(data));
-}
+  // timestamps de la operación
+  op.updated_at = nowISO;
+  if (!op.created_at) op.created_at = nowISO;
 
+  saveState(state);
+}
 
 function volverALaVista(){
-  const ret = qsGet('return');
-  if (ret) { window.location.href = ret; return; }
-  if (document.referrer) {
-    try {
-      const sameOrigin = new URL(document.referrer).origin === location.origin;
-      if (sameOrigin && history.length > 1) { history.back(); return; }
-    } catch {}
-  }
-  window.location.href = RETURN_FALLBACK;
+  if (history.length > 1) history.back();
+  else window.location.href = 'back-office-ope-camb.html'; // o tu fallback
 }
 
-
-function volverALaVista(){
-  const ret = qsGet('return');
-  if (ret) { window.location.href = ret; return; }
-  if (document.referrer) {
-    try {
-      const sameOrigin = new URL(document.referrer).origin === location.origin;
-      if (sameOrigin && history.length > 1) { history.back(); return; }
-    } catch(e){}
-  }
-  window.location.href = RETURN_FALLBACK;
-}
-
-  
 function escapeHtml(s){ return (s||'').replace(/[&<>"]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m])); }
+
+
