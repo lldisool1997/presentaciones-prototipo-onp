@@ -703,11 +703,12 @@ function goToCarta(scope, tabId, route){
   url.searchParams.set('scope', scope);
   url.searchParams.set('id', tabId);
 
+
     const qs = new URLSearchParams({
       scope: scope,
       id: tabId
     }).toString();
-  window.location.href = `${route}?${qs}`;
+  window.location.href = `${route}?${qs}&area=Tesoreria&storage_key_carta=${STORAGE_KEY}`;
 }
 
 /* =====================  Hooks de botones “Generar Carta”  ===================== */
