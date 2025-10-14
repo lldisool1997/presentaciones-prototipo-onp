@@ -742,7 +742,7 @@ $(function(){
   });
 
 
-  
+
   restoreFromStorage(); // restauración automática
                function getAreaParam() {
     const params = new URLSearchParams(window.location.search);
@@ -760,7 +760,7 @@ $(function(){
 
 //PDF COMPROBANTE
 // ===================== Helpers =====================
-function getAllSnaps(KEY = "oc_carta_context") {
+function getAllSnaps(KEY = "oc_operacion_v1") {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return [];
