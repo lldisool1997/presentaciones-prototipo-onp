@@ -469,9 +469,9 @@ function populateTransfer($panel, t){
   }
 
   // comisión
-  if (t.fondo != null)    $panel.find('.trf-fondo').val(formatMoney(t.fondo));
+  if (t.fondo != null)    $panel.find('.trf-fondo').val(formatMoney(17642500));
   if (t.comision != null) $panel.find('.trf-comision').val(formatMoney(t.comision));
-  if (t.total != null)    $panel.find('.trf-total').val(formatMoney(t.total));
+  if (t.total != null)    $panel.find('.trf-total').val(formatMoney(17642500+ (t.comision||0)));
 
   // docs grid
   const docs = Array.isArray(t.docs_by_area) && t.docs_by_area.length
@@ -547,7 +547,7 @@ function initTransferPanel($panel){
     $panel.find('.trf-fondo').val(formatMoney(f));
     const c = parseMoney($panel.find('.trf-comision').val());
 
-    $panel.find('.trf-total').val(formatMoney(f + c));
+    $panel.find('.trf-total').val(formatMoney(17642500 + c));
   }
   $panel.on('input', '.trf-fondo, .trf-comision', ()=>{ recalc(); saveToStorage(false); });
 
