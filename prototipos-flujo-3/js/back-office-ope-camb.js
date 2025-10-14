@@ -444,10 +444,10 @@ function populateOperacion(op){
   renderDocsGrid($('#oc_docs_grid'), docs);
 
    // En populateOperacion:
-    /*if (op.carta_generada) {
+    if (op.carta_generada) {
       const ts = op.carta_fecha || (window.ocStorage?.load()?.meta?.cartaUpdatedAt);
       renderUltimaCarta($('#oc_card_operation_confirm'), ts, 'operacion'); // <-- usa el placeholder
-    }*/
+    }
 
   // bloqueo global: todo disabled menos comisión y sustentos
   lockGlobal();
