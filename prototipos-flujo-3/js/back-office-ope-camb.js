@@ -57,6 +57,7 @@ function applyEstadoBadges(data){
     $('#btnInstruir').addClass('hidden');
     $('#oc_btn_add_doc').addClass('hidden');
     $('input, select').prop("disabled", true)
+    $('.inp-fecha').prop("disabled", false)
   }
 
   // Transferencias
@@ -74,6 +75,7 @@ function applyEstadoBadges(data){
       $panel.find('.trf-btn-carta').addClass('hidden');
       $panel.find('.trf-btn-add-doc').addClass('hidden');
             $panel.find('input, select').prop("disabled", true)
+                $panel.find('.inp-fecha').prop("disabled", false)
     }
   });
 
@@ -458,6 +460,8 @@ function populateTransfer($panel, t){
   $panel.find('.trf-docs-grid .doc-file').prop('disabled', false);
   $panel.find('.trf-btn-add-doc, .trf-doc-nombre').prop('disabled', false);
   $panel.find('.trf-docs-grid .doc-remove').prop('disabled', false);
+
+      $('.inp-fecha').prop("disabled", false)
 }
 
 /* =====================  Crear tab + panel de Transferencia ===================== */
@@ -628,6 +632,7 @@ function lockGlobal(){
   $('#oc_fondo').prop('disabled', true);
   $('#oc_total').prop('disabled', true).prop('readonly', true);
   $('#oc_comision').prop('disabled', false); // editable
+  $('.inp-fecha').prop('disabled', false); // editable
 
   // Sustentos (grilla) activos
   $('#oc_docs_grid .doc-file').prop('disabled', false);

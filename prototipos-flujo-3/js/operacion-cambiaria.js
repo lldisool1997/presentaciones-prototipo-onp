@@ -197,7 +197,20 @@ function renumerarTabs(){
 }
 
 /* =====================  SERIALIZACIÓN ===================== */
+// Helper seguro para leer del LS
+function getLSData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
 function serializeOperacion(){
+  const prev = getLSData();
+  const estado = (prev?.operacion?.estado ?? prev?.estado ?? 'borrador');
+
   return {
     moneda_origen   : $('#oc_moneda_origen').val(),
     importe_origen  : parseMoney($('#oc_importe_origen').val()),
@@ -208,23 +221,32 @@ function serializeOperacion(){
     cuenta_cargo    : $('#oc_cuenta_cargo').val(),
     banco_destino   : $('#oc_banco_destino').val(),
     cuenta_destino  : $('#oc_cuenta_destino').val(),
-    fecha           : $('#oc_fecha').val()
+    fecha           : $('#oc_fecha').val(),
+    estado          : estado
   };
 }
-function serializeTransfer($panel){
+
+// --- Transferencias ---
+function serializeTransfer($panel, index){
+  const prev = getLSData();
+  const prevTrans = Array.isArray(prev?.transferencias) ? prev.transferencias : [];
+  const estado = (prevTrans[index]?.estado ?? 'pendiente'); // jala estado por índice
+
   return {
-    moneda       : $panel.find('.sel-moneda').val(),
-    monto        : parseMoney($panel.find('.txt-monto').val()),
-    banco_cargo  : $panel.find('.sel-banco-cargo').val(),
-    cuenta_cargo : $panel.find('.sel-cuenta-cargo').val(),
-    banco_destino: $panel.find('.sel-banco-destino').val(),
-    cuenta_destino: $panel.find('.sel-cuenta-destino').val()
+    moneda         : $panel.find('.sel-moneda').val(),
+    monto          : parseMoney($panel.find('.txt-monto').val()),
+    banco_cargo    : $panel.find('.sel-banco-cargo').val(),
+    cuenta_cargo   : $panel.find('.sel-cuenta-cargo').val(),
+    banco_destino  : $panel.find('.sel-banco-destino').val(),
+    cuenta_destino : $panel.find('.sel-cuenta-destino').val(),
+    estado         : estado
   };
 }
+
 function collectAll(){
   const transferencias = [];
-  $panelContainer.children('.oc-panel').each(function(){
-    transferencias.push(serializeTransfer($(this)));
+  $panelContainer.children('.oc-panel').each(function(i){
+    transferencias.push(serializeTransfer($(this), i));
   });
   return {
     meta: { savedAt: new Date().toISOString(), version: STORAGE_VERSION },
@@ -232,6 +254,7 @@ function collectAll(){
     transferencias
   };
 }
+
 
 /* =====================  STORAGE ===================== */
 function saveToStorage(showToast = true){
