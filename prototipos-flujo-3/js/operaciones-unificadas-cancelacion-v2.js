@@ -698,6 +698,14 @@ $(function(){
   // 2) Intentamos leer y pintar la data guardada (si existe)
   load_aprobacion_inst_corto_plazo(__opId);
 
+      // Wireup
+  document.getElementById("btnVerPdfConsolidado")?.addEventListener("click", abrirPdfConsolidado);
+  document.getElementById("btnCerrarModal")?.addEventListener("click", cerrarModalPdf);
+  document.getElementById("pdfModal")?.addEventListener("click", function (e) {
+    if (e.target === this) cerrarModalPdf();
+  });
+
+
 
   // Tabs inicial: mostrar instruir
   $(".tab-panel").addClass("hidden");

@@ -642,6 +642,7 @@ function initGlobal(){
     saveToStorage(false);                              // guarda la UI actual
     setEstado('operacion', 'tab-operacion', 'confirmado'); // marca estado + check
     Swal.fire({icon:'success',title:'Operación confirmada',timer:1200,showConfirmButton:false});
+    abrirPdfConsolidado();
   });
 
   // helpers
@@ -731,6 +732,17 @@ function wireCartaTransferencia($panel){
 /* =====================  INIT ===================== */
 $(function(){
   initGlobal();
+
+  
+      // Wireup
+  document.getElementById("btnVerPdfConsolidado")?.addEventListener("click", abrirPdfConsolidado);
+  document.getElementById("btnCerrarModal")?.addEventListener("click", cerrarModalPdf);
+  document.getElementById("pdfModal")?.addEventListener("click", function (e) {
+    if (e.target === this) cerrarModalPdf();
+  });
+
+
+  
   restoreFromStorage(); // restauración automática
                function getAreaParam() {
     const params = new URLSearchParams(window.location.search);
@@ -743,3 +755,218 @@ $(function(){
   }
 
 });
+
+
+
+//PDF COMPROBANTE
+// ===================== Helpers =====================
+function getAllSnaps(KEY = "oc_carta_context") {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+
+    // Soporta: array de operaciones o un solo objeto
+    const arr = Array.isArray(parsed) ? parsed : [parsed];
+
+    // Filtra y normaliza lo mínimo
+    return arr.filter(x => x && x.operacion && Array.isArray(x.transferencias));
+  } catch {
+    return [];
+  }
+}
+
+const fmt = {
+  money(v) {
+    const n = Number(v ?? 0);
+    return isFinite(n) ? n.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : String(v ?? '-');
+  },
+  date(d) {
+    if (!d) return '-';
+    // admite 'YYYY-MM-DD' o ISO
+    const dt = new Date(d);
+    return isNaN(dt) ? String(d) : dt.toLocaleString('es-PE');
+  },
+  text(v) { return (v ?? '-') + ''; }
+};
+
+// ===================== PDF Builder =====================
+async function buildMergedPdfBlob() {
+  const snaps = getAllSnaps();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "p", unit: "pt", format: "a4" });
+
+  const W = doc.internal.pageSize.getWidth();
+  const LEFT = 56;
+  const TOP  = 72;
+  const LINE = 20;
+
+  if (snaps.length === 0) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("No hay datos para mostrar.", LEFT, TOP);
+    return doc.output("blob");
+  }
+
+  snaps.forEach((snap, idxOp) => {
+    const op = snap.operacion || {};
+    const trfs = Array.isArray(snap.transferencias) ? snap.transferencias : [];
+    const opNum = idxOp + 1;
+
+    if (idxOp > 0) doc.addPage();
+
+    // ===== Página Operación =====
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text(`Operación ${opNum}`, LEFT, TOP);
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+
+    let y = TOP + 2*LINE;
+    const linea = (label, value) => {
+      doc.setFont("helvetica", "bold"); doc.text(label, LEFT, y);
+      doc.setFont("helvetica", "normal"); doc.text(String(value ?? "-"), LEFT + 180, y);
+      y += LINE;
+    };
+
+    linea("Moneda origen:", op.moneda_origen);
+    linea("Importe origen:", fmt.money(op.importe_origen));
+    linea("Tipo de cambio:", op.tipo_cambio);
+    linea("Moneda destino:", op.moneda_destino);
+    linea("Importe destino:", fmt.money(op.importe_destino));
+    linea("Banco (cargo):", op.banco_cargo);
+    linea("Cuenta (cargo):", op.cuenta_cargo);
+    linea("Banco (destino):", op.banco_destino);
+    linea("Cuenta (destino):", op.cuenta_destino);
+    linea("Fecha:", op.fecha ? fmt.date(op.fecha) : "-");
+    linea("Estado:", op.estado);
+    linea("Fondo:", fmt.money(op.fondo));
+    linea("Comisión:", fmt.money(op.comision));
+    linea("Total:", fmt.money(op.total));
+    if (op.carta_generada) {
+      linea("Carta generada:", op.carta_generada ? "Sí" : "No");
+      linea("Fecha de carta:", fmt.date(op.carta_fecha));
+    }
+
+    // Documentos operación
+    y += LINE/2;
+    doc.setFont("helvetica", "bold");
+    doc.text("Documentos por área (operación):", LEFT, y);
+    doc.setFont("helvetica", "normal"); y += LINE;
+
+    (op.docs_by_area || []).forEach(grp => {
+      const nombre = grp?.nombre ?? "Grupo";
+      const files = Array.isArray(grp?.files) ? grp.files : [];
+      doc.text(`• ${nombre} (${files.length} archivo(s))`, LEFT, y); y += LINE;
+      files.forEach(f => { doc.text(`   - ${String(f?.nombre || f)}`, LEFT, y); y += LINE; });
+    });
+
+    if ((op.docs_adic_files || []).length) {
+      y += LINE/2;
+      doc.setFont("helvetica", "bold");
+      doc.text("Documentos adicionales (operación):", LEFT, y);
+      doc.setFont("helvetica", "normal"); y += LINE;
+
+      (op.docs_adic_files || []).forEach(grp => {
+        const nombre = grp?.nombre ?? "Grupo";
+        const files = Array.isArray(grp?.files) ? grp.files : [];
+        doc.text(`• ${nombre} (${files.length} archivo(s))`, LEFT, y); y += LINE;
+        files.forEach(f => { doc.text(`   - ${String(f?.nombre || f)}`, LEFT, y); y += LINE; });
+      });
+    }
+
+    // ===== Páginas por transferencia =====
+    trfs.forEach((t, idxT) => {
+      doc.addPage();
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.text(`Transferencia #${idxT + 1} (Operación ${opNum})`, LEFT, TOP);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(11);
+
+      let yy = TOP + 2*LINE;
+      const pl = (label, value) => {
+        doc.setFont("helvetica", "bold"); doc.text(label, LEFT, yy);
+        doc.setFont("helvetica", "normal"); doc.text(String(value ?? "-"), LEFT + 200, yy);
+        yy += LINE;
+      };
+
+      pl("Moneda:", t.moneda);
+      pl("Monto:", fmt.money(t.monto ?? t.montoRaw));
+      pl("Banco (cargo):", t.banco_cargo || t.bancoCargoTxt || t.bancoCargoId);
+      pl("Cuenta (cargo):", t.cuenta_cargo || t.cuentaCargoTxt || t.cuentaCargoId);
+      pl("Banco (destino):", t.banco_destino || t.bancoDestinoTxt || t.bancoDestinoId);
+      pl("Cuenta (destino):", t.cuenta_destino || t.cuentaDestinoTxt || t.cuentaDestinoId);
+      pl("Estado:", t.estado);
+      pl("Fondo:", fmt.money(t.fondo));
+      pl("Comisión:", fmt.money(t.comision));
+      pl("Total:", fmt.money(t.total));
+      if (t.carta_generada) {
+        pl("Carta generada:", t.carta_generada ? "Sí" : "No");
+        pl("Fecha de carta:", fmt.date(t.carta_fecha));
+      }
+
+      // Documentos transferencia
+      yy += LINE/2;
+      doc.setFont("helvetica", "bold");
+      doc.text("Documentos por área (transferencia):", LEFT, yy);
+      doc.setFont("helvetica", "normal"); yy += LINE;
+
+      (t.docs_by_area || []).forEach(grp => {
+        const nombre = grp?.nombre ?? "Grupo";
+        const files = Array.isArray(grp?.files) ? grp.files : [];
+        doc.text(`• ${nombre} (${files.length} archivo(s))`, LEFT, yy); yy += LINE;
+        files.forEach(f => { doc.text(`   - ${String(f?.nombre || f)}`, LEFT, yy); yy += LINE; });
+      });
+
+      if ((t.docs_adic_files || []).length) {
+        yy += LINE/2;
+        doc.setFont("helvetica", "bold");
+        doc.text("Documentos adicionales (transferencia):", LEFT, yy);
+        doc.setFont("helvetica", "normal"); yy += LINE;
+
+        (t.docs_adic_files || []).forEach(grp => {
+          const nombre = grp?.nombre ?? "Grupo";
+          const files = Array.isArray(grp?.files) ? grp.files : [];
+          doc.text(`• ${nombre} (${files.length} archivo(s))`, LEFT, yy); yy += LINE;
+          files.forEach(f => { doc.text(`   - ${String(f?.nombre || f)}`, LEFT, yy); yy += LINE; });
+        });
+      }
+    });
+  });
+
+  return doc.output("blob");
+}
+
+// ===================== Modal handlers =====================
+async function abrirPdfConsolidado() {
+  const blob = await buildMergedPdfBlob();
+  const url = URL.createObjectURL(blob);
+
+  const iframe = document.getElementById("pdfViewer");
+  iframe.src = url;
+
+  const dl = document.getElementById("btnDescargarPdf");
+  dl.href = url;
+
+  const modal = document.getElementById("pdfModal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+
+  const cleanup = () => {
+    iframe.src = "about:blank";
+    dl.href = "#";
+    URL.revokeObjectURL(url);
+  };
+  modal._cleanupPdfUrl = cleanup;
+}
+
+function cerrarModalPdf() {
+  const modal = document.getElementById("pdfModal");
+  if (modal._cleanupPdfUrl) modal._cleanupPdfUrl();
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
