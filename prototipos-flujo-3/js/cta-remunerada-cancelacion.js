@@ -1759,7 +1759,7 @@ function buildInteresDataConMovimientos({ start, end, tea, saldoInicial, moneda 
   if (!start || !end) return [];
 
   const BASE_DIAS = 360;
-  const teaDec = Number(tea) / 100; // a decimal
+  const teaDec = Number(4.51) / 100; // a decimal
   const iDiaria = Math.pow(1 + teaDec, 1 / BASE_DIAS) - 1;
 
   const days = enumerateDates(start, end);
