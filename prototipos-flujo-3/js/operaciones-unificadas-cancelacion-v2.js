@@ -562,6 +562,8 @@ const base = {
   sustentoOpPrincipal: __collectOpDropDoc(),
   documentosAdicionalesOperacion: __collectDynamicDocsFrom("#tab-instruir-op .documentFields"),
 
+  cartas: snap?.base?.cartas || [],
+
   estado: snap.base.estado,
 };
 
@@ -600,6 +602,8 @@ const base = {
   // ⬇⬇⬇  SOLO documentos de la OPERACIÓN (por transferencia)
   sustentoOpPrincipal: __collectOpDropDocTrf($p),
   documentosAdicionalesOperacion: __collectDynamicDocsFrom($p.find(".documentFields_op_trf")), // OPERACIÓN (transferencia)
+
+  cartas: snap?.transferencias[i]?.cartas || [],
 
   estado: snap.transferencias[i].estado,
 };
@@ -804,6 +808,44 @@ function __renderDynamicDocsByNames(panelId, names) {
   });
 }
 
+// ------ Helper: crea campos dinámicos por cada documento adicional (solo muestra nombre) ------
+function __renderCards(panelId, cartas) {
+  if (!Array.isArray(cartas) || !cartas.length) return;
+  cartas.forEach((carta) => {
+    $p = $(`#${panelId} .section-cards`);
+    if ($p.length) {
+       let fecha = new Date(carta.fechaISO).toLocaleString("es-PE");
+
+      const $card = $(`
+             <section class="p-4 border rounded-lg bg-white shadow">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-800 mb-1">📄 Carta Generada</h2>
+      <p class="text-sm text-gray-600">
+        Fecha y hora:
+        <span class="font-medium text-gray-900">${fecha}</span>
+      </p>
+    </div>
+
+    <!-- Botones pequeños -->
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        class="px-2 py-1 text-xs rounded-md bg-emerald-600 hover:bg-emerald-700 text-white"
+        data-action="confirmar"
+      >
+        Confirmar
+      </button>
+    </div>
+  </div>
+</section>
+
+      `);
+      $p.append($card);
+    }
+  });
+}
+
 // ---- Tab principal: leer el archivo del drop (#file_base / #fileName_base)
 function __collectBaseDropDoc() {
   const inp = document.getElementById("file_base");
@@ -854,6 +896,15 @@ function load_aprobacion_inst_corto_plazo(opId) {
         : (Array.isArray(base.sustentoOpAdicionales) ? base.sustentoOpAdicionales : [])
     );
 
+
+        __renderCards(
+      "tab-instruir",
+      Array.isArray(base.cartas)
+        ? base.cartas
+        : (Array.isArray(base.cartas) ? base.cartas : [])
+    );
+
+
     aplicarUIEstados("INV-7000");
 
 
@@ -898,6 +949,14 @@ __renderPrevDocsListTrf($p, t);
 
 // Documentos NUEVOS de la operación
 __setOpDropFileNameTrf($p, t.sustentoOpPrincipal);
+
+    __renderCards(
+      `tab-fondeo-${fondeoCount}`,
+      Array.isArray(t.cartas)
+        ? t.cartas
+        : (Array.isArray(t.cartas) ? t.cartas : [])
+    );
+
 
 if (Array.isArray(t.sustentoOpAdicionales)) {
   t.sustentoOpAdicionales.forEach(name => {
@@ -1142,7 +1201,7 @@ function __buildCartaUrl({ panelId, operacionUrl, transferenciaUrl, paramName })
 
   // construimos a pelo la URL con el query param
   const sep = baseUrl.includes("?") ? "&" : "?";
-  return `${baseUrl}${sep}${encodeURIComponent(key)}=${encodeURIComponent(panelId)}&area=Tesoreria`;
+  return `${baseUrl}${sep}${encodeURIComponent(key)}=${encodeURIComponent(panelId)}&area=Tesoreria&storage_key_carta=cancelacion_inst_corto_plazo`;
 }
 
 

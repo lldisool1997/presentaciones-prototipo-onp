@@ -387,6 +387,8 @@ function build_aprobacion_snapshot(){
       // ⬇⬇⬇  SOLO documentos de OPERACIÓN (base)
    sustentoOpPrincipal: snap?.base?.sustentoOpPrincipal ?? null,
   documentosAdicionalesOperacion: snap?.base?.documentosAdicionalesOperacion ?? [],
+
+    cartas: snap?.base?.cartas || [],
   estado: snap?.base?.estado ?? "REGISTRADO",
 
   };
@@ -419,6 +421,9 @@ function build_aprobacion_snapshot(){
         // ⬇⬇⬇  SOLO documentos de la OPERACIÓN (por transferencia)
       sustentoOpPrincipal: snap?.transferencias?.[i]?.sustentoOpPrincipal ?? null,
       documentosAdicionalesOperacion: snap?.transferencias?.[i]?.documentosAdicionalesOperacion ?? [],
+
+        cartas: snap?.transferencias[i]?.cartas || [],
+        
       estado: snap?.transferencias?.[i]?.estado ?? "REGISTRADO",
 
     };
