@@ -127,6 +127,8 @@ function renderUltimaCarta($anchorSubsection, isoTs, suffix){
 }
 
 
+
+
 // --- MERGE helpers para no perder 'carta_*' ni metadata de docs ---
 function mergeDocLists(prev = [], next = []) {
   // next (lo que está en la UI) manda en nombres y archivos,

@@ -126,6 +126,42 @@ function renderUltimaCarta($anchorSubsection, isoTs, suffix){
   $anchorSubsection.find(`#${spanId}`).text(formatFechaLima(isoTs));
 }
 
+// ------ Helper: crea campos dinámicos por cada documento adicional (solo muestra nombre) ------
+function __renderCards(panelId, cartas) {
+  if (!Array.isArray(cartas) || !cartas.length) return;
+  cartas.forEach((carta) => {
+    $p = $(`#${panelId} .section-cards`);
+    if ($p.length) {
+       let fecha = new Date(carta.fechaISO).toLocaleString("es-PE");
+      const $card = $(`
+               <section class="p-4 border rounded-lg bg-white shadow">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-800 mb-1">📄 Carta Generada</h2>
+      <p class="text-sm text-gray-600">
+        Fecha y hora:
+        <span class="font-medium text-gray-900">${fecha}</span>
+      </p>
+    </div>
+
+    <!-- Botones pequeños -->
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        class="px-2 py-1 text-xs rounded-md bg-emerald-600 hover:bg-emerald-700 text-white"
+        data-action="confirmar"
+      >
+        Confirmar
+      </button>
+    </div>
+  </div>
+</section>
+      `);
+      $p.append($card);
+    }
+  });
+}
+
 
 // --- MERGE helpers para no perder 'carta_*' ni metadata de docs ---
 function mergeDocLists(prev = [], next = []) {
@@ -408,10 +444,10 @@ function populateOperacion(op){
   renderDocsGrid($('#oc_docs_grid'), docs);
 
    // En populateOperacion:
-    if (op.carta_generada) {
+    /*if (op.carta_generada) {
       const ts = op.carta_fecha || (window.ocStorage?.load()?.meta?.cartaUpdatedAt);
       renderUltimaCarta($('#oc_card_operation_confirm'), ts, 'operacion'); // <-- usa el placeholder
-    }
+    }*/
 
   // bloqueo global: todo disabled menos comisión y sustentos
   lockGlobal();
