@@ -251,6 +251,7 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
       actualizarEstadoAprobacion("INV-7000", "base", "INSTRUIDO");
       aprobacion_inst_corto_plazo_upsert();
       aplicarUIEstados("INV-7000");
+      abrirPdfConsolidado();
     });
   });
 }
