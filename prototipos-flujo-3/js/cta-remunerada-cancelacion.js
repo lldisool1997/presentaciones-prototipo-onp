@@ -1849,7 +1849,7 @@ const FORMULA_TEMPLATES = {
     formula: {
       label: "Valor futuro (días / año comercial 360)",
       latex: "F = P\\,\\left(1 + i\\right)^{\\tfrac{n}{360}} \\quad\\Rightarrow\\quad I = F - P",
-      notes: "Se convierte n días a fracción de año comercial: n/360. Si tu política usa año calendario, reemplaza 360 por 365."
+      notes: "Se convierte n días a fracción de año comercial: n/360."
     }
   }
 };
