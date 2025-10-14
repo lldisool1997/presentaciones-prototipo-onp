@@ -1823,7 +1823,7 @@ $(document).on('click','#btnInteres', function(){
     tna: 4.51,       // % (solo visual en header)
     start: '2025-09-01',
     end  : '2025-09-30',
-    saldoInicial: 1_000_000.00,
+    saldoInicial: 743_323_244.00,
     moneda: 'PEN',
     movimientos: [
       { fecha: '2025-09-02', desc: 'Depósito',                  mov:  25000 },
