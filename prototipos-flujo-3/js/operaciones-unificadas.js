@@ -841,7 +841,7 @@ function __renderCards(panelId, cartas) {
         class="px-2 py-1 text-xs rounded-md bg-blue-600 hover:bg-blue-700 text-white"
         data-action="confirmar"
       >
-        Subir Sustento
+        Subir Carta Firmada
       </button>
     </div>
         <div class="flex items-center gap-2">
