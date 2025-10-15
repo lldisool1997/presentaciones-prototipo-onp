@@ -1,23 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
   // ===== Contenidos iniciales =====
   const bodyInicial = `
-    <p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales</strong> (FCR),
-    con RUC <strong>{{RUC_FONDO}}</strong>, a fin de solicitarle efectúe la(s) siguiente(s) operación(es):</p>
-    <br>
-    <p><strong>RECIBIR VÍA BCRP DE:</strong> SCOTIABANK PERÚ SAA / S/ 150,000,000.00</p>
+<p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales – FCR</strong>, 
+con RUC N° <strong>20421413216</strong>, a fin de confirmar la orden de compra de los 
+<strong>INSTRUMENTOS DE CORTO PLAZO COFIDE</strong> del 4° Programa, 2° Emisión y Serie “C”.</p>
 
-    <p><strong>APERTURA/COMPRA DE:</strong><br/>
-       TITULAR: FCR–MACROFONDO<br/>
-       INVERSIÓN: DEPÓSITO A PLAZO<br/>
-       MONTO: S/ 150,000,000.00 &nbsp;&nbsp;&nbsp;&nbsp; <strong>TASA:</strong> 4.59% T.E.A.<br/>
-       PLAZO: 361 días &nbsp;&nbsp;&nbsp;&nbsp; <strong>VENCIMIENTO:</strong> 23/02/2026</p>
-      <br>
-    <p>Asimismo, autorizamos a {{REPRESENTANTE_1}} (DNI {{DOC_REPRESENTANTE_1}}) y/o
-       {{REPRESENTANTE_2}} (DNI {{DOC_REPRESENTANTE_2}}) a recibir la documentación respectiva.</p>
+<p>La compra se efectúa bajo las siguientes condiciones:</p>
+<br>
+<p style="margin-left: 40px; line-height: 1.6;">
+  <strong>TITULAR</strong>:&nbsp;&nbsp;&nbsp;&nbsp;FCR–MACROFONDO<br>
+  <strong>CAVALI</strong>:&nbsp;&nbsp;&nbsp;&nbsp;942630<br>
+  <strong>CANTIDAD BONOS</strong>:&nbsp;&nbsp;&nbsp;&nbsp;2,485.00<br>
+  <strong>VALOR NOMINAL UNITARIO</strong>:&nbsp;&nbsp;&nbsp;&nbsp;S/ 5,000.000<br>
+  <strong>PRECIO</strong>:&nbsp;&nbsp;&nbsp;&nbsp;100%<br>
+  <strong>TASA</strong>:&nbsp;&nbsp;&nbsp;&nbsp;6.0000 % T.N.A.<br>
+  <strong>MONTO</strong>:&nbsp;&nbsp;&nbsp;&nbsp;S/ 12,425,000.00
+</p>
+<br>
+<p>Cabe mencionar que hemos dado las instrucciones al <strong>BANCO SCOTIABANK PERÚ</strong> 
+para que realice el abono de <strong>S/ 12,425,000.00</strong> a la 
+<strong>Cuenta Ordinaria M.N. N° 110301-007101000000000</strong> en el 
+<strong>Banco Central de Reserva del Perú</strong>, denominada COFIDE.</p>
 
-    <p>Agradecidos por la atención, quedamos</p>
-    <p>Atentamente,</p>
-    <p><strong>Back Office Tesorería — FCR</strong></p>
+<p>Asimismo, sírvase transferir los valores a la cuenta matriz N° 342 del <strong>SCOTIABANK</strong>. 
+Para cualquier consulta, contactarse con el Sr. <strong>Jaime Soto Salas</strong>, 
+Jefe de Custodia y Valores.</p>
+
+<p>Agradecidos por la atención, quedamos.</p>
+<p>Atentamente,</p>
+<p><strong>Back Office Tesorería — FCR</strong></p>
+
   `.trim();
 
   const footerInicial = `
@@ -29,6 +41,96 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== TinyMCE =====
   initEditor('#editorBody', 520, bodyInicial, '14px');
   initEditor('#editorFooter', 160, footerInicial, '12px');
+
+  // === CAMBIO AUTOMÁTICO DE CUERPO SEGÚN SELECCIÓN ===
+
+  
+
+  $('#selTexto').on('change', function () {
+  const value = $(this).val();
+  let nuevoBody = '';
+
+
+
+  if (value === 'ORDEN_COMPRA') {
+    nuevoBody = `
+     <p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales – FCR</strong>, 
+con RUC N° <strong>20421413216</strong>, a fin de confirmar la orden de compra de los 
+<strong>INSTRUMENTOS DE CORTO PLAZO COFIDE</strong> del 4° Programa, 2° Emisión y Serie “C”.</p>
+
+<p>La compra se efectúa bajo las siguientes condiciones:</p>
+<br>
+<p style="margin-left: 40px; line-height: 1.6;">
+  <strong>TITULAR</strong>:&nbsp;&nbsp;&nbsp;&nbsp;FCR–MACROFONDO<br>
+  <strong>CAVALI</strong>:&nbsp;&nbsp;&nbsp;&nbsp;942630<br>
+  <strong>CANTIDAD BONOS</strong>:&nbsp;&nbsp;&nbsp;&nbsp;2,485.00<br>
+  <strong>VALOR NOMINAL UNITARIO</strong>:&nbsp;&nbsp;&nbsp;&nbsp;S/ 5,000.000<br>
+  <strong>PRECIO</strong>:&nbsp;&nbsp;&nbsp;&nbsp;100%<br>
+  <strong>TASA</strong>:&nbsp;&nbsp;&nbsp;&nbsp;6.0000 % T.N.A.<br>
+  <strong>MONTO</strong>:&nbsp;&nbsp;&nbsp;&nbsp;S/ 12,425,000.00
+</p>
+<br>
+<p>Cabe mencionar que hemos dado las instrucciones al <strong>BANCO SCOTIABANK PERÚ</strong> 
+para que realice el abono de <strong>S/ 12,425,000.00</strong> a la 
+<strong>Cuenta Ordinaria M.N. N° 110301-007101000000000</strong> en el 
+<strong>Banco Central de Reserva del Perú</strong>, denominada COFIDE.</p>
+
+<p>Asimismo, sírvase transferir los valores a la cuenta matriz N° 342 del <strong>SCOTIABANK</strong>. 
+Para cualquier consulta, contactarse con el Sr. <strong>Jaime Soto Salas</strong>, 
+Jefe de Custodia y Valores.</p>
+
+<p>Agradecidos por la atención, quedamos.</p>
+<p>Atentamente,</p>
+<p><strong>Back Office Tesorería — FCR</strong></p>
+    `;
+  } else if (value === 'CUSTODIO') {
+    nuevoBody = `
+    <p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales – FCR</strong>, 
+con RUC N° <strong>20421413216</strong>, a fin de solicitar el ingreso de 
+<strong>INSTRUMENTOS DE CORTO PLAZO COFIDE</strong> del 4° Programa, 2° Emisión y Serie “C”, 
+que se encuentra en su cuenta matriz, a la siguiente cuenta de custodia:</p>
+<br>
+<p style="margin-left: 40px; line-height: 1.6;">
+  <strong>TITULAR</strong>:&nbsp;&nbsp;&nbsp;&nbsp;FCR–MACROFONDO<br>
+  <strong>ISIN</strong>:&nbsp;&nbsp;&nbsp;&nbsp;PEPXXXXXXX<br>
+  <strong>CAVALI</strong>:&nbsp;&nbsp;&nbsp;&nbsp;942630<br>
+  <strong>VALOR NOMINAL UNITARIO</strong>:&nbsp;&nbsp;&nbsp;&nbsp;S/ 5,000.0000<br>
+  <strong>TASA</strong>:&nbsp;&nbsp;&nbsp;&nbsp;6.0000 % T.N.A.<br>
+  <strong>CANTIDAD BONOS</strong>:&nbsp;&nbsp;&nbsp;&nbsp;2,485.00<br>
+  <strong>PRECIO</strong>:&nbsp;&nbsp;&nbsp;&nbsp;100.0000 %<br>
+  <strong>MONTO</strong>:&nbsp;&nbsp;&nbsp;&nbsp;S/ 12,425,000.00
+</p>
+<br>
+<p>Cabe mencionar que la compra fue realizada con <strong>COFIDE</strong>.</p>
+
+<p>Sin otro particular, quedamos de ustedes.</p>
+
+<p>Atentamente,</p>
+<p><strong>Back Office Tesorería — FCR</strong></p>
+
+    `;
+  } else if (value === 'TPL_REPO') {
+    nuevoBody = `
+      <p>Por la presente, solicitamos realizar una operación de <strong>REPO</strong> conforme a las condiciones previamente acordadas.</p>
+      <p>Los títulos involucrados y las fechas de recompra se detallan en el anexo correspondiente.</p>
+    `;
+  } else {
+    // Valor no reconocido o vacío → cuerpo genérico
+    nuevoBody = `
+      <p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales</strong> (FCR).</p>
+    `;
+  }
+
+  // ✅ Actualiza el editor TinyMCE con el nuevo cuerpo
+  if (tinymce.get('editorBody')) {
+    tinymce.get('editorBody').setContent(nuevoBody.trim());
+  }
+
+  // Actualiza la vista previa automáticamente
+  if (typeof refreshPreview === 'function') refreshPreview();
+});
+
+
 
 
 
