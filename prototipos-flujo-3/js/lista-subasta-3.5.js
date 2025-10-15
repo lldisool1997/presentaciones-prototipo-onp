@@ -701,7 +701,7 @@
   ? 
   `  <div class="actions-cell" style="display:flex;gap:8px;justify-content:center;align-items:center">
       <button class="btn btn-action btn-llamado-registro" onclick="irARegistroAprobacionDIPC('${inv.invPrincipal}')">
-        Instruir Habilitación de Cuenta
+        Instruir Adjudicación
       </button>
     </div>` 
   : ` `
