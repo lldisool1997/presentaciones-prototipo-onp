@@ -253,6 +253,7 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
       Swal.fire({ icon:"success", title:"¡Instrucción registrada!", confirmButtonColor:"#16a34a" });
       actualizarEstadoAprobacion("INV-7000", "base", "INSTRUIDO");
       aprobacion_inst_corto_plazo_upsert();
+      cancelacion_inst_corto_plazo_upsert();
       aplicarUIEstados("INV-7000");
     });
   });
@@ -471,6 +472,35 @@ function aprobacion_inst_corto_plazo(){
 function aprobacion_inst_corto_plazo_upsert() {
   try {
     const KEY = "aprobacion_inst_corto_plazo_depo_corto";
+    const snap = build_aprobacion_snapshot();
+
+    let lista = [];
+    try { lista = JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch { lista = []; }
+
+    const idx = lista.findIndex(x => x && x.opId === snap.opId);
+    const now = new Date().toISOString();
+
+    if (idx === -1) {
+      // No existía: lo creamos (carga inicial con created_at)
+      lista.push({ ...snap, created_at: now, updated_at: now });
+      console.log(`[aprobación][upsert] creado (${snap.opId}).`);
+    } else {
+      // Ya existía: reemplazamos con el snapshot nuevo, conservando created_at
+      const created = lista[idx]?.created_at || now;
+      lista[idx] = { ...snap, created_at: created, updated_at: now };
+      console.log(`[aprobación][upsert] actualizado (${snap.opId}).`);
+    }
+
+    localStorage.setItem(KEY, JSON.stringify(lista));
+  } catch (err) {
+    console.error("Error en upsert de localStorage:", err);
+  }
+}
+
+function cancelacion_inst_corto_plazo_upsert() {
+  try {
+    const KEY = "cancelacion_inst_corto_plazo_depo_corto";
     const snap = build_aprobacion_snapshot();
 
     let lista = [];
