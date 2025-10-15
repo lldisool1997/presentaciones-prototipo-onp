@@ -164,12 +164,12 @@
         </div>
 
 
-          <div class="section-header">3. Información de la instrucción</div>
+          <div class="section-header">3. Información de la cancelación</div>
       <!-- Tabs header -->
       <div class="flex items-center justify-between mb-2 mt-2">
         <ul id="tabs" class="tabs-list">
           <li class="mr-2">
-            <a href="#tab-instruir" class="tab-link active">Aprobar</a>
+            <a href="#tab-instruir" class="tab-link active">Cancelar inversión</a>
           </li>
         </ul>
       </div>
@@ -184,20 +184,20 @@
             <!-- Resumen numérico (solo lectura) -->
             <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div class="grid sm:grid-cols-3 gap-4">
-                <div>
-                  <label class="mini-label">Monto</label>
-                  <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-                         value="150,000,000.00" disabled>
-                </div>
-                <div>
-                  <label class="mini-label">Interés (4.59%)</label>
-                  <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-                         value="6,885,000.00" disabled>
-                </div>
+                  <div>
+              <label class="mini-label">Monto</label>
+                <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
+                      value="12,425,000.00" disabled>
+              </div>
+              <div>
+                <label class="mini-label">Interés (6.0%)</label>
+                <input id="intereses_principal" class="w-full rounded-xl border-2 border-gray-200 p-2.5 font-semibold"
+                      value="741,358.33">
+              </div>
                 <div>
                   <label class="mini-label">Total</label>
-                  <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-                         value="156,885,000.00" disabled>
+                  <input id="total-informativo" class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
+                         value="12,425,000.00" disabled>
                 </div>
               </div>
 
@@ -211,9 +211,17 @@
                   <select id="cuenta_destino_base" class="select2 w-full" disabled></select>
                 </div>
               </div>
+               <div class="grid sm:grid-cols-2 gap-4 mt-4">
+             <div>
+              <label class="mini-label">Fecha de cancelación</label>
+              <input type="date" id="fecha_cancelacion"
+  class="w-full rounded-xl border-2 border-gray-200 p-2.5 font-semibold"
+  value="2025-10-15">
+              </div>
+              </div>
             </section>
 
-            <div class="section-header">3. Registro de la comisión</div>
+            <div class="section-header">4. Registro de la comisión</div>
 
                         <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div class="grid sm:grid-cols-4 gap-4">
@@ -242,12 +250,7 @@
 
             </section>
 
-           <div class="section-header">4. Sustentos documentario de la instrucción</div>
-<div class="p-5 rounded-md bg-gray-50 border border-slate-200">
-  <div id="prev_docs_list" class="list-disc list-inside text-sm text-slate-700 flex flex-row gap-2">
-    <!-- Se llena desde JS -->
-  </div>
-</div>
+
 
 <div class="section-header mt-6">5. Sustento documentario de la operación</div>
 <div id="tab-instruir-op" class="p-5 rounded-md bg-gray-100">
@@ -414,7 +417,7 @@
           </div>
         </div>
 
-          <div class="section-header">3. Registro de la comisión</div>
+          <div class="section-header">4. Registro de la comisión</div>
            <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div class="grid sm:grid-cols-4 gap-4">
   <div>

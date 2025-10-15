@@ -84,9 +84,43 @@ function createDocumentField(panelId, docName, isCustom=false){
     numeralDecimalMark: '.',
     delimiter: ','
   });
+  
+// Inicializa Cleave
+const cleaveIntereses = new Cleave('#intereses_principal', {
+  numeral: true,
+  numeralThousandsGroupStyle: 'thousand',
+  numeralDecimalMark: '.',
+  delimiter: ','
+});
+
+
+function actualizarTotalInstruccion() {
+  const total = 12425000.00;
+  const valor = $('#intereses_principal').val().replace(/,/g, '');
+
+  $('#total-informativo').val((parseFloat(total) + parseFloat(valor)).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }));
+
+  const cleaveIntereses = new Cleave('#total-informativo', {
+  numeral: true,
+  numeralThousandsGroupStyle: 'thousand',
+  numeralDecimalMark: '.',
+  delimiter: ','
+});
+
+}
+
+
 
 // Bind delegados comunes a toda la página (una sola vez)
 function bindDelegatesOnce(){
+
+  // Escuchar en tiempo real
+$('#intereses_principal').on('input', actualizarTotalInstruccion);
+
+
 
 $(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", function(){
   // Make sure input isn't disabled in read-only mode
@@ -1365,6 +1399,8 @@ function bloquearCamposSoloLectura($panel) {
   $panel.find("#newDocumentName_op").prop("disabled", false); // permitir uploads PDF
   $panel.find(".remove-btn").prop("disabled", false); // permitir uploads PDF
   $panel.find(".newDocumentName_op_trf").prop("disabled", false); // permitir uploads PDF
+  $panel.find("#intereses_principal").prop("disabled", false); // permitir uploads PDF
+  $panel.find("#fecha_cancelacion").prop("disabled", false); // permitir uploads PDF
 
   // 3️⃣ Deshabilitar botones excepto los de sustento
   //$panel.find("button").prop("disabled", true);
