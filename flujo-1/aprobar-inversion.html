@@ -1063,7 +1063,8 @@
             if (inversion.estado === 'APROBADO' || inversion.estado === 'GENERADO') {
                 abrirModalDetalle(inversion);
             } else if (inversion.estado === 'REGISTRADO') {
-                abrirModalAprobacion(inversion);
+                //abrirModalAprobacion(inversion);
+                location.href = 'operaciones-unificadas-cuponera.html?area=DIN';
             }
         }
 

@@ -182,7 +182,7 @@
       <div class="flex items-center justify-between mb-2 mt-2">
         <ul id="tabs" class="tabs-list">
           <li class="mr-2">
-            <a href="#tab-instruir" class="tab-link active">Apertura de depósito a plazo</a>
+            <a href="#tab-instruir" class="tab-link active">Compra de la inversión</a>
           </li>
         </ul>
       </div>
@@ -196,25 +196,70 @@
 
             <!-- Resumen numérico (solo lectura) -->
             <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div class="grid sm:grid-cols-3 gap-4">
-                <div>
-                  <label class="mini-label">Monto</label>
-                  <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-                         value="150,000,000.00" disabled>
-                </div>
-                <div>
-                  <label class="mini-label">Interés (4.59%)</label>
-                  <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-                         value="6,904,558.57" disabled>
-                </div>
-                <div>
-                  <label class="mini-label">Total</label>
-                  <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
-                         value="156,904,558.57" disabled>
-                </div>
-              </div>
+                           <div class="grid sm:grid-cols-3 gap-4">
+  <div>
+    <label for="fechaEmision" class="mini-label">Fecha de emisión</label>
+    <input id="fechaEmision" name="fechaEmision" type="date"
+           class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50"
+           value="2025-10-15" disabled>
+  </div>
 
-              <div class="grid sm:grid-cols-2 gap-4 mt-4">
+  <div>
+    <label for="fechaVencimiento" class="mini-label">Fecha de vencimiento</label>
+    <input id="fechaVencimiento" name="fechaVencimiento" type="date"
+           class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50"
+           value="2026-10-15" disabled>
+  </div>
+
+  <div>
+    <label for="periodicidad" class="mini-label">Periodicidad</label>
+    <select id="periodicidad" name="periodicidad"
+            class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50"
+            disabled>
+      <option value="" disabled>Selecciona</option>
+      <option value="UNICO">Único</option>
+      <option value="MENSUAL">Mensual</option>
+      <option value="BIMESTRAL">Bimestral</option>
+      <option value="TRIMESTRAL" selected>Trimestral</option>
+      <option value="SEMESTRAL">Semestral</option>
+      <option value="ANUAL">Anual</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="modalidadPago" class="mini-label">Modalidad de pago</label>
+    <select id="modalidadPago" name="modalidadPago"
+            class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50"
+            disabled>
+      <option value="" disabled>Selecciona</option>
+      <option value="VENCIDO" selected>Vencido</option>
+      <option value="ANTICIPADO">Anticipado</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="tipoTasa" class="mini-label">Tipo de tasa</label>
+    <select id="tipoTasa" name="tipoTasa"
+            class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50"
+            disabled>
+      <option value="" disabled>Selecciona</option>
+      <option value="TNA">TNA</option>
+      <option value="TEA" selected>TEA</option>
+      <option value="TEM">TEM</option>
+      <option value="TED">TED</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="tasa" class="mini-label">Tasa (%)</label>
+    <input id="tasa" name="tasa" type="number" step="0.0001" min="0"
+           class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50"
+           value="4.5900" disabled>
+  </div>
+</div>
+
+
+              <!--<div class="grid sm:grid-cols-2 gap-4 mt-4">
                 <div>
                   <label class="mini-label">Banco destino <span class="text-rose-600">*</span></label>
                   <select id="banco_destino_base" class="select2 w-full" disabled></select>
@@ -223,7 +268,7 @@
                   <label class="mini-label">Cuenta destino <span class="text-rose-600">*</span></label>
                   <select id="cuenta_destino_base" class="select2 w-full" disabled></select>
                 </div>
-              </div>
+              </div>-->
             </section>
 
             <div class="section-header">3. Registro de la comisión</div>
