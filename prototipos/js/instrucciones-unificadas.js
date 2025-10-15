@@ -15,14 +15,16 @@ const BANCOS = [
   { id: "BCP", text: "Banco de Crédito del Perú (BCP)" },
   { id: "Scotiabank", text: "Scotiabank Perú" },
   { id: "BBVA", text: "BBVA Perú" },
-  { id: "Interbank", text: "Interbank" }
+  { id: "Interbank", text: "Interbank" },
+  { id: "BANBIF", text: "BANBIF" },
 ];
 
 const CUENTAS_BANCARIAS = [
   { id: "BCP-PEN-001", banco: "BCP", text: "193-1990153-0-54" },
   { id: "SCOTIA-PEN-002", banco: "Scotiabank", text: "970-0700108" },
   { id: "BBVA-PEN-003", banco: "BBVA", text: "0011-0661-02-00040907" },
-  { id: "INTERBANK-PEN-004", banco: "Interbank", text: "200-3067561380" }
+  { id: "INTERBANK-PEN-004", banco: "Interbank", text: "200-3067561380" },
+  { id: "BANBIF", banco: "BANBIF", text: "200-3067561380" },
 ];
 
 // Estado por panel
@@ -78,57 +80,8 @@ function createDocumentField(panelId, docName, isCustom=false){
   filesUploadedByPanel[panelId][fieldId] = false;
 }
 
-    new Cleave('#comision', {
-    numeral: true,
-    numeralThousandsGroupStyle: 'thousand',
-    numeralDecimalMark: '.',
-    delimiter: ','
-  });
-
 // Bind delegados comunes a toda la página (una sola vez)
 function bindDelegatesOnce(){
-
-$(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", function(){
-  // Make sure input isn't disabled in read-only mode
-  $(this).prop("disabled", false);
-
-  const $group    = $(this).closest(".file-upload-group");
-  const $fileArea = $group.find(".file-upload-area").first();
-  const panelId   = $(this).closest(".tab-panel").attr("id");
-  const fieldId   = $(this).data("field");
-  const file      = this.files && this.files[0];
-
-  const v = validatePdf(file);
-  if(!v.ok){
-    this.value = "";
-    if (panelId && fieldId) {
-      filesUploadedByPanel[panelId] = filesUploadedByPanel[panelId] || {};
-      filesUploadedByPanel[panelId][fieldId] = false
-    }
-    $fileArea
-      .removeClass('ring-2 ring-green-600 border-green-600')
-      .addClass('ring-2 ring-red-400 border-red-400')
-      .html('<div class="upload-text text-red-600">⌫ '+v.msg+'</div><div class="upload-text text-gray-500 text-sm mt-1">PDF</div>');
-    return;
-  }
-
-  if (panelId && fieldId) {
-    filesUploadedByPanel[panelId] = filesUploadedByPanel[panelId] || {};
-    filesUploadedByPanel[panelId][fieldId] = true;
-  }
-
-  $fileArea
-    .removeClass('ring-2 ring-red-400 border-red-400')
-    .html('<div class="file-name">📎 '+file.name+'</div><div class="upload-text text-green-600 text-sm">Archivo cargado correctamente</div>');
-
-  checkFormCompletion(panelId);
-
-  if (typeof aprobacion_inst_corto_plazo_upsert === "function") {
-    aprobacion_inst_corto_plazo_upsert();
-  }
-});
-
-
   if (window.__unifiedBinds) return;
   window.__unifiedBinds = true;
 
@@ -140,52 +93,24 @@ $(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", f
   });
 
   // Cambio de archivo en dinámicos
-  // Cambio de archivo en dinámicos (documentos adicionales)
-$(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", function(){
-  // Asegura que no esté deshabilitado por bloqueo de solo lectura
-  $(this).prop("disabled", false);
-
-  const $group   = $(this).closest(".file-upload-group");
-  const $fileArea= $group.find(".file-upload-area").first();
-  const panelId  = $(this).closest(".tab-panel").attr("id");
-  const fieldId  = $(this).data("field");
-  const file     = this.files && this.files[0];
-
-  const v = validatePdf(file);
-  if(!v.ok){
-    this.value = "";
-    if (panelId && fieldId) {
-      filesUploadedByPanel[panelId] = filesUploadedByPanel[panelId] || {};
+  $(document).on("change", ".file-dyn", function(){
+    const panelId = $(this).closest(".tab-panel").attr("id");
+    const fileArea = $(this).siblings(".file-upload-area");
+    const fieldId  = $(this).data("field");
+    const file     = this.files[0];
+    const v = validatePdf(file);
+    if(!v.ok){
+      this.value = "";
       filesUploadedByPanel[panelId][fieldId] = false;
+      $(fileArea).addClass('ring-2 ring-red-400 border-red-400')
+                 .html('<div class="upload-text text-red-600">⌫ '+v.msg+'</div><div class="upload-text text-gray-500 text-sm mt-1">PDF</div>');
+      return;
     }
-    $fileArea
-      .removeClass('ring-2 ring-green-600 border-green-600')
-      .addClass('ring-2 ring-red-400 border-red-400')
-      .html('<div class="upload-text text-red-600">⌫ '+v.msg+'</div><div class="upload-text text-gray-500 text-sm mt-1">PDF</div>');
-    return;
-  }
-
-  // OK: actualiza estado + UI del card
-  if (panelId && fieldId) {
-    filesUploadedByPanel[panelId] = filesUploadedByPanel[panelId] || {};
     filesUploadedByPanel[panelId][fieldId] = true;
-  }
-
-  $fileArea
-    .removeClass('ring-2 ring-red-400 border-red-400')
-    .html('<div class="file-name">📎 '+file.name+'</div><div class="upload-text text-green-600 text-sm">Archivo cargado correctamente</div>');
-
-  // (Opcional) marca visual verde
-  // $fileArea.addClass('ring-2 ring-green-600 border-green-600');
-
-  // Re-evalúa habilitación del submit del panel
-  checkFormCompletion(panelId);
-
-  // ✅ Persistir al vuelo, para que no “se pierda” al refrescar
-  if (typeof aprobacion_inst_corto_plazo_upsert === "function") {
-    aprobacion_inst_corto_plazo_upsert();
-  }
-});
+    $(fileArea).removeClass('ring-2 ring-red-400 border-red-400')
+               .html('<div class="file-name">📎 '+file.name+'</div><div class="upload-text text-green-600 text-sm">Archivo cargado correctamente</div>');
+    checkFormCompletion(panelId);
+  });
 
   // Remover documento dinámico
   $(document).on("click", ".remove-btn", function(){
@@ -198,12 +123,7 @@ $(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", f
   });
 
   // Add-document (delegado)
-  $(document).off("click.addDocBase", ".add-document-btn").on("click.addDocBase", ".add-document-btn", function(){
-  if ($(this).data("target") === "op") return;
-  // ⬇⬇⬇ evita que el handler genérico corra cuando es para operación
-  if ($(this).data("target") === "op") return;
-
-
+  $(document).on("click", ".add-document-btn", function(){
     const $panel = $(this).closest(".tab-panel");
     const panelId = $panel.attr("id");
     const $input = $panel.find(".newDocumentName");
@@ -222,7 +142,6 @@ $(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", f
       $input.val("");
     }
   });
-
 
   // Drop principal per panel
   $(document).on("click", ".drop", function(e){
@@ -259,84 +178,6 @@ $(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", f
     $(".tab-panel").addClass("hidden");
     $(target).removeClass("hidden");
   });
-
-  // Recalcular total neto
-function actualizarTotalNeto(){
-  const monto = 150000000.00;
-  //const interes = 6885000.00;
-  const comisionStr = ($("#comision").val() || "").replace(/,/g,"");
-  const comision = parseFloat(comisionStr) || 0;
-  const total = monto + comision;
-  $("#totalNeto").val(total.toLocaleString("es-PE", { minimumFractionDigits:2 }));
-}
-
-$("#comision").on("input", actualizarTotalNeto);
-
-// Comisión independiente por panel
-$(document).on("input", ".comision", function(){
-  const $panel = $(this).closest(".tab-panel");
-  const monto = 150000000;
-  const comision = parseFloat($(this).val().replace(/,/g,"")) || 0;
-  const total = monto + comision;
-  $panel.find(".totalNeto").val(total.toLocaleString("es-PE",{minimumFractionDigits:2}));
-});
-// Generar Carta
-$("#btnGenerarCarta").on("click", function(e){
-  e.preventDefault();
-  Swal.fire({
-    title: "Generar carta",
-    text: "Se generará la carta con los datos de la operación.",
-    icon: "info",
-    confirmButtonText: "Aceptar"
-  });
-});
-
-// Drop de Sustento de la Operación
-$("#drop_op").off(".opDrop").on("click.opDrop", function (e) {
-  e.preventDefault();
-  e.stopPropagation();
-  const input = document.getElementById("file_op");
-  if (input) {
-    input.dispatchEvent(new MouseEvent("click", { bubbles: false, cancelable: true, view: window }));
-  }
-});
-$("#file_op").off("change.opDrop").on("change.opDrop", function (e) {
-  e.stopPropagation();
-  const f = this.files[0];
-  const v = validatePdf(f);
-  if (!v.ok) {
-    this.value = "";
-    $("#fileName_op").addClass("hidden").text("");
-    markInvalid($("#drop_op"));
-    toastr.error(v.msg);
-    $("#drop_op .font-semibold").text("📄 Seleccionar archivo");
-    $("#drop_op .text-gray-500").text("PDF/Imagen");
-    return;
-  }
-  clearInvalid($("#drop_op"));
-  $("#fileName_op").removeClass("hidden").text(f.name);
-  toastr.success("Documento de operación adjuntado.");
-});
-
-// "Agregar Documento" para la Operación
-$(document).on("click", ".add-document-btn", function(){
-  const isOp = $(this).data("target")==="op";
-  if (!isOp) return; // otros targets ya los manejas
-
-  const name = ($("#newDocumentName_op").val()||"").trim();
-  if(!name){ toastr.warning("Ingresa un nombre para el documento."); return; }
-
-  // Creamos campo dinámico en el contenedor de operación
-  createDocumentField("tab-instruir-op", name, true);
-  $("#newDocumentName_op").val("");
-});
-
-// Click en "Agregar Carta" (opera para operación y transferencias)
-$(document).on("click", ".btnCarta, .btnCartaOp", function (e) {
-  e.preventDefault();
-  goToCartaForPanel($(this));
-});
-
 }
 
 // Habilitar/deshabilitar submit según adjuntos del panel
@@ -347,13 +188,18 @@ function checkFormCompletion(panelId){
   const keys = Object.keys(map);
   if (!keys.length){ $submit.prop("disabled", false); return; }
   const ok = keys.every(k => !!map[k]);
-  //$submit.prop("disabled", !ok);
+  $submit.prop("disabled", !ok);
 }
 
 // Inicializar el panel base (Instruir)
 function initBasePanel(){
   // Select2
   initBancoCuenta($("#banco_destino_base"), $("#cuenta_destino_base"));
+
+    
+  createDocumentField("tab-instruir", "Subasta de Adjudicación");
+  createDocumentField("tab-instruir", "Colocación Subasta");
+
 
   // Crear contenedor documentos base y dos ejemplos
   //createDocumentField("tab-instruir", "Carta de instrucción (PDF)");
@@ -393,15 +239,13 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
   $("#formLlamado_base").on("submit", function(e){
     e.preventDefault();
 
-    
-    if(!todasTransferenciasInstruidas("INV-7000")){
-      toastr.warning("Todas las transferencias deben estar aprobadas.");
+        if(!todasTransferenciasInstruidas("INV-7000")){
+      toastr.warning("Todas las transferencias deben estar instruidas.");
       return false;
     }
-
     Swal.fire({
       title: "¿Confirmar instrucción?",
-      text: "Se registrará la instrucción del instrumento.",
+      text: "Se registrará la instrucción de la inversión.",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Sí, instruir",
@@ -411,10 +255,9 @@ $("#file_base").off("change.mainDrop").on("change.mainDrop", function (e) {
     }).then(res => {
       if (!res.isConfirmed) return;
       Swal.fire({ icon:"success", title:"¡Instrucción registrada!", confirmButtonColor:"#16a34a" });
-      actualizarEstadoAprobacion("INV-7000", "base", "APROBADO");
+      actualizarEstadoAprobacion("INV-7000", "base", "INSTRUIDO");
       aprobacion_inst_corto_plazo_upsert();
       aplicarUIEstados("INV-7000");
-      abrirPdfConsolidado();
     });
   });
 }
@@ -431,7 +274,7 @@ function addFondeoTab(){
   // Panel (clonado del template)
   const $tpl = $($("#tpl-fondeo").html());
   $tpl.attr("id", panelId);
-  $tpl.find(".cabecera-transferencia").text(`2. Transferencia a banco #${fondeoCount}`);
+  $tpl.find(".section-header").text(`Transferencia a banco #${fondeoCount}`);
   $("#panels").append($tpl);
 
   // Init select2 para los cuatro combos del panel
@@ -451,6 +294,7 @@ function addFondeoTab(){
   filesUploadedByPanel[panelId] = {};
   //createDocumentField(panelId, "Voucher de transferencia (PDF)");
 
+  aprobacion_inst_corto_plazo_upsert();
   ordenarTabs(1);
 
   // Submit de este panel
@@ -465,8 +309,8 @@ function addFondeoTab(){
       return;
     }
     Swal.fire({
-      title: "¿Confirmar operación?",
-      text: "Se registrará la operación de transferencia.",
+      title: "¿Confirmar fondeo?",
+      text: "Se registrará la operación de fondeo.",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Sí, guardar",
@@ -475,8 +319,8 @@ function addFondeoTab(){
       cancelButtonColor: "#6b7280"
     }).then(res => {
       if (!res.isConfirmed) return;
-      Swal.fire({ icon:"success", title:"¡Transferencia registrada!", confirmButtonColor:"#16a34a" });
-      actualizarEstadoAprobacion("INV-7000", "transferencia", "APROBADO", fondeoCount);
+      Swal.fire({ icon:"success", title:"Transferencia registrada", confirmButtonColor:"#16a34a" });
+      actualizarEstadoAprobacion("INV-7000", "transferencia", "INSTRUIDO", fondeoCount);
       aprobacion_inst_corto_plazo_upsert();
       aplicarUIEstados("INV-7000", fondeoCount);
     });
@@ -486,8 +330,6 @@ function addFondeoTab(){
   $(`#tabs a[href="#${panelId}"]`).trigger("click");
 }
 
-
-
 // =============== Helpers de snapshot ===============
 function __getSelectText($sel){
   // Soporta select2 o <select> nativo
@@ -495,23 +337,15 @@ function __getSelectText($sel){
   return (opt && opt.length) ? (opt.text() || null) : ($sel.val() || null);
 }
 
-// Recolecta nombres de inputs dinámicos (solo en el contenedor indicado)
-function __collectDynamicDocsFrom(scopeSelector){
-  const $scope = (scopeSelector instanceof $) ? scopeSelector : $(scopeSelector);
+function __collectDynamicDocs($scope){
+  // Documentos dinámicos (inputs .file-dyn agregados con "Agregar Documento")
   const docs = [];
   $scope.find('input.file-dyn').each(function(){
     const f = this.files && this.files[0] ? this.files[0].name : null;
     if (f) docs.push(f);
-    else {
-      // si ya pintaste el nombre en la UI (sin File real), úsalo como fallback visual
-      const $area = $(this).closest('.file-upload-group').find('.file-upload-area .file-name');
-      const txt = $area.text().trim().replace(/^📎\s*/,'');
-      if (txt) docs.push(txt);
-    }
   });
   return docs;
 }
-
 
 function __collectDropDoc($scope){
   // Documento principal del drop (clase .file + .fileName en fondeo; #file_base en instruir)
@@ -531,43 +365,40 @@ function __parseMontoToNumber(montoStr){
 
 // =============== Snapshot + persistencia ===============
 function build_aprobacion_snapshot(){
-  // ID/código de la inversión (preferir hidden, si no usar el visible "INV-7000")
-  const opId = $("#inv_id_base").val() || $(".info-value").first().text().trim(); // INV-xxxx
-  const codigoInversion = $(".info-value").first().text().trim();                 // Visual en cabecera
-  const comision = __parseMontoToNumber(($("#comision").val() || "").trim());
+   // ID/código de la inversión
+  const opId = $("#inv_id_base").val() || $(".info-value").first().text().trim();
+  const codigoInversion = $(".info-value").first().text().trim();
 
-    const KEY = "aprobacion_cuponera";
-    const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
-    if (!Array.isArray(lista) || !lista.length) return;
+  // Si no hay opId, no seguimos
+  if (!opId) {
+    console.warn("⚠️ build_aprobacion_snapshot: opId vacío");
+    return { opId:null, base:{}, transferencias:[] }; // devuelve algo seguro
+  }
 
-    const snap = lista.find(x => x && x.opId === opId);
-    if (!snap) return;
+  // Intenta leer el snap previo SOLO para defaults (pero no dependas de él)
+  const snap = (__getListaAprobacion().find(x => x.opId === opId)) || {};
+  // -------- Operación principal (tab-instruir) --------
+  const $base = $("#tab-instruir");
+  const base = {
+    tipo: "operacion_principal",
+    opId,
+    codigoInversion,
+    bancoDestinoId: $("#banco_destino_base").val() || null,
+    bancoDestinoTxt: __getSelectText($("#banco_destino_base")),
+    cuentaDestinoId: $("#cuenta_destino_base").val() || null,
+    cuentaDestinoTxt: __getSelectText($("#cuenta_destino_base")),
+    documentoPrincipal: __collectBaseDropDoc(),
+    documentosAdicionales: __collectDynamicDocs($base),
+    sustentoOpPrincipal: __collectOpDropDoc(),
+    documentosAdicionalesOperacion: __collectDynamicDocsFrom("#tab-instruir-op .documentFields"),
+      // ⬇⬇⬇  SOLO documentos de OPERACIÓN (base)
+   sustentoOpPrincipal: snap?.base?.sustentoOpPrincipal ?? null,
+  documentosAdicionalesOperacion: snap?.base?.documentosAdicionalesOperacion ?? [],
+  estado: snap?.base?.estado ?? "REGISTRADO",
 
- // -------- Operación principal (tab-instruir) --------
-const $base = $("#tab-instruir");
-const base = {
-  tipo: "operacion_principal",
-  opId,
-  codigoInversion,
-  comision,
-  bancoDestinoId: $("#banco_destino_base").val() || null,
-  bancoDestinoTxt: __getSelectText($("#banco_destino_base")),
-  cuentaDestinoId: $("#cuenta_destino_base").val() || null,
-  cuentaDestinoTxt: __getSelectText($("#cuenta_destino_base")),
+    cartas: snap?.base?.cartas || [],
 
-  // ⬇⬇⬇  SOLO documentos de INSTRUCCIÓN (no operación)
-  documentoPrincipal: snap.base.documentoPrincipal,
-  documentosAdicionales: snap.base.documentosAdicionales,
-
-  // ⬇⬇⬇  SOLO documentos de OPERACIÓN (base)
-  sustentoOpPrincipal: __collectOpDropDoc(),
-  documentosAdicionalesOperacion: __collectDynamicDocsFrom("#tab-instruir-op .documentFields"),
-  cartas: snap?.base?.cartas || [],
-
-  estado: snap.base.estado,
-};
-
-
+  };
 
   // -------- Transferencias (todas las .fondeo-form existentes) --------
   const transferencias = [];
@@ -578,36 +409,30 @@ const base = {
 
     const moneda = $p.find(".moneda").val() || null;
     const montoStr = ($p.find(".monto").val() || "").trim();
-    const comisionStr = ($p.find(".comision").val() || "").trim();
     const transfer = {
-  tipo: "transferencia",
-  idx: i + 1,
-  moneda,
-  monto: __parseMontoToNumber(montoStr),
-  comision: __parseMontoToNumber(comisionStr),
-  montoRaw: montoStr || null,
-  bancoCargoId: $p.find(".banco").val() || null,
-  bancoCargoTxt: __getSelectText($p.find(".banco")),
-  cuentaCargoId: $p.find(".cuenta").val() || null,
-  cuentaCargoTxt: __getSelectText($p.find(".cuenta")),
-  bancoDestinoId: $p.find(".banco_destino").val() || null,
-  bancoDestinoTxt: __getSelectText($p.find(".banco_destino")),
-  cuentaDestinoId: $p.find(".cuenta_destino").val() || null,
-  cuentaDestinoTxt: __getSelectText($p.find(".cuenta_destino")),
+      tipo: "transferencia",
+      idx: i + 1,
+      moneda,
+      monto: __parseMontoToNumber(montoStr),
+      montoRaw: montoStr || null,
+      bancoCargoId: $p.find(".banco").val() || null,
+      bancoCargoTxt: __getSelectText($p.find(".banco")),
+      cuentaCargoId: $p.find(".cuenta").val() || null,
+      cuentaCargoTxt: __getSelectText($p.find(".cuenta")),
+      bancoDestinoId: $p.find(".banco_destino").val() || null,
+      bancoDestinoTxt: __getSelectText($p.find(".banco_destino")),
+      cuentaDestinoId: $p.find(".cuenta_destino").val() || null,
+      cuentaDestinoTxt: __getSelectText($p.find(".cuenta_destino")),
+      documentoPrincipal: __collectDropDoc($p),
+      documentosAdicionales: __collectDynamicDocs($p),
+        // ⬇⬇⬇  SOLO documentos de la OPERACIÓN (por transferencia)
+      sustentoOpPrincipal: snap?.transferencias?.[i]?.sustentoOpPrincipal ?? null,
+      documentosAdicionalesOperacion: snap?.transferencias?.[i]?.documentosAdicionalesOperacion ?? [],
+      estado: snap?.transferencias?.[i]?.estado ?? "REGISTRADO",
 
-  // ⬇⬇⬇  SOLO documentos de la INSTRUCCIÓN de esta transferencia
-  documentoPrincipal: snap.transferencias[i].documentoPrincipal,                   // voucher (drop)
-  documentosAdicionales: snap.transferencias[i].documentosAdicionales, // si usas ese contenedor para instrucción
+        cartas: snap?.transferencias[i]?.cartas || [],
 
-  // ⬇⬇⬇  SOLO documentos de la OPERACIÓN (por transferencia)
-  sustentoOpPrincipal: __collectOpDropDocTrf($p),
-  documentosAdicionalesOperacion: __collectDynamicDocsFrom($p.find(".documentFields_op_trf")), // OPERACIÓN (transferencia)
-
-  cartas: snap?.transferencias[i]?.cartas || [],
-
-  estado: snap.transferencias[i].estado,
-};
-
+    };
     transferencias.push(transfer);
   });
 
@@ -621,11 +446,11 @@ const base = {
 
 /**
  * Guardar en localStorage SOLO si no existe (carga inicial).
- * Key: "aprobacion_cuponera"
+ * Key: "aprobacion_inst_corto_plazo"
  */
-function aprobacion_cuponera(){
+function aprobacion_inst_corto_plazo(){
   try {
-    const KEY = "aprobacion_cuponera";
+    const KEY = "aprobacion_inst_corto_plazo";
     const snap = build_aprobacion_snapshot();
 
     let lista = [];
@@ -649,11 +474,11 @@ function aprobacion_cuponera(){
 
 /**
  * Upsert del snapshot: si no existe lo crea, si existe lo reemplaza (manteniendo created_at).
- * Key: "aprobacion_cuponera"
+ * Key: "aprobacion_inst_corto_plazo"
  */
 function aprobacion_inst_corto_plazo_upsert() {
   try {
-    const KEY = "aprobacion_cuponera";
+    const KEY = "aprobacion_inst_corto_plazo";
     const snap = build_aprobacion_snapshot();
 
     let lista = [];
@@ -690,21 +515,14 @@ $(function(){
   bindDelegatesOnce();
   initBasePanel();
   // Carga inicial: guardar operación principal + transferencias existentes (si no existe aún)
-  aprobacion_cuponera();
-
-  
-    // Wireup
-  document.getElementById("btnVerPdfConsolidado")?.addEventListener("click", abrirPdfConsolidado);
-  document.getElementById("btnCerrarModal")?.addEventListener("click", cerrarModalPdf);
-  document.getElementById("pdfModal")?.addEventListener("click", function (e) {
-    if (e.target === this) cerrarModalPdf();
-  });
+  aprobacion_inst_corto_plazo();
 
   // 1) Identificamos la inversión mostrada en pantalla
   const __opId = $("#inv_id_base").val() || $(".info-value").first().text().trim(); // ej. "INV-7000"
 
   // 2) Intentamos leer y pintar la data guardada (si existe)
   load_aprobacion_inst_corto_plazo(__opId);
+
 
 
   // Tabs inicial: mostrar instruir
@@ -816,52 +634,6 @@ function __renderDynamicDocsByNames(panelId, names) {
   });
 }
 
-// ------ Helper: crea campos dinámicos por cada documento adicional (solo muestra nombre) ------
-function __renderCards(panelId, cartas) {
-  if (!Array.isArray(cartas) || !cartas.length) return;
-  cartas.forEach((carta) => {
-    $p = $(`#${panelId} .section-cards`);
-    if ($p.length) {
-       let fecha = new Date(carta.fechaISO).toLocaleString("es-PE");
-      const $card = $(`
-               <section class="p-4 border rounded-lg bg-white shadow">
-  <div class="flex items-start justify-between gap-4">
-    <div>
-      <h2 class="text-lg font-semibold text-gray-800 mb-1">📄 Carta Generada</h2>
-      <p class="text-sm text-gray-600">
-        Fecha y hora:
-        <span class="font-medium text-gray-900">${fecha}</span>
-      </p>
-    </div>
-
-    <!-- Botones pequeños -->
-    <div class="flex items-center gap-2">
-      <button
-        type="button"
-        class="px-2 py-1 text-xs rounded-md bg-blue-600 hover:bg-blue-700 text-white"
-        data-action="confirmar"
-      >
-        Subir Carta Firmada
-      </button>
-    </div>
-        <div class="flex items-center gap-2">
-      <button
-        type="button"
-        class="px-2 py-1 text-xs rounded-md bg-emerald-600 hover:bg-emerald-700 text-white"
-        data-action="confirmar"
-      >
-        Confirmar
-      </button>
-    </div>
-  </div>
-</section>
-      `);
-      $p.append($card);
-    }
-  });
-}
-
-
 // ---- Tab principal: leer el archivo del drop (#file_base / #fileName_base)
 function __collectBaseDropDoc() {
   const inp = document.getElementById("file_base");
@@ -886,7 +658,7 @@ function __setBaseDropFileName(fileName) {
  */
 function load_aprobacion_inst_corto_plazo(opId) {
   try {
-    const KEY = "aprobacion_cuponera";
+    const KEY = "aprobacion_inst_corto_plazo";
     const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
     if (!Array.isArray(lista) || !lista.length) return;
 
@@ -899,28 +671,13 @@ function load_aprobacion_inst_corto_plazo(opId) {
     __setSelect2Value($("#banco_destino_base"), base.bancoDestinoId, base.bancoDestinoTxt);
     __setSelect2Value($("#cuenta_destino_base"), base.cuentaDestinoId, base.cuentaDestinoTxt);
 
-    $('#comision').val(base.comision);
-
     // Documento principal (drop)
     __setBaseDropFileName(base.documentoPrincipal);
 
     // Documentos dinámicos
-    __renderDynamicDocsByNames(
-      "tab-instruir-op",
-      Array.isArray(base.documentosAdicionalesOperacion)
-        ? base.documentosAdicionalesOperacion
-        : (Array.isArray(base.sustentoOpAdicionales) ? base.sustentoOpAdicionales : [])
-    );
-
-    __renderCards(
-      "tab-instruir",
-      Array.isArray(base.cartas)
-        ? base.cartas
-        : (Array.isArray(base.cartas) ? base.cartas : [])
-    );
+    __renderDynamicDocsByNames("tab-instruir", base.documentosAdicionales);
 
     aplicarUIEstados("INV-7000");
-
 
     // -------- Transferencias (crear tantas como existan y setear campos) --------
     const arr = Array.isArray(snap.transferencias) ? snap.transferencias : [];
@@ -954,51 +711,14 @@ function load_aprobacion_inst_corto_plazo(opId) {
       __setSelect2Value($p.find(".banco_destino"), t.bancoDestinoId, t.bancoDestinoTxt);
       __setSelect2Value($p.find(".cuenta_destino"), t.cuentaDestinoId, t.cuentaDestinoTxt);
 
-          $p.find('.comision').val(t.comision);
+      // Documento principal del panel de fondeo
+      __setDropFileName($p, t.documentoPrincipal);
 
-              aplicarUIEstados("INV-7000", i + 1);
+      // Documentos dinámicos del panel
+      __renderDynamicDocsByNames(panelId, t.documentosAdicionales);
 
-      // Documentos previos (voucher + adicionales anteriores, solo lectura)
-__renderPrevDocsListTrf($p, t);
-
-// Documentos NUEVOS de la operación
-__setOpDropFileNameTrf($p, t.sustentoOpPrincipal);
-
-    __renderCards(
-      `tab-fondeo-${fondeoCount}`,
-      Array.isArray(t.cartas)
-        ? t.cartas
-        : (Array.isArray(t.cartas) ? t.cartas : [])
-    );
-
-
-if (Array.isArray(t.sustentoOpAdicionales)) {
-  t.sustentoOpAdicionales.forEach(name => {
-   const opExtrasTrf = Array.isArray(t.documentosAdicionalesOperacion)
-  ? t.documentosAdicionalesOperacion
-  : (Array.isArray(t.sustentoOpAdicionales) ? t.sustentoOpAdicionales : []);
-
-
-
-if (opExtrasTrf.length) {
-  opExtrasTrf.forEach(name => {
-    createDocumentField(panelId, name, true);
-    const $last = $p.find(`#field_${panelId}_doc_${docCounterByPanel[panelId]}`);
-
-    // Apendea SIEMPRE al contenedor de OPERACIÓN por transferencia
-    let $cont = $p.find(".documentFields_op_trf");
-    if (!$cont.length) $cont = $p.find(".documentFields"); // fallback por si falta en HTML
-    $cont.append($last);
-
-    $last.find(".file-upload-area").html(
-      `<div class="file-name">📎 ${name}</div>
-       <div class="upload-text text-green-600 text-sm">Archivo previamente adjuntado</div>`
-    );
-  });
-}
-      });
-    }
-
+      
+    aplicarUIEstados("INV-7000", i + 1);
     });
 
     // Deja activo el tab base o el último que prefieras
@@ -1007,239 +727,12 @@ if (opExtrasTrf.length) {
     $(".tab-panel").addClass("hidden");
     $("#tab-instruir").removeClass("hidden");
 
-    // Sustentos previos (solo lectura)
-    __renderPrevDocsList(base);
-
-    // Sustento de la Operación (nuevo)
-    __setOpDropFileName(base.sustentoOpPrincipal);
-    __renderDynamicDocsByNames("tab-instruir-op", base.sustentoOpAdicionales);
-
-    // Bloquear todos los campos de la operación y transferencias, salvo comisiones y sustentos nuevos
-bloquearCamposSoloLectura($("#tab-instruir"));
-$(".tab-panel[id^='tab-fondeo-']").each(function() {
-  bloquearCamposSoloLectura($(this));
-});
-
-desbloquearCamposGlobales();
 
     console.log(`[aprobación][load] snapshot cargado para ${opId}.`);
   } catch (err) {
     console.error("Error al cargar desde localStorage:", err);
   }
 }
-
-
-// ---- Operación: leer/mostrar archivo del drop (#file_op / #fileName_op)
-function __collectOpDropDoc() {
-  const inp = document.getElementById("file_op");
-  if (inp && inp.files && inp.files[0]) return inp.files[0].name;
-  const txt = $("#fileName_op").text().trim();
-  return txt || null;
-}
-function __setOpDropFileName(fileName) {
-  if (!fileName) return;
-  $("#fileName_op").removeClass("hidden").text(fileName);
-  $("#drop_op .font-semibold").text("📎 Archivo cargado");
-  $("#drop_op .text-gray-500").text(fileName);
-}
-
-// ---- Render de lista de "Sustentos previos (solo lectura)"
-function __renderPrevDocsList(base) {
-  const $ul = $("#prev_docs_list").empty();
-  const items = [];
-
-  if (base?.documentoPrincipal) items.push(base.documentoPrincipal);
-  if (Array.isArray(base?.documentosAdicionales)) {
-    base.documentosAdicionales.forEach(n => items.push(n));
-  }
-
-  if (!items.length) {
-    $ul.append('<li class="text-slate-500">No hay documentos previos.</li>');
-    return;
-  }
-
-  items.forEach(n => $ul.append(`<li>${n}</li>`));
-}
-
-
-// Drop "Sustento de la operación" por transferencia
-$(document).on("click", ".drop_op_trf", function(e){
-  e.preventDefault(); e.stopPropagation();
-  $(this).closest(".tab-panel").find(".file_op_trf")[0]
-    ?.dispatchEvent(new MouseEvent("click", { bubbles:false, cancelable:true, view:window }));
-});
-$(document).on("change", ".file_op_trf", function(e){
-  e.stopPropagation();
-  const $panel = $(this).closest(".tab-panel");
-  const f = this.files[0];
-  const v = validatePdf(f);
-  if(!v.ok){
-    this.value = "";
-    $panel.find(".fileName_op_trf").addClass("hidden").text("");
-    markInvalid($panel.find(".drop_op_trf"));
-    toastr.error(v.msg);
-    $panel.find(".drop_op_trf .font-semibold").text("📄 Seleccionar archivo");
-    $panel.find(".drop_op_trf .text-gray-500").text("PDF/Imagen");
-    return;
-  }
-  clearInvalid($panel.find(".drop_op_trf"));
-  $panel.find(".fileName_op_trf").removeClass("hidden").text(f.name);
-  toastr.success("Documento de operación (transferencia) adjuntado.");
-});
-
-// Agregar documento adicional de operación por transferencia
-// Operación por transferencia: crea + apendea en .documentFields_op_trf
-$(document).off("click.addDocOpTrf", ".add-document-btn-op-trf")
-.on("click.addDocOpTrf", ".add-document-btn-op-trf", function(){
-  const $panel = $(this).closest(".tab-panel");
-  const name = ($panel.find(".newDocumentName_op_trf").val() || "").trim();
-  if(!name){ toastr.warning("Ingresa un nombre para el documento."); return; }
-
-  const panelId = $panel.attr("id");
-  createDocumentField(panelId, name, true);
-
-  const $last = $panel.find(`#field_${panelId}_doc_${docCounterByPanel[panelId]}`);
-  let $cont = $panel.find(".documentFields_op_trf");
-  if (!$cont.length) $cont = $panel.find(".documentFields");
-  $cont.append($last);
-
-  $panel.find(".newDocumentName_op_trf").val("");
-
-  if (typeof aprobacion_inst_corto_plazo_upsert === "function") {
-    aprobacion_inst_corto_plazo_upsert();
-  }
-});
-
-
-// ====== Operación principal (tab-instruir) ======
-function __collectOpDropDoc() {
-  const inp = document.getElementById("file_op");
-  if (inp && inp.files && inp.files[0]) return inp.files[0].name;
-  const txt = $("#fileName_op").text().trim();
-  return txt || null;
-}
-function __setOpDropFileName(fileName) {
-  if (!fileName) return;
-  $("#fileName_op").removeClass("hidden").text(fileName);
-  $("#drop_op .font-semibold").text("📎 Archivo cargado");
-  $("#drop_op .text-gray-500").text(fileName);
-}
-function __renderPrevDocsList(base) {
-  const $ul = $("#prev_docs_list").empty();
-  const items = [];
-  if (base?.documentoPrincipal) items.push(base.documentoPrincipal);
-  if (Array.isArray(base?.documentosAdicionales)) items.push(...(base.documentosAdicionales || []));
-  if (!items.length) return $ul.append('<li class="text-slate-500">No hay documentos previos.</li>');
-  items.forEach(n => $ul.append(`
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 w-1/3">
-        <div class="flex items-center justify-between">
-          <div class="font-semibold text-slate-700">${n}</div>
-          <div class="text-xs rounded-full px-2 py-1 bg-green-100 text-green-700">Adjuntado</div>
-        </div>
-        <div class="mt-3 text-sm text-slate-700">
-          <div class="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-3 py-2">
-            <div>📄 <b>colocaciones.pdf</b> <span class="text-slate-500">(0.39 MB)</span></div>
-            <div class="flex gap-2">
-              <button class="btn-ver bg-slate-600 hover:bg-slate-700 text-white text-sm font-semibold px-3 py-1.5 rounded-md"
-                      data-kind="pdf"
-                      data-url="https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf">
-                Ver
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `));
-}
-
-// ====== Transferencia: helpers per-panel ======
-function __collectOpDropDocTrf($panel){
-  const $inp = $panel.find('.file_op_trf').first();
-  if ($inp.length && $inp[0].files && $inp[0].files[0]) return $inp[0].files[0].name;
-  const name = $panel.find('.fileName_op_trf').first().text().trim();
-  return name || null;
-}
-function __setOpDropFileNameTrf($panel, fileName){
-  if(!fileName) return;
-  $panel.find(".fileName_op_trf").removeClass("hidden").text(fileName);
-  $panel.find(".drop_op_trf .font-semibold").text("📎 Archivo cargado");
-  $panel.find(".drop_op_trf .text-gray-500").text(fileName);
-}
-function __renderPrevDocsListTrf($panel, trf){
-  const $ul = $panel.find(".prev_docs_list_trf").empty();
-  const items = [];
-  if (trf?.documentoPrincipal) items.push(trf.documentoPrincipal);
-  if (Array.isArray(trf?.documentosAdicionales)) items.push(...(trf.documentosAdicionales || []));
-  if (!items.length) return $ul.append('<li class="text-slate-500">No hay documentos previos.</li>');
-  items.forEach(n => $ul.append(`
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 w-1/3">
-        <div class="flex items-center justify-between">
-          <div class="font-semibold text-slate-700">${n}</div>
-          <div class="text-xs rounded-full px-2 py-1 bg-green-100 text-green-700">Adjuntado</div>
-        </div>
-        <div class="mt-3 text-sm text-slate-700">
-          <div class="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-3 py-2">
-            <div>📄 <b>colocaciones.pdf</b> <span class="text-slate-500">(0.39 MB)</span></div>
-            <div class="flex gap-2">
-              <button class="btn-ver bg-slate-600 hover:bg-slate-700 text-white text-sm font-semibold px-3 py-1.5 rounded-md"
-                      data-kind="pdf"
-                      data-url="https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf">
-                Ver
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `));
-}
-
-
-// URLs por tipo
-const CARTA_URLS = {
-  operacion: "/cartas/operacion/nueva",       // <-- cambia a tu ruta real
-  transferencia: "/cartas/transferencia/nueva"
-};
-// Nombre del query param
-const CARTA_QUERY_KEY_DEFAULT = "tabId";
-
-// Identifica si el panel es de transferencia por su patrón de id
-function __isTransferPanelId(panelId) {
-  return /^tab-fondeo-\d+$/.test(panelId);
-}
-
-function __buildCartaUrl({ panelId, operacionUrl, transferenciaUrl, paramName }) {
-  const isTransfer = __isTransferPanelId(panelId);
-  const baseUrl = isTransfer 
-    ? (transferenciaUrl || CARTA_URLS.transferencia)
-    : (operacionUrl || CARTA_URLS.operacion);
-    
-  const key = paramName || CARTA_QUERY_KEY_DEFAULT;
-
-  // construimos a pelo la URL con el query param
-  const sep = baseUrl.includes("?") ? "&" : "?";
-  return `${baseUrl}${sep}${encodeURIComponent(key)}=${encodeURIComponent(panelId)}&area=Tesoreria&storage_key_carta=aprobacion_cuponera`;
-}
-
-
-function goToCartaForPanel($btn) {
-  const $panel = $btn.closest(".tab-panel");
-  const panelId = $panel.attr("id") || "tab-instruir"; // base por defecto
-
-  // overrides vía data-attributes (opcionales)
-  const operUrl = $btn.data("urlOperacion");
-  const trfUrl  = $btn.data("urlTransferencia");
-  const param   = $btn.data("param");
-
-  const href = __buildCartaUrl({
-    panelId,
-    operacionUrl: operUrl,
-    transferenciaUrl: trfUrl,
-    paramName: param
-  });
-
-  window.location.href = href;
-}
-
 
  // Abrir modal genérico
     function abrirModal(titulo) {
@@ -1425,33 +918,29 @@ function ordenarTabs(modo = 1) {
   });
 }
 
-/**
- * Deshabilita todos los campos de un panel excepto comisiones y sustentos.
- * @param {jQuery} $panel - panel jQuery (por ejemplo $("#tab-instruir") o $("#tab-fondeo-1"))
- */
-function bloquearCamposSoloLectura($panel) {
-  // 1️⃣ Deshabilitar todos los inputs, selects y textareas
-  $panel.find("input, select, textarea").prop("disabled", true);
-
-  // 2️⃣ Rehabilitar campos permitidos (comisión y sustentos nuevos)
-  $panel.find(".comision").prop("disabled", false);        // campos de comisión
-  $panel.find(".fecha_operacion").prop("disabled", false);        // campos de comisión
-  $panel.find("#comision").prop("disabled", false);        // campos de comisión
-  $panel.find("input[type='file']").prop("disabled", false); // permitir uploads PDF
-  $panel.find("#newDocumentName_op").prop("disabled", false); // permitir uploads PDF
-  $panel.find(".remove-btn").prop("disabled", false); // permitir uploads PDF
-  $panel.find(".newDocumentName_op_trf").prop("disabled", false); // permitir uploads PDF
-
-  // 3️⃣ Deshabilitar botones excepto los de sustento
-  //$panel.find("button").prop("disabled", true);
-  $panel.find(".add-document-btn, .add-document-btn-op-trf").prop("disabled", false); // “Agregar Sustento”
-  $panel.find(".btn-ver").prop("disabled", false); // visor de PDF/Excel
+// ---- Operación: leer/mostrar archivo del drop (#file_op / #fileName_op)
+function __collectOpDropDoc() {
+  const inp = document.getElementById("file_op");
+  if (inp && inp.files && inp.files[0]) return inp.files[0].name;
+  const txt = $("#fileName_op").text().trim();
+  return txt || null;
 }
 
-function desbloquearCamposGlobales(){
-  // Deshabilitar todos los inputs, selects y textareas
-  //$("#confirmar-principal").prop("disabled", false);
-  //$("#agregar-carta-btn").prop("disabled", false);
+// Recolecta nombres de inputs dinámicos (solo en el contenedor indicado)
+function __collectDynamicDocsFrom(scopeSelector){
+  const $scope = (scopeSelector instanceof $) ? scopeSelector : $(scopeSelector);
+  const docs = [];
+  $scope.find('input.file-dyn').each(function(){
+    const f = this.files && this.files[0] ? this.files[0].name : null;
+    if (f) docs.push(f);
+    else {
+      // si ya pintaste el nombre en la UI (sin File real), úsalo como fallback visual
+      const $area = $(this).closest('.file-upload-group').find('.file-upload-area .file-name');
+      const txt = $area.text().trim().replace(/^📎\s*/,'');
+      if (txt) docs.push(txt);
+    }
+  });
+  return docs;
 }
 
 /**
@@ -1463,7 +952,7 @@ function desbloquearCamposGlobales(){
  * @param {number} [idx] - Solo si es transferencia: índice (1, 2, 3, ...)
  */
 function actualizarEstadoAprobacion(opId, tipo, nuevoEstado, idx){
-  const KEY = "aprobacion_cuponera";
+  const KEY = "aprobacion_inst_corto_plazo";
   let lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const i = lista.findIndex(x => x && x.opId === opId);
   if (i === -1) return console.warn("❌ No existe la operación", opId);
@@ -1500,13 +989,13 @@ function actualizarEstadoAprobacion(opId, tipo, nuevoEstado, idx){
 
 /**
  * Aplica UI según estado para operación principal y transferencias.
- * Lee de localStorage clave "aprobacion_cuponera".
+ * Lee de localStorage clave "aprobacion_inst_corto_plazo".
  * Reglas:
  *  - BASE:   REGISTRADO -> mostrar Modificar/Agregar ; INSTRUIDO -> marcar tab y ocultar todo
  *  - TRANSF: REGISTRADO -> mostrar Registrar         ; INSTRUIDO -> marcar tab y ocultar todo
  */
 function aplicarUIEstados(opId, idx = null){
-  const KEY = "aprobacion_cuponera";
+  const KEY = "aprobacion_inst_corto_plazo";
   const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const snap = lista.find(x => x && x.opId === opId);
   if (!snap) return;
@@ -1526,46 +1015,60 @@ function aplicarUIEstados(opId, idx = null){
     const panelSel = `#tab-fondeo-${idx}`;
     const TABBTN_TRF = `#tabs a[href="#tab-fondeo-${idx}"]`;
 
-    const BTN_TRF_REG = `${panelSel} .btn-registrar`;
-    const BTN_TRF_CARTA = `${panelSel} .btn-carta`;
+    const BTN_TRF_REG = `${panelSel} .btn-trf-registrar`;
+    const BTN_TRF_DEL = `${panelSel} .btn-trf-eliminar`;
 
     // Reset
-    show(BTN_TRF_REG); show(BTN_TRF_CARTA);
+    show(BTN_TRF_REG); show(BTN_TRF_DEL);
     unmarkDone(TABBTN_TRF);
 
-    if (estado === 'INSTRUIDO'){
+    if (estado === 'REGISTRADO'){
       // En REGISTRADO: dejar registrar visible
       show(BTN_TRF_REG);
-      show(BTN_TRF_CARTA);
-    } else if (estado === 'APROBADO'){
+      show(BTN_TRF_DEL);
+    } else if (estado === 'INSTRUIDO'){
       // En INSTRUIDO: marcar tab y ocultar acciones
       markDone(TABBTN_TRF);
       hide(BTN_TRF_REG);
-      hide(BTN_TRF_CARTA);
+      hide(BTN_TRF_DEL);
     }
+
+     else if (estado === 'APROBADO'){
+      // En INSTRUIDO: marcar tab y ocultar acciones
+      markDone(TABBTN_TRF);
+      hide(BTN_TRF_REG);
+      hide(BTN_TRF_DEL);
+    }
+
+
     return;
   }
 
   // ===== Operación principal (cuando NO se pasa idx) =====
   const estadoBase = (snap.base?.estado || "").trim().toUpperCase();
   const TABBTN_BASE = '#tabs a[href="#tab-instruir"]';
-  const BTN_BASE_REG = '#tab-instruir .btn-registrar';
-  const BTN_TRF_CARTA = `#tab-instruir .btn-carta`;
+  const BTN_BASE_REG = '#tab-instruir .btn-base-registrar';
   const BTN_ADD_TRF  = '#btnAddFondeo';
 
   // Reset base
   show(BTN_BASE_REG); show(BTN_ADD_TRF);
   unmarkDone(TABBTN_BASE);
 
-  if (estadoBase === 'INSTRUIDO'){
+  if (estadoBase === 'REGISTRADO'){
     // Puedes seguir registrando y agregando transferencias
     show(BTN_BASE_REG);
-    show(BTN_TRF_CARTA);
-  } else if (estadoBase === 'APROBADO'){
+    show(BTN_ADD_TRF);
+  } else if (estadoBase === 'INSTRUIDO'){
     // Tab checkeado y sin botones de acción
     markDone(TABBTN_BASE);
     hide(BTN_BASE_REG);
-    hide(BTN_TRF_CARTA);
+    hide(BTN_ADD_TRF);
+  }
+  else if (estadoBase === 'APROBADO'){
+    // Tab checkeado y sin botones de acción
+    markDone(TABBTN_BASE);
+    hide(BTN_BASE_REG);
+    hide(BTN_ADD_TRF);
   }
 
   // ===== Transferencias (todas) =====
@@ -1584,10 +1087,16 @@ function aplicarUIEstados(opId, idx = null){
     show(BTN_TRF_REG); show(BTN_TRF_DEL);
     unmarkDone(TABBTN_TRF);
 
-    if (estado === 'INSTRUIDO'){
+    if (estado === 'REGISTRADO'){
       show(BTN_TRF_REG);
       show(BTN_TRF_DEL);
-    } else if (estado === 'APROBADO'){
+    } else if (estado === 'INSTRUIDO'){
+      markDone(TABBTN_TRF);
+      hide(BTN_TRF_REG);
+      hide(BTN_TRF_DEL);
+    }
+
+    else if (estado === 'APROBADO'){
       markDone(TABBTN_TRF);
       hide(BTN_TRF_REG);
       hide(BTN_TRF_DEL);
@@ -1600,7 +1109,7 @@ function aplicarUIEstados(opId, idx = null){
  * Retorna false si hay al menos una transferencia con otro estado.
  */
 function todasTransferenciasInstruidas(opId) {
-  const KEY = "aprobacion_cuponera";
+  const KEY = "aprobacion_inst_corto_plazo";
   const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const snap = lista.find(x => x && x.opId === opId);
   if (!snap) return false;
@@ -1609,11 +1118,11 @@ function todasTransferenciasInstruidas(opId) {
   if (trfs.length === 0) return true; // si no hay transferencias, consideramos que está todo listo
 
   // revisa si TODAS están en INSTRUIDO
-  return trfs.every(t => (t.estado || "").trim().toUpperCase() === "APROBADO");
+  return trfs.every(t => (t.estado || "").trim().toUpperCase() === "INSTRUIDO");
 }
 
 
-function __getListaAprobacion(KEY = "aprobacion_cuponera"){
+function __getListaAprobacion(KEY = "aprobacion_inst_corto_plazo"){
   let lista;
   try { lista = JSON.parse(localStorage.getItem(KEY) || "[]"); }
   catch { lista = []; }
@@ -1621,151 +1130,3 @@ function __getListaAprobacion(KEY = "aprobacion_cuponera"){
   // elimina nulos y “huecos”
   return lista.filter(x => x && typeof x === 'object' && typeof x.opId === 'string' && x.opId.trim());
 }
-
-
-
-//PDF COMPROBANTE
-
-  // Lee todo de localStorage
-  function getAllSnaps(KEY = "aprobacion_cuponera") {
-    try {
-      const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
-      return Array.isArray(lista) ? lista.filter(x => x && x.opId) : [];
-    } catch { return []; }
-  }
-
-  // Genera un único PDF con todas las operaciones y sus transferencias
-  async function buildMergedPdfBlob() {
-    const snaps = getAllSnaps();
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ orientation: "p", unit: "pt", format: "a4" });
-
-    const W = doc.internal.pageSize.getWidth();
-    const LEFT = 56;
-    const TOP  = 72;
-    const LINE = 20;
-
-    if (snaps.length === 0) {
-      // PDF con aviso si no hay datos
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(16);
-      doc.text("No hay datos para mostrar.", LEFT, TOP);
-      return doc.output("blob");
-    }
-
-    snaps.forEach((snap, idxOp) => {
-      const base = snap?.base || {};
-      const trfs = Array.isArray(snap?.transferencias) ? snap.transferencias : [];
-      const opNum = idxOp + 1;
-
-      // Si no es la primera operación, añade nueva página
-      if (idxOp > 0) doc.addPage();
-
-      // ===== Página 1 de la operación =====
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(18);
-      doc.text(`Operación ${opNum}`, LEFT, TOP);
-
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "normal");
-
-      let y = TOP + 2*LINE;
-      const linea = (label, value) => {
-        doc.setFont("helvetica", "bold"); doc.text(label, LEFT, y);
-        doc.setFont("helvetica", "normal"); doc.text(String(value ?? "-"), LEFT + 160, y);
-        y += LINE;
-      };
-
-      linea("OP ID:", snap?.opId || "-");
-      linea("Código inversión:", base?.codigoInversion || "-");
-      linea("Moneda destino:", base?.monedaDestinoTxt || base?.monedaDestinoId || "-");
-      linea("Banco destino:", base?.bancoDestinoTxt || base?.bancoDestinoId || "-");
-      linea("Cuenta destino:", base?.cuentaDestinoTxt || base?.cuentaDestinoId || "-");
-      linea("Estado:", (base?.estado || "-"));
-
-      y += LINE/2;
-      doc.setFont("helvetica", "bold");
-      doc.text("Archivos de la operación:", LEFT, y);
-      doc.setFont("helvetica", "normal"); y += LINE;
-
-      if (base?.documentoPrincipal) {
-        doc.text("• Documento principal: " + base.documentoPrincipal, LEFT, y); y += LINE;
-      }
-      (base?.documentosAdicionales || []).forEach(n => {
-        doc.text("• " + n, LEFT, y); y += LINE;
-      });
-
-      // ===== Páginas por transferencia de esta operación =====
-      trfs.forEach((t, idxT) => {
-        doc.addPage();
-
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(18);
-        doc.text(`Transferencia #${idxT + 1} (Operación ${opNum})`, LEFT, TOP);
-
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(11);
-
-        let yy = TOP + 2*LINE;
-        const pl = (label, value) => {
-          doc.setFont("helvetica", "bold"); doc.text(label, LEFT, yy);
-          doc.setFont("helvetica", "normal"); doc.text(String(value ?? "-"), LEFT + 180, yy);
-          yy += LINE;
-        };
-
-        pl("Moneda:", t?.moneda || "-");
-        pl("Monto:", (t?.montoRaw || t?.monto || "-"));
-        pl("Banco (cargo):", t?.bancoCargoTxt || t?.bancoCargoId || "-");
-        pl("Cuenta (cargo):", t?.cuentaCargoTxt || t?.cuentaCargoId || "-");
-        pl("Banco (destino):", t?.bancoDestinoTxt || t?.bancoDestinoId || "-");
-        pl("Cuenta (destino):", t?.cuentaDestinoTxt || t?.cuentaDestinoId || "-");
-        pl("Estado:", t?.estado || "-");
-
-        yy += LINE/2;
-        doc.setFont("helvetica", "bold");
-        doc.text("Archivos de la transferencia:", LEFT, yy);
-        doc.setFont("helvetica", "normal"); yy += LINE;
-
-        if (t?.documentoPrincipal) {
-          doc.text("• Documento principal: " + t.documentoPrincipal, LEFT, yy); yy += LINE;
-        }
-        (t?.documentosAdicionales || []).forEach(n => {
-          doc.text("• " + n, LEFT, yy); yy += LINE;
-        });
-      });
-    });
-
-    return doc.output("blob");
-  }
-
-  // Abre el modal y carga el PDF consolidado
-  async function abrirPdfConsolidado() {
-    const blob = await buildMergedPdfBlob();
-    const url = URL.createObjectURL(blob);
-
-    // Cargar en iframe y botón de descarga
-    const iframe = document.getElementById("pdfViewer");
-    iframe.src = url;
-    const dl = document.getElementById("btnDescargarPdf");
-    dl.href = url;
-
-    // Mostrar modal
-    const modal = document.getElementById("pdfModal");
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
-
-    // Guardar cleanup
-    const cleanup = () => {
-      iframe.src = "about:blank";
-      dl.href = "#";
-      URL.revokeObjectURL(url);
-    };
-    modal._cleanupPdfUrl = cleanup;
-  }
-
-  function cerrarModalPdf() {
-    const modal = document.getElementById("pdfModal");
-    if (modal._cleanupPdfUrl) modal._cleanupPdfUrl();
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
-  }

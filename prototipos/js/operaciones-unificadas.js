@@ -536,7 +536,7 @@ function build_aprobacion_snapshot(){
   const codigoInversion = $(".info-value").first().text().trim();                 // Visual en cabecera
   const comision = __parseMontoToNumber(($("#comision").val() || "").trim());
 
-    const KEY = "aprobacion_cuponera";
+    const KEY = "aprobacion_inst_corto_plazo";
     const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
     if (!Array.isArray(lista) || !lista.length) return;
 
@@ -621,11 +621,11 @@ const base = {
 
 /**
  * Guardar en localStorage SOLO si no existe (carga inicial).
- * Key: "aprobacion_cuponera"
+ * Key: "aprobacion_inst_corto_plazo"
  */
-function aprobacion_cuponera(){
+function aprobacion_inst_corto_plazo(){
   try {
-    const KEY = "aprobacion_cuponera";
+    const KEY = "aprobacion_inst_corto_plazo";
     const snap = build_aprobacion_snapshot();
 
     let lista = [];
@@ -649,11 +649,11 @@ function aprobacion_cuponera(){
 
 /**
  * Upsert del snapshot: si no existe lo crea, si existe lo reemplaza (manteniendo created_at).
- * Key: "aprobacion_cuponera"
+ * Key: "aprobacion_inst_corto_plazo"
  */
 function aprobacion_inst_corto_plazo_upsert() {
   try {
-    const KEY = "aprobacion_cuponera";
+    const KEY = "aprobacion_inst_corto_plazo";
     const snap = build_aprobacion_snapshot();
 
     let lista = [];
@@ -690,7 +690,7 @@ $(function(){
   bindDelegatesOnce();
   initBasePanel();
   // Carga inicial: guardar operación principal + transferencias existentes (si no existe aún)
-  aprobacion_cuponera();
+  aprobacion_inst_corto_plazo();
 
   
     // Wireup
@@ -886,7 +886,7 @@ function __setBaseDropFileName(fileName) {
  */
 function load_aprobacion_inst_corto_plazo(opId) {
   try {
-    const KEY = "aprobacion_cuponera";
+    const KEY = "aprobacion_inst_corto_plazo";
     const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
     if (!Array.isArray(lista) || !lista.length) return;
 
@@ -1217,7 +1217,7 @@ function __buildCartaUrl({ panelId, operacionUrl, transferenciaUrl, paramName })
 
   // construimos a pelo la URL con el query param
   const sep = baseUrl.includes("?") ? "&" : "?";
-  return `${baseUrl}${sep}${encodeURIComponent(key)}=${encodeURIComponent(panelId)}&area=Tesoreria&storage_key_carta=aprobacion_cuponera`;
+  return `${baseUrl}${sep}${encodeURIComponent(key)}=${encodeURIComponent(panelId)}&area=Tesoreria&storage_key_carta=aprobacion_inst_corto_plazo`;
 }
 
 
@@ -1463,7 +1463,7 @@ function desbloquearCamposGlobales(){
  * @param {number} [idx] - Solo si es transferencia: índice (1, 2, 3, ...)
  */
 function actualizarEstadoAprobacion(opId, tipo, nuevoEstado, idx){
-  const KEY = "aprobacion_cuponera";
+  const KEY = "aprobacion_inst_corto_plazo";
   let lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const i = lista.findIndex(x => x && x.opId === opId);
   if (i === -1) return console.warn("❌ No existe la operación", opId);
@@ -1500,13 +1500,13 @@ function actualizarEstadoAprobacion(opId, tipo, nuevoEstado, idx){
 
 /**
  * Aplica UI según estado para operación principal y transferencias.
- * Lee de localStorage clave "aprobacion_cuponera".
+ * Lee de localStorage clave "aprobacion_inst_corto_plazo".
  * Reglas:
  *  - BASE:   REGISTRADO -> mostrar Modificar/Agregar ; INSTRUIDO -> marcar tab y ocultar todo
  *  - TRANSF: REGISTRADO -> mostrar Registrar         ; INSTRUIDO -> marcar tab y ocultar todo
  */
 function aplicarUIEstados(opId, idx = null){
-  const KEY = "aprobacion_cuponera";
+  const KEY = "aprobacion_inst_corto_plazo";
   const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const snap = lista.find(x => x && x.opId === opId);
   if (!snap) return;
@@ -1600,7 +1600,7 @@ function aplicarUIEstados(opId, idx = null){
  * Retorna false si hay al menos una transferencia con otro estado.
  */
 function todasTransferenciasInstruidas(opId) {
-  const KEY = "aprobacion_cuponera";
+  const KEY = "aprobacion_inst_corto_plazo";
   const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
   const snap = lista.find(x => x && x.opId === opId);
   if (!snap) return false;
@@ -1613,7 +1613,7 @@ function todasTransferenciasInstruidas(opId) {
 }
 
 
-function __getListaAprobacion(KEY = "aprobacion_cuponera"){
+function __getListaAprobacion(KEY = "aprobacion_inst_corto_plazo"){
   let lista;
   try { lista = JSON.parse(localStorage.getItem(KEY) || "[]"); }
   catch { lista = []; }
@@ -1627,7 +1627,7 @@ function __getListaAprobacion(KEY = "aprobacion_cuponera"){
 //PDF COMPROBANTE
 
   // Lee todo de localStorage
-  function getAllSnaps(KEY = "aprobacion_cuponera") {
+  function getAllSnaps(KEY = "aprobacion_inst_corto_plazo") {
     try {
       const lista = JSON.parse(localStorage.getItem(KEY) || "[]");
       return Array.isArray(lista) ? lista.filter(x => x && x.opId) : [];
