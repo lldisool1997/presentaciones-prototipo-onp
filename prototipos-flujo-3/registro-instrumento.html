@@ -2807,7 +2807,7 @@
                         ]
                     },
                     "Instrumentos de corto plazo": {
-                        "Instrumento de corto plazo": [
+                          "Instrumento de corto plazo": [
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
@@ -2823,15 +2823,8 @@
                                 "options": [],
                                 "special": "business_unit"
                             },
-
                             {
                                 "label": "Plazo de vencimiento",
-                                // "type": "select",
-                                // "options": [
-                                //     "Corto",
-                                //     "Largo"
-                                // ]
-
                                 "type": "text",
                                 "attributes": {
                                     "readonly": true,
@@ -2839,32 +2832,17 @@
                                 },
                                 "calculated": true
                             },
-                            /*
-                            {
-                                "label": "Emisor",
-                                "type": "text"
-                            },//ha sido reemplazad con lista de entidad financiera*/
                             {
                                 "label": "Emisor",
                                 "type": "select",
                                 "options": [
-                                    "BANCO INTERAMERICANO DE FINANZAS",
+                                    "ALICORP S.A.A",
                                     "VOLCAN COMPAÑIA MINERA S.A.A.",
-                                    "BANCO AGRARIO - AGROBANCO", "COFIDE"
-
-
+                                    "BANCO AGRARIO - AGROBANCO",
+                                    "COFIDE"
                                 ]
                             },
-                              {
-                                "label": "Banco Apertura/Agente Colocador",
-                                "type": "select",
-                                "options": [
-                                    "BANBIF",
-
-
-                                ]
-                            },
-                           /* {
+                            {
                                 "label": "Agente Colocador",
                                 "type": "select",
                                 "options": [
@@ -2891,28 +2869,11 @@
                                     "SUDAMERIS PERU S.A.B.     ",
                                     "WIESE SUDAMERIS S.A.B.     "
                                 ]
-                            },*/
-
-
-                            {
-                                "label": "ISIN",
-                                "type": "text",
-                                "attributes": {
-                                    "placeholder": "Ej: US0378331005"
-                                }
                             },
                             {
                                 "label": "Clasificación de riesgos",
                                 "type": "select",
                                 "options": []
-                            },
-                                                        {
-                                "label": "Plazo calificación",
-                                "type": "select",
-                                "options": [
-                                    "Corto",
-                                    "Largo"
-                                ]
                             },
                             {
                                 "label": "Grupo económico",
@@ -2920,97 +2881,80 @@
                                 "options": []
                             },
                             {
+                                "label": "Denominación",
+                                "type": "text"
+                            },
+                            {
                                 "label": "Destino de emisión",
                                 "type": "text"
                             },
-                           /* {
+                            {
                                 "label": "ISIN",
                                 "type": "text",
                                 "attributes": {
                                     "placeholder": "Ej: US0378331005"
                                 }
-                            },*/
+                            },
                             {
                                 "label": "Moneda",
                                 "type": "select",
-                                "options": [
-
-                                ]
+                                "options": []
                             },
-                              {
-                                "label": "Tipo Tasa (Añadido)",
-                                "type": "select",
-                                "options": [
-                                    "Tasa Efectiva",
-                                ]
-                            },
-                            
                             {
-                                "label": "Tasa Nominal (%)",
-                                "type": "number",
-                                "attributes": {
-                                    "step": "0.0001"
-                                }
-                            },
-                           {
-                                "label": "Tasa Efectiva (%)",
+                                "label": "Valor nominal adquirido",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.01"
                                 }
                             },
-                          /*  {
+                            {
+                                "label": "Rendimiento (%)",
+                                "type": "number",
+                                "attributes": {
+                                    "step": "0.0001"
+                                }
+                            },
+                            {
                                 "label": "Precio (%)",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.0001"
                                 }
-                            },*/
+                            },
                             {
-                                "label": "Monto de adjudicación",
+                                "label": "Monto de adquisición",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.01"
                                 }
                             },
-                           /* {
+                            {
                                 "label": "Intereses al vencimiento",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.01"
                                 }
-                            },*/
-
+                            },
+                            {
+                                "label": "Plazo en días",
+                                "type": "number",
+                                "attributes": {
+                                    "step": "1"
+                                }
+                            },
+                            {
+                                "label": "Fecha de subasta",
+                                "type": "date"
+                            },
                             {
                                 "label": "Fecha de emisión",
                                 "type": "date"
                             },
-                            
                             {
-                                "label": "Fecha de compra/corte (Añadido)",
-                                "type": "date"
-                            },
-                              {
-                                "label": "Fecha Vencimiento",
-                                "type": "date"
-                            },
-                             {
-                                "label": "Fecha Pactada (Añadido)",
-                                "type": "date"
-                            },
-                            {
-                                "label": "Fecha Custodia (Añadido)",
-                                "type": "date"
-                            },
-                            {
-                                "label": "Fecha Negociación (Añadido)",
-                                "type": "date"
-                            },
-                           /* {
                                 "label": "Fecha de redención",
                                 "type": "date"
-                            },*/
-                            /*{
+                            },
+                            {
                                 "label": "Banco cuenta de cargo",
                                 "type": "select",
                                 "options": [],
@@ -3036,9 +2980,9 @@
                                 "type": "select",
                                 "options": [],
                                 "special": "custody_name"
-                            }*/
+                            }
                         ],
-                        "Papel comercial": [
+                       "Papel comercial": [
                             {
                                 "label": "Código del instrumento",
                                 "type": "text",
