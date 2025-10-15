@@ -2900,12 +2900,28 @@
                                 "type": "select",
                                 "options": []
                             },
-                            {
-                                "label": "Valor nominal adquirido",
+                                   {
+                                "label": "Cantidad",
+                                "type": "number",
+                                "attributes": {
+                                    "step": "0"
+                                }
+                            },
+                            ,
+                                   {
+                                "label": "Precio Unitario",
                                 "type": "number",
                                 "attributes": {
                                     "step": "0.01"
                                 }
+                            },
+                            {
+                                "label": "Valor nominal adquirido",
+                                "type": "number",
+                               "attributes": {
+                                    "placeholder": "Se calculará automáticamente"
+                                },
+                                "calculated": true
                             },
                             {
                                 "label": "Rendimiento (%)",
@@ -2925,8 +2941,9 @@
                                 "label": "Monto de adquisición",
                                 "type": "number",
                                 "attributes": {
-                                    "step": "0.01"
-                                }
+                                    "placeholder": "Se calculará automáticamente"
+                                },
+                                "calculated": true
                             },
                             {
                                 "label": "Intereses al vencimiento",
