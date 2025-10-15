@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generar Carta</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- TinyMCE self-hosted -->
+  <script src="https://cdn.jsdelivr.net/npm/tinymce@7.4.1/tinymce.min.js"></script>
+
+  <!-- Exportadores -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.3.1/html-docx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+
+    <!-- Select2 -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+  <!-- App -->
+  <script src="js/generar-carta-aprobacion.js" defer></script>
+  <link rel="stylesheet" href="css/generar-carta-aprobacion.css">
+
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <main class="max-w-screen-2xl mx-auto px-6 py-6 space-y-6">
+    <div id="area-badge"
+     style="position: absolute; top: 15px; right: 20px;
+            background-color: #1e6ba8; color: #fff;
+            font-weight: bold; font-size: 0.9rem;
+            padding: 6px 14px; border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+  Área: -
+</div>
+<div>
+
+                <div class="header rounded-2xl rounded-b-none">
+                <h1>Generación de cartas</h1>
+            </div>
+    <!-- Inversión seleccionada -->
+    <section class="bg-white border border-y-0 border-line shadow-card px-5 pt-3 pb-5">
+         <div class="section-header">1. Información de la Inversión</div>
+                            <div class="info-grid">
+  <div class="info-column">
+    <div class="info-item">
+      <div class="info-label">Código de la Inversión:</div>
+      <div class="info-value">INV-7000</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Banco Apertura:</div>
+      <div class="info-value">BANBIF</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Grupo Económico:</div>
+      <div class="info-value">Grupo Breca</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Tasa Efectiva (%):</div>
+      <div class="info-value">4.59</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha Vencimiento:</div>
+      <div class="info-value">23/02/2026</div>
+    </div>
+  </div>
+
+  <div class="info-column">
+    <div class="info-item">
+      <div class="info-label">Unidad de negocio:</div>
+      <div class="info-value">FCR-MACROFONDO</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Clasificación de riesgos:</div>
+      <div class="info-value">A+</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Plazo calificación:</div>
+      <div class="info-value">Corto</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Monto de adjudicación:</div>
+      <div class="info-value">150,000,000.00</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha de emisión:</div>
+      <div class="info-value">29/09/2025</div>
+    </div>
+  </div>
+
+  <div class="info-column">
+    <div class="info-item">
+      <div class="info-label">Plazo de vencimiento:</div>
+      <div class="info-value">361 días</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Emisor:</div>
+      <div class="info-value">BANCO INTERAMERICANO DE FINANZAS</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Categoría Riesgo Merc.:</div>
+      <div class="info-value">A+</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Tipo Tasa:</div>
+      <div class="info-value">Tasa Efectiva</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Tasa Nominal (%):</div>
+      <div class="info-value">4.4961</div>
+    </div>
+  </div>
+
+  <div class="info-column">
+    <div class="info-item">
+      <div class="info-label">Moneda:</div>
+      <div class="info-value">PEN</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha de compra/corte:</div>
+      <div class="info-value">29/09/2025</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha Custodia:</div>
+      <div class="info-value">27/02/2025</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha Negociación:</div>
+      <div class="info-value">27/02/2025</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">Fecha Pactada:</div>
+      <div class="info-value">01/01/0001</div>
+    </div>
+  </div>
+            </div>
+    </section>
+    <!-- BANDA DE CAMPOS -->
+     <section class="bg-white border border-t-0 border-b-0 shadow-sm px-5 space-y-4 mb-0">
+      <div class="border-b-2 border-[#3396d8] mb-4">
+        <h1 class="text-xl font-semibold text-ink flex items-center">
+          <span class="border-l-4 border-[#3396d8] pl-2">Cabecera</span>
+        </h1>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4">
+        <div>
+          <label class="text-xs text-slate-500">Texto (plantilla)</label>
+          <select id="selTexto" class="w-full rounded-xl border px-3 py-2">
+            <option value="TPL_TRANSFER">RECIBIR VIA BCRP DE UN BANCO/APERTURA 1 o VARIOS</option>
+            <option value="TPL_DP">DEPÓSITO A PLAZO</option>
+            <option value="TPL_REPO">REPO/TRANSFERENCIA</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Atención</label>
+          <select id="txtAtencion" class="w-full rounded-xl border px-3 py-2">
+            <option selected>SR. CÉSAR AUGUSTO REÁTEGUI GARCÍA</option>
+            <option>SR. JUAN PÉREZ</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Carta Referencia</label>
+          <select id="txtReferencia" class="w-full rounded-xl border px-3 py-2">
+            <option selected>SUBGERENTE DE BANCA INSTITUCIONAL</option>
+            <option>GERENTE GENERAL</option>
+          </select>
+        </div>
+
+        <div class="md:col-span-3">
+          <label class="text-xs text-slate-500">Asunto</label>
+          <select id="txtAsunto" class="w-full rounded-xl border px-3 py-2">
+            <option></option> <!-- opción vacía para que no seleccione nada -->
+            <option selected>Solicitud de operación de transferencia y apertura</option>
+            <option>Solicitud de depósito a plazo</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Firma 1</label>
+          <select id="txtFirma1" class="w-full rounded-xl border px-3 py-2">
+            <option selected>LEON NIETO, PEDRO HUN</option>
+            <option>MARQUEZ RAMOS, ANA</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Firma 2</label>
+          <select id="txtFirma2" class="w-full rounded-xl border px-3 py-2">
+            <option selected>GARAY SÁNCHEZ, CARLO</option>
+            <option>CASTRO TORRES, JULIO</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Elaborado</label>
+          <select id="txtElaborado" class="w-full rounded-xl border px-3 py-2">
+            <option selected>70429350 - BEDREGAL JULCA, ELIZABETH</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Autorizado 1</label>
+          <select id="txtAutorizado" class="w-full rounded-xl border px-3 py-2">
+            <option selected>70429350 - ALCALÁ BENITES, JORGE</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Autorizado 2</label>
+          <select id="txtAutorizado2" class="w-full rounded-xl border px-3 py-2">
+            <option selected>70429350 - ALCALÁ BENITES, JORGE</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-500">Número Digital</label>
+          <input id="txtNumDigital" class="w-full rounded-xl border px-3 py-2" value="" disabled>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-2">
+        <label class="flex items-center gap-2">
+          <input id="chkLogo" type="checkbox" class="rounded border-slate-300 text-indigo-600" checked>
+          <span class="text-sm">Imprimir Logo de proveedor</span>
+        </label>
+        <div class="flex items-center gap-2">
+          <button id="btnPreview"  class="px-3 py-2 rounded-lg border hover:bg-slate-50">Vista previa</button>
+          <button id="btnGenerar"  class="px-3 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">Generar PDF</button>
+    
+        </div>
+      </div>
+    </section>
+    <!-- EDITORES -->
+    <section class="grid grid-cols-1 bg-white gap-5 border rounded-b-xl border-y-0 py-5">
+      <div class=" px-5">
+                       <div class="border-b-2 border-[#3396d8] mb-4">
+        <h1 class="text-xl font-semibold text-ink flex items-center">
+            <span class="border-l-4 border-[#3396d8] pl-2">Cuerpo</span>
+        </h1>
+       </div>
+        <textarea id="editorBody"></textarea>
+      </div>
+
+      <div class="   px-5">
+                      <div class="border-b-2 border-[#3396d8] mb-4">
+        <h1 class="text-xl font-semibold text-ink flex items-center">
+            <span class="border-l-4 border-[#3396d8] pl-2">Pie de página</span>
+        </h1>
+       </div>
+        <textarea id="editorFooter"></textarea>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL de Vista Previa -->
+  <div id="previewModal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+    <div class="absolute inset-0 bg-black/60" id="modalBackdrop"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-screen-lg w-full">
+        <div class="flex items-center justify-between px-4 py-3 border-b header rounded-t-xl">
+          <h4 class="font-semibold">Vista previa (A4)</h4>
+          <button id="btnCloseModal" class="rounded-lg px-2 py-1 hover:bg-slate-100">✕</button>
+        </div>
+        <div class="max-h-[80vh] overflow-auto p-4 bg-gray-400">
+          <div id="preview" class="a4 bg-white shadow"></div>
+        </div>
+        <div class="flex justify-end gap-2 px-4 py-3 border-t">
+          <button id="btnCloseModal2" class="px-3 py-2 rounded-lg bg-slate-900 text-white hover:bg-black">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -15,14 +15,16 @@ const BANCOS = [
   { id: "BCP", text: "Banco de Crédito del Perú (BCP)" },
   { id: "Scotiabank", text: "Scotiabank Perú" },
   { id: "BBVA", text: "BBVA Perú" },
-  { id: "Interbank", text: "Interbank" }
+  { id: "Interbank", text: "Interbank" },
+  { id: "COFIDE", text: "COFIDE" },
 ];
 
 const CUENTAS_BANCARIAS = [
   { id: "BCP-PEN-001", banco: "BCP", text: "193-1990153-0-54" },
   { id: "SCOTIA-PEN-002", banco: "Scotiabank", text: "970-0700108" },
   { id: "BBVA-PEN-003", banco: "BBVA", text: "0011-0661-02-00040907" },
-  { id: "INTERBANK-PEN-004", banco: "Interbank", text: "200-3067561380" }
+  { id: "INTERBANK-PEN-004", banco: "Interbank", text: "200-3067561380" },
+  { id: "COFIDE", banco: "COFIDE", text: "110301-00701000000000" }
 ];
 
 // Estado por panel
@@ -48,9 +50,21 @@ function initBancoCuenta($banco, $cuenta){
   $banco.off("change.init").on("change.init", function(){
     const bancoSel = $(this).val();
     const cuentas = CUENTAS_BANCARIAS.filter(c => c.banco === bancoSel);
-    $cuenta.empty().select2({ data: cuentas, placeholder:"Selecciona una cuenta...", allowClear:true, width:"100%" });
+    
+    $cuenta.empty().select2({
+      data: cuentas,
+      placeholder:"Selecciona una cuenta...",
+      allowClear:true,
+      width:"100%"
+    });
+
+    // ✅ Selecciona automáticamente la primera cuenta si no hay valor previo
+    if (!$cuenta.val() && cuentas.length > 0) {
+      $cuenta.val(cuentas[0].id || cuentas[0].value).trigger("change");
+    }
   });
 }
+
 
 // Crear campo de documento dinámico dentro de un panel
 function createDocumentField(panelId, docName, isCustom=false){
@@ -354,7 +368,11 @@ function checkFormCompletion(panelId){
 function initBasePanel(){
   // Select2
   initBancoCuenta($("#banco_destino_base"), $("#cuenta_destino_base"));
-      initBancoCuenta($("#banco_origen_base"), $("#cuenta_origen_base"));
+     // initBancoCuenta($("#banco_origen_base"), $("#cuenta_origen_base"));
+
+    $("#banco_origen_base").select2({ data: BANCOS.filter(e=> e.id == "Scotiabank"), placeholder:"Selecciona un banco...", allowClear:true, width:"100%" });
+  $("#cuenta_origen_base").select2({ data: CUENTAS_BANCARIAS.filter(e=> e.id == "SCOTIA-PEN-002"), allowClear:true, width:"100%" });
+
 
   // Crear contenedor documentos base y dos ejemplos
   //createDocumentField("tab-instruir", "Carta de instrucción (PDF)");

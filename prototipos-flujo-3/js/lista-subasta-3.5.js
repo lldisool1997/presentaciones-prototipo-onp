@@ -1152,9 +1152,9 @@ function irAInstruccionCuentaRemunerada(inversionId){
 
 function irARegistroInstruccionTesoreriaDIPC(inversionId) {
   if (inversionId) {
-    window.location.href = `instrucciones-unificadas-depo-corto.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
+    window.location.href = `operaciones-unificadas-depo-corto.html?area=Tesoreria&inv_id=${encodeURIComponent(inversionId)}`;
   } else {
-    window.location.href = "instrucciones-unificadas-depo-corto.html";
+    window.location.href = "operaciones-unificadas-depo-corto.html";
   }
 }
 
