@@ -296,7 +296,7 @@ $(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", f
 
   // Recalcular total neto
 function actualizarTotalNeto(){
-  const monto = 150000000.00;
+  const monto = 12425000.00;
   //const interes = 6885000.00;
   const comisionStr = ($("#comision").val() || "").replace(/,/g,"");
   const comision = parseFloat(comisionStr) || 0;
