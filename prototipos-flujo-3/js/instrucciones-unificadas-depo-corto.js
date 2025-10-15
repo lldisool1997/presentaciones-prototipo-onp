@@ -15,14 +15,16 @@ const BANCOS = [
   { id: "BCP", text: "Banco de Crédito del Perú (BCP)" },
   { id: "Scotiabank", text: "Scotiabank Perú" },
   { id: "BBVA", text: "BBVA Perú" },
-  { id: "Interbank", text: "Interbank" }
+  { id: "Interbank", text: "Interbank" },
+  { id: "COFIDE", text: "COFIDE" },
 ];
 
 const CUENTAS_BANCARIAS = [
   { id: "BCP-PEN-001", banco: "BCP", text: "193-1990153-0-54" },
   { id: "SCOTIA-PEN-002", banco: "Scotiabank", text: "970-0700108" },
   { id: "BBVA-PEN-003", banco: "BBVA", text: "0011-0661-02-00040907" },
-  { id: "INTERBANK-PEN-004", banco: "Interbank", text: "200-3067561380" }
+  { id: "INTERBANK-PEN-004", banco: "Interbank", text: "200-3067561380" },
+  { id: "COFIDE", banco: "COFIDE", text: "110301-00701000000000" }
 ];
 
 // Estado por panel
