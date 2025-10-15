@@ -864,13 +864,7 @@
             const inversion = inversiones.find(inv => inv.inversionNum === inversionNum);
 
             if (!inversion) return;
-            console.log('INVERSIONN', inversion)
-            // Solo verificar el estado de la inversión
-            if (inversion.estado === 'APROBADO' || inversion.estado === 'GENERADO') {
-                abrirModalDetalle(inversion);
-            } else if (inversion.estado === 'REGISTRADO') {
-                abrirModalAprobacion(inversion);
-            }
+            location.href = 'instrucciones-unificadas-cuponera.html?area=DIN';
         }
 
         // Función para filtrar inversiones
