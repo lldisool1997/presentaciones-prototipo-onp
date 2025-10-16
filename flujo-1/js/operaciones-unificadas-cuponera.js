@@ -262,7 +262,7 @@ $(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", f
 
   // Recalcular total neto
 function actualizarTotalNeto(){
-  const monto = 150000000.00;
+  const monto = 1000000.00;
   //const interes = 6885000.00;
   const comisionStr = ($("#comision").val() || "").replace(/,/g,"");
   const comision = parseFloat(comisionStr) || 0;
@@ -275,7 +275,7 @@ $("#comision").on("input", actualizarTotalNeto);
 // Comisión independiente por panel
 $(document).on("input", ".comision", function(){
   const $panel = $(this).closest(".tab-panel");
-  const monto = 150000000;
+  const monto = 1000000;
   const comision = parseFloat($(this).val().replace(/,/g,"")) || 0;
   const total = monto + comision;
   $panel.find(".totalNeto").val(total.toLocaleString("es-PE",{minimumFractionDigits:2}));
