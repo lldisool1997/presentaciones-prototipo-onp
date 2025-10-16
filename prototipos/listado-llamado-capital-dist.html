@@ -802,7 +802,7 @@ async function instruirMovimiento(i, j){
 async function registrarDesagregado(i, j, tipo){
     const inv = inversiones[i];
   const h = inv.hijos[j];
-  if(h.estado !== "APROBADO"){
+  if(h.estado !== "REGISTRADO"){
     toastr.error("Solo puedes registrar un desagregado de un movimiento en estado APROBADO.");
     return;
   }
