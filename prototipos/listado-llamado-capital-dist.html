@@ -480,7 +480,7 @@
       flagCtas: "1",
       hijos:[
        
-        { id:"C-1001", accion:"registrar-desagregado", codFCR: "C-1001", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"APROBADO" },
+        { id:"C-1001", accion:"registrar-desagregado", codFCR: "C-1001", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"REGISTRADO" },
         { id:"C-1001", accion:"notificar-backoffice", codFCR: "C-1001", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"DESAGREGADO REGISTRADO" },
         { id:"C-1001", accion:"realizar-operacion", codFCR: "C-1001", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"INSTRUIDO" },
         //{ id:"C-1002", tipo:"Distribución",   fecha:"2024-12-05", monto:"-250,000.00",  documento:"dist_1002.pdf", estado:"INSTRUIDO" }
@@ -509,8 +509,8 @@
       ecoInstrument:"ALTERNATIVOS",
       flagCtas: "1",
       hijos:[
-        { id:"C-1001", codFCR: "C-1001", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"OPERACIÓN REGISTRADA" },
-         { id:"D-1001",codFCR: "D-1001",accion:"registrar-desagregado",  tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"APROBADO" },
+        { id:"C-1001", codFCR: "C-1001", tipo:"Llamado",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"CANCELADO" },
+         { id:"D-1001",codFCR: "D-1001",accion:"registrar-desagregado",  tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"REGISTRADO" },
         { id:"D-1001", codFCR: "D-1001",accion:"notificar-backoffice", tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"DESAGREGADO REGISTRADO" },
         { id:"D-1001",codFCR: "D-1001", accion:"realizar-operacion", tipo:"Distribucion",        fecha:"2025-30-09", monto:"1,000,000.00", documento:"documento-notificacion.pdf", estado:"INSTRUIDO" },
       
@@ -695,7 +695,7 @@
                                 : ""
                             }
                               ${
-                                h.estado === "APROBADO" && getAreaParam() === "OGR"
+                                h.estado === "REGISTRADO" && getAreaParam() === "OGR"
                                 ? `<button class="btn btn-action btn-instruir"
                                     onclick="registrarDesagregado(${idx},${j}, '${h.tipo}')">
                                     Registrar Desagregado
