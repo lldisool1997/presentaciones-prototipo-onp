@@ -245,6 +245,11 @@
             color: #856404;
         }
 
+        .status-instruido {
+            background: #78b870;
+            color: #082907;
+        }
+
 
         .status-cancelado {
             background: #f8d7da;
@@ -584,6 +589,7 @@
                             <select id="estado">
                                 <option value="">Todos los estados</option>
                                 <option value="registrado">Registrado</option>
+                                <option value="instruido">Instruido</option>
                                 <option value="registrado">Generado</option>
 
                                 <option value="aprobado">Aprobado</option>
@@ -684,7 +690,7 @@
         const inversiones = [
 
             {
-                estado: 'REGISTRADO',
+                estado: 'INSTRUIDO',
                 inversionNum: '2001',
                 invPrincipal: '2001',
                 producto: 'BS-20SEP2029',
@@ -1062,7 +1068,7 @@
             // Solo verificar el estado de la inversión
             if (inversion.estado === 'APROBADO' || inversion.estado === 'GENERADO') {
                 abrirModalDetalle(inversion);
-            } else if (inversion.estado === 'REGISTRADO') {
+            } else if (inversion.estado === 'INSTRUIDO') {
                 //abrirModalAprobacion(inversion);
                 location.href = 'operaciones-unificadas-cuponera.html?area=DIN';
             }
