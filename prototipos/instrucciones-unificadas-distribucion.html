@@ -44,7 +44,7 @@
 <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
 
   <link rel="stylesheet" href="css/instrucciones-unificadas.css">
-  <script src="js/instrucciones-unificadas-llamado.js" defer></script>
+  <script src="js/instrucciones-unificadas-distribucion.js" defer></script>
 </head>
 <body class="bg-gray-100 text-ink">
   <!-- Área badge -->
@@ -55,7 +55,7 @@
 
   <main class="max-w-screen-2xl mx-auto px-4 py-6">
     <header class="header rounded-2xl rounded-b-none">
-      <h1>Habilitar cuenta bancaria</h1>
+      <h1>Cancelación de la inversión</h1>
     </header>
 
     <!-- Info de la inversión (común) -->
@@ -167,19 +167,19 @@
         </div>
 
         
-          <div class="section-header">3. Registro de la instrucción al backoffice</div>
+          <div class="section-header">3. Registro de la instrucción</div>
 
       <!-- Tabs header -->
       <div class="flex items-center justify-between mb-2 mt-2">
         <ul id="tabs" class="tabs-list">
           <li class="mr-2">
-            <a href="#tab-instruir" class="tab-link active">Apetura de depósito a plazo</a>
+            <a href="#tab-instruir" class="tab-link active">Instruir a Back Office</a>
           </li>
         </ul>
-        <button id="btnAddFondeo"
+        <!--<button id="btnAddFondeo"
           class="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-800">
           Agregar transferencia a banco
-        </button>
+        </button>-->
       </div>
 
       <!-- Panels -->
@@ -197,7 +197,7 @@
                   <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
                          value="150,000,000.00" disabled>
                 </div>
-                <div>
+                                <div>
                   <label class="mini-label">Interés (4.59%)</label>
                   <input class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50 font-semibold"
                          value="6,904,558.57" disabled>
@@ -224,7 +224,7 @@
             <div class="section-header">4. Sustento documentario</div>
             <div class="p-5 rounded-md bg-gray-100">
               <div class="text-center justify-center">
-                <label class="text-sm font-semibold mb-1 text-md">Colocaciones e inversiones de fondos públicos</label>
+                <label class="text-sm font-semibold mb-1">Documento sustento</label>
                 <div id="drop_base" class="dropzone w-[30%] m-auto">
                   <input id="file_base" type="file" accept=".pdf,.png,.jpg,.jpeg" required class="hidden">
                   <div class="flex items-center text-center text-sm">
