@@ -197,8 +197,8 @@ function initBasePanel(){
   initBancoCuenta($("#banco_destino_base"), $("#cuenta_destino_base"));
 
     
-  createDocumentField("tab-instruir", "Subasta de Adjudicación");
-  createDocumentField("tab-instruir", "Colocación Subasta");
+  //createDocumentField("tab-instruir", "Subasta de Adjudicación");
+  //createDocumentField("tab-instruir", "Colocación Subasta");
 
 
   // Crear contenedor documentos base y dos ejemplos
