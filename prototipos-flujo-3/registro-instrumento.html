@@ -1054,6 +1054,27 @@
             }
         }
 
+         function calculateValorNominal_adquirido() {
+            // TODO: CONFIRMAR QUÉ ES "FECHA DE CORTE" - Por ahora usando Fecha de Operación
+            let valorNominal = getFieldValue("Precio Unitario");
+            let cantidad = getFieldValue("Cantidad");
+            const valorNominalAdquirido = getFieldByCalculationId("valor_nominal_adquirido_corto_plazo");
+
+              if (valorNominalAdquirido) {
+                if(!valorNominal)
+                    valorNominal = 0;
+
+                if(!cantidad)
+                    cantidad = 0;
+
+                const resultado = (valorNominal * cantidad);
+                setCalculatedValue(valorNominalAdquirido.input, valorNominalAdquirido.config, resultado);
+
+                // Recalcular interés después de actualizar plazo
+                //setTimeout(() => calculateInteresDeposito(), 50);
+            }
+        }
+
          function calculatePlazoVencimiento_XAEmision() {
             // TODO: CONFIRMAR QUÉ ES "FECHA DE CORTE" - Por ahora usando Fecha de Operación
             const fechaEmision = getFieldValue("Fecha de emisión");
@@ -1066,7 +1087,7 @@
                 const fecha2 = new Date(fechaVencimiento);
                 const diffTime = fecha2 - fecha1;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                
+
                 setCalculatedValue(plazoDias.input, plazoDias.config, diffDays);
 
                 // Recalcular interés después de actualizar plazo
@@ -1560,6 +1581,10 @@
                 //     });
                 // }
 
+                if (fieldConfig.label === "Cantidad" || fieldConfig.label === "Precio Unitario") {
+                    input.addEventListener('change', calculateValorNominal_adquirido);
+                    input.addEventListener('input', calculateValorNominal_adquirido);
+                }
 
             });
         }
@@ -2958,7 +2983,8 @@
                                "attributes": {
                                     "placeholder": "Se calculará automáticamente"
                                 },
-                                "calculated": true
+                                "calculated": true,
+                                "calculationId": "valor_nominal_adquirido_corto_plazo"
                             },
                             {
                                 "label": "Rendimiento (%)",
@@ -10950,6 +10976,7 @@
                 "monto_dolares_forward_calc",
                 "monto_soles_forward_input",
                 "interes_deposito_simple",
+                "valor_nominal_adquirido_corto_plazo",
                 "monto_total_vencimiento",
                 "tasa_tea_sintetico"
             ];
