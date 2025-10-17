@@ -632,11 +632,11 @@
             "Instrumento de corto plazo": {
                 plazoDias: {
                     fechaInicio: "Fecha de emisión",
-                    fechaFin: "Fecha de redención"
+                    fechaFin: "Fecha de vencimiento"
                 },
                 plazoVencimiento: {
                     fechaInicio: "Fecha de emisión",
-                    fechaFin: "Fecha de redención"
+                    fechaFin: "Fecha de vencimiento"
                 }
             }//fin test
 
@@ -1054,6 +1054,26 @@
             }
         }
 
+         function calculatePlazoVencimiento_XAEmision() {
+            // TODO: CONFIRMAR QUÉ ES "FECHA DE CORTE" - Por ahora usando Fecha de Operación
+            const fechaEmision = getFieldValue("Fecha de emisión");
+            const fechaVencimiento = getFieldValue("Fecha de vencimiento");
+            const plazoDias = getFieldByCalculationId("plazo_dias_corto_plazo");
+
+
+              if (fechaEmision && fechaVencimiento && plazoDias) {
+                const fecha1 = new Date(fechaEmision);
+                const fecha2 = new Date(fechaVencimiento);
+                const diffTime = fecha2 - fecha1;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                setCalculatedValue(plazoDias.input, plazoDias.config, diffDays);
+
+                // Recalcular interés después de actualizar plazo
+                //setTimeout(() => calculateInteresDeposito(), 50);
+            }
+        }
+
         //NILTON ESTE METODO ES PLAZO COMO EL ANTERIO METODO PERO POR TIPO DE INSTRUMENTO:
 
 
@@ -1447,6 +1467,14 @@
                 )) {
                     input.addEventListener('change', calculatePlazoVencimiento);
                 }
+
+                if (mappingPlazoVencimiento && (
+                    fieldConfig.label === mappingPlazoVencimiento.fechaInicio ||
+                    fieldConfig.label === mappingPlazoVencimiento.fechaFin
+                )) {
+                    input.addEventListener('change', calculatePlazoVencimiento_XAEmision);
+                }
+
 
 
 
@@ -2830,7 +2858,8 @@
                                     "readonly": true,
                                     "placeholder": "Se calculará automáticamente"
                                 },
-                                "calculated": true
+                                "calculated": true,
+                                 "calculationId": "plazo_vencimiento"
                             },
                             {
                                 "label": "Emisor",
@@ -2976,8 +3005,11 @@
                                 "label": "Plazo en días",
                                 "type": "number",
                                 "attributes": {
-                                    "step": "1"
-                                }
+                                    "step": "1",
+                                    "readonly": true
+                                },
+                                 "calculated": true,
+                                  "calculationId": "plazo_dias_corto_plazo"
                             },
                             {
                                 "label": "Fecha de subasta",
@@ -2989,6 +3021,10 @@
                             },
                             {
                                 "label": "Fecha de redención",
+                                "type": "date"
+                            },
+                             {
+                                "label": "Fecha de vencimiento",
                                 "type": "date"
                             },
                             {
