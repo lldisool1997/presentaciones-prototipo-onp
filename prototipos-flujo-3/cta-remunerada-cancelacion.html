@@ -247,13 +247,26 @@
                   <input id="fecha_operacion" type="date" class="w-full rounded-xl border-2 border-gray-200 p-2.5  font-semibold"
                          value="2025-10-14">
                 </div>
-                 <div>
-                  <label class="mini-label">Tipo de Tasa</label>
-                  <select class="w-full rounded-xl border-2 border-gray-200 p-2.5  font-semibold" id="tasa_tea_tna">
-                    <option>TEA</option>
-                    <option>TNA</option>
-                  </select>
-                </div>
+
+                  <div class="flex flex-row gap-3">
+                    <div class="w-1/2">
+                      <label class="mini-label">Moneda</label>
+                      <select class="w-full rounded-xl border-2 border-gray-200 p-2.5  font-semibold" id="id_moneda">
+                        <option>PEN</option>
+                        <option>USD</option>
+                      </select>
+                    </div >
+                       <div class="w-1/2">
+                      <label class="mini-label">Tipo de Tasa</label>
+                      <select class="w-full rounded-xl border-2 border-gray-200 p-2.5  font-semibold" id="tasa_tea_tna">
+                        <option>TEA</option>
+                        <option>TNA</option>
+                      </select>
+                    </div>
+                  </div>
+
+               
+             
                  <div>
                   <label class="mini-label">Tasa Remunerada</label>
                   <input type="text" class="w-full rounded-xl border-2 border-gray-200 p-2.5  font-semibold"
