@@ -1075,6 +1075,27 @@
             }
         }
 
+        function calculateMontoAdquisicionCortoPlazo() {
+            // TODO: CONFIRMAR QUÉ ES "FECHA DE CORTE" - Por ahora usando Fecha de Operación
+            let valorNominalAquirido = getFieldValue("Valor nominal adquirido");
+            let precio = getFieldValue("Precio (%)");
+            const montoAdquisicion = getFieldByCalculationId("monto_de_adquisicion");
+
+            if (montoAdquisicion) {
+                if(!valorNominalAquirido)
+                    valorNominalAquirido = 0;
+
+                if(!precio)
+                    precio = 0;
+
+                const resultado = (valorNominalAquirido * (precio/100));
+                setCalculatedValue(montoAdquisicion.input, montoAdquisicion.config, resultado);
+
+                // Recalcular interés después de actualizar plazo
+                //setTimeout(() => calculateInteresDeposito(), 50);
+            }
+        }
+
          function calculatePlazoVencimiento_XAEmision() {
             // TODO: CONFIRMAR QUÉ ES "FECHA DE CORTE" - Por ahora usando Fecha de Operación
             const fechaEmision = getFieldValue("Fecha de emisión");
@@ -1584,6 +1605,11 @@
                 if (fieldConfig.label === "Cantidad" || fieldConfig.label === "Precio Unitario") {
                     input.addEventListener('change', calculateValorNominal_adquirido);
                     input.addEventListener('input', calculateValorNominal_adquirido);
+                }
+
+                if (fieldConfig.label === "Valor nominal adquirido" || fieldConfig.label === "Precio (%)") {
+                    input.addEventListener('change', calculateMontoAdquisicionCortoPlazo);
+                    input.addEventListener('input', calculateMontoAdquisicionCortoPlazo);
                 }
 
             });
@@ -3018,7 +3044,8 @@
                                 "attributes": {
                                     "placeholder": "Se calculará automáticamente"
                                 },
-                                "calculated": true
+                                "calculated": true,
+                                "calculationId": "monto_de_adquisicion"
                             },
                             {
                                 "label": "Intereses al vencimiento",
