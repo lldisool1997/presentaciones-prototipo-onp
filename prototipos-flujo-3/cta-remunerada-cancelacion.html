@@ -286,7 +286,7 @@
                     <div class="w-full flex flex-col align-middle justify-center">
                                             <button id="btnFormula" type="button" class="px-3 py-2 my-1 rounded bg-indigo-600 text-white"
                     data-formula-key="interes_compuesto_fcr">
-              Ver fórmula
+              Validar fórmula
             </button>
             
                     </div>
@@ -697,7 +697,7 @@
 
 <!-- Modal: Plantilla de Fórmula (Registro externo) -->
 <div id="formulaModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[60]">
-  <div class="bg-white rounded-2xl shadow-panel w-[780px] max-w-[96vw]">
+  <div class="bg-white rounded-2xl shadow-panel w-[800px] max-w-[96vw]">
     <div class="flex items-center justify-between bg-[#0F172A] text-white px-5 py-3 rounded-t-2xl">
       <div class="flex items-center gap-2">
         <span class="px-2 py-0.5 text-xs rounded bg-emerald-500/20 text-emerald-100 border border-emerald-500/50">
@@ -728,13 +728,22 @@
 
       <!-- Variables incluidas -->
       <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
-        <div class="grid sm:grid-cols-3 gap-4 items-end">
+        <div class="grid sm:grid-cols-4 gap-4 items-end">
   <div>
     <label class="text-gray-600 text-sm block mb-1">Banco</label>
     <div class="rounded-xl border-2 border-gray-200 bg-gray-50 p-2.5 font-semibold text-gray-800 text-center">
       Interbank
     </div>
   </div>
+    <div>
+    <label class="text-gray-600 text-sm block mb-1">Moneda</label>
+    <select id="moneda_modal"
+            class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-white font-semibold focus:border-blue-400 focus:ring-0">
+      <option>PEN</option>
+      <option>USD</option>
+    </select>
+  </div>
+
 
   <div>
     <label class="text-gray-600 text-sm block mb-1">Tipo de Tasa</label>
@@ -747,8 +756,8 @@
 
   <div>
     <label class="text-gray-600 text-sm block mb-1">Tasa</label>
-    <div class="rounded-xl border-2 border-gray-200 bg-gray-50 p-2.5 font-semibold text-gray-800 text-center">
-      4.51%
+    <div id="tasa_modal" class="rounded-xl border-2 border-gray-200 bg-gray-50 p-2.5 font-semibold text-gray-800 text-center">
+      4.60%
     </div>
   </div>
 </div>

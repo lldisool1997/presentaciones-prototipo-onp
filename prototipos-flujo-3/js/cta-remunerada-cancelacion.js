@@ -166,6 +166,18 @@ function createDocumentField(panelId, docName, isCustom=false){
 // Bind delegados comunes a toda la página (una sola vez)
 function bindDelegatesOnce(){
 
+
+  $(document).on("change", "#tipo_tasa_modal", function(){
+    if($(this).val()==="TEA"){
+      $('#tasa_modal').text("4.60%");
+    }
+    else{
+        $('#tasa_modal').text("4.51%");
+    }
+
+
+  });
+
 $(document).off("change.addDyn", ".file-dyn").on("change.addDyn", ".file-dyn", function(){
   // Make sure input isn't disabled in read-only mode
   $(this).prop("disabled", false);
@@ -1849,7 +1861,7 @@ const FORMULA_TEMPLATES = {
     },
     variables: [
       { sym: "P", desc: "Principal o capital inicial" },
-      { sym: "i", desc: "Tasa efectiva anual (decimal, TEA)" },
+      { sym: "i", desc: "Tasa efectiva anual (decimal, TEA, TNA)" },
       { sym: "n", desc: "Número de días del periodo" },
       { sym: "I", desc: "Interés generado" },
       { sym: "F", desc: "Valor futuro" }
