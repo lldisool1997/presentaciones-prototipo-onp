@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Instrucciones Pagos Diversos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/instrucciones.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 font-inter">
+  <div id="app" class="max-w-6xl mx-auto p-4 md:p-6 space-y-4">
+
+    <div class="bg-sky-900 text-white rounded-xl px-5 py-3 text-center text-lg font-semibold">
+      Instrucciones Pagos Diversos
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 space-y-3">
+      <div class="flex flex-col md:flex-row gap-3 md:items-end">
+        <div class="w-full md:w-96">
+          <label class="block text-xs text-slate-500 mb-1">Tipo de transacción</label>
+          <select v-model="ui.selectedType" class="tw-input w-full">
+            <option value="" disabled>— Selecciona —</option>
+            <option v-for="t in master.types" :key="t" :value="t">{{ t }}</option>
+          </select>
+        </div>
+        <button class="tw-btn" @click="addType">Agregar tipo de transacción +</button>
+        <div class="md:ml-auto flex items-center gap-2">
+          <span class="tw-pill">Aprobadas: {{ approvedCount }}</span>
+          <button class="tw-btn-primary" @click="guardarTodo">Guardar instrucciones</button>
+        </div>
+      </div>
+      <div v-if="state.typesAdded?.length" class="flex flex-wrap gap-2 pt-2">
+        <span v-for="(t, idx) in state.typesAdded" :key="t" class="tw-chip">
+          {{ t }}
+          <button class="tw-chip-x" @click="state.typesAdded.splice(idx, 1)">×</button>
+        </span>
+      </div>
+    </div>
+
+    <!-- Tabs de Tipo de Transferencia -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+      <div class="px-4 py-2 border-b border-slate-200 font-semibold">
+        Tipos de Transacción
+      </div>
+      <div class="flex flex-wrap gap-2 px-4 pt-3 border-b border-slate-200">
+        <button v-for="(type, idx) in state.typesAdded" :key="idx" class="tw-tab" :class="idx === ui.activeTab ? 'tw-tab-active' : ''" @click="ui.activeTab = idx">
+          {{ type }}
+        </button>
+      </div>
+
+      <!-- Paneles de Instrucciones para cada Tipo de Transferencia -->
+      <div v-for="(type, idx) in state.typesAdded" :key="idx" v-show="idx === ui.activeTab">
+        <div class="px-4 py-2 border-b border-slate-200 font-semibold">Instrucciones para {{ type }}</div>
+        
+        <!-- Tabs de Instrucción dentro del tipo de transacción -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
+          <div class="px-4 py-2 border-b border-slate-200 flex items-center gap-3">
+            <span class="font-semibold">Instrucciones</span>
+            <button class="tw-btn" @click="addInstruction(type)">Agregar Instrucción</button>
+          </div>
+          <div class="flex flex-wrap gap-2 px-4 pt-3 border-b border-slate-200">
+            <button v-for="(ins, i) in state.instructionsByType[type]" :key="ins.id" class="tw-tab" :class="i === ui.activeInstructionTab ? 'tw-tab-active' : ''" @click="ui.activeInstructionTab = i">
+              Instrucción #{{ i + 1 }}
+            </button>
+          </div>
+
+          <!-- Contenido de la Instrucción seleccionada -->
+          <div v-if="curr" class="p-4 space-y-4">
+            <!-- Descripción y Producto como Textareas -->
+            <div class="grid md:grid-cols-2 gap-3">
+              <div>
+                <label class="tw-label">Descripción</label>
+                <textarea class="tw-input w-full" v-model="curr.descripcion" placeholder="Descripción de la instrucción"></textarea>
+              </div>
+              <div>
+                <label class="tw-label">Producto</label>
+                <textarea class="tw-input w-full" v-model="curr.producto" placeholder="p.ej. Con el producto X"></textarea>
+              </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="grid md:grid-cols-4 gap-3">
+              <div>
+                <label class="tw-label">Unidad de Negocio</label>
+                <select class="tw-input w-full" v-model="curr.unidad">
+                  <option v-for="u in master.unidades" :key="u">{{ u }}</option>
+                </select>
+              </div>
+              <div>
+                <label class="tw-label">Fecha de Operación</label>
+                <input type="date" class="tw-input w-full" v-model="curr.fecha">
+              </div>
+              <div>
+                <label class="tw-label">Moneda</label>
+                <select class="tw-input w-full" v-model="curr.moneda">
+                  <option>PEN</option><option>USD</option>
+                </select>
+              </div>
+              <div>
+                <label class="tw-label">Importe</label>
+                <input class="tw-input w-full" v-model="curr.importe" placeholder="1,000.00">
+              </div>
+            </div>
+
+            <!-- Tabla de detalles -->
+            <div class="my-4">
+              <button class="tw-btn" @click="agregarFila(curr)">+ Agregar fila</button>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm align-top">
+                  <thead class="text-xs text-slate-500">
+                    <tr>
+                      <th class="p-2 text-left">Banco</th>
+                      <th class="p-2 text-left">Saldo Cuenta</th>
+                      <th class="p-2 text-left">Pensión</th>
+                      <th class="p-2 text-left">Cantidad Pensionistas</th>
+                      <th class="p-2 text-left">Neto Habilitar</th>
+                      <th class="p-2 text-left">Aprob.</th>
+                      <th class="p-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(r, ri) in curr.detalle" :key="r.uid" class="bg-slate-50 border-y">
+                      <td class="p-2 min-w-[10rem]">
+                        <select class="tw-input w-full" v-model="r.banco">
+                          <option value="" disabled>—</option>
+                          <option v-for="b in master.bancos" :key="b">{{ b }}</option>
+                        </select>
+                      </td>
+                      <td class="p-2"><input class="tw-input w-full" v-model="r.saldo" placeholder="0.00"></td>
+                      <td class="p-2"><input class="tw-input w-full" v-model="r.pension" placeholder="0.00"></td>
+                      <td class="p-2"><input class="tw-input w-full" v-model="r.cantidad" placeholder="0"></td>
+                      <td class="p-2"><input class="tw-input w-full" v-model="r.neto" placeholder="0.00"></td>
+                      <td class="p-2 text-center">
+                        <input type="checkbox" v-model="r.aprob" class="accent-sky-600">
+                      </td>
+                      <td class="p-2">
+                        <div class="flex gap-2">
+                          <button class="tw-btn" @click="duplicarFila(curr, ri)">Duplicar</button>
+                          <button class="tw-btn-danger" @click="curr.detalle.splice(ri, 1)">Eliminar</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <!-- Sustento Documentario -->
+            <div>
+              <div class="font-semibold mb-2">Sustento Documentario</div>
+              <div class="grid md:grid-cols-2 gap-3">
+                <div>
+                  <label class="tw-label">Documento sustento de transferencia</label>
+                  <input type="file" class="tw-input w-full" @change="onFile($event)">
+                  <p class="text-xs text-slate-500 mt-1">PDF / Imagen. (Demo: se guarda en memoria)</p>
+                </div>
+                <div>
+                  <label class="tw-label">Agregar documento adicional</label>
+                  <div class="flex gap-2">
+                    <input class="tw-input w-full" v-model="ui.newDocName" placeholder="Nombre del nuevo documento">
+                    <button class="tw-btn" @click="agregarDoc">Agregar</button>
+                  </div>
+                </div>
+              </div>
+              <div v-if="curr.docs?.length" class="flex flex-wrap gap-2 mt-3">
+                <span class="tw-chip" v-for="(d, di) in curr.docs" :key="d.id">
+                  {{ d.nombre }}
+                  <button class="tw-chip-x" @click="curr.docs.splice(di, 1)">×</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="./js/instrucciones.js"></script>
+</body>
+</html>
