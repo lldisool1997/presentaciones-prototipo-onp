@@ -1,4 +1,8 @@
 [
+    { "codigo": "TFB", "descripcion": "Transferencias Bancarias", "categoria": "Transferencia", "tienePersona": false, "idPersona": null },
+    { "codigo": "EMC", "descripcion": "De Macrofondo a otros fondos", "categoria": "Egreso", "tienePersona": false, "idPersona": null },
+  { "codigo": "RMC", "descripcion": "Recepción Otros de macrofondo", "categoria": "Ingreso", "tienePersona": false, "idPersona": null },
+  
   { "codigo": "DAM", "descripcion": "DEV. AÑOS ANT.F.MINERO", "categoria": "Egreso", "tienePersona": true, "idPersona": "per-001" },
   { "codigo": "PP3", "descripcion": "Pago Pensiones Entel Perú", "categoria": "Egreso", "tienePersona": true, "idPersona": "per-002" },
   { "codigo": "PP9", "descripcion": "Pago Pensiones Centromin", "categoria": "Egreso", "tienePersona": true, "idPersona": "per-003" },
@@ -61,7 +65,7 @@
   { "codigo": "TPE", "descripcion": "Transf.de Pagos con Error", "categoria": "Egreso", "tienePersona": false, "idPersona": null },
   { "codigo": "TMC", "descripcion": "Transferencia a Macrofondo", "categoria": "Egreso", "tienePersona": false, "idPersona": null },
   { "codigo": "RET", "descripcion": "Retención", "categoria": "Egreso", "tienePersona": false, "idPersona": null },
-  { "codigo": "TFB", "descripcion": "Transferencias Bancarias", "categoria": "Transferencia", "tienePersona": false, "idPersona": null },
+
   { "codigo": "CME", "descripcion": "Compra Moneda Extranjera", "categoria": "Transferencia", "tienePersona": false, "idPersona": null },
   { "codigo": "RAP", "descripcion": "Recaudacion Asegura Tu Pension", "categoria": "Ingreso", "tienePersona": false, "idPersona": null },
   { "codigo": "PQA", "descripcion": "Anulaciones Pesquero AA", "categoria": "Ingreso", "tienePersona": true, "idPersona": "per-001" },
@@ -74,4 +78,5 @@
   { "codigo": "ICE", "descripcion": "Intereses Ctas Bancarias Euros", "categoria": "Ingreso", "tienePersona": false, "idPersona": null },
   { "codigo": "ICD", "descripcion": "Intereses Ctas Bancarias Dólar", "categoria": "Ingreso", "tienePersona": false, "idPersona": null },
   { "codigo": "INT", "descripcion": "Intereses Ctas Bancarias Soles", "categoria": "Ingreso", "tienePersona": false, "idPersona": null }
+
 ]

@@ -36,13 +36,16 @@
 
     "FCR-MACROFONDO": {
       "BANCO DE CRÉDITO": [
+
+        { "numero": "ME N° 191-4217521-1-31",  "moneda": "USD" },
         { "numero": "193-1990153-0-54", "moneda": "PEN" },
-        { "numero": "191-4217521-1-31", "moneda": "PEN" },
-        { "numero": "191-0000000-USD",  "moneda": "USD" }
+        { "numero": "191-4217521-1-31", "moneda": "PEN" }
+
       ],
       "SCOTIABANK PERÚ": [
         { "numero": "970-0700108",      "moneda": "PEN" },
-        { "numero": "4732923-000-07",   "moneda": "PEN" }
+        { "numero": "4732923-000-07",   "moneda": "PEN" },
+                { "numero": "ME N° 000-4732923",  "moneda": "USD" }
       ],
       "BBVA PERÚ": [
         { "numero": "0011-0661-02-00040907", "moneda": "PEN" },

@@ -74,14 +74,14 @@ const app = createApp({
         // Personas con cuenta definida (si eliges persona, la cuenta se setea sola)
         personas: [
     // PEN
-    { id: "per-001", nombre: "Juan Pérez",   cuentaId: "cta-bbva-pen",  moneda: "PEN" },
-    { id: "per-002", nombre: "ACME S.A.C.",  cuentaId: "cta-bcp-pen",   moneda: "PEN" },
-    { id: "per-003", nombre: "María López",  cuentaId: "cta-ibk-pen",   moneda: "PEN" },
+    { id: "per-001", nombre: "A & A CONSULTORES Y GESTION DE COBRANZAS SAC",   cuentaId: "cta-bbva-pen",  moneda: "PEN" },
+    { id: "per-002", nombre: "A & A COPIADORAS SOCIEDAD ANONIMA CERRADA",  cuentaId: "cta-bcp-pen",   moneda: "PEN" },
+    { id: "per-003", nombre: "A & B ECOSISTEMAS S.R.L.",  cuentaId: "cta-ibk-pen",   moneda: "PEN" },
 
     // USD
-    { id: "usd-001", nombre: "Juan Pérez",   cuentaId: "cta-bbva-usd",  moneda: "USD" },
-    { id: "usd-002", nombre: "ACME S.A.C.",  cuentaId: "cta-bcp-usd",   moneda: "USD" },
-    { id: "usd-003", nombre: "María López",  cuentaId: "cta-ibk-usd",   moneda: "USD" },
+    { id: "usd-001", nombre: "A & A CONSULTORES Y GESTION DE COBRANZAS SAC",   cuentaId: "cta-bbva-usd",  moneda: "USD" },
+    { id: "usd-002", nombre: "A & A COPIADORAS SOCIEDAD ANONIMA CERRADA",  cuentaId: "cta-bcp-usd",   moneda: "USD" },
+    { id: "usd-003", nombre: "A & B ECOSISTEMAS S.R.L.",  cuentaId: "cta-ibk-usd",   moneda: "USD" },
   ],
   cuentas: [
     // BBVA
