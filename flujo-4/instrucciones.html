@@ -52,8 +52,10 @@
 
       <!-- Paneles de Instrucciones para cada Tipo de Transferencia -->
       <div v-for="(type, idx) in state.typesAdded" :key="idx" v-show="idx === ui.activeTab">
-        <div class="px-4 py-2 border-b border-slate-200 font-semibold">Instrucciones para {{ type }}</div>
-        
+        <div class="mx-2 my-4">
+            <div class="px-4 py-3  rounded-lg bg-[#f8f9fa] border-b border-slate-200 font-semibold border-l-2 border-l-blue-300">Instrucciones para {{ type }}</div>
+        </div>
+
         <!-- Tabs de Instrucción dentro del tipo de transacción -->
         <div class="bg-white rounded-xl shadow-sm border border-slate-200">
           <div class="px-4 py-2 border-b border-slate-200 flex items-center gap-3">
@@ -105,47 +107,98 @@
             </div>
 
             <!-- Tabla de detalles -->
-            <div class="my-4">
-              <button class="tw-btn" @click="agregarFila(curr)">+ Agregar fila</button>
-              <div class="overflow-x-auto">
-                <table class="w-full text-sm align-top">
-                  <thead class="text-xs text-slate-500">
-                    <tr>
-                      <th class="p-2 text-left">Banco</th>
-                      <th class="p-2 text-left">Saldo Cuenta</th>
-                      <th class="p-2 text-left">Pensión</th>
-                      <th class="p-2 text-left">Cantidad Pensionistas</th>
-                      <th class="p-2 text-left">Neto Habilitar</th>
-                      <th class="p-2 text-left">Aprob.</th>
-                      <th class="p-2"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(r, ri) in curr.detalle" :key="r.uid" class="bg-slate-50 border-y">
-                      <td class="p-2 min-w-[10rem]">
-                        <select class="tw-input w-full" v-model="r.banco">
-                          <option value="" disabled>—</option>
-                          <option v-for="b in master.bancos" :key="b">{{ b }}</option>
-                        </select>
-                      </td>
-                      <td class="p-2"><input class="tw-input w-full" v-model="r.saldo" placeholder="0.00"></td>
-                      <td class="p-2"><input class="tw-input w-full" v-model="r.pension" placeholder="0.00"></td>
-                      <td class="p-2"><input class="tw-input w-full" v-model="r.cantidad" placeholder="0"></td>
-                      <td class="p-2"><input class="tw-input w-full" v-model="r.neto" placeholder="0.00"></td>
-                      <td class="p-2 text-center">
-                        <input type="checkbox" v-model="r.aprob" class="accent-sky-600">
-                      </td>
-                      <td class="p-2">
-                        <div class="flex gap-2">
-                          <button class="tw-btn" @click="duplicarFila(curr, ri)">Duplicar</button>
-                          <button class="tw-btn-danger" @click="curr.detalle.splice(ri, 1)">Eliminar</button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+         <!-- Tabla de detalles -->
+<div class="my-4">
+  <button class="tw-btn" @click="agregarFila()">+ Agregar fila</button>
+
+  <div class="overflow-x-auto mt-2">
+    <table class="w-full text-sm align-top">
+      <thead class="text-xs text-slate-500">
+        <tr>
+          <!-- Columna condicional -->
+          <th class="p-2 text-left" v-if="isPersonaLayout">Persona</th>
+          <th class="p-2 text-left" v-else>Unidad de negocio</th>
+
+          <th class="p-2 text-left">Cuenta</th>
+          <th class="p-2 text-right">Monto</th>
+          <th class="p-2 text-center">Aprob.</th>
+          <th class="p-2"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-for="(r, ri) in curr.detalle" :key="r.uid" class="bg-slate-50 border-y">
+
+          <!-- Persona / Unidad de negocio -->
+          <td class="p-2 min-w-[14rem]" v-if="isPersonaLayout">
+            <select class="tw-input w-full"
+                    v-model="r.personaId"
+                    @change="onChangePersona(r)">
+              <option value="" disabled>— Selecciona persona —</option>
+              <option v-for="p in master.personas" :key="p.id" :value="p.id">
+                {{ p.nombre }}
+              </option>
+            </select>
+          </td>
+
+          <td class="p-2 min-w-[14rem]" v-else>
+            <select class="tw-input w-full"
+                    v-model="r.unidadNegocio"
+                    @change="onChangeUnidad(r)">
+              <option value="" disabled>— Selecciona unidad —</option>
+              <option v-for="u in master.unidades" :key="u" :value="u">{{ u }}</option>
+            </select>
+          </td>
+
+          <!-- Cuenta (dependiente) -->
+          <td class="p-2 min-w-[16rem]">
+            <select class="tw-input w-full"
+                    v-model="r.cuentaId"
+                    :disabled="isPersonaLayout">
+              <option value="" disabled>— Selecciona cuenta —</option>
+              <option v-for="c in cuentasPara(r)" :key="c.id" :value="c.id">
+                {{ c.alias }} — {{ c.numero }}
+              </option>
+            </select>
+          </td>
+
+          <!-- Monto -->
+          <td class="p-2 min-w-[8rem]">
+            <input class="tw-input w-full text-right"
+                   v-model="r.monto"
+                   placeholder="0.00" />
+          </td>
+
+          <!-- Aprob -->
+          <td class="p-2 text-center">
+            <input type="checkbox" v-model="r.aprob" class="accent-sky-600">
+          </td>
+
+          <!-- Acciones -->
+          <td class="p-2">
+            <div class="flex gap-2 justify-end">
+              <button class="tw-btn" @click="duplicarFila(ri)">Duplicar</button>
+              <button class="tw-btn-danger" @click="eliminarFila(ri)">Eliminar</button>
             </div>
+          </td>
+        </tr>
+      </tbody>
+
+      <tfoot class="text-sm font-semibold">
+        <tr>
+          <td class="p-2" :colspan="isPersonaLayout ? 2 : 2">
+            Total filas: {{ totalFilas }}
+          </td>
+          <td class="p-2 text-right">Total:</td>
+          <td class="p-2 text-right min-w-[8rem]">{{ totalMontoFormateado }}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+
             
             <!-- Sustento Documentario -->
             <div>
