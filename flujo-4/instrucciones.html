@@ -148,6 +148,7 @@
   <div class="flex items-center gap-2">
     <button class="tw-btn"
         @click="agregarFila()"
+        v-if="!isSingleRowType"
         :disabled="isSingleRowType && curr?.detalle?.length >= 1"
         :title="isSingleRowType ? 'Este tipo solo permite una fila' : ''">
   + Agregar fila
