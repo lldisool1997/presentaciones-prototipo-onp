@@ -265,7 +265,7 @@
   <div class="docsec-body">
     <!-- Tarjetas iniciales (fijas) -->
     <div class="doc-grid">
-      <div class="doc-card" v-for="d in initialDocs" :key="d.key">
+      <div class="doc-card" v-for="d in curr.docsIniciales" :key="d.key">
         <div class="doc-card-title">{{ d.label }}</div>
 
         <label class="uploader-dropzone">
@@ -306,8 +306,8 @@
       </div>
 
       <!-- Dinámicos -->
-      <div class="doc-grid mt-3" v-if="extraDocs.length">
-        <div class="doc-card" v-for="(d, di) in extraDocs" :key="d.id">
+      <div class="doc-grid mt-3" v-if="curr.docsExtras.length">
+        <div class="doc-card" v-for="(d, di) in curr.docsExtras" :key="d.id">
           <div class="doc-card-title">
             {{ d.label }}
             <button class="doc-remove"

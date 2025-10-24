@@ -1,3 +1,9 @@
+const DOCS_INICIALES = [
+  { key: 'riesgos', label: 'Informe de Riesgos', fileName: '', file: null },
+  { key: 'legal',  label: 'Informe Legal',       fileName: '', file: null },
+  { key: 'acta',   label: 'Acta de Comité de Inversiones', fileName: '', file: null },
+];
+
 // --- Directiva de formato monetario ---
 const moneyBaseOptions = {
   digitGroupSeparator: ',',
@@ -312,6 +318,11 @@ newInstruction() {
     moneda: "PEN",
     importe: "",
     aprobado: false,
+
+      // 👇 documentos a nivel de instrucción
+    docsIniciales: DOCS_INICIALES.map(d => ({ ...d })), // copia por instrucción
+    docsExtras: [], // { id, label, fileName, file }
+
     detalle: [],
     docs: []
   };
@@ -320,28 +331,23 @@ newInstruction() {
 
 
     // Guarda las instrucciones (solo demo)
-   guardarTodo() {
-  const docs = this.collectAllDocs();
+guardarTodo() {
+  const type = this.state.typesAdded[this.ui.activeTab];
+  const list = this.state.instructionsByType[type] || [];
 
-  // Ejemplo: validación mínima
-  // if (!docs.every(d => d.file)) { ... }
-
-  // Aquí armarías tu FormData para enviar al backend
-  // const fd = new FormData();
-  // docs.forEach((d, i) => d.file && fd.append(`file_${i}`, d.file, d.fileName));
-
-  console.log('DOCS:', docs.map(d => ({
-    label: d.label, file: !!d.file, fileName: d.fileName, tipo: d.tipo
-  })));
-
-  Swal.fire({
-    icon: 'success',
-    title: 'Guardado',
-    text: 'Datos listos para enviar.',
-    timer: 1200,
-    showConfirmButton: false
+  // Ejemplo: armar FormData por instrucción
+  const fd = new FormData();
+  list.forEach((ins, idx) => {
+    const docs = this.collectDocsOf(ins);
+    docs.forEach((d, i) => {
+      if (d.file) fd.append(`ins_${idx}_file_${i}`, d.file, d.fileName || d.label + '.pdf');
+    });
   });
+
+  console.log('Docs por instrucción:', list.map(ins => this.collectDocsOf(ins)));
+  this.toastSuccess('Listo para enviar');
 },
+
 
     // Elimina una instrucción
     eliminarInstruccion(instructionIdx) {
@@ -593,9 +599,11 @@ async confirmDeleteRow(idx) {
 uid() { return Math.random().toString(36).slice(2); }, // si ya lo tienes, omite este
 
 isPdf(file) {
-  // Valida por MIME o por extensión
   return file && (file.type === 'application/pdf' || /\.pdf$/i.test(file.name));
 },
+
+// ==== Helpers ====
+currentIns() { return this.curr; }, // alias corto
 formatBytes(n) {
   if (!n && n !== 0) return '';
   const k = 1024, sizes = ['B','KB','MB','GB'];
@@ -603,38 +611,34 @@ formatBytes(n) {
   return (n / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
 },
 
-// --- UPLOAD INICIALES ---
+// ==== Upload INICIALES (a nivel instrucción) ====
 onFileInicial(ev, doc) {
+  const ins = this.currentIns();
+  if (!ins) return;
+
   const f = ev.target.files?.[0];
   if (!f) return;
 
   if (!this.isPdf(f)) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Archivo no válido',
-      text: 'Solo se permite PDF.',
-      timer: 1600, showConfirmButton: false
-    });
+    this.toastError('Solo se permite PDF');
     ev.target.value = '';
     return;
   }
 
-  doc.file = f;
+  doc.file = f;          // el doc pertenece a ESTA instrucción
   doc.fileName = f.name;
 },
 
-// --- UPLOAD DINÁMICOS ---
+// ==== Upload DINÁMICOS (a nivel instrucción) ====
 onFileExtra(ev, d) {
+  const ins = this.currentIns();
+  if (!ins) return;
+
   const f = ev.target.files?.[0];
   if (!f) return;
 
   if (!this.isPdf(f)) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Archivo no válido',
-      text: 'Solo se permite PDF.',
-      timer: 1600, showConfirmButton: false
-    });
+    this.toastError('Solo se permite PDF');
     ev.target.value = '';
     return;
   }
@@ -643,29 +647,31 @@ onFileExtra(ev, d) {
   d.fileName = f.name;
 },
 
-// --- AGREGAR DINÁMICO ---
-addDynamicDoc() {
-  const name = (this.ui.newDocName || '').trim();
-  if (!name) {
-    Swal.fire({ icon: 'info', title: 'Escribe un nombre', timer: 1200, showConfirmButton: false });
-    return;
-  }
 
-  this.extraDocs.push({
+addDynamicDoc() {
+  const ins = this.currentIns();
+  if (!ins) return;
+
+  const name = (this.ui.newDocName || '').trim();
+  if (!name) { this.toastInfo('Escribe un nombre'); return; }
+
+  ins.docsExtras.push({
     id: this.uid(),
     label: name,
     fileName: '',
     file: null
   });
   this.ui.newDocName = '';
+  this.toastSuccess('Documento agregado');
 },
 
-// --- QUITAR DINÁMICO (con confirm bonito) ---
-async confirmDeleteDynamicDoc(index) {
-  const d = this.extraDocs[index];
+async confirmDeleteDynamicDoc(di) {
+  const ins = this.currentIns();
+  if (!ins) return;
+  const d = ins.docsExtras[di];
   if (!d) return;
 
-  const { value: ok } = await Swal.fire({
+  const { isConfirmed } = await Swal.fire({
     title: '¿Quitar documento?',
     text: `Se quitará "${d.label}".`,
     icon: 'warning',
@@ -680,27 +686,36 @@ async confirmDeleteDynamicDoc(index) {
       actions: 'flex gap-3 justify-center',
       popup: 'rounded-xl'
     }
-  }).then(r => ({ value: r.isConfirmed }));
-
-  if (!ok) return;
-
-  this.extraDocs.splice(index, 1);
-
-  Swal.fire({
-    icon: 'success',
-    title: 'Documento quitado',
-    timer: 1100,
-    showConfirmButton: false,
-    customClass: { popup: 'rounded-xl' }
   });
+
+  if (!isConfirmed) return;
+
+  ins.docsExtras.splice(di, 1);
+  this.toastSuccess('Documento eliminado');
 },
 
-// --- (Opcional) limpiar archivo de una tarjeta ---
+
+// (Opcional) limpiar archivo de un doc inicial
 clearDocFile(doc) {
   doc.file = null;
   doc.fileName = '';
 },
-
+// (Opcional) recolectar docs de UNA instrucción (para enviar al backend)
+collectDocsOf(ins) {
+  const base = ins.docsIniciales.map(d => ({
+    key: d.key, label: d.label, fileName: d.fileName, file: d.file, tipo: 'inicial', insId: ins.id
+  }));
+  const extra = ins.docsExtras.map(d => ({
+    id: d.id, label: d.label, fileName: d.fileName, file: d.file, tipo: 'extra', insId: ins.id
+  }));
+  return [...base, ...extra];
+},
+// (Opcional) recolectar docs de TODAS las instrucciones del tipo activo
+collectAllDocsOfActiveType() {
+  const type = this.state.typesAdded[this.ui.activeTab];
+  const list = this.state.instructionsByType[type] || [];
+  return list.flatMap(ins => this.collectDocsOf(ins));
+},
 // --- (Opcional) recolectar todos los adjuntos para enviar al backend ---
 collectAllDocs() {
   // Retorna un arreglo unificado con metadatos y File
