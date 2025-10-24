@@ -1,5 +1,5 @@
 const DOCS_INICIALES = [
-  { key: 'sustentos', label: 'Documento Sustento', fileName: '', file: null },
+  //{ key: 'sustentos', label: 'Documento Sustento', fileName: '', file: null },
  // { key: 'legal',  label: 'Informe Legal',       fileName: '', file: null },
  // { key: 'acta',   label: 'Acta de Comité de Inversiones', fileName: '', file: null },
 ];
@@ -635,11 +635,11 @@ onFileExtra(ev, d) {
   const f = ev.target.files?.[0];
   if (!f) return;
 
-  if (!this.isPdf(f)) {
+  /*if (!this.isPdf(f)) {
     this.toastError('Solo se permite PDF');
     ev.target.value = '';
     return;
-  }
+  }*/
 
   d.file = f;
   d.fileName = f.name;
