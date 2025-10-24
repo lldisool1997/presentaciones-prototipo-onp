@@ -596,8 +596,19 @@ async confirmDeleteRow(idx) {
     // --- UTIL ---
 uid() { return Math.random().toString(36).slice(2); }, // si ya lo tienes, omite este
 
-isPdf(file) {
-  return file && (file.type === 'application/pdf' || /\.pdf$/i.test(file.name));
+isFileAllowed(file) {
+  if (!file) return false;
+
+  const allowedMimeTypes = [
+    'application/pdf',
+    'application/vnd.ms-excel', // .xls
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' // .xlsx
+  ];
+
+  const allowedExts = ['pdf', 'xls', 'xlsx'];
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  return allowedMimeTypes.includes(file.type) || allowedExts.includes(ext);
 },
 
 // ==== Helpers ====
@@ -635,11 +646,11 @@ onFileExtra(ev, d) {
   const f = ev.target.files?.[0];
   if (!f) return;
 
-  /*if (!this.isPdf(f)) {
-    this.toastError('Solo se permite PDF');
+  if (!this.isFileAllowed(f)) {
+    this.toastError('Solo se permiten archivos PDF o Excel');
     ev.target.value = '';
     return;
-  }*/
+  }
 
   d.file = f;
   d.fileName = f.name;
