@@ -1,11 +1,11 @@
 {
   "personasCatalog": {
-    "per-001": { "nombre": "Juan Pérez",   "bancoPreferido": "INTERBANK",      "unidadPreferida": "FCR-MACROFONDO" },
-    "per-002": { "nombre": "ACME S.A.C.",  "bancoPreferido": "INTERBANK",       "unidadPreferida": "FCR-EMSAL" },
-    "per-003": { "nombre": "María López",  "bancoPreferido": "INTERBANK", "unidadPreferida": "FCR-PARAMONGA" },
-    "usd-001": { "nombre": "Juan Pérez",   "bancoPreferido": "INTERBANK",      "unidadPreferida": "FCR-MACROFONDO" },
-    "usd-002": { "nombre": "ACME S.A.C.",  "bancoPreferido": "INTERBANK",       "unidadPreferida": "FCR-MACROFONDO" },
-    "usd-003": { "nombre": "María López",  "bancoPreferido": "INTERBANK", "unidadPreferida": "FCR-MACROFONDO" }
+    "per-001": { "nombre": "Juan Pérez",   "bancoPreferido": "BANCO DE LA NACIÓN",      "unidadPreferida": "FCR-MACROFONDO" },
+    "per-002": { "nombre": "ACME S.A.C.",  "bancoPreferido": "BANCO DE LA NACIÓN",       "unidadPreferida": "FCR-EMSAL" },
+    "per-003": { "nombre": "María López",  "bancoPreferido": "BANCO DE LA NACIÓN", "unidadPreferida": "FCR-PARAMONGA" },
+    "usd-001": { "nombre": "Juan Pérez",   "bancoPreferido": "BANCO DE LA NACIÓN",      "unidadPreferida": "FCR-MACROFONDO" },
+    "usd-002": { "nombre": "ACME S.A.C.",  "bancoPreferido": "BANCO DE LA NACIÓN",       "unidadPreferida": "FCR-MACROFONDO" },
+    "usd-003": { "nombre": "María López",  "bancoPreferido": "BANCO DE LA NACIÓN", "unidadPreferida": "FCR-MACROFONDO" }
   },
 
   "unidades": {
@@ -15,7 +15,7 @@
         { "numero": "193-14004253-0-09", "moneda": "PEN" },
         { "numero": "193-14004326-0-83", "moneda": "PEN" },
         { "numero": "193-16111242-0-81", "moneda": "PEN" },
-        { "numero": "193-16695371-0-09", "moneda": "PEN" }
+        { "numero": "193-16695371-0-09", "moneda": "PEN"}
       ],
       "INTERBANK": [
         { "numero": "200-3071337036", "moneda": "PEN" },
@@ -25,7 +25,7 @@
         { "numero": "200-3071337290", "moneda": "PEN" }
       ],
       "BANCO DE LA NACIÓN": [
-        { "numero": "00-000-341835", "moneda": "PEN" },
+        { "numero": "0000-232459", "moneda": "PEN" },
         { "numero": "00-000-341843", "moneda": "PEN" },
         { "numero": "00-068-219051", "moneda": "PEN" },
         { "numero": "00-000-525278", "moneda": "PEN" },

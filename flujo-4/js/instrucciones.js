@@ -67,21 +67,21 @@ const app = createApp({
      master: {
         types: [],
         unidades: ["FCR-Macrofondo", "FCR-Emsal", "FCR-Paramonga"],
-        bancos: ["SCOTIABANK", "BBVA", "BCP", "INTERBANK"],
+        bancos: ["SCOTIABANK", "BBVA", "BCP", "INTERBANK", "BN"],
          monedas: ["PEN", "USD"],
 
 
         // Personas con cuenta definida (si eliges persona, la cuenta se setea sola)
         personas: [
     // PEN
-    { id: "per-001", nombre: "A & A CONSULTORES Y GESTION DE COBRANZAS SAC", "bancoPreferido": "INTERBANK",   cuentaId: "cta-bbva-pen",  moneda: "PEN" },
-    { id: "per-002", nombre: "A & A COPIADORAS SOCIEDAD ANONIMA CERRADA",  "bancoPreferido": "BBVA", cuentaId: "cta-bcp-pen",   moneda: "PEN" },
-    { id: "per-003", nombre: "A & B ECOSISTEMAS S.R.L.", "bancoPreferido": "BBVA",  cuentaId: "cta-ibk-pen",   moneda: "PEN" },
+    { id: "per-001", nombre: "ONP-PENSIONES EMSAL", "bancoPreferido": "BANCO DE LA NACIÓN",   cuentaId: "cta-bbva-pen",  moneda: "PEN" },
+    { id: "per-002", nombre: "ONP-PENSIONES EMSAL",  "bancoPreferido": "BANCO DE LA NACIÓN", cuentaId: "cta-bcp-pen",   moneda: "PEN" },
+    { id: "per-003", nombre: "A & B ECOSISTEMAS S.R.L.", "bancoPreferido": "BN",  cuentaId: "cta-ibk-pen",   moneda: "PEN" },
 
     // USD
-    { id: "usd-001", nombre: "A & A CONSULTORES Y GESTION DE COBRANZAS SAC", "bancoPreferido": "INTERBANK",   cuentaId: "cta-bbva-usd",  moneda: "USD" },
-    { id: "usd-002", nombre: "A & A COPIADORAS SOCIEDAD ANONIMA CERRADA", "bancoPreferido": "BBVA",  cuentaId: "cta-bcp-usd",   moneda: "USD" },
-    { id: "usd-003", nombre: "A & B ECOSISTEMAS S.R.L.", "bancoPreferido": "BBVA",  cuentaId: "cta-ibk-usd",   moneda: "USD" },
+    { id: "usd-001", nombre: "ONP-PENSIONES EMSAL", "bancoPreferido": "BANCO DE LA NACIÓN",   cuentaId: "cta-bbva-usd",  moneda: "USD" },
+    { id: "usd-002", nombre: "ONP-PENSIONES EMSAL", "bancoPreferido": "BANCO DE LA NACIÓN",  cuentaId: "cta-bcp-usd",   moneda: "USD" },
+    { id: "usd-003", nombre: "A & B ECOSISTEMAS S.R.L.", "bancoPreferido": "BN",  cuentaId: "cta-ibk-usd",   moneda: "USD" },
   ],
   cuentas: [
     // BBVA
