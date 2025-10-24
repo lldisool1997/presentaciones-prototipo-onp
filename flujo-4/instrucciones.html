@@ -27,7 +27,7 @@
         </div>
         <button class="tw-btn" @click="addType">Agregar tipo de transacción +</button>
         <div class="md:ml-auto flex items-center gap-2">
-          <span class="tw-pill">Aprobadas: {{ approvedCount }}</span>
+          <span class="tw-pill">Instr. aprobadas: {{ approvedInstrCount }} / {{ totalInstrCount }}</span>
           <button class="tw-btn-primary" @click="guardarTodo">Guardar instrucciones</button>
         </div>
       </div>
@@ -67,9 +67,25 @@
               Instrucción #{{ i + 1 }}
             </button>
           </div>
+          <!-- Acciones de la instrucción -->
 
           <!-- Contenido de la Instrucción seleccionada -->
           <div v-if="curr" class="p-4 space-y-4">
+                   <div class="flex items-center justify-end gap-4 text-sm text-slate-600 mt-2">
+  <label class="inline-flex items-center gap-2 cursor-pointer">
+    <input type="checkbox" v-model="curr.aprobado" class="accent-sky-600" />
+    <span class="font-medium">Aprobar instrucción</span>
+  </label>
+
+  <button
+    class="tw-btn-danger"
+    @click="eliminarInstruccion(ui.activeInstructionTab)"
+    title="Eliminar esta instrucción"
+  >
+    Eliminar instrucción
+  </button>
+</div>
+
             <!-- Descripción y Producto como Textareas -->
             <div class="grid md:grid-cols-2 gap-3">
               <div>
@@ -106,19 +122,25 @@
               </div>
             </div>
 
-            <!-- Tabla de detalles -->
-         <!-- Tabla de detalles -->
+<!-- Tabla de detalles -->
 <div class="my-4">
-  <button class="tw-btn" @click="agregarFila()">+ Agregar fila</button>
+  <div class="flex items-center gap-2">
+    <button class="tw-btn" @click="agregarFila()">+ Agregar fila</button>
+
+    <span v-if="lockedLayout" class="tw-pill">
+      Modo: {{ lockedLayout === 'persona' ? 'Persona' : 'Unidad de negocio' }}
+    </span>
+    <button v-if="lockedLayout" class="tw-btn-outline" @click="resetLayout()">
+      Cambiar modo
+    </button>
+  </div>
 
   <div class="overflow-x-auto mt-2">
     <table class="w-full text-sm align-top">
       <thead class="text-xs text-slate-500">
         <tr>
-          <!-- Columna condicional -->
-          <th class="p-2 text-left" v-if="isPersonaLayout">Persona</th>
-          <th class="p-2 text-left" v-else>Unidad de negocio</th>
-
+          <th class="p-2 text-left">Persona</th>
+          <th class="p-2 text-left">Unidad de negocio</th>
           <th class="p-2 text-left">Cuenta</th>
           <th class="p-2 text-right">Monto</th>
           <th class="p-2 text-center">Aprob.</th>
@@ -128,34 +150,36 @@
 
       <tbody>
         <tr v-for="(r, ri) in curr.detalle" :key="r.uid" class="bg-slate-50 border-y">
-
-          <!-- Persona / Unidad de negocio -->
-          <td class="p-2 min-w-[14rem]" v-if="isPersonaLayout">
+          <!-- Persona -->
+          <td class="p-2 min-w-[14rem]">
             <select class="tw-input w-full"
                     v-model="r.personaId"
+                    :disabled="lockedLayout === 'unidad'"
                     @change="onChangePersona(r)">
-              <option value="" disabled>— Selecciona persona —</option>
+              <option value="">— Selecciona persona —</option>
               <option v-for="p in master.personas" :key="p.id" :value="p.id">
                 {{ p.nombre }}
               </option>
             </select>
           </td>
 
-          <td class="p-2 min-w-[14rem]" v-else>
+          <!-- Unidad -->
+          <td class="p-2 min-w-[14rem]">
             <select class="tw-input w-full"
                     v-model="r.unidadNegocio"
+                    :disabled="lockedLayout === 'persona'"
                     @change="onChangeUnidad(r)">
-              <option value="" disabled>— Selecciona unidad —</option>
+              <option value="">— Selecciona unidad —</option>
               <option v-for="u in master.unidades" :key="u" :value="u">{{ u }}</option>
             </select>
           </td>
 
-          <!-- Cuenta (dependiente) -->
+          <!-- Cuenta (dependiente de persona o unidad) -->
           <td class="p-2 min-w-[16rem]">
             <select class="tw-input w-full"
                     v-model="r.cuentaId"
-                    :disabled="isPersonaLayout">
-              <option value="" disabled>— Selecciona cuenta —</option>
+                    :disabled="lockedLayout === 'persona'">
+              <option value="">— Selecciona cuenta —</option>
               <option v-for="c in cuentasPara(r)" :key="c.id" :value="c.id">
                 {{ c.alias }} — {{ c.numero }}
               </option>
@@ -186,17 +210,18 @@
 
       <tfoot class="text-sm font-semibold">
         <tr>
-          <td class="p-2" :colspan="isPersonaLayout ? 2 : 2">
+          <td class="p-2" colspan="3">
             Total filas: {{ totalFilas }}
           </td>
-          <td class="p-2 text-right">Total:</td>
           <td class="p-2 text-right min-w-[8rem]">{{ totalMontoFormateado }}</td>
+          <td></td>
           <td></td>
         </tr>
       </tfoot>
     </table>
   </div>
 </div>
+
 
 
             

@@ -24,6 +24,7 @@ createApp({
         ]
       },
       personaTypes: ["Habilitación de recursos"],
+      lockedLayout: null, // null | 'persona' | 'unidad'
       ui: {
         selectedType: "",
         activeTab: 0, // Tab del tipo de transacción
@@ -70,19 +71,19 @@ isPersonaLayout() {
   return this.personaTypes.includes(this.currentType);
 },
 cuentasPara() {
-  // devolveremos una función para usar con la fila `r`
   return (row) => {
-    if (this.isPersonaLayout) {
+    if (this.lockedLayout === 'persona') {
       const p = this.master.personas.find(x => x.id === row.personaId);
       if (!p) return [];
       const c = this.master.cuentas.find(x => x.id === p.cuentaId);
       return c ? [c] : [];
-    } else {
-      if (!row.unidadNegocio) return [];
-      return this.master.cuentas.filter(c => c.unidad === row.unidadNegocio);
     }
+    // 'unidad' o null (antes de bloquear): filtra por unidad si existe
+    if (!row.unidadNegocio) return [];
+    return this.master.cuentas.filter(c => c.unidad === row.unidadNegocio);
   };
 },
+
 // Totales
 totalFilas() {
   return this.curr?.detalle?.length || 0;
@@ -111,7 +112,25 @@ totalMontoFormateado() {
     // Cuenta de instrucciones aprobadas
     approvedCount() {
       return this.curr ? this.curr.detalle.filter(i => i.aprob).length : 0;
-    }
+    },
+    // --- Instrucciones (nivel INSTRUCCIÓN) ---
+approvedInstrCount() {
+  const t = this.state.typesAdded[this.ui.activeTab];
+  const list = this.state.instructionsByType[t] || [];
+  return list.filter(ins => !!ins.aprobado).length;
+},
+totalInstrCount() {
+  const t = this.state.typesAdded[this.ui.activeTab];
+  const list = this.state.instructionsByType[t] || [];
+  return list.length;
+},
+
+// --- Detalles (nivel FILA) ---
+approvedRowsCount() {
+  if (!this.curr || !Array.isArray(this.curr.detalle)) return 0;
+  return this.curr.detalle.filter(r => !!r.aprob).length;
+},
+
 
     
   },
@@ -144,21 +163,22 @@ totalMontoFormateado() {
 
     // Crea una nueva instrucción
     newInstruction() {
-      return {
-        id: this.uid(),
-        descripcion: "",
-        producto: "",
-        unidad: "Pública",
-        fecha: new Date().toISOString().slice(0, 10),
-        moneda: "PEN",
-        importe: "",
-        banco: "SCOTIABANK",
-        nroCuenta: "",
-        aprobado: false,
-        detalle: [], // Detalles bancarios vacíos inicialmente
-        docs: []
-      };
-    },
+  return {
+    id: this.uid(),
+    descripcion: "",
+    producto: "",
+    unidad: "Pública",
+    fecha: new Date().toISOString().slice(0, 10),
+    moneda: "PEN",
+    importe: "",
+    banco: "SCOTIABANK",
+    nroCuenta: "",
+    aprobado: false,   // <-- nivel instrucción
+    detalle: [],       // <-- filas (cada una con r.aprob)
+    docs: []
+  };
+},
+
 
     // Guarda las instrucciones (solo demo)
     guardarTodo() {
@@ -182,19 +202,20 @@ totalMontoFormateado() {
 
     // Agregar una fila en la tabla de detalles de una instrucción
 agregarFila() {
-  const instruction = this.curr;
-  if (!instruction) return;
-  if (!Array.isArray(instruction.detalle)) instruction.detalle = [];
+  const ins = this.curr;
+  if (!ins) return;
+  if (!Array.isArray(ins.detalle)) ins.detalle = [];
 
-  instruction.detalle.push({
+  ins.detalle.push({
     uid: this.uid(),
-    personaId: "",       // usado cuando isPersonaLayout === true
-    unidadNegocio: "",   // usado cuando isPersonaLayout === false
-    cuentaId: "",        // depende de persona o de unidad
+    personaId: "",
+    unidadNegocio: "",
+    cuentaId: "",
     monto: "",
-    aprob: false
+    aprob: false       // <-- nivel fila
   });
 },
+
 
 
 
@@ -225,10 +246,76 @@ eliminarFila(idx) {
   row.cuentaId = p?.cuentaId || "";
 },
 
-onChangeUnidad(row) {
-  // Cuando cambia la unidad, limpia cuenta y deja seleccionar entre las cuentas de esa unidad
-  row.cuentaId = "";
+// Forzar modo y aplicar reglas a todas las filas
+enforceLayout(layout) {
+  this.lockedLayout = layout; // 'persona' | 'unidad'
+
+  // Recorre todas las filas de la instrucción activa
+  const list = this.curr?.detalle || [];
+  for (const r of list) {
+    if (layout === 'persona') {
+      // Al ir a persona: limpia unidad, fija cuenta por persona (si hay persona)
+      r.unidadNegocio = "";
+      const p = this.master.personas.find(x => x.id === r.personaId);
+      r.cuentaId = p?.cuentaId || "";
+    } else if (layout === 'unidad') {
+      // Al ir a unidad: limpia persona, y deja cuenta libre (filtrada por unidad)
+      r.personaId = "";
+      // si ya hay unidad, dejamos cuenta seleccionada si pertenece; si no, vacía
+      const cuentas = this.master.cuentas.filter(c => c.unidad === r.unidadNegocio);
+      if (!cuentas.find(c => c.id === r.cuentaId)) r.cuentaId = "";
+    }
+  }
 },
+
+// Cuando cambia persona en una fila
+onChangePersona(row) {
+  if (row.personaId) {
+    // bloquea en 'persona'
+    this.enforceLayout('persona');
+    // setea cuenta por la persona
+    const p = this.master.personas.find(x => x.id === row.personaId);
+    row.cuentaId = p?.cuentaId || "";
+  } else {
+    // si deselecciona y no hay ninguna persona en ninguna fila, libera el modo
+    this.tryUnlockLayoutIfEmpty();
+  }
+},
+
+// Cuando cambia unidad en una fila
+onChangeUnidad(row) {
+  if (row.unidadNegocio) {
+    // bloquea en 'unidad'
+    this.enforceLayout('unidad');
+    // limpia cuenta si no pertenece a la unidad
+    const cuentas = this.master.cuentas.filter(c => c.unidad === row.unidadNegocio);
+    if (!cuentas.find(c => c.id === row.cuentaId)) row.cuentaId = "";
+  } else {
+    // si deselecciona y no hay ninguna unidad en ninguna fila, libera el modo
+    this.tryUnlockLayoutIfEmpty();
+  }
+},
+
+// Intenta liberar el modo si no hay selección en ninguna fila
+tryUnlockLayoutIfEmpty() {
+  const list = this.curr?.detalle || [];
+  const anyPersona = list.some(r => !!r.personaId);
+  const anyUnidad  = list.some(r => !!r.unidadNegocio);
+  if (!anyPersona && !anyUnidad) this.lockedLayout = null;
+},
+
+// Botón "Cambiar modo"
+resetLayout() {
+  this.lockedLayout = null;
+  const list = this.curr?.detalle || [];
+  for (const r of list) {
+    // dejamos ambas columnas vacías y cuenta vacía
+    r.personaId = "";
+    r.unidadNegocio = "";
+    r.cuentaId = "";
+  }
+},
+
 
 
 
