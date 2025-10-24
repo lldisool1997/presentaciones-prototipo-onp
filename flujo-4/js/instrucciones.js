@@ -23,6 +23,12 @@ createApp({
           { id: "cta-ibk-021",  alias: "Impuestos",        numero: "IBK-021-111111",  unidad: "Mixta",    banco: "INTERBANK" }
         ]
       },
+       initialDocs: [
+      { key: 'sustentos', label: 'Documento Sustento', fileName: '', file: null },
+      //{ key: 'legal',  label: 'Informe Legal',       fileName: '', file: null },
+      //{ key: 'acta',   label: 'Acta de Comité de Inversiones', fileName: '', file: null }
+    ],
+    extraDocs: [], // { id, label, fileName, file }
       personaTypes: ["Habilitación de recursos"],
       lockedLayout: null, // null | 'persona' | 'unidad'
       ui: {
@@ -181,12 +187,28 @@ approvedRowsCount() {
 
 
     // Guarda las instrucciones (solo demo)
-    guardarTodo() {
-      console.clear();
-      console.log("TYPES:", this.state.typesAdded);
-      console.log("INSTRUCCIONES POR TIPO:", JSON.parse(JSON.stringify(this.state.instructionsByType)));
-      alert("Guardado (demo). Revisa la consola del navegador.");
-    },
+   guardarTodo() {
+  const docs = this.collectAllDocs();
+
+  // Ejemplo: validación mínima
+  // if (!docs.every(d => d.file)) { ... }
+
+  // Aquí armarías tu FormData para enviar al backend
+  // const fd = new FormData();
+  // docs.forEach((d, i) => d.file && fd.append(`file_${i}`, d.file, d.fileName));
+
+  console.log('DOCS:', docs.map(d => ({
+    label: d.label, file: !!d.file, fileName: d.fileName, tipo: d.tipo
+  })));
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Guardado',
+    text: 'Datos listos para enviar.',
+    timer: 1200,
+    showConfirmButton: false
+  });
+},
 
     // Elimina una instrucción
     eliminarInstruccion(instructionIdx) {
@@ -316,9 +338,96 @@ resetLayout() {
   }
 },
 
+async confirmDeleteType(idx, typeName) {
+  const { value: confirmed } = await Swal.fire({
+    title: '¿Eliminar tipo de transacción?',
+    text: `Se eliminará "${typeName}" y todas sus instrucciones asociadas.`,
+    icon: 'warning',
+    showCancelButton: true,
+    reverseButtons: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    buttonsStyling: false,
+    customClass: {
+      popup: 'rounded-xl',
+      confirmButton: 'tw-btn-danger',
+      cancelButton: 'tw-btn',
+      actions: 'flex gap-3 justify-center'
+    }
+  }).then(res => ({ value: res.isConfirmed }));
+
+  if (!confirmed) return;
+
+  // Eliminamos el tipo y sus instrucciones asociadas
+  const typeToRemove = this.state.typesAdded[idx];
+  this.state.typesAdded.splice(idx, 1);
+  delete this.state.instructionsByType[typeToRemove];
+
+  // Ajusta el tab activo si hace falta
+  if (this.ui.activeTab >= this.state.typesAdded.length) {
+    this.ui.activeTab = Math.max(0, this.state.typesAdded.length - 1);
+  }
+
+  await Swal.fire({
+    title: 'Eliminado',
+    text: `"${typeName}" fue eliminado correctamente.`,
+    icon: 'success',
+    timer: 1500,
+    showConfirmButton: false,
+    customClass: { popup: 'rounded-xl' }
+  });
+},
 
 
+async confirmDeleteInstruction(index) {
+  if (index == null || !this.curr) return;
 
+  const { value: confirmed } = await Swal.fire({
+    title: '¿Eliminar esta instrucción?',
+    text: 'Esta acción no se puede deshacer.',
+    icon: 'warning',
+    showCancelButton: true,
+    reverseButtons: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+      popup: 'rounded-xl',
+      confirmButton: 'tw-btn-danger',
+      cancelButton: 'tw-btn',
+          actions: 'flex gap-3 justify-center' // 👈 agrega espacio entre los botones
+    },
+    buttonsStyling: false
+  }).then(res => ({ value: res.isConfirmed }));
+
+  if (!confirmed) return;
+
+  this.eliminarInstruccion(index);
+
+  await Swal.fire({
+    title: 'Eliminada',
+    text: 'La instrucción se eliminó correctamente.',
+    icon: 'success',
+    timer: 1500,
+    showConfirmButton: false,
+    customClass: { popup: 'rounded-xl' }
+  });
+},
+
+async confirmDeleteRow(idx) {
+  const { value: ok } = await Swal.fire({
+    title: '¿Eliminar fila?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Eliminar',
+    cancelButtonText: 'Cancelar',
+    reverseButtons: true,
+    customClass: { confirmButton: 'tw-btn-danger', cancelButton: 'tw-btn' },
+    buttonsStyling: false
+  }).then(r => ({ value: r.isConfirmed }));
+
+  if (!ok) return;
+  this.eliminarFila(idx);
+},
 
     // Agregar documento adicional manualmente
     agregarDoc() {
@@ -328,6 +437,138 @@ resetLayout() {
       const currentInstruction = this.state.instructionsByType[currentType][this.ui.activeInstructionTab];
       currentInstruction.docs.push({ id: this.uid(), nombre: name });
       this.ui.newDocName = "";
+    },
+    // --- UTIL ---
+uid() { return Math.random().toString(36).slice(2); }, // si ya lo tienes, omite este
+
+isPdf(file) {
+  // Valida por MIME o por extensión
+  return file && (file.type === 'application/pdf' || /\.pdf$/i.test(file.name));
+},
+formatBytes(n) {
+  if (!n && n !== 0) return '';
+  const k = 1024, sizes = ['B','KB','MB','GB'];
+  const i = Math.floor(Math.log(n) / Math.log(k));
+  return (n / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
+},
+
+// --- UPLOAD INICIALES ---
+onFileInicial(ev, doc) {
+  const f = ev.target.files?.[0];
+  if (!f) return;
+
+  if (!this.isPdf(f)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Archivo no válido',
+      text: 'Solo se permite PDF.',
+      timer: 1600, showConfirmButton: false
+    });
+    ev.target.value = '';
+    return;
+  }
+
+  doc.file = f;
+  doc.fileName = f.name;
+},
+
+// --- UPLOAD DINÁMICOS ---
+onFileExtra(ev, d) {
+  const f = ev.target.files?.[0];
+  if (!f) return;
+
+  if (!this.isPdf(f)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Archivo no válido',
+      text: 'Solo se permite PDF.',
+      timer: 1600, showConfirmButton: false
+    });
+    ev.target.value = '';
+    return;
+  }
+
+  d.file = f;
+  d.fileName = f.name;
+},
+
+// --- AGREGAR DINÁMICO ---
+addDynamicDoc() {
+  const name = (this.ui.newDocName || '').trim();
+  if (!name) {
+    Swal.fire({ icon: 'info', title: 'Escribe un nombre', timer: 1200, showConfirmButton: false });
+    return;
+  }
+
+  this.extraDocs.push({
+    id: this.uid(),
+    label: name,
+    fileName: '',
+    file: null
+  });
+  this.ui.newDocName = '';
+},
+
+// --- QUITAR DINÁMICO (con confirm bonito) ---
+async confirmDeleteDynamicDoc(index) {
+  const d = this.extraDocs[index];
+  if (!d) return;
+
+  const { value: ok } = await Swal.fire({
+    title: '¿Quitar documento?',
+    text: `Se quitará "${d.label}".`,
+    icon: 'warning',
+    showCancelButton: true,
+    reverseButtons: true,
+    confirmButtonText: 'Sí, quitar',
+    cancelButtonText: 'Cancelar',
+    buttonsStyling: false,
+    customClass: {
+      confirmButton: 'tw-btn-danger',
+      cancelButton: 'tw-btn',
+      actions: 'flex gap-3 justify-center',
+      popup: 'rounded-xl'
     }
+  }).then(r => ({ value: r.isConfirmed }));
+
+  if (!ok) return;
+
+  this.extraDocs.splice(index, 1);
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Documento quitado',
+    timer: 1100,
+    showConfirmButton: false,
+    customClass: { popup: 'rounded-xl' }
+  });
+},
+
+// --- (Opcional) limpiar archivo de una tarjeta ---
+clearDocFile(doc) {
+  doc.file = null;
+  doc.fileName = '';
+},
+
+// --- (Opcional) recolectar todos los adjuntos para enviar al backend ---
+collectAllDocs() {
+  // Retorna un arreglo unificado con metadatos y File
+  const base = this.initialDocs.map(d => ({
+    key: d.key,
+    label: d.label,
+    fileName: d.fileName,
+    file: d.file,
+    tipo: 'inicial'
+  }));
+  const extra = this.extraDocs.map(d => ({
+    id: d.id,
+    label: d.label,
+    fileName: d.fileName,
+    file: d.file,
+    tipo: 'extra'
+  }));
+  return [...base, ...extra];
+}
+
   }
 }).mount("#app");

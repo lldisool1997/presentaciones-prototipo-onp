@@ -90,7 +90,135 @@
   font-weight: 600;
 }
 .tw-tab-active {
-  background: #fff;
-  color: #0b4c6f;
+  background: #2568b4;
+  color: #ffffff;
   border-color: rgb(203 213 225);
 }
+
+
+/* ===== Cards contenedor sección ===== */
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(16,24,40,.04);
+}
+.card-soft {
+  background: #f4f6f8;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+/* ===== Título sección con filete izquierdo ===== */
+.docsec-title {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 700;
+  padding: .9rem 1rem;
+  background: #f1f5f9;
+  border-radius: 12px 12px 0 0;
+}
+.docsec-index {
+  border-left: 4px solid #1e90ff;
+  padding-left: .6rem;
+}
+
+/* ===== Cuerpo de la sección ===== */
+.docsec-body { padding: 1rem; }
+
+/* ===== Grid de tarjetas ===== */
+.doc-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+}
+@media (min-width: 1024px) {
+  .doc-grid > .doc-card { grid-column: span 4 / span 4; }
+}
+@media (max-width: 1023.98px) {
+  .doc-grid > .doc-card { grid-column: span 12 / span 12; }
+}
+
+/* ===== Tarjeta de documento ===== */
+.doc-card {
+  background: #fff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 12px;
+}
+.doc-card-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Botón quitar (para dinámicos) */
+.doc-remove {
+  border: 0;
+  background: #fee2e2;
+  color: #b91c1c;
+  width: 28px; height: 28px;
+  line-height: 26px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.doc-remove:hover { background: #fecaca; }
+
+/* ===== Dropzone ===== */
+.uploader-dropzone {
+  display: block;
+  border: 2px dashed #d1d5db;
+  border-radius: 10px;
+  padding: 18px;
+  background: #fafafa;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+.uploader-dropzone:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+.uploader-input { display: none; }
+
+.uploader-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.uploader-icon {
+  font-size: 22px;
+  opacity: .75;
+}
+.uploader-text { font-size: 13px; color: #64748b; }
+.uploader-action { color: #0f172a; font-weight: 600; }
+.uploader-sub { font-size: 12px; opacity: .7; }
+.uploader-file { margin-top: 4px; color: #334155; font-weight: 600; }
+
+/* ===== Advanced (barra superior y fila) ===== */
+.adv { margin-top: 16px; padding: 14px; }
+.adv-head {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 700; margin-bottom: 10px;
+}
+.adv-icon { font-size: 16px; }
+.adv-row { display: grid; gap: 10px; }
+.adv-help { font-size: 13px; color: #475569; }
+.adv-form { display: flex; gap: 10px; align-items: center; }
+
+/* Botón éxito (verde) */
+.tw-btn-success {
+  background: #22c55e;
+  border: 1px solid #22c55e;
+  color: #fff;
+  border-radius: 10px;
+  padding: .55rem .9rem;
+  font-weight: 600;
+}
+.tw-btn-success:hover { filter: brightness(.95); }
+
+/* Utilidad espaciado top */
+.mt-3 { margin-top: .75rem; }
