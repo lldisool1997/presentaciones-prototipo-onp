@@ -41,6 +41,18 @@ const MoneyDirective = {
   }
 };
 
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  customClass: {
+    popup: 'rounded-xl shadow-md',
+    timerProgressBar: 'tw-toast-progress' // opcional (puedes estilizarlo)
+  },
+  timer: 1800,
+  timerProgressBar: true
+});
+
 const { createApp, computed } = Vue;
 
 const app = createApp({
@@ -51,6 +63,7 @@ const app = createApp({
         unidades: ["FCR-Macrofondo", "FCR-Emsal", "FCR-Paramonga"],
         bancos: ["SCOTIABANK", "BBVA", "BCP", "INTERBANK"],
          monedas: ["PEN", "USD"],
+
 
         // Personas con cuenta definida (si eliges persona, la cuenta se setea sola)
         personas: [
@@ -64,7 +77,6 @@ const app = createApp({
     { id: "usd-002", nombre: "ACME S.A.C.",  cuentaId: "cta-bcp-usd",   moneda: "USD" },
     { id: "usd-003", nombre: "María López",  cuentaId: "cta-ibk-usd",   moneda: "USD" },
   ],
-
   cuentas: [
     // BBVA
     { id: "cta-bbva-pen", alias: "BBVA Central PEN", numero: "001-123456", unidad: "FCR-Macrofondo",  moneda: "PEN" },
@@ -79,6 +91,12 @@ const app = createApp({
     { id: "cta-ibk-usd",  alias: "INTERBANK Mixta USD", numero: "003-444444", unidad: "FCR-Paramonga",   moneda: "USD" },
   ],
       },
+      
+
+            singleRowTypes: [
+      "Transferencias",
+    ],
+
        initialDocs: [
       { key: 'sustentos', label: 'Documento Sustento', fileName: '', file: null },
       //{ key: 'legal',  label: 'Informe Legal',       fileName: '', file: null },
@@ -210,6 +228,10 @@ approvedRowsCount() {
   return this.curr.detalle.filter(r => !!r.aprob).length;
 },
 
+  isSingleRowType() {
+    const t = this.state.typesAdded[this.ui.activeTab];
+    return this.singleRowTypes.includes(t);
+  },
 
     
   },
@@ -217,28 +239,66 @@ approvedRowsCount() {
   methods: {
     // Genera un ID único
     uid() { return Math.random().toString(36).slice(2); },
+    
 
     // Agrega un tipo de transacción
     addType() {
-      const t = this.ui.selectedType;
-      if (!t) return;
-      if (!this.state.typesAdded.includes(t)) {
-        this.state.typesAdded.push(t);
-        this.state.instructionsByType[t] = []; // Inicializa el grupo de instrucciones para este tipo
-        this.addInstruction(t); // Agrega la primera instrucción automáticamente
-      }
-      this.ui.selectedType = "";
-    },
+  const t = this.ui.selectedType;
+  if (!t){
+      Toast.fire({
+    icon: 'warning',
+    title: `Debe seleccionar un tipo de transacción`
+  });
+   return;
+  }
+
+  // Verifica si el tipo ya fue agregado
+  if (this.state.typesAdded.includes(t)) {
+    Toast.fire({
+      icon: 'warning',
+      title: `El tipo "${t}" ya ha sido agregado`
+    });
+    return; // 🔹 evita que se agregue de nuevo
+  }
+
+  // Si no existe, lo agrega normalmente
+  this.state.typesAdded.push(t);
+  this.state.instructionsByType[t] = []; // Inicializa el grupo de instrucciones
+  this.addInstruction(t); // Crea la primera instrucción automáticamente
+  this.ui.selectedType = "";
+
+  // Notifica éxito
+  Toast.fire({
+    icon: 'success',
+    title: `Tipo "${t}" agregado correctamente`
+  });
+},
+
 
     // Agrega una instrucción dentro del tipo de transacción
-    addInstruction(type) {
-      if (!this.state.instructionsByType[type]) {
-        this.state.instructionsByType[type] = [];
-      }
-      const newInstruction = this.newInstruction();
-      this.state.instructionsByType[type].push(newInstruction);
-      this.ui.activeInstructionTab = this.state.instructionsByType[type].length - 1; // Establece la instrucción recién agregada como activa
-    },
+   addInstruction(type) {
+  if (!this.state.instructionsByType[type]) {
+    this.state.instructionsByType[type] = [];
+  }
+  const ins = this.newInstruction();
+  this.state.instructionsByType[type].push(ins);
+  this.ui.activeInstructionTab = this.state.instructionsByType[type].length - 1;
+
+  // Si el tipo solo permite una fila, asegúrate de crearla
+  if (this.singleRowTypes.includes(type)) {
+    if (!Array.isArray(ins.detalle) || ins.detalle.length === 0) {
+      ins.detalle.push({
+        uid: this.uid(),
+        personaId: "",
+        unidadNegocio: "",
+        cuentaId: "",
+        monto: "",
+        aprob: false
+      });
+    }
+  }
+},
+
 
     // Crea una nueva instrucción
 newInstruction() {
@@ -301,27 +361,43 @@ agregarFila() {
   if (!ins) return;
   if (!Array.isArray(ins.detalle)) ins.detalle = [];
 
+  if (this.isSingleRowType && ins.detalle.length >= 1) {
+    // Toast de aviso (usa el mixin Toast que ya tienes)
+    Toast.fire({ icon: 'warning', title: 'Este tipo solo permite una fila' });
+    return;
+  }
+
   ins.detalle.push({
     uid: this.uid(),
     personaId: "",
     unidadNegocio: "",
     cuentaId: "",
     monto: "",
-    aprob: false       // <-- nivel fila
+    aprob: false
   });
 },
 
 
 
 
+
     // Duplicar una fila en la tabla de detalles de una instrucción
 duplicarFila(idx) {
+  if (this.isSingleRowType) {
+    Toast.fire({ icon: 'warning', title: 'No se puede duplicar en este tipo' });
+    return;
+  }
   const ins = this.curr;
   const src = ins.detalle[idx];
   ins.detalle.splice(idx + 1, 0, { ...src, uid: this.uid() });
 },
+
 eliminarFila(idx) {
   const ins = this.curr;
+  if (this.isSingleRowType && ins.detalle.length <= 1) {
+    Toast.fire({ icon: 'warning', title: 'Debe permanecer al menos 1 fila' });
+    return;
+  }
   ins.detalle.splice(idx, 1);
 },
 
@@ -438,14 +514,16 @@ async confirmDeleteType(idx, typeName) {
     this.ui.activeTab = Math.max(0, this.state.typesAdded.length - 1);
   }
 
-  await Swal.fire({
+  this.toastSuccess(`"${typeName}" fue eliminado correctamente.`);
+
+  /*await Swal.fire({
     title: 'Eliminado',
     text: `"${typeName}" fue eliminado correctamente.`,
     icon: 'success',
     timer: 1500,
     showConfirmButton: false,
     customClass: { popup: 'rounded-xl' }
-  });
+  });*/
 },
 
 
@@ -473,6 +551,9 @@ async confirmDeleteInstruction(index) {
 
   this.eliminarInstruccion(index);
 
+    this.toastSuccess(`La instrucción se eliminó correctamente.`);
+
+    /*
   await Swal.fire({
     title: 'Eliminada',
     text: 'La instrucción se eliminó correctamente.',
@@ -480,7 +561,7 @@ async confirmDeleteInstruction(index) {
     timer: 1500,
     showConfirmButton: false,
     customClass: { popup: 'rounded-xl' }
-  });
+  });*/
 },
 
 async confirmDeleteRow(idx) {
@@ -682,7 +763,21 @@ onMonedaChange() {
   }
 
   
+
+  
 },
+  toastSuccess(msg = 'Operación exitosa') {
+    Toast.fire({ icon: 'success', title: msg });
+  },
+  toastInfo(msg = 'Información') {
+    Toast.fire({ icon: 'info', title: msg });
+  },
+  toastWarn(msg = 'Revisar datos') {
+    Toast.fire({ icon: 'warning', title: msg });
+  },
+  toastError(msg = 'Ocurrió un error') {
+    Toast.fire({ icon: 'error', title: msg });
+  },
 
 
 

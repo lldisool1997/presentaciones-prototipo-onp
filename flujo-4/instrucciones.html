@@ -10,6 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.10.5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 font-inter">
   <div id="app" class="max-w-6xl mx-auto p-4 md:p-6 space-y-4">
@@ -145,7 +146,12 @@
 <!-- Tabla de detalles -->
 <div class="my-4">
   <div class="flex items-center gap-2">
-    <button class="tw-btn" @click="agregarFila()">+ Agregar fila</button>
+    <button class="tw-btn"
+        @click="agregarFila()"
+        :disabled="isSingleRowType && curr?.detalle?.length >= 1"
+        :title="isSingleRowType ? 'Este tipo solo permite una fila' : ''">
+  + Agregar fila
+</button>
 
     <span v-if="lockedLayout" class="tw-pill">
       Modo: {{ lockedLayout === 'persona' ? 'Persona' : 'Unidad de negocio' }}
@@ -219,12 +225,15 @@
           </td>
 
           <!-- Acciones -->
-          <td class="p-2">
-            <div class="flex gap-2 justify-end">
-              <button class="tw-btn" @click="duplicarFila(ri)">Duplicar</button>
-              <button class="tw-btn-danger" @click="eliminarFila(ri)">Eliminar</button>
-            </div>
-          </td>
+         <td class="p-2">
+  <div class="flex gap-2 justify-end" v-if="!isSingleRowType">
+    <button class="tw-btn" @click="duplicarFila(ri)">Duplicar</button>
+    <button class="tw-btn-danger" @click="eliminarFila(ri)">Eliminar</button>
+  </div>
+  <!--<div class="text-xs text-slate-500 text-right" v-else>
+    Fila obligatoria
+  </div>-->
+</td>
         </tr>
       </tbody>
 
