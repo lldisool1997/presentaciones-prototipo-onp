@@ -25,8 +25,8 @@
       <div class="flex flex-col md:flex-row gap-3 md:items-end">
         <div class="w-full md:w-96">
           <label class="block text-xs text-slate-500 mb-1">Tipo de transacción</label>
-        <select v-model="ui.selectedType" class="tw-input w-full">
-            <option value="" disabled>— Selecciona —</option>
+          <select id="selectTipoTransaccion" class="tw-input w-full">
+            <option value="">— Selecciona —</option>
             <option v-for="t in master.types" :key="t" :value="t">{{ t }}</option>
           </select>
         </div>

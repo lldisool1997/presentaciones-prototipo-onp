@@ -805,7 +805,19 @@ onMonedaChange() {
 
 
 
-  }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      // Si usas Tom Select, tu <select> debe tener id="selectTipoTransaccion"
+      new TomSelect('#selectTipoTransaccion', {
+        create: true,
+        placeholder: 'Escribe o selecciona un tipo...',
+        sortField: { field: 'text', direction: 'asc' },
+        onChange: (v) => { this.ui.selectedType = v; }
+      });
+    });
+  },
+  
 });
 
 
