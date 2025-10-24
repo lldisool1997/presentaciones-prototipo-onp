@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="./css/instrucciones.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.10.5"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 font-inter">
   <div id="app" class="max-w-6xl mx-auto p-4 md:p-6 space-y-4">
@@ -103,24 +104,41 @@
             <!-- Información adicional -->
             <div class="grid md:grid-cols-4 gap-3">
               <div>
-                <label class="tw-label">Unidad de Negocio</label>
-                <select class="tw-input w-full" v-model="curr.unidad">
-                  <option v-for="u in master.unidades" :key="u">{{ u }}</option>
-                </select>
-              </div>
+    <label class="tw-label">Unidad de Negocio</label>
+    <select class="tw-input w-full" v-model="curr.unidad" @change="onUnidadCabeceraChange">
+      <option value="" disabled>— Selecciona —</option>
+      <option v-for="u in master.unidades" :key="u" :value="u">{{ u }}</option>
+    </select>
+  </div>
+
+  
+             <div>
+            <label class="tw-label">Moneda</label>
+            <select class="tw-input w-full" v-model="curr.moneda" @change="onMonedaChange">
+              <option v-for="m in master.monedas" :key="m">{{ m }}</option>
+            </select>
+          </div>
+
+  <!-- Cuenta (dependiente de Unidad) -->
+  <div>
+    <label class="tw-label">Cuenta</label>
+    <select class="tw-input w-full"
+            v-model="curr.cuentaCabeceraId"
+            :disabled="!curr.unidad">
+      <option value="" disabled>— Selecciona —</option>
+      <option v-for="c in cuentasCabecera" :key="c.id" :value="c.id">
+        {{ c.alias }} — {{ c.numero }}
+      </option>
+    </select>
+    <p v-if="!curr.unidad" class="text-xs text-slate-500 mt-1">Primero elige la unidad.</p>
+  </div>
               <div>
                 <label class="tw-label">Fecha de Operación</label>
                 <input type="date" class="tw-input w-full" v-model="curr.fecha">
               </div>
               <div>
-                <label class="tw-label">Moneda</label>
-                <select class="tw-input w-full" v-model="curr.moneda">
-                  <option>PEN</option><option>USD</option>
-                </select>
-              </div>
-              <div>
                 <label class="tw-label">Importe</label>
-                <input class="tw-input w-full" v-model="curr.importe" placeholder="1,000.00">
+                <input class="tw-input w-full" v-model="curr.importe" v-money placeholder="1,000.00">
               </div>
             </div>
 
@@ -159,7 +177,7 @@
                     :disabled="lockedLayout === 'unidad'"
                     @change="onChangePersona(r)">
               <option value="">— Selecciona persona —</option>
-              <option v-for="p in master.personas" :key="p.id" :value="p.id">
+              <option v-for="p in personasFiltradas" :key="p.id" :value="p.id">
                 {{ p.nombre }}
               </option>
             </select>
@@ -191,7 +209,7 @@
           <!-- Monto -->
           <td class="p-2 min-w-[8rem]">
             <input class="tw-input w-full text-right"
-                   v-model="r.monto"
+                   v-model="r.monto" v-money
                    placeholder="0.00" />
           </td>
 

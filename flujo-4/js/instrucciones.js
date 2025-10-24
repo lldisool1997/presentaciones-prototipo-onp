@@ -1,27 +1,83 @@
+// --- Directiva de formato monetario ---
+const moneyBaseOptions = {
+  digitGroupSeparator: ',',
+  decimalCharacter: '.',
+  decimalPlaces: 2,
+  allowDecimalPadding: true,
+  modifyValueOnWheel: false,
+  emptyInputBehavior: 'null',
+  watchExternalChanges: true,
+  outputFormat: 'number'
+};
+
+const MoneyDirective = {
+  mounted(el, binding) {
+    const opts = { ...moneyBaseOptions, ...(binding.value || {}) };
+    el.__an = new AutoNumeric(el, opts);
+
+    const syncToModel = () => {
+      if (!el.__an) return;
+      const raw = el.__an.getNumericString();
+      const e = new Event('input', { bubbles: true });
+      el.value = raw ?? '';
+      el.dispatchEvent(e);
+    };
+
+    el.__anSync = syncToModel;
+    el.addEventListener('autoNumeric:rawValueModified', syncToModel);
+    el.addEventListener('change', syncToModel);
+  },
+  updated(el, binding) {
+    if (binding.value && el.__an) el.__an.update(binding.value);
+  },
+  unmounted(el) {
+    if (el.__an) {
+      el.removeEventListener('autoNumeric:rawValueModified', el.__anSync);
+      el.removeEventListener('change', el.__anSync);
+      el.__an.remove();
+      delete el.__an;
+      delete el.__anSync;
+    }
+  }
+};
+
 const { createApp, computed } = Vue;
 
-createApp({
+const app = createApp({
   data() {
     return {
      master: {
         types: ["Transferencias", "Habilitación de recursos", "Pago de pensiones", "Devoluciones fcjmms"],
-        unidades: ["Pública", "Privada", "Mixta"],
+        unidades: ["FCR-Macrofondo", "FCR-Emsal", "FCR-Paramonga"],
         bancos: ["SCOTIABANK", "BBVA", "BCP", "INTERBANK"],
+         monedas: ["PEN", "USD"],
 
         // Personas con cuenta definida (si eliges persona, la cuenta se setea sola)
         personas: [
-          { id: "per-001", nombre: "Juan Pérez",   cuentaId: "cta-bbva-001" },
-          { id: "per-002", nombre: "ACME S.A.C.",  cuentaId: "cta-bcp-010" },
-          { id: "per-003", nombre: "María López",  cuentaId: "cta-ibk-021" }
-        ],
+    // PEN
+    { id: "per-001", nombre: "Juan Pérez",   cuentaId: "cta-bbva-pen",  moneda: "PEN" },
+    { id: "per-002", nombre: "ACME S.A.C.",  cuentaId: "cta-bcp-pen",   moneda: "PEN" },
+    { id: "per-003", nombre: "María López",  cuentaId: "cta-ibk-pen",   moneda: "PEN" },
 
-        // Cuentas bancarias parametrizadas por unidad (y banco de referencia si quieres mostrar)
-        cuentas: [
-          { id: "cta-bbva-001", alias: "Planilla Central", numero: "BBVA-001-123456", unidad: "Pública",  banco: "BBVA" },
-          { id: "cta-bbva-002", alias: "Operaciones",      numero: "BBVA-002-654321", unidad: "Pública",  banco: "BBVA" },
-          { id: "cta-bcp-010",  alias: "Servicios",        numero: "BCP-010-777777",  unidad: "Privada",  banco: "BCP"  },
-          { id: "cta-ibk-021",  alias: "Impuestos",        numero: "IBK-021-111111",  unidad: "Mixta",    banco: "INTERBANK" }
-        ]
+    // USD
+    { id: "usd-001", nombre: "Juan Pérez",   cuentaId: "cta-bbva-usd",  moneda: "USD" },
+    { id: "usd-002", nombre: "ACME S.A.C.",  cuentaId: "cta-bcp-usd",   moneda: "USD" },
+    { id: "usd-003", nombre: "María López",  cuentaId: "cta-ibk-usd",   moneda: "USD" },
+  ],
+
+  cuentas: [
+    // BBVA
+    { id: "cta-bbva-pen", alias: "BBVA Central PEN", numero: "001-123456", unidad: "FCR-Macrofondo",  moneda: "PEN" },
+    { id: "cta-bbva-usd", alias: "BBVA Central USD", numero: "001-987654", unidad: "FCR-Macrofondo",  moneda: "USD" },
+
+    // BCP
+    { id: "cta-bcp-pen",  alias: "BCP Operaciones PEN", numero: "002-111111", unidad: "FCR-Emsal", moneda: "PEN" },
+    { id: "cta-bcp-usd",  alias: "BCP Operaciones USD", numero: "002-222222", unidad: "FCR-Emsal", moneda: "USD" },
+
+    // INTERBANK
+    { id: "cta-ibk-pen",  alias: "INTERBANK Mixta PEN", numero: "003-333333", unidad: "FCR-Paramonga",   moneda: "PEN" },
+    { id: "cta-ibk-usd",  alias: "INTERBANK Mixta USD", numero: "003-444444", unidad: "FCR-Paramonga",   moneda: "USD" },
+  ],
       },
        initialDocs: [
       { key: 'sustentos', label: 'Documento Sustento', fileName: '', file: null },
@@ -69,6 +125,17 @@ createApp({
   },
 
   computed: {
+      cuentasCabecera() {
+    if (!this.curr) return [];
+    const unidad = this.curr.unidad;
+    const moneda = this.curr.moneda;
+    if (!unidad || !moneda) return [];
+    return this.master.cuentas.filter(c => c.unidad === unidad && c.moneda === moneda);
+  },
+   personasFiltradas() {
+    if (!this.curr || !this.curr.moneda) return this.master.personas;
+    return this.master.personas.filter(p => p.moneda === this.curr.moneda);
+  },
 
 currentType() {
   return this.state.typesAdded[this.ui.activeTab];
@@ -77,18 +144,24 @@ isPersonaLayout() {
   return this.personaTypes.includes(this.currentType);
 },
 cuentasPara() {
-  return (row) => {
-    if (this.lockedLayout === 'persona') {
-      const p = this.master.personas.find(x => x.id === row.personaId);
-      if (!p) return [];
-      const c = this.master.cuentas.find(x => x.id === p.cuentaId);
-      return c ? [c] : [];
-    }
-    // 'unidad' o null (antes de bloquear): filtra por unidad si existe
-    if (!row.unidadNegocio) return [];
-    return this.master.cuentas.filter(c => c.unidad === row.unidadNegocio);
-  };
-},
+    // Devuelve una función para usar con la fila `r`
+    return (row) => {
+      const moneda = this.curr?.moneda;
+      if (!moneda) return [];
+
+      if (this.lockedLayout === 'persona') {
+        // Modo PERSONA: la cuenta viene de la persona PERO debe calzar con la moneda
+        const p = this.master.personas.find(x => x.id === row.personaId);
+        if (!p) return [];
+        const c = this.master.cuentas.find(x => x.id === p.cuentaId && x.moneda === moneda);
+        return c ? [c] : [];
+      }
+
+      // Modo UNIDAD: filtra por unidad y por moneda
+      if (!row.unidadNegocio) return [];
+      return this.master.cuentas.filter(c => c.unidad === row.unidadNegocio && c.moneda === moneda);
+    };
+  },
 
 // Totales
 totalFilas() {
@@ -168,22 +241,22 @@ approvedRowsCount() {
     },
 
     // Crea una nueva instrucción
-    newInstruction() {
+newInstruction() {
   return {
     id: this.uid(),
     descripcion: "",
     producto: "",
-    unidad: "Pública",
+    unidad: "",
+    cuentaCabeceraId: "", // 👈 nueva
     fecha: new Date().toISOString().slice(0, 10),
     moneda: "PEN",
     importe: "",
-    banco: "SCOTIABANK",
-    nroCuenta: "",
-    aprobado: false,   // <-- nivel instrucción
-    detalle: [],       // <-- filas (cada una con r.aprob)
+    aprobado: false,
+    detalle: [],
     docs: []
   };
 },
+
 
 
     // Guarda las instrucciones (solo demo)
@@ -262,11 +335,13 @@ eliminarFila(idx) {
       ev.target.value = "";
     },
 
+    /*
+
     onChangePersona(row) {
   // Cuando cambia la persona, setea automáticamente la cuenta y bloquea el select de cuenta
   const p = this.master.personas.find(x => x.id === row.personaId);
   row.cuentaId = p?.cuentaId || "";
-},
+},*/
 
 // Forzar modo y aplicar reglas a todas las filas
 enforceLayout(layout) {
@@ -291,18 +366,13 @@ enforceLayout(layout) {
 },
 
 // Cuando cambia persona en una fila
-onChangePersona(row) {
-  if (row.personaId) {
-    // bloquea en 'persona'
+  onChangePersona(row) {
+    // Bloquea modo persona y setea la cuenta si coincide con la moneda actual
     this.enforceLayout('persona');
-    // setea cuenta por la persona
     const p = this.master.personas.find(x => x.id === row.personaId);
-    row.cuentaId = p?.cuentaId || "";
-  } else {
-    // si deselecciona y no hay ninguna persona en ninguna fila, libera el modo
-    this.tryUnlockLayoutIfEmpty();
-  }
-},
+    const c = p ? this.master.cuentas.find(x => x.id === p.cuentaId && x.moneda === (this.curr?.moneda || '')) : null;
+    row.cuentaId = c ? c.id : "";
+  },
 
 // Cuando cambia unidad en una fila
 onChangeUnidad(row) {
@@ -568,7 +638,60 @@ collectAllDocs() {
     tipo: 'extra'
   }));
   return [...base, ...extra];
-}
+},
+  onUnidadCabeceraChange() {
+    if (!this.curr) return;
+    this.curr.cuentaCabeceraId = ""; // limpia cuenta
+  },
+onMonedaChange() {
+  if (!this.curr) return;
+
+  // Limpiar cabecera
+  this.curr.cuentaCabeceraId = "";
+
+  // Actualizar cada fila
+  const list = this.curr.detalle || [];
+
+  // Si la moneda cambia, y alguna persona no coincide con la nueva, vaciarla
+  for (const r of list) {
+    const p = this.master.personas.find(x => x.id === r.personaId);
+    if (p && p.moneda !== this.curr.moneda) {
+      r.personaId = "";
+      r.cuentaId = "";
+    }
+  }
+
+  // Recalcular las cuentas también
+  if (this.lockedLayout === 'persona') {
+    for (const r of list) {
+      if (!r.personaId) continue;
+      const p = this.master.personas.find(x => x.id === r.personaId);
+      const c = this.master.cuentas.find(
+        x => x.id === p?.cuentaId && x.moneda === this.curr.moneda
+      );
+      r.cuentaId = c ? c.id : "";
+    }
+  } else {
+    for (const r of list) {
+      if (!r.unidadNegocio) continue;
+      const ok = this.master.cuentas.some(
+        c => c.id === r.cuentaId && c.unidad === r.unidadNegocio && c.moneda === this.curr.moneda
+      );
+      if (!ok) r.cuentaId = "";
+    }
+  }
+
+  
+},
+
+
 
   }
-}).mount("#app");
+});
+
+
+// Registra la directiva global
+app.directive('money', MoneyDirective);
+
+// Monta
+app.mount("#app");
