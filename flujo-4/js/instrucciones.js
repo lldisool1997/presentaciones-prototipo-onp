@@ -1,7 +1,7 @@
 const DOCS_INICIALES = [
-  { key: 'riesgos', label: 'Informe de Riesgos', fileName: '', file: null },
-  { key: 'legal',  label: 'Informe Legal',       fileName: '', file: null },
-  { key: 'acta',   label: 'Acta de Comité de Inversiones', fileName: '', file: null },
+  { key: 'sustentos', label: 'Documento Sustento', fileName: '', file: null },
+ // { key: 'legal',  label: 'Informe Legal',       fileName: '', file: null },
+ // { key: 'acta',   label: 'Acta de Comité de Inversiones', fileName: '', file: null },
 ];
 
 // --- Directiva de formato monetario ---
