@@ -189,9 +189,10 @@
     v-model="r.personaId"
     @change="onChangePersona(r)"
     :ref="'personaSel_' + r.uid"
+    disabled
   >
-    <option value="">— Selecciona persona —</option>
-    <option v-for="p in personasFiltradas" :key="p.id" :value="p.id">
+    <option value="" disabled>— Selecciona persona —</option>
+    <option v-for="p in personasFiltradas" :key="p.id" :value="p.id" disabled>
       {{ p.nombre }}
     </option>
   </select>
