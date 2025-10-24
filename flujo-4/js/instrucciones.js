@@ -74,14 +74,14 @@ const app = createApp({
         // Personas con cuenta definida (si eliges persona, la cuenta se setea sola)
         personas: [
     // PEN
-    { id: "per-001", nombre: "A & A CONSULTORES Y GESTION DE COBRANZAS SAC",   cuentaId: "cta-bbva-pen",  moneda: "PEN" },
-    { id: "per-002", nombre: "A & A COPIADORAS SOCIEDAD ANONIMA CERRADA",  cuentaId: "cta-bcp-pen",   moneda: "PEN" },
-    { id: "per-003", nombre: "A & B ECOSISTEMAS S.R.L.",  cuentaId: "cta-ibk-pen",   moneda: "PEN" },
+    { id: "per-001", nombre: "A & A CONSULTORES Y GESTION DE COBRANZAS SAC", "bancoPreferido": "INTERBANK",   cuentaId: "cta-bbva-pen",  moneda: "PEN" },
+    { id: "per-002", nombre: "A & A COPIADORAS SOCIEDAD ANONIMA CERRADA",  "bancoPreferido": "BBVA", cuentaId: "cta-bcp-pen",   moneda: "PEN" },
+    { id: "per-003", nombre: "A & B ECOSISTEMAS S.R.L.", "bancoPreferido": "BBVA",  cuentaId: "cta-ibk-pen",   moneda: "PEN" },
 
     // USD
-    { id: "usd-001", nombre: "A & A CONSULTORES Y GESTION DE COBRANZAS SAC",   cuentaId: "cta-bbva-usd",  moneda: "USD" },
-    { id: "usd-002", nombre: "A & A COPIADORAS SOCIEDAD ANONIMA CERRADA",  cuentaId: "cta-bcp-usd",   moneda: "USD" },
-    { id: "usd-003", nombre: "A & B ECOSISTEMAS S.R.L.",  cuentaId: "cta-ibk-usd",   moneda: "USD" },
+    { id: "usd-001", nombre: "A & A CONSULTORES Y GESTION DE COBRANZAS SAC", "bancoPreferido": "INTERBANK",   cuentaId: "cta-bbva-usd",  moneda: "USD" },
+    { id: "usd-002", nombre: "A & A COPIADORAS SOCIEDAD ANONIMA CERRADA", "bancoPreferido": "BBVA",  cuentaId: "cta-bcp-usd",   moneda: "USD" },
+    { id: "usd-003", nombre: "A & B ECOSISTEMAS S.R.L.", "bancoPreferido": "BBVA",  cuentaId: "cta-ibk-usd",   moneda: "USD" },
   ],
   cuentas: [
     // BBVA
@@ -941,19 +941,6 @@ async loadTiposTransaccion() {
 
 // -------- resolutores de cuenta --------
 // Persona: devuelve cuentaId (match por id exacto y moneda)
-resolveCuentaForPersona(personaId, moneda) {
-  const p = this.master.personas.find(x => x.id === personaId);
-  if (!p) return '';
-  // Si la persona del JSON es "per-001" (PEN) y la instrucción está en USD, busca su par USD por nombre
-  if ((p.moneda || 'PEN') !== moneda) {
-    const sameNameUsd = this.master.personas.find(
-      x => x.nombre === p.nombre && (x.moneda || 'PEN') === moneda
-    );
-    if (sameNameUsd && sameNameUsd.cuentaId) return sameNameUsd.cuentaId;
-  }
-  return p.cuentaId || '';
-},
-
 // Unidad: escoge primera cuenta por unidad + moneda respetando orden de bancos
 resolveCuentaForUnidad(unidad, moneda, preferBankOrder = ['BBVA','BCP','INTERBANK','SCOTIABANK','BANCO DE LA NACIÓN']) {
   const pool = this.master.cuentas.filter(c => c.unidad === unidad && c.moneda === moneda);
@@ -1062,7 +1049,7 @@ buildMasterFromV3(v3) {
 
         cuentas.push({
           id,
-          alias: `${banco} ${unidad} ${moneda}`,
+          alias: `${banco} ${moneda}`,
           numero,
           unidad,
           moneda,
@@ -1146,6 +1133,8 @@ async loadMacroCuentasAndReplace() {
 
     // 5) Asignar UNA cuenta por persona, según moneda y preferencias
     this.master.personas = this.master.personas.map(p => {
+
+
       const pref = (v3.personasCatalog && v3.personasCatalog[p.id]) || {};
       const bancoPref = this.normalizeBankName(pref.bancoPreferido || 'BBVA');
       const unidadPref = pref.unidadPreferida || (this.master.unidades.find(u => u.toUpperCase().includes('MACROFONDO')) || this.master.unidades[0]);
@@ -1170,6 +1159,9 @@ async loadMacroCuentasAndReplace() {
 
       return { ...p, cuentaId };
     });
+
+          console.log("1")
+          console.log(this.master.personas)
 
     this.toastSuccess('Catálogo bancario actualizado y personas asignadas');
   } catch (e) {
@@ -1244,8 +1236,10 @@ applyTipoRulesForCurrent() {
     // Setear persona/cuenta si el tipo trae idPersona
     ins.detalle.forEach(row => {
       if (meta.idPersona && !row.personaId) row.personaId = meta.idPersona;
+
       if (row.personaId) {
         row.cuentaId = this.resolveCuentaForPersona(row.personaId, moneda) || '';
+        console.log(row.cuentaId)
       }
       // En modo persona, limpia unidad
       row.unidadNegocio = '';

@@ -1,10 +1,10 @@
 {
   "personasCatalog": {
-    "per-001": { "nombre": "Juan Pérez",   "bancoPreferido": "BBVA",      "unidadPreferida": "FCR-MACROFONDO" },
-    "per-002": { "nombre": "ACME S.A.C.",  "bancoPreferido": "BCP",       "unidadPreferida": "FCR-EMSAL" },
+    "per-001": { "nombre": "Juan Pérez",   "bancoPreferido": "INTERBANK",      "unidadPreferida": "FCR-MACROFONDO" },
+    "per-002": { "nombre": "ACME S.A.C.",  "bancoPreferido": "INTERBANK",       "unidadPreferida": "FCR-EMSAL" },
     "per-003": { "nombre": "María López",  "bancoPreferido": "INTERBANK", "unidadPreferida": "FCR-PARAMONGA" },
-    "usd-001": { "nombre": "Juan Pérez",   "bancoPreferido": "BBVA",      "unidadPreferida": "FCR-MACROFONDO" },
-    "usd-002": { "nombre": "ACME S.A.C.",  "bancoPreferido": "BCP",       "unidadPreferida": "FCR-MACROFONDO" },
+    "usd-001": { "nombre": "Juan Pérez",   "bancoPreferido": "INTERBANK",      "unidadPreferida": "FCR-MACROFONDO" },
+    "usd-002": { "nombre": "ACME S.A.C.",  "bancoPreferido": "INTERBANK",       "unidadPreferida": "FCR-MACROFONDO" },
     "usd-003": { "nombre": "María López",  "bancoPreferido": "INTERBANK", "unidadPreferida": "FCR-MACROFONDO" }
   },
 
@@ -53,10 +53,12 @@
         { "numero": "0011-0000-USD-040915",  "moneda": "USD" }
       ],
       "INTERBANK": [
+        { "numero": "200-0000000000-USD", "moneda": "USD" },
         { "numero": "200-3067561380",   "moneda": "PEN" },
         { "numero": "200-3068999825",   "moneda": "PEN" },
         { "numero": "200-3076993051",   "moneda": "PEN" },
-        { "numero": "200-0000000000-USD", "moneda": "USD" }
+
+        { "numero": "MN N° 200-3067561380", "moneda": "PEN"}
       ]
     },
 
@@ -123,6 +125,8 @@
     "FCR-BONOS DE RECONOCIMIENTO":{ "INTERBANK": [ { "numero": "200-3312207473", "moneda": "PEN" } ] },
     "FCR-BANMAT":                 { "INTERBANK": [ { "numero": "200-3383342088", "moneda": "PEN" } ] },
 
-    "FCR-ENATA": {}
+    "FCR-ENATA":  { "INTERBANK": [ { "numero": "200-3114431740", "moneda": "PEN" } ] },
+    "FCR-ENAPU":  { "INTERBANK": [ { "numero": "200-3114431945", "moneda": "PEN" } ] },
+    "FCR-FONDO PESQUERO":  { "INTERBANK": [ { "numero": "200-3114432054", "moneda": "PEN" } ] }
   }
 }

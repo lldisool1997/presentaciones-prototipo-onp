@@ -2,6 +2,7 @@
     { "codigo": "TFB", "descripcion": "Transferencias Bancarias", "categoria": "Transferencia", "tienePersona": false, "idPersona": null },
     { "codigo": "EMC", "descripcion": "De Macrofondo a otros fondos", "categoria": "Egreso", "tienePersona": false, "idPersona": null },
   { "codigo": "RMC", "descripcion": "Recepción Otros de macrofondo", "categoria": "Ingreso", "tienePersona": false, "idPersona": null },
+    { "codigo": "PP2", "descripcion": "Pago Pensiones Emsal", "categoria": "Egreso", "tienePersona": true, "idPersona": "per-002" },
   
   { "codigo": "DAM", "descripcion": "DEV. AÑOS ANT.F.MINERO", "categoria": "Egreso", "tienePersona": true, "idPersona": "per-001" },
   { "codigo": "PP3", "descripcion": "Pago Pensiones Entel Perú", "categoria": "Egreso", "tienePersona": true, "idPersona": "per-002" },
@@ -44,7 +45,7 @@
   { "codigo": "BCS", "descripcion": "Cuenta Ordinaria M.N BCRP", "categoria": "Egreso", "tienePersona": false, "idPersona": null },
   { "codigo": "A1O", "descripcion": "Transf, Alquileres MN a ONP-Ma", "categoria": "Egreso", "tienePersona": false, "idPersona": null },
   { "codigo": "PP6", "descripcion": "Pago Pensiones Pesca Perú", "categoria": "Egreso", "tienePersona": true, "idPersona": "per-001" },
-  { "codigo": "PP2", "descripcion": "Pago Pensiones Emsal", "categoria": "Egreso", "tienePersona": true, "idPersona": "per-002" },
+
   { "codigo": "POF", "descripcion": "Prestamos a Otros Fondos", "categoria": "Egreso", "tienePersona": false, "idPersona": null },
   { "codigo": "PMR", "descripcion": "Pago Beneficio Reserva", "categoria": "Egreso", "tienePersona": true, "idPersona": "per-003" },
   { "codigo": "PDT", "descripcion": "Pago de Detraccion M.N", "categoria": "Egreso", "tienePersona": false, "idPersona": null },

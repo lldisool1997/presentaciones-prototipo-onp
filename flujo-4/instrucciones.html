@@ -217,7 +217,8 @@
                     :disabled="lockedLayout === 'persona'">
               <option value="">— Selecciona cuenta —</option>
               <option v-for="c in cuentasPara(r)" :key="c.id" :value="c.id">
-                {{ c.alias }} — {{ c.numero }}
+                {{ c.alias }} — 
+                {{ c.numero }}
               </option>
             </select>
           </td>
