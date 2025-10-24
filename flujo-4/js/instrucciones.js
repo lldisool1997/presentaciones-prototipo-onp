@@ -100,7 +100,7 @@ const app = createApp({
       
 
             singleRowTypes: [
-      "Transferencias",
+      //"Transferencias",
     ],
 
        initialDocs: [
@@ -291,8 +291,7 @@ approvedRowsCount() {
   this.ui.activeInstructionTab = this.state.instructionsByType[type].length - 1;
 
   // Si el tipo solo permite una fila, asegúrate de crearla
-  if (this.singleRowTypes.includes(type)) {
-    if (!Array.isArray(ins.detalle) || ins.detalle.length === 0) {
+  if (!Array.isArray(ins.detalle) || ins.detalle.length === 0) {
       ins.detalle.push({
         uid: this.uid(),
         personaId: "",
@@ -302,7 +301,6 @@ approvedRowsCount() {
         aprob: false
       });
     }
-  }
 },
 
 

@@ -11,6 +11,8 @@
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.10.5"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 font-inter">
   <div id="app" class="max-w-6xl mx-auto p-4 md:p-6 space-y-4">
@@ -23,8 +25,8 @@
       <div class="flex flex-col md:flex-row gap-3 md:items-end">
         <div class="w-full md:w-96">
           <label class="block text-xs text-slate-500 mb-1">Tipo de transacción</label>
-          <select v-model="ui.selectedType" class="tw-input w-full">
-            <option value="" disabled>— Selecciona —</option>
+          <select id="selectTipo" class="tw-input w-full">
+            <option value="">— Selecciona —</option>
             <option v-for="t in master.types" :key="t" :value="t">{{ t }}</option>
           </select>
         </div>
@@ -119,9 +121,20 @@
               <option v-for="m in master.monedas" :key="m">{{ m }}</option>
             </select>
           </div>
+               <div>
+                <label class="tw-label">Importe</label>
+                <input class="tw-input w-full" v-model="curr.importe" v-money placeholder="1,000.00">
+              </div>
 
   <!-- Cuenta (dependiente de Unidad) -->
-  <div>
+
+              <div>
+                <label class="tw-label">Fecha de Operación</label>
+                <input type="date" class="tw-input w-full" v-model="curr.fecha">
+              </div>
+         
+            </div>
+              <div>
     <label class="tw-label">Cuenta</label>
     <select class="tw-input w-full"
             v-model="curr.cuentaCabeceraId"
@@ -133,15 +146,6 @@
     </select>
     <p v-if="!curr.unidad" class="text-xs text-slate-500 mt-1">Primero elige la unidad.</p>
   </div>
-              <div>
-                <label class="tw-label">Fecha de Operación</label>
-                <input type="date" class="tw-input w-full" v-model="curr.fecha">
-              </div>
-              <div>
-                <label class="tw-label">Importe</label>
-                <input class="tw-input w-full" v-model="curr.importe" v-money placeholder="1,000.00">
-              </div>
-            </div>
 
 <!-- Tabla de detalles -->
 <div class="my-4">
@@ -168,7 +172,7 @@
         <tr>
           <th class="p-2 text-left">Persona</th>
           <th class="p-2 text-left">Unidad de negocio</th>
-          <th class="p-2 text-left">Cuenta</th>
+          <th class="p-2 text-left">Banco/Cuenta</th>
           <th class="p-2 text-right">Monto</th>
           <th class="p-2 text-center">Aprob.</th>
           <th class="p-2"></th>
@@ -228,8 +232,8 @@
           <!-- Acciones -->
          <td class="p-2">
   <div class="flex gap-2 justify-end" v-if="!isSingleRowType">
-    <button class="tw-btn" @click="duplicarFila(ri)">Duplicar</button>
-    <button class="tw-btn-danger" @click="eliminarFila(ri)">Eliminar</button>
+    <!--<button class="tw-btn" @click="duplicarFila(ri)">Duplicar</button>-->
+    <button class="tw-btn-danger" v-if="ri >= 1" @click="eliminarFila(ri)">Eliminar</button>
   </div>
   <!--<div class="text-xs text-slate-500 text-right" v-else>
     Fila obligatoria
