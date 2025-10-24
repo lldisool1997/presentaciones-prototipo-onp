@@ -25,10 +25,10 @@
       <div class="flex flex-col md:flex-row gap-3 md:items-end">
         <div class="w-full md:w-96">
           <label class="block text-xs text-slate-500 mb-1">Tipo de transacción</label>
-          <select id="selectTipoTransaccion" class="tw-input w-full">
-            <option value="">— Selecciona —</option>
-            <option v-for="t in master.types" :key="t" :value="t">{{ t }}</option>
-          </select>
+           <select v-model="ui.selectedType" class="tw-input w-full">
+    <option value="">— Selecciona —</option>
+    <option v-for="t in master.types" :key="t" :value="t">{{ t }}</option>
+  </select>
         </div>
         <button class="tw-btn" @click="addType">Agregar tipo de transacción +</button>
         <div class="md:ml-auto flex items-center gap-2">
@@ -170,8 +170,8 @@
     <table class="w-full text-sm align-top">
       <thead class="text-xs text-slate-500">
         <tr>
-          <th class="p-2 text-left">Persona</th>
-          <th class="p-2 text-left">Unidad de negocio</th>
+          <th class="p-2 text-left" v-if="showPersonaCol">Persona</th>
+          <th class="p-2 text-left" v-if="!showPersonaCol">Unidad de negocio</th>
           <th class="p-2 text-left">Banco y Cuenta</th>
           <th class="p-2 text-right">Monto</th>
           <th class="p-2 text-center">Aprob.</th>
@@ -182,20 +182,24 @@
       <tbody>
         <tr v-for="(r, ri) in curr.detalle" :key="r.uid" class="bg-slate-50 border-y">
           <!-- Persona -->
-          <td class="p-2 min-w-[14rem]">
-            <select class="tw-input w-full"
-                    v-model="r.personaId"
-                    :disabled="lockedLayout === 'unidad'"
-                    @change="onChangePersona(r)">
-              <option value="">— Selecciona persona —</option>
-              <option v-for="p in personasFiltradas" :key="p.id" :value="p.id">
-                {{ p.nombre }}
-              </option>
-            </select>
-          </td>
+         <!-- Columna Persona (se muestra solo cuando aplique) -->
+<td v-if="showPersonaCol">
+  <select
+    class="tw-input w-full"
+    v-model="r.personaId"
+    @change="onChangePersona(r)"
+    :ref="'personaSel_' + r.uid"
+  >
+    <option value="">— Selecciona persona —</option>
+    <option v-for="p in personasFiltradas" :key="p.id" :value="p.id">
+      {{ p.nombre }}
+    </option>
+  </select>
+</td>
+
 
           <!-- Unidad -->
-          <td class="p-2 min-w-[14rem]">
+          <td class="p-2 min-w-[14rem]" v-if="!showPersonaCol">
             <select class="tw-input w-full"
                     v-model="r.unidadNegocio"
                     :disabled="lockedLayout === 'persona'"

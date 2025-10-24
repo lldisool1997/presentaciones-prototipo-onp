@@ -65,7 +65,7 @@ const app = createApp({
   data() {
     return {
      master: {
-        types: ["Transferencias", "Habilitación de recursos", "Pago de pensiones", "Devoluciones fcjmms"],
+        types: [],
         unidades: ["FCR-Macrofondo", "FCR-Emsal", "FCR-Paramonga"],
         bancos: ["SCOTIABANK", "BBVA", "BCP", "INTERBANK"],
          monedas: ["PEN", "USD"],
@@ -121,32 +121,26 @@ const app = createApp({
         typesAdded: [],
         instructionsByType: {} // Instrucciones agrupadas por tipo de transacción
       },
+
+      macroCuentas: {},            // ← aquí guardaremos el JSON externo
+    cuentasNormalizadas: []      // ← opcional: array plano (unidad, banco, numero)
       
     };
   },
 
     created() {
-    // 1) Preselecciona un tipo por defecto
-    this.ui.selectedType = this.master.types[0] || "";
 
-    // 2) Asegura que exista al menos un tipo agregado
-    if (this.ui.selectedType) {
-      this.addType();                 // agrega el seleccionado y limpia selectedType
-      this.ui.activeTab = 0;          // apunta al primer tab
-    }
-
-    // 3) Asegura al menos una instrucción en el tipo activo
-    const currentType = this.state.typesAdded[this.ui.activeTab];
-    if (currentType) {
-      if (!Array.isArray(this.state.instructionsByType[currentType])) {
-        this.state.instructionsByType[currentType] = [];
-      }
-      if (this.state.instructionsByType[currentType].length === 0) {
-        this.addInstruction(currentType);     // crea la primera instrucción
-      }
-      this.ui.activeInstructionTab = 0;       // selecciona la primera instrucción
-    }
+      
+      this.loadMacroCuentasAndReplace?.();
+  this.loadTiposTransaccion();
   },
+
+watch: {
+  currentType() { this.applyTipoRulesForCurrent(); },
+  'ui.activeTab'() { this.applyTipoRulesForCurrent(); },
+  'curr.moneda'() { this.applyTipoRulesForCurrent(); }
+}
+,
 
   computed: {
       cuentasCabecera() {
@@ -167,6 +161,17 @@ currentType() {
 isPersonaLayout() {
   return this.personaTypes.includes(this.currentType);
 },
+
+
+
+async focusPersona(uid) {
+  await this.$nextTick();
+  const el = this.$refs?.[`personaSel_${uid}`];
+  // Si la ref es un array (v-for), toma el primero
+  const node = Array.isArray(el) ? el[0] : el;
+  if (node && node.focus) node.focus();
+},
+
 cuentasPara() {
     // Devuelve una función para usar con la fila `r`
     return (row) => {
@@ -239,6 +244,19 @@ approvedRowsCount() {
     return this.singleRowTypes.includes(t);
   },
 
+   currentType() {
+    return this.state.typesAdded[this.ui.activeTab] || '';
+  },
+  showPersonaCol() {
+    const t = this.currentType;
+    if (!t) return false;
+    const meta = this.state.tiposByDesc?.[String(t).trim().toLowerCase()];
+    return !!meta?.tienePersona;
+  },
+  showUnidadCol() {
+    return !this.showPersonaCol;
+  }
+
     
   },
 
@@ -282,7 +300,7 @@ approvedRowsCount() {
 
 
     // Agrega una instrucción dentro del tipo de transacción
-   addInstruction(type) {
+addInstruction(type) {
   if (!this.state.instructionsByType[type]) {
     this.state.instructionsByType[type] = [];
   }
@@ -290,17 +308,21 @@ approvedRowsCount() {
   this.state.instructionsByType[type].push(ins);
   this.ui.activeInstructionTab = this.state.instructionsByType[type].length - 1;
 
-  // Si el tipo solo permite una fila, asegúrate de crearla
+  // si no hay filas, crea una
   if (!Array.isArray(ins.detalle) || ins.detalle.length === 0) {
-      ins.detalle.push({
-        uid: this.uid(),
-        personaId: "",
-        unidadNegocio: "",
-        cuentaId: "",
-        monto: "",
-        aprob: false
-      });
-    }
+    const row = {
+      uid: this.uid(),
+      personaId: "",
+      unidadNegocio: "",
+      cuentaId: "",
+      monto: "",
+      aprob: false
+    };
+    ins.detalle.push(row);
+  }
+
+  // aplica reglas del tipo (persona/unidad) y enfoca si aplica
+  this.applyTipoRulesForCurrent();
 },
 
 
@@ -366,19 +388,25 @@ agregarFila() {
   if (!Array.isArray(ins.detalle)) ins.detalle = [];
 
   if (this.isSingleRowType && ins.detalle.length >= 1) {
-    // Toast de aviso (usa el mixin Toast que ya tienes)
     Toast.fire({ icon: 'warning', title: 'Este tipo solo permite una fila' });
     return;
   }
 
-  ins.detalle.push({
+  const row = {
     uid: this.uid(),
     personaId: "",
     unidadNegocio: "",
     cuentaId: "",
     monto: "",
     aprob: false
-  });
+  };
+  ins.detalle.push(row);
+
+  // si el tipo es por persona → enfoca el select de persona de esta fila
+  if (this.isPersonaType(this.currentType)) {
+    this.enforceLayout('persona');
+    this.focusPersona(row.uid);
+  }
 },
 
 
@@ -593,9 +621,6 @@ async confirmDeleteRow(idx) {
       currentInstruction.docs.push({ id: this.uid(), nombre: name });
       this.ui.newDocName = "";
     },
-    // --- UTIL ---
-uid() { return Math.random().toString(36).slice(2); }, // si ya lo tienes, omite este
-
 isFileAllowed(file) {
   if (!file) return false;
 
@@ -804,6 +829,468 @@ onMonedaChange() {
   },
 
 
+  getCuentasPor(unidad, banco) {
+    return this.macroCuentas?.[unidad]?.[banco] || [];
+  },
+
+// -------- helpers básicos --------
+normalizeBankName(b) {
+  const map = {
+    'BANCO DE CRÉDITO': 'BCP',
+    'SCOTIABANK PERÚ': 'SCOTIABANK',
+    'BBVA PERÚ': 'BBVA',
+    'BANCO DE LA NACIÓN': 'BANCO DE LA NACIÓN',
+    'INTERBANK': 'INTERBANK',
+    'BCP': 'BCP', 'BBVA': 'BBVA', 'SCOTIABANK': 'SCOTIABANK'
+  };
+  return map[b?.trim()] || (b || '').trim();
+},
+slugify(s) {
+  return (s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/(^-|-$)/g,'');
+},
+
+// -------- índice de tipos --------
+// -------- índice de tipos --------
+async loadTiposTransaccion() {
+  try {
+    const res = await fetch('json/tipos-transaccion.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('No se pudo cargar tipos-transaccion.json');
+
+    const tiposRaw = await res.json();
+
+    // --- Normaliza cada item del JSON ---
+    const tipos = (Array.isArray(tiposRaw) ? tiposRaw : []).map(t => {
+      const desc = (t.descripcion || '').trim();
+      const cat  = (t.categoria || '').trim();
+      const idp  = (t.idPersona == null || t.idPersona === '') ? null : String(t.idPersona).trim();
+
+      // Normaliza booleans: true/false o "true"/"false" o valores truthy/falsy
+      let tienePersona = false;
+      if (typeof t.tienePersona === 'boolean') {
+        tienePersona = t.tienePersona;
+      } else if (typeof t.tienePersona === 'string') {
+        tienePersona = t.tienePersona.trim().toLowerCase() === 'true';
+      } else {
+        // si viene 1/0, "1"/"0", etc.
+        tienePersona = !!t.tienePersona;
+      }
+
+      return {
+        codigo: (t.codigo || '').trim(),
+        descripcion: desc,
+        categoria: cat,
+        tienePersona,
+        idPersona: idp
+      };
+    }).filter(t => t.descripcion); // desc obligatoria
+
+    // Índices
+    this.state.tiposByCode = {};
+    this.state.tiposByDesc = {};
+    for (const t of tipos) {
+      this.state.tiposByCode[t.codigo] = t;
+      this.state.tiposByDesc[t.descripcion.toLowerCase()] = t;
+    }
+
+    // Lista para el <select> (únicos, en orden)
+    const uniq = [];
+    const seen = new Set();
+    for (const t of tipos) {
+      const d = t.descripcion.toLowerCase();
+      if (!seen.has(d)) {
+        uniq.push(t.descripcion);
+        seen.add(d);
+      }
+    }
+    this.master.types = uniq;
+
+    // Arrays de layout (persona/unidad) con normalización de booleano
+    const personaTypes = [];
+    const unidadTypes  = [];
+    for (const t of tipos) {
+      if (t.tienePersona) personaTypes.push(t.descripcion);
+      else unidadTypes.push(t.descripcion);
+    }
+    this.personaTypes = [...new Set(personaTypes)];
+    this.unidadTypes  = [...new Set(unidadTypes)];
+
+    // (Debug útil)
+    console.log('Total tipos:', tipos.length);
+    console.log('Tipos con persona:', this.personaTypes.length);
+    console.table(this.personaTypes.slice(0, 10));
+    console.log('Tipos por unidad:', this.unidadTypes.length);
+    console.table(this.unidadTypes.slice(0, 10));
+
+    // Limpia selección si quedó inválida
+    if (this.ui.selectedType && !seen.has(this.ui.selectedType.toLowerCase())) {
+      this.ui.selectedType = '';
+    }
+
+    this.toastSuccess('Tipos de transacción cargados');
+  } catch (e) {
+    console.error(e);
+    this.toastError('No se pudo cargar tipos de transacción');
+  }
+},
+
+
+
+// -------- resolutores de cuenta --------
+// Persona: devuelve cuentaId (match por id exacto y moneda)
+resolveCuentaForPersona(personaId, moneda) {
+  const p = this.master.personas.find(x => x.id === personaId);
+  if (!p) return '';
+  // Si la persona del JSON es "per-001" (PEN) y la instrucción está en USD, busca su par USD por nombre
+  if ((p.moneda || 'PEN') !== moneda) {
+    const sameNameUsd = this.master.personas.find(
+      x => x.nombre === p.nombre && (x.moneda || 'PEN') === moneda
+    );
+    if (sameNameUsd && sameNameUsd.cuentaId) return sameNameUsd.cuentaId;
+  }
+  return p.cuentaId || '';
+},
+
+// Unidad: escoge primera cuenta por unidad + moneda respetando orden de bancos
+resolveCuentaForUnidad(unidad, moneda, preferBankOrder = ['BBVA','BCP','INTERBANK','SCOTIABANK','BANCO DE LA NACIÓN']) {
+  const pool = this.master.cuentas.filter(c => c.unidad === unidad && c.moneda === moneda);
+  if (pool.length === 0) return '';
+  // ordena por preferencia de banco si es posible
+  const bankIndex = (alias) => {
+    const bank = preferBankOrder.find(b => (alias || '').toUpperCase().startsWith(b));
+    return bank ? preferBankOrder.indexOf(bank) : 999;
+  };
+  const sorted = pool.slice().sort((a,b) => bankIndex(a.alias) - bankIndex(b.alias));
+  return sorted[0]?.id || pool[0].id;
+},
+
+// -------- aplica el tipo a la instrucción activa (layout + cuentas) --------
+applyTipoToCurrentInstruction() {
+  const tDesc = this.currentType; // tu tab activo usa la descripción como nombre del tipo
+  if (!tDesc || !this.curr) return;
+
+  const tipo = this.state.tiposByDesc?.[String(tDesc).toLowerCase()];
+  // Si no hay en JSON, no forzamos nada
+  if (!tipo) return;
+
+  // Forzamos layout según tienePersona
+  if (tipo.tienePersona) {
+    this.enforceLayout('persona');
+  } else {
+    this.enforceLayout('unidad');
+  }
+
+  // Seteo por cada fila del detalle
+  const moneda = (this.curr.moneda || 'PEN').toUpperCase();
+  const list = this.curr.detalle || [];
+  for (const row of list) {
+    if (tipo.tienePersona) {
+      // Persona obligatoria: setea persona e infiere cuenta
+      if (tipo.idPersona) row.personaId = tipo.idPersona;
+      const cuentaId = this.resolveCuentaForPersona(row.personaId, moneda);
+      row.cuentaId = cuentaId || '';
+      // al ser por persona, limpiamos unidad
+      row.unidadNegocio = '';
+    } else {
+      // Por unidad: si no tiene unidad, usa la primera de master
+      if (!row.unidadNegocio) row.unidadNegocio = this.master.unidades[0] || '';
+      row.cuentaId = this.resolveCuentaForUnidad(row.unidadNegocio, moneda);
+      // al ser por unidad, limpiamos persona
+      row.personaId = '';
+    }
+  }
+
+  // Cabecera: si trabajas con cuenta de cabecera, seleccionala también
+  if (!this.curr.cuentaCabeceraId) {
+    if (!tipo.tienePersona) {
+      // por unidad: intenta con unidad de la cabecera si existe, o de la primera fila
+      const unidadCab = this.curr.unidad || list[0]?.unidadNegocio || this.master.unidades[0] || '';
+      const cid = this.resolveCuentaForUnidad(unidadCab, moneda);
+      this.curr.cuentaCabeceraId = cid || '';
+    } else {
+      // por persona: toma la cuenta de la primera fila/persona
+      const cid = list[0]?.cuentaId || this.resolveCuentaForPersona(tipo.idPersona, moneda);
+      this.curr.cuentaCabeceraId = cid || '';
+    }
+  }
+},
+
+// -------- util para asegurar que siempre haya 1 fila mínimo --------
+ensureOneRow() {
+  if (!this.curr) return;
+  if (!Array.isArray(this.curr.detalle)) this.curr.detalle = [];
+  if (this.curr.detalle.length === 0) {
+    this.curr.detalle.push({
+      uid: this.uid(),
+      personaId: "",
+      unidadNegocio: "",
+      cuentaId: "",
+      monto: "",
+      aprob: false
+    });
+  }
+},
+slugify(s) {
+  return (s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/(^-|-$)/g,'');
+},
+
+// Construye master desde JSON v3
+buildMasterFromV3(v3) {
+  const unidades = Object.keys(v3.unidades || {});
+  const bankSet = new Set();
+  const cuentas = [];
+
+  for (const unidad of unidades) {
+    const porBanco = v3.unidades[unidad] || {};
+    for (const bancoRaw of Object.keys(porBanco)) {
+      const banco = this.normalizeBankName(bancoRaw);
+      bankSet.add(banco);
+
+      const items = porBanco[bancoRaw] || [];
+      items.forEach((it, i) => {
+        const numero = String(it.numero || '').replace(/^N°\s*/i,'').trim();
+        if (!numero) return;
+        const moneda = (it.moneda || 'PEN').toUpperCase();
+        const id = `cta-${this.slugify(banco)}-${this.slugify(unidad)}-${moneda.toLowerCase()}-${i+1}`;
+
+        cuentas.push({
+          id,
+          alias: `${banco} ${unidad} ${moneda}`,
+          numero,
+          unidad,
+          moneda,
+          banco
+        });
+      });
+    }
+  }
+
+  return {
+    unidades,
+    bancos: Array.from(bankSet),
+    cuentas
+  };
+},
+
+// Encuentra la mejor cuenta para una persona (una sola) por moneda
+pickAccountForPersona({ cuentas, bancoPreferido, unidadPreferida, moneda }) {
+  // 1) banco + unidad + moneda
+  let c = cuentas.find(x =>
+    x.banco === bancoPreferido && x.unidad === unidadPreferida && x.moneda === moneda
+  );
+  if (c) return c.id;
+
+  // 2) banco + moneda (cualquier unidad)
+  c = cuentas.find(x => x.banco === bancoPreferido && x.moneda === moneda);
+  if (c) return c.id;
+
+  // 3) cualquier cuenta por moneda
+  c = cuentas.find(x => x.moneda === moneda);
+  if (c) return c.id;
+
+  return ''; // no encontrada
+},
+
+// Crea (si hace falta) una cuenta placeholder para la persona
+ensurePlaceholderAccount({ cuentas, bancoPreferido, unidadPreferida, moneda }) {
+  const id = `cta-${this.slugify(bancoPreferido)}-${this.slugify(unidadPreferida)}-${moneda.toLowerCase()}-placeholder`;
+  if (!cuentas.some(c => c.id === id)) {
+    cuentas.push({
+      id,
+      alias: `${bancoPreferido} ${unidadPreferida} ${moneda}`,
+      numero: '—',
+      unidad: unidadPreferida,
+      moneda,
+      banco: bancoPreferido
+    });
+  }
+  return id;
+},
+
+// Carga el JSON v3 y reemplaza master.*; asigna cuentaId a cada persona (una sola)
+async loadMacroCuentasAndReplace() {
+  try {
+    const res = await fetch('json/macro-cuentas.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('No se pudo cargar macro-cuentas.v3.json');
+    const v3 = await res.json();
+
+    // 1) Construir master desde JSON
+    const built = this.buildMasterFromV3(v3);
+
+    // 2) Reemplazar master.* (unidades, bancos, cuentas)
+    this.master.unidades = built.unidades;
+    this.master.bancos   = built.bancos;
+    this.master.cuentas  = built.cuentas;
+
+    // 3) Monedas por defecto si hiciera falta
+    if (!Array.isArray(this.master.monedas) || this.master.monedas.length === 0) {
+      this.master.monedas = ['PEN', 'USD'];
+    }
+
+    // 4) Asegurar personas base si no existen
+    if (!Array.isArray(this.master.personas) || this.master.personas.length === 0) {
+      this.master.personas = Object.keys(v3.personasCatalog || {}).map(pid => ({
+        id: pid,
+        nombre: v3.personasCatalog[pid].nombre,
+        moneda: /usd/i.test(pid) ? 'USD' : 'PEN',
+        cuentaId: ''
+      }));
+    }
+
+    // 5) Asignar UNA cuenta por persona, según moneda y preferencias
+    this.master.personas = this.master.personas.map(p => {
+      const pref = (v3.personasCatalog && v3.personasCatalog[p.id]) || {};
+      const bancoPref = this.normalizeBankName(pref.bancoPreferido || 'BBVA');
+      const unidadPref = pref.unidadPreferida || (this.master.unidades.find(u => u.toUpperCase().includes('MACROFONDO')) || this.master.unidades[0]);
+      const moneda = (p.moneda || 'PEN').toUpperCase();
+
+      let cuentaId = this.pickAccountForPersona({
+        cuentas: this.master.cuentas,
+        bancoPreferido: bancoPref,
+        unidadPreferida: unidadPref,
+        moneda
+      });
+
+      if (!cuentaId) {
+        // crea placeholder si no existe ninguna cuenta apta
+        cuentaId = this.ensurePlaceholderAccount({
+          cuentas: this.master.cuentas,
+          bancoPreferido: bancoPref,
+          unidadPreferida: unidadPref,
+          moneda
+        });
+      }
+
+      return { ...p, cuentaId };
+    });
+
+    this.toastSuccess('Catálogo bancario actualizado y personas asignadas');
+  } catch (e) {
+    console.error(e);
+    this.toastError('No se pudo actualizar data desde JSON externo');
+  }
+},
+// ====== PÉGALO DENTRO DE methods: { ... } ======
+
+isPersonaType(desc) {
+  if (!desc) return false;
+  const meta = this.state?.tiposByDesc?.[String(desc).trim().toLowerCase()];
+  return !!meta?.tienePersona;
+},
+getTipoMeta(desc) {
+  if (!desc) return null;
+  return this.state?.tiposByDesc?.[String(desc).trim().toLowerCase()] || null;
+},
+
+// Si ya tienes uno similar, deja el tuyo y borra este
+resolveCuentaForPersona(personaId, moneda) {
+  const p = this.master.personas.find(x => x.id === personaId);
+  if (!p) return '';
+  // Si la moneda no coincide, intenta el "gemelo" por nombre
+  if ((p.moneda || 'PEN').toUpperCase() !== (moneda || 'PEN').toUpperCase()) {
+    const alt = this.master.personas.find(
+      x => x.nombre === p.nombre && (x.moneda || 'PEN').toUpperCase() === (moneda || 'PEN').toUpperCase()
+    );
+    return alt?.cuentaId || '';
+  }
+  return p.cuentaId || '';
+},
+
+// Si ya tienes resolveCuentaForUnidad, usa el tuyo:
+resolveCuentaForUnidad(unidad, moneda, preferBankOrder = ['BBVA','BCP','INTERBANK','SCOTIABANK','BANCO DE LA NACIÓN']) {
+  const pool = this.master.cuentas.filter(c => c.unidad === unidad && c.moneda === moneda);
+  if (pool.length === 0) return '';
+  const bankIndex = (alias) => {
+    const upper = (alias || '').toUpperCase();
+    const idx = preferBankOrder.findIndex(b => upper.startsWith(b));
+    return idx === -1 ? 999 : idx;
+  };
+  const sorted = pool.slice().sort((a,b) => bankIndex(a.alias) - bankIndex(b.alias));
+  return sorted[0]?.id || pool[0].id;
+},
+
+// 👇👇 EL MÉTODO QUE TE FALTA
+applyTipoRulesForCurrent() {
+  const tDesc = this.state.typesAdded?.[this.ui.activeTab];
+  const ins = this.curr;
+  if (!tDesc || !ins) return;
+
+  const meta = this.getTipoMeta(tDesc);
+  const moneda = (ins.moneda || 'PEN').toUpperCase();
+
+  if (meta?.tienePersona) {
+    // Forzar layout persona
+    this.enforceLayout?.('persona');
+
+    // Asegura al menos una fila
+    if (!Array.isArray(ins.detalle) || ins.detalle.length === 0) {
+      ins.detalle = [{
+        uid: this.uid(),
+        personaId: "",
+        unidadNegocio: "",
+        cuentaId: "",
+        monto: "",
+        aprob: false
+      }];
+    }
+
+    // Setear persona/cuenta si el tipo trae idPersona
+    ins.detalle.forEach(row => {
+      if (meta.idPersona && !row.personaId) row.personaId = meta.idPersona;
+      if (row.personaId) {
+        row.cuentaId = this.resolveCuentaForPersona(row.personaId, moneda) || '';
+      }
+      // En modo persona, limpia unidad
+      row.unidadNegocio = '';
+    });
+
+    // Cabecera (opcional): toma la cuenta de la primera fila
+    if (!ins.cuentaCabeceraId && ins.detalle[0]?.cuentaId) {
+      ins.cuentaCabeceraId = ins.detalle[0].cuentaId;
+    }
+
+  } else {
+    // Forzar layout unidad (no hace nada extra si no quieres)
+    this.enforceLayout?.('unidad');
+
+    // Asegura al menos una fila
+    if (!Array.isArray(ins.detalle) || ins.detalle.length === 0) {
+      ins.detalle = [{
+        uid: this.uid(),
+        personaId: "",
+        unidadNegocio: this.master.unidades[0] || "",
+        cuentaId: "",
+        monto: "",
+        aprob: false
+      }];
+    }
+
+    // Sugerir cuenta por unidad+moneda
+    ins.detalle.forEach(row => {
+      if (!row.unidadNegocio) row.unidadNegocio = this.master.unidades[0] || '';
+      row.personaId = '';
+      row.cuentaId = this.resolveCuentaForUnidad(row.unidadNegocio, moneda) || '';
+    });
+
+    // Cabecera (opcional): por unidad/moneda
+    if (!ins.cuentaCabeceraId) {
+      const uCab = ins.unidad || ins.detalle[0]?.unidadNegocio || this.master.unidades[0] || '';
+      ins.cuentaCabeceraId = this.resolveCuentaForUnidad(uCab, moneda) || '';
+    }
+  }
+},
+
+
+  
+
+
 
   },
   mounted() {
@@ -823,6 +1310,18 @@ onMonedaChange() {
 
 // Registra la directiva global
 app.directive('money', MoneyDirective);
+
+// Activa detección en DevTools
+app.config.devtools = true;
+
+// Muestra warnings en consola
+app.config.warnHandler = (msg, vm, trace) => {
+  console.warn(`[Vue warning]: ${msg}\nTrace: ${trace}`);
+};
+
+app.config.errorHandler = (err, vm, info) => {
+  console.error(`[Vue error]: ${info}`, err);
+};
 
 // Monta
 app.mount("#app");

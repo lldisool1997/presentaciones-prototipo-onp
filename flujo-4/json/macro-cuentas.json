@@ -1,0 +1,125 @@
+{
+  "personasCatalog": {
+    "per-001": { "nombre": "Juan Pérez",   "bancoPreferido": "BBVA",      "unidadPreferida": "FCR-MACROFONDO" },
+    "per-002": { "nombre": "ACME S.A.C.",  "bancoPreferido": "BCP",       "unidadPreferida": "FCR-EMSAL" },
+    "per-003": { "nombre": "María López",  "bancoPreferido": "INTERBANK", "unidadPreferida": "FCR-PARAMONGA" },
+    "usd-001": { "nombre": "Juan Pérez",   "bancoPreferido": "BBVA",      "unidadPreferida": "FCR-MACROFONDO" },
+    "usd-002": { "nombre": "ACME S.A.C.",  "bancoPreferido": "BCP",       "unidadPreferida": "FCR-MACROFONDO" },
+    "usd-003": { "nombre": "María López",  "bancoPreferido": "INTERBANK", "unidadPreferida": "FCR-MACROFONDO" }
+  },
+
+  "unidades": {
+    "FCR-LEY N° 28046": {
+      "BANCO DE CRÉDITO": [
+        { "numero": "193-13814691-0-31", "moneda": "PEN" },
+        { "numero": "193-14004253-0-09", "moneda": "PEN" },
+        { "numero": "193-14004326-0-83", "moneda": "PEN" },
+        { "numero": "193-16111242-0-81", "moneda": "PEN" },
+        { "numero": "193-16695371-0-09", "moneda": "PEN" }
+      ],
+      "INTERBANK": [
+        { "numero": "200-3071337036", "moneda": "PEN" },
+        { "numero": "200-3071337141", "moneda": "PEN" },
+        { "numero": "200-3071337222", "moneda": "PEN" },
+        { "numero": "200-3071337257", "moneda": "PEN" },
+        { "numero": "200-3071337290", "moneda": "PEN" }
+      ],
+      "BANCO DE LA NACIÓN": [
+        { "numero": "00-000-341835", "moneda": "PEN" },
+        { "numero": "00-000-341843", "moneda": "PEN" },
+        { "numero": "00-068-219051", "moneda": "PEN" },
+        { "numero": "00-000-525278", "moneda": "PEN" },
+        { "numero": "00-068-259169", "moneda": "PEN" },
+        { "numero": "00-000-525243", "moneda": "PEN" }
+      ]
+    },
+
+    "FCR-MACROFONDO": {
+      "BANCO DE CRÉDITO": [
+        { "numero": "193-1990153-0-54", "moneda": "PEN" },
+        { "numero": "191-4217521-1-31", "moneda": "PEN" },
+        { "numero": "191-0000000-USD",  "moneda": "USD" }
+      ],
+      "SCOTIABANK PERÚ": [
+        { "numero": "970-0700108",      "moneda": "PEN" },
+        { "numero": "4732923-000-07",   "moneda": "PEN" }
+      ],
+      "BBVA PERÚ": [
+        { "numero": "0011-0661-02-00040907", "moneda": "PEN" },
+        { "numero": "0011-0661-02-00040915", "moneda": "PEN" },
+        { "numero": "0011-0000-USD-040915",  "moneda": "USD" }
+      ],
+      "INTERBANK": [
+        { "numero": "200-3067561380",   "moneda": "PEN" },
+        { "numero": "200-3068999825",   "moneda": "PEN" },
+        { "numero": "200-3076993051",   "moneda": "PEN" },
+        { "numero": "200-0000000000-USD", "moneda": "USD" }
+      ]
+    },
+
+    "FCR-D.L.19990": {
+      "SCOTIABANK PERÚ": [
+        { "numero": "00-170-102-005017", "moneda": "PEN" },
+        { "numero": "01-170-102-005118", "moneda": "PEN" },
+        { "numero": "000-8046716",       "moneda": "PEN" },
+        { "numero": "000-8037110",       "moneda": "PEN" },
+        { "numero": "170-1122112",       "moneda": "PEN" },
+        { "numero": "970-0942460",       "moneda": "PEN" }
+      ],
+      "INTERBANK": [
+        { "numero": "200-3079380186", "moneda": "PEN" }
+      ],
+      "BANCO DE LA NACIÓN": [
+        { "numero": "00-000-644935", "moneda": "PEN" },
+        { "numero": "00-000-873241", "moneda": "PEN" },
+        { "numero": "00-000-874310", "moneda": "PEN" }
+      ]
+    },
+
+    "FCR-FCJIMMS-LEY N°29741": {
+      "INTERBANK": [
+        { "numero": "200-3070593039", "moneda": "PEN" },
+        { "numero": "200-3090250880", "moneda": "PEN" },
+        { "numero": "200-3202185393", "moneda": "PEN" },
+        { "numero": "200-3202185571", "moneda": "PEN" },
+        { "numero": "200-3202185644", "moneda": "PEN" },
+        { "numero": "200-3202185806", "moneda": "PEN" },
+        { "numero": "200-3202186012", "moneda": "PEN" },
+        { "numero": "200-3202186080", "moneda": "PEN" },
+        { "numero": "200-3202186110", "moneda": "PEN" },
+        { "numero": "200-3202186160", "moneda": "PEN" },
+        { "numero": "200-3240319255", "moneda": "PEN" },
+        { "numero": "200-3300753235", "moneda": "PEN" },
+        { "numero": "200-3364664783", "moneda": "PEN" },
+        { "numero": "200-3418021743", "moneda": "PEN" },
+        { "numero": "200-3469529377", "moneda": "PEN" }
+      ],
+      "BANCO DE LA NACIÓN": [
+        { "numero": "00-068-315956", "moneda": "PEN" },
+        { "numero": "00-068-315964", "moneda": "PEN" }
+      ]
+    },
+
+    "FCR-PESCA PERU S.A.": { "INTERBANK": [ { "numero": "200-3071337249", "moneda": "PEN" } ] },
+    "FCR-PARAMONGA":       { "INTERBANK": [ { "numero": "200-3071337320", "moneda": "PEN" } ] },
+    "FCR-EMSAL":           { "INTERBANK": [ { "numero": "200-3114431287", "moneda": "PEN" } ] },
+    "FCR-ENTEL":           { "INTERBANK": [ { "numero": "200-3114431627", "moneda": "PEN" } ] },
+    "FCR-ENAPU S.A.-D.S. N° 101-2010-EF": { "INTERBANK": [ { "numero": "200-3114431945", "moneda": "PEN" } ] },
+    "FCR-CENTROMIN":       { "INTERBANK": [ { "numero": "200-3114432003", "moneda": "PEN" } ] },
+
+    "FCR-REP PESQ. LEY N° 30003": {
+      "INTERBANK": [ { "numero": "200-3114432054", "moneda": "PEN" } ],
+      "BANCO DE LA NACIÓN": [
+        { "numero": "00-068-335973", "moneda": "PEN" },
+        { "numero": "00-068-335981", "moneda": "PEN" }
+      ]
+    },
+
+    "FCR-RTP":                    { "INTERBANK": [ { "numero": "200-3202186233", "moneda": "PEN" } ] },
+    "FCR-ELECTROLIMA":            { "INTERBANK": [ { "numero": "200-3312203818", "moneda": "PEN" } ] },
+    "FCR-BONOS DE RECONOCIMIENTO":{ "INTERBANK": [ { "numero": "200-3312207473", "moneda": "PEN" } ] },
+    "FCR-BANMAT":                 { "INTERBANK": [ { "numero": "200-3383342088", "moneda": "PEN" } ] },
+
+    "FCR-ENATA": {}
+  }
+}
