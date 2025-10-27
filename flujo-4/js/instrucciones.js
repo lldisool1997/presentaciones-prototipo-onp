@@ -135,6 +135,7 @@ const app = createApp({
       
       this.loadMacroCuentasAndReplace?.();
   this.loadTiposTransaccion();
+  this.loadFromLocalStorage();
   },
 
 watch: {
@@ -372,6 +373,7 @@ guardarTodo() {
 
   console.log('Docs por instrucción:', list.map(ins => this.collectDocsOf(ins)));
   this.toastSuccess('Listo para enviar');
+  this.saveToLocalStorage();
 },
 
 
@@ -1210,6 +1212,50 @@ applyTipoRulesForCurrent() {
     }
   }
 },
+
+// === 🔸 Guardar en localStorage sin sobreescribir ===
+saveToLocalStorage(key = 'instruccionesData') {
+  try {
+    const existing = JSON.parse(localStorage.getItem(key) || '{}');
+    const data = {
+      master: this.master,
+      state: this.state,
+      ui: this.ui,
+      timestamp: new Date().toISOString()
+    };
+
+    // fusiona sin sobreescribir propiedades existentes
+    const merged = { ...existing, ...data };
+    localStorage.setItem(key, JSON.stringify(merged));
+
+    this.toastSuccess('Datos guardados en localStorage');
+  } catch (e) {
+    console.error('Error al guardar en localStorage:', e);
+    this.toastError('No se pudo guardar');
+  }
+},
+
+// === 🔸 Recuperar del localStorage (sin sobreescribir el actual) ===
+loadFromLocalStorage(key = 'instruccionesData') {
+  try {
+    const stored = JSON.parse(localStorage.getItem(key) || '{}');
+    if (!stored || Object.keys(stored).length === 0) {
+      this.toastInfo('No hay datos previos guardados');
+      return;
+    }
+
+    // fusiona sin borrar lo actual
+    this.master = { ...this.master, ...(stored.master || {}) };
+    this.state = { ...this.state, ...(stored.state || {}) };
+    this.ui     = { ...this.ui, ...(stored.ui || {}) };
+
+    this.toastSuccess('Datos recuperados de localStorage');
+  } catch (e) {
+    console.error('Error al cargar desde localStorage:', e);
+    this.toastError('No se pudo cargar');
+  }
+},
+
 
 
   

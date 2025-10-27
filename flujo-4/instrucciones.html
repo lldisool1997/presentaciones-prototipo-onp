@@ -109,7 +109,7 @@
 
 <div class="my-4">
       <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
-        1. Información de la instrucción
+        1. Descripción de la instrucción
       </div>
   </div>
 
@@ -130,7 +130,7 @@
 </div>
 
             <!-- Descripción y Producto como Textareas -->
-            <div class="grid md:grid-cols-2 gap-3">
+            <div class="grid md:grid-cols-1 gap-3">
               <div>
                 <label class="tw-label">Descripción</label>
                 <textarea class="tw-input w-full" v-model="curr.descripcion" placeholder="Descripción de la instrucción"
@@ -138,13 +138,19 @@
                 :disabled="isInstructionLocked"
                 ></textarea>
               </div>
-              <div>
+              <!--<div>
                 <label class="tw-label">Producto</label>
                 <textarea class="tw-input w-full" v-model="curr.producto" placeholder="p.ej. Con el producto X"
                 :disabled="isInstructionLocked"
                 ></textarea>
-              </div>
+              </div>-->
             </div>
+
+            <div class="my-4">
+      <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
+        2. Cuenta de cargo
+      </div>
+  </div>
 
             <!-- Información adicional -->
             <div class="grid md:grid-cols-4 gap-3">
@@ -195,7 +201,7 @@
 
 <div class="my-4">
       <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
-        2. Transferencias destino
+        3. Cuentas de abono
       </div>
   </div>
 
@@ -319,7 +325,7 @@
 <div class="mt-4">
 <div class="my-4">
       <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
-        3. Sustentos de la instrucción
+        4. Sustentos de la instrucción
       </div>
   </div>
 
