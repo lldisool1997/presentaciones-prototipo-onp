@@ -104,8 +104,16 @@
           <div v-if="curr" class="p-4 space-y-4">
 
 
-<div class="border rounded-md border-gray-400 p-5 shadow-md">
-                     <div class="flex items-center justify-end gap-4 text-sm text-slate-600 mt-2">
+<div class=" rounded-md p-5 shadow-md">
+
+
+<div class="my-4">
+      <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
+        1. Información de la instrucción
+      </div>
+  </div>
+
+                       <div class="flex items-center justify-end gap-4 text-sm text-slate-600 mt-2">
   <label class="inline-flex items-center gap-2 cursor-pointer">
     <input type="checkbox" v-model="curr.aprobado" class="accent-sky-600" />
     <span class="font-medium">Listo para enviar</span>
@@ -120,12 +128,6 @@
     Eliminar instrucción
   </button>
 </div>
-
-<div class="my-4">
-      <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
-        1. Información de la instrucción
-      </div>
-  </div>
 
             <!-- Descripción y Producto como Textareas -->
             <div class="grid md:grid-cols-2 gap-3">
@@ -321,7 +323,7 @@
 
   <div class="flex flex-wrap gap-3">
     <button
-      v-for="doc in master?.globalDocsExtras"
+      v-for="doc in master?.globalDocsExtras.filter(e => e.fileName)"
       :key="doc.id"
       @click="toggleDocSeleccionado(doc.id)"
       :disabled="isInstructionLocked"
