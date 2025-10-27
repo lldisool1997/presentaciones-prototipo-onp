@@ -5,7 +5,9 @@
   <title>Listado de Instrucciones</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- Fuente opcional -->
+    <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/lista-instrucciones.css" />
 </head>
@@ -14,10 +16,10 @@
     <div class="container">
       <div class="main-container">
         <!-- Header -->
-        <div class="header flex items-center justify-between gap-4 mb-3">
+        <div class="header flex items-center justify-center gap-4 mb-3">
           <div>
             <h1 class="m-0 text-xl font-semibold">Listado de Instrucciones</h1>
-            <div class="text-gray-500 text-sm">Administración de instrucciones por tipo (Estados: Registrado, Aprobado)</div>
+            <div class="text-white text-sm">Administración de instrucciones por tipo (Estados: Registrado, Aprobado)</div>
           </div>
         </div>
 
@@ -124,10 +126,10 @@
                 Mostrando
                 <span class="font-normal">{{ pageFrom }}</span>–<span class="font-normal">{{ pageTo }}</span>
                 de <span class="font-normal">{{ filteredAll.length }}</span>
-                &middot; Suma total: <span class="font-normal">{{ money(sumFiltered) }}</span>
+                <!--&middot; Suma total: <span class="font-normal">{{ money(sumFiltered) }}</span>-->
               </div>
 
-              <div class="paginator flex items-center gap-2">
+              <div class="paginator flex flex-row items-center gap-2">
                 <label class="text-sm text-gray-600">Filas por página</label>
                 <select v-model.number="pagination.pageSize" class="tw-input !py-1 !px-2 min-w-[80px]">
                   <option :value="5">5</option>
