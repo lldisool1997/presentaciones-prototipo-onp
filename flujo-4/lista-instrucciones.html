@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Listado de Instrucciones</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Fuente opcional -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/lista-instrucciones.css" />
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <div class="main-container">
+        <!-- Header -->
+        <div class="header flex items-center justify-between gap-4 mb-3">
+          <div>
+            <h1 class="m-0 text-xl font-semibold">Listado de Instrucciones</h1>
+            <div class="text-gray-500 text-sm">Administración de instrucciones por tipo (Estados: Registrado, Aprobado)</div>
+          </div>
+        </div>
+
+        <div class="content-wrapper">
+          <!-- ===== Filtros ===== -->
+          <div class="filters-section bg-[#f8f9fa] p-4 rounded-xl border border-gray-200 mb-4">
+            <div class="filters-row flex flex-wrap items-end gap-4 mb-4">
+              <div class="form-group flex flex-col gap-1 min-w-[220px]">
+                <label for="fTipo" class="text-sm">Tipo de transacción</label>
+                <select id="fTipo" v-model="uiFilter.tipo" class="tw-input">
+                  <option value="">Todos</option>
+                  <option v-for="t in state.typesAdded" :key="t" :value="t">{{ t }}</option>
+                </select>
+              </div>
+
+              <div class="form-group flex flex-col gap-1 min-w-[160px]">
+                <label for="fMoneda" class="text-sm">Moneda</label>
+                <select id="fMoneda" v-model="uiFilter.moneda" class="tw-input">
+                  <option value="">Todas</option>
+                  <option v-for="m in master.monedas" :key="m" :value="m">{{ m }}</option>
+                </select>
+              </div>
+
+              <div class="form-group grow flex flex-col gap-1 min-w-[220px]">
+                <label for="fTexto" class="text-sm">Buscar (descripción)</label>
+                <input id="fTexto" v-model.trim="uiFilter.q" type="text" placeholder="Escribe parte de la descripción..." class="tw-input" />
+              </div>
+
+              <!-- NUEVO: rango de fecha de la instrucción -->
+              <div class="form-group flex flex-col gap-1">
+                <label class="text-sm" for="fDesde">Fecha desde</label>
+                <input id="fDesde" type="date" v-model="uiFilter.fechaIni" class="tw-input min-w-[160px]" />
+              </div>
+              <div class="form-group flex flex-col gap-1">
+                <label class="text-sm" for="fHasta">Fecha hasta</label>
+                <input id="fHasta" type="date" v-model="uiFilter.fechaFin" class="tw-input min-w-[160px]" />
+              </div>
+            </div>
+
+            <div class="filters-row flex gap-2">
+              <button class="btn btn-primary tw-btn-primary" @click="applyFilters">Buscar</button>
+              <button class="btn tw-btn" @click="resetFilters">Limpiar</button>
+            </div>
+          </div>
+
+          <!-- ===== Tabla ===== -->
+          <div class="section-header font-semibold my-3">Instrucciones</div>
+
+          <div class="table-container rounded-xl border border-gray-200 overflow-hidden bg-white">
+            <div class="table-wrapper w-full overflow-auto">
+              <table class="table w-full border-separate border-spacing-0">
+                <thead>
+                  <tr class="bg-gray-100">
+                    <th>Estado</th>
+                    <th>Tipo</th>
+                    <th class="text-left">Descripción</th>
+                    <th class="text-center">Fecha</th>
+                    <th class="text-center">Moneda</th>
+                    <th class="text-center">Cuenta cabecera</th>
+                    <th class="text-right">Total detalle</th>
+                    <th class="text-center">Filas</th>
+                    <th class="text-center">Aprobadas</th>
+                    <th class="text-center">Acciones</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <!-- Paginación GLOBAL sobre todas las filas ya filtradas -->
+                  <tr v-for="row in pagedAll" :key="row.ins.id">
+                    <td class="py-2">
+                      <span :class="row.ins.aprobado ? 'badge badge-ok' : 'badge badge-warn'">
+                        {{ row.ins.aprobado ? 'Aprobado' : 'Registrado' }}
+                      </span>
+                    </td>
+                    <td>{{ row.tipo }}</td>
+                    <td class="ellipsis" :title="row.ins.descripcion || '—'">{{ row.ins.descripcion || '—' }}</td>
+                    <td class="text-center">{{ row.ins.fecha }}</td>
+                    <td class="text-center">{{ row.ins.moneda }}</td>
+                    <td class="text-center">{{ accountAlias(row.ins.cuentaCabeceraId) }}</td>
+                    <td class="text-right tabular-nums">{{ money(sumInstruction(row.ins)) }}</td>
+                    <td class="text-center">{{ row.ins.detalle?.length || 0 }}</td>
+                    <td class="text-center">{{ (row.ins.detalle || []).filter(r => !!r.aprob).length }}</td>
+                    <td class="text-center">
+                      <div class="actions flex gap-2 justify-center">
+                        <button class="btn btn-ghost tw-btn-ghost" @click="goToInstruction(row.tipo, row.ins)">Editar</button>
+                        <button class="btn btn-danger btn-outline tw-btn-danger-outline" @click="deleteInstruction(row.tipo, row.ins)">Eliminar</button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Sin filas -->
+                  <tr v-if="filteredAll.length === 0">
+                    <td class="text-gray-500 text-center py-3" colspan="10">
+                      No hay instrucciones con los filtros actuales.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Totales + Paginador -->
+            <div class="footer-bar flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-gray-200 bg-gray-50">
+              <div class="totals font-semibold">
+                Mostrando
+                <span class="font-normal">{{ pageFrom }}</span>–<span class="font-normal">{{ pageTo }}</span>
+                de <span class="font-normal">{{ filteredAll.length }}</span>
+                &middot; Suma total: <span class="font-normal">{{ money(sumFiltered) }}</span>
+              </div>
+
+              <div class="paginator flex items-center gap-2">
+                <label class="text-sm text-gray-600">Filas por página</label>
+                <select v-model.number="pagination.pageSize" class="tw-input !py-1 !px-2 min-w-[80px]">
+                  <option :value="5">5</option>
+                  <option :value="10">10</option>
+                  <option :value="20">20</option>
+                  <option :value="50">50</option>
+                </select>
+
+                <button class="btn tw-btn" :disabled="pagination.page === 1" @click="toFirst">«</button>
+                <button class="btn tw-btn" :disabled="pagination.page === 1" @click="prevPage">Anterior</button>
+                <div class="px-2 text-sm text-gray-600">Página {{ pagination.page }} / {{ totalPages || 1 }}</div>
+                <button class="btn tw-btn" :disabled="pagination.page >= totalPages" @click="nextPage">Siguiente</button>
+                <button class="btn tw-btn" :disabled="pagination.page >= totalPages" @click="toLast">»</button>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /content-wrapper -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <!-- (Opcional) SweetAlert2 para diálogos bonitos -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="js/lista-instrucciones.js"></script>
+</body>
+</html>
