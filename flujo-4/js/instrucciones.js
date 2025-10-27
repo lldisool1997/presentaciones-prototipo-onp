@@ -96,6 +96,8 @@ const app = createApp({
     { id: "cta-ibk-pen",  alias: "INTERBANK Mixta PEN", numero: "003-333333", unidad: "FCR-Paramonga",   moneda: "PEN" },
     { id: "cta-ibk-usd",  alias: "INTERBANK Mixta USD", numero: "003-444444", unidad: "FCR-Paramonga",   moneda: "USD" },
   ],
+  
+      globalDocsExtras: [],
       },
       
 
@@ -667,20 +669,37 @@ onFileExtra(ev, d) {
 
 
 addDynamicDoc() {
-  const ins = this.currentIns();
-  if (!ins) return;
+   const name = (this.ui.newDocName || '').trim();
+  if (!name) { this.toastInfo('Escriba el nombre del documento'); return; }
 
-  const name = (this.ui.newDocName || '').trim();
-  if (!name) { this.toastInfo('Escribe un nombre'); return; }
 
-  ins.docsExtras.push({
+
+  this.master.globalDocsExtras.push({
     id: this.uid(),
-    label: name,
-    fileName: '',
-    file: null
+    label: this.ui.newDocName.trim(),
+    file: null,
+    fileName: "",
   });
-  this.ui.newDocName = '';
-  this.toastSuccess('Documento agregado');
+  this.ui.newDocName = "";
+   this.toastSuccess('Nuebo documento registrado'); return;
+},
+
+onFileGlobal(e, doc) {
+  const file = e.target.files[0];
+  if (!file) return;
+  doc.file = file;
+  doc.fileName = file.name;
+},
+
+confirmDeleteGlobalDoc(i) {
+  this.master.globalDocsExtras.splice(i, 1);
+},
+
+toggleDocSeleccionado(docId) {
+  if (!this.curr.docsSeleccionados) this.curr.docsSeleccionados = [];
+  const i = this.curr.docsSeleccionados.indexOf(docId);
+  if (i >= 0) this.curr.docsSeleccionados.splice(i, 1);
+  else this.curr.docsSeleccionados.push(docId);
 },
 
 async confirmDeleteDynamicDoc(di) {

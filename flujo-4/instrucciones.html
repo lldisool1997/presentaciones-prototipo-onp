@@ -123,7 +123,7 @@
 
 <div class="my-4">
       <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
-        Información de la instrucción
+        1. Información de la instrucción
       </div>
   </div>
 
@@ -191,7 +191,7 @@
 
 <div class="my-4">
       <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
-        Transferencias destino
+        2. Transferencias destino
       </div>
   </div>
 
@@ -299,11 +299,10 @@
 
       <tfoot class="text-sm font-semibold">
         <tr>
-          <td class="p-2" colspan="3">
+          <td class="p-2" colspan="2">
             Total filas: {{ totalFilas }}
           </td>
           <td class="p-2 text-right min-w-[8rem]">{{ totalMontoFormateado }}</td>
-          <td></td>
           <td></td>
         </tr>
       </tfoot>
@@ -313,7 +312,64 @@
 
 
 
-            
+<div class="mt-4">
+<div class="my-4">
+      <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
+        3. Sustentos de la instrucción
+      </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <button
+      v-for="doc in master?.globalDocsExtras"
+      :key="doc.id"
+      @click="toggleDocSeleccionado(doc.id)"
+      :disabled="isInstructionLocked"
+      class="relative flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium shadow-sm
+             transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-400"
+      :class="curr.docsSeleccionados?.includes(doc.id)
+              ? 'bg-emerald-50 border-emerald-400 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-500 hover:shadow-md'
+              : 'bg-white border-slate-300 text-slate-500 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-60 disabled:cursor-not-allowed'"
+    >
+      <div class="flex items-center justify-between w-full">
+        <div class="flex items-center gap-2">
+          <!-- Ícono -->
+          <span
+            class="flex-shrink-0 transition-transform duration-200"
+            :class="curr.docsSeleccionados?.includes(doc.id)
+                    ? 'text-emerald-600'
+                    : 'text-slate-400 group-hover:scale-110'"
+          >
+            <svg v-if="curr.docsSeleccionados?.includes(doc.id)"
+                 xmlns="http://www.w3.org/2000/svg"
+                 class="w-5 h-5"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor"
+                 stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <svg v-else
+                 xmlns="http://www.w3.org/2000/svg"
+                 class="w-5 h-5"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor"
+                 stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+          </span>
+
+          <!-- Nombre -->
+          <span class="truncate max-w-[11rem]">{{ doc.fileName || doc.label }}</span>
+        </div>
+      </div>
+    </button>
+  </div>
+</div>
+
+
 
 
 </div>
@@ -337,7 +393,7 @@
       </div>
   </div>
 
-  <div class="docsec-body" v-if="curr">
+  <div class="docsec-body">
     <!-- Tarjetas iniciales (fijas) -->
    <!-- <div class="doc-grid">
       <div class="doc-card" v-for="d in curr.docsIniciales" :key="d.key">
@@ -381,33 +437,34 @@
       </div>
 
       <!-- Dinámicos -->
-      <div class="doc-grid mt-3" v-if="curr.docsExtras.length">
-        <div class="doc-card" v-for="(d, di) in curr.docsExtras" :key="d.id">
-          <div class="doc-card-title">
-            {{ d.label }}
-            <button class="doc-remove"
-                    @click="confirmDeleteDynamicDoc(di)"
-                    title="Quitar documento">×</button>
-          </div>
+      <div class="doc-grid mt-3" v-if="master.globalDocsExtras?.length">
+  <div class="doc-card" v-for="(d, di) in master.globalDocsExtras" :key="d.id">
+    <div class="doc-card-title">
+      {{ d.label }}
+      <button class="doc-remove"
+              @click="confirmDeleteGlobalDoc(di)"
+              title="Quitar documento">×</button>
+    </div>
 
-          <label class="uploader-dropzone">
-            <input type="file"
-                    accept="application/pdf,
-               application/vnd.ms-excel,
-               application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                   class="uploader-input"
-                   @change="onFileExtra($event, d)" />
-            <div class="uploader-inner">
-              <div class="uploader-icon">📄</div>
-              <div class="uploader-text">
-                <div class="uploader-action">Seleccionar archivo</div>
-                <div class="uploader-sub">PDF y Excel</div>
-                <div class="uploader-file" v-if="d.fileName">{{ d.fileName }}</div>
-              </div>
-            </div>
-          </label>
+    <label class="uploader-dropzone">
+      <input type="file"
+             accept="application/pdf,
+                     application/vnd.ms-excel,
+                     application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+             class="uploader-input"
+             @change="onFileGlobal($event, d)" />
+      <div class="uploader-inner">
+        <div class="uploader-icon">📄</div>
+        <div class="uploader-text">
+          <div class="uploader-action">Seleccionar archivo</div>
+          <div class="uploader-sub">PDF y Excel</div>
+          <div class="uploader-file" v-if="d.fileName">{{ d.fileName }}</div>
         </div>
       </div>
+    </label>
+  </div>
+</div>
+
     </div>
   </div>
 </section>
