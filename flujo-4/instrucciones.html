@@ -180,7 +180,9 @@
     <label class="tw-label">Banco y Cuenta</label>
     <select class="tw-input w-full"
             v-model="curr.cuentaCabeceraId"
-            :disabled="!curr.unidad" :disabled="isInstructionLocked">
+            :disabled="!curr.unidad || isInstructionLocked"
+            
+            >
       <option value="" disabled>— Selecciona —</option>
       <option v-for="c in cuentasCabecera" :key="c.id" :value="c.id">
         {{ c.alias }} — {{ c.numero }}
