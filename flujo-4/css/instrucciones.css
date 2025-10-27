@@ -45,7 +45,7 @@
 .tw-label {
   display: block;
   font-size: .75rem;
-  color: rgb(100 116 139);
+  color: rgb(53, 57, 63);
   margin-bottom: .25rem;
 }
 
@@ -125,7 +125,7 @@
 }
 
 /* ===== Cuerpo de la sección ===== */
-.docsec-body { padding: 1rem; }
+.docsec-body { padding: 1rem; padding-top: 0px; }
 
 /* ===== Grid de tarjetas ===== */
 .doc-grid {
@@ -222,3 +222,16 @@
 
 /* Utilidad espaciado top */
 .mt-3 { margin-top: .75rem; }
+
+/* Lightweight, accessible help tooltips */
+.help-group{position:relative;display:inline-block;vertical-align:middle;margin-left:.35rem;}
+.help-btn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:9999px;border:1px solid rgba(2,6,23,.25);font-size:11px;line-height:1;font-weight:700;background:white;color:#0f172a;cursor:help}
+.help-btn:focus{outline:2px solid #38bdf8;outline-offset:2px}
+.help-bubble{position:absolute;z-index:999;min-width:220px;max-width:340px;background:#0f172a;color:white;border-radius:.5rem;padding:.5rem .625rem;font-size:.75rem;line-height:1.25rem;box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);opacity:0;pointer-events:none;transform:translateY(-6px)}
+.help-group:hover .help-bubble,
+.help-group:focus-within .help-bubble{opacity:1;pointer-events:auto;transform:translateY(-2px)}
+.help-arrow{position:absolute;bottom:-5px;left:10px;width:10px;height:10px;background:#0f172a;transform:rotate(45deg)}
+/* Positions */
+.help-top{bottom:125%;left:0}
+.help-right{left:calc(100% + 8px);top:50%;transform:translateY(-50%)}
+.help-right .help-arrow{bottom:auto;left:-5px;top:calc(50% - 5px)}

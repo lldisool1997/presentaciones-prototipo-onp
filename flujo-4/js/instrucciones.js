@@ -255,7 +255,11 @@ approvedRowsCount() {
   },
   showUnidadCol() {
     return !this.showPersonaCol;
-  }
+  },
+   isInstructionLocked() {
+    const curr = this.curr;
+    return !!(curr && curr.aprobado === true);
+  },
 
     
   },
@@ -407,21 +411,6 @@ agregarFila() {
     this.enforceLayout('persona');
     this.focusPersona(row.uid);
   }
-},
-
-
-
-
-
-    // Duplicar una fila en la tabla de detalles de una instrucción
-duplicarFila(idx) {
-  if (this.isSingleRowType) {
-    Toast.fire({ icon: 'warning', title: 'No se puede duplicar en este tipo' });
-    return;
-  }
-  const ins = this.curr;
-  const src = ins.detalle[idx];
-  ins.detalle.splice(idx + 1, 0, { ...src, uid: this.uid() });
 },
 
 eliminarFila(idx) {
@@ -638,12 +627,7 @@ isFileAllowed(file) {
 
 // ==== Helpers ====
 currentIns() { return this.curr; }, // alias corto
-formatBytes(n) {
-  if (!n && n !== 0) return '';
-  const k = 1024, sizes = ['B','KB','MB','GB'];
-  const i = Math.floor(Math.log(n) / Math.log(k));
-  return (n / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
-},
+
 
 // ==== Upload INICIALES (a nivel instrucción) ====
 onFileInicial(ev, doc) {
@@ -828,11 +812,6 @@ onMonedaChange() {
     Toast.fire({ icon: 'error', title: msg });
   },
 
-
-  getCuentasPor(unidad, banco) {
-    return this.macroCuentas?.[unidad]?.[banco] || [];
-  },
-
 // -------- helpers básicos --------
 normalizeBankName(b) {
   const map = {
@@ -844,13 +823,6 @@ normalizeBankName(b) {
     'BCP': 'BCP', 'BBVA': 'BBVA', 'SCOTIABANK': 'SCOTIABANK'
   };
   return map[b?.trim()] || (b || '').trim();
-},
-slugify(s) {
-  return (s || '')
-    .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^a-z0-9]+/g,'-')
-    .replace(/(^-|-$)/g,'');
 },
 
 // -------- índice de tipos --------
@@ -942,68 +914,7 @@ async loadTiposTransaccion() {
 // -------- resolutores de cuenta --------
 // Persona: devuelve cuentaId (match por id exacto y moneda)
 // Unidad: escoge primera cuenta por unidad + moneda respetando orden de bancos
-resolveCuentaForUnidad(unidad, moneda, preferBankOrder = ['BBVA','BCP','INTERBANK','SCOTIABANK','BANCO DE LA NACIÓN']) {
-  const pool = this.master.cuentas.filter(c => c.unidad === unidad && c.moneda === moneda);
-  if (pool.length === 0) return '';
-  // ordena por preferencia de banco si es posible
-  const bankIndex = (alias) => {
-    const bank = preferBankOrder.find(b => (alias || '').toUpperCase().startsWith(b));
-    return bank ? preferBankOrder.indexOf(bank) : 999;
-  };
-  const sorted = pool.slice().sort((a,b) => bankIndex(a.alias) - bankIndex(b.alias));
-  return sorted[0]?.id || pool[0].id;
-},
 
-// -------- aplica el tipo a la instrucción activa (layout + cuentas) --------
-applyTipoToCurrentInstruction() {
-  const tDesc = this.currentType; // tu tab activo usa la descripción como nombre del tipo
-  if (!tDesc || !this.curr) return;
-
-  const tipo = this.state.tiposByDesc?.[String(tDesc).toLowerCase()];
-  // Si no hay en JSON, no forzamos nada
-  if (!tipo) return;
-
-  // Forzamos layout según tienePersona
-  if (tipo.tienePersona) {
-    this.enforceLayout('persona');
-  } else {
-    this.enforceLayout('unidad');
-  }
-
-  // Seteo por cada fila del detalle
-  const moneda = (this.curr.moneda || 'PEN').toUpperCase();
-  const list = this.curr.detalle || [];
-  for (const row of list) {
-    if (tipo.tienePersona) {
-      // Persona obligatoria: setea persona e infiere cuenta
-      if (tipo.idPersona) row.personaId = tipo.idPersona;
-      const cuentaId = this.resolveCuentaForPersona(row.personaId, moneda);
-      row.cuentaId = cuentaId || '';
-      // al ser por persona, limpiamos unidad
-      row.unidadNegocio = '';
-    } else {
-      // Por unidad: si no tiene unidad, usa la primera de master
-      if (!row.unidadNegocio) row.unidadNegocio = this.master.unidades[0] || '';
-      row.cuentaId = this.resolveCuentaForUnidad(row.unidadNegocio, moneda);
-      // al ser por unidad, limpiamos persona
-      row.personaId = '';
-    }
-  }
-
-  // Cabecera: si trabajas con cuenta de cabecera, seleccionala también
-  if (!this.curr.cuentaCabeceraId) {
-    if (!tipo.tienePersona) {
-      // por unidad: intenta con unidad de la cabecera si existe, o de la primera fila
-      const unidadCab = this.curr.unidad || list[0]?.unidadNegocio || this.master.unidades[0] || '';
-      const cid = this.resolveCuentaForUnidad(unidadCab, moneda);
-      this.curr.cuentaCabeceraId = cid || '';
-    } else {
-      // por persona: toma la cuenta de la primera fila/persona
-      const cid = list[0]?.cuentaId || this.resolveCuentaForPersona(tipo.idPersona, moneda);
-      this.curr.cuentaCabeceraId = cid || '';
-    }
-  }
-},
 
 // -------- util para asegurar que siempre haya 1 fila mínimo --------
 ensureOneRow() {
