@@ -57,13 +57,18 @@ createApp({
         return acc + (isNaN(n) ? 0 : n);
       }, 0);
     },
-    docsOfInstruction(){
-      const ins = this.curr;
-      if (!ins) return [];
-      const base = Array.isArray(ins.docsIniciales) ? ins.docsIniciales : [];
-      const extra = Array.isArray(ins.docsExtras) ? ins.docsExtras : [];
-      return [...base, ...extra];
-    },
+    // En operaciones.js -> computed.docsOfInstruction (reemplaza la función)
+docsOfInstruction(){
+  const ins = this.curr;
+  if (!ins) return [];
+  const base  = Array.isArray(ins.docsIniciales) ? ins.docsIniciales : [];
+  const extra = Array.isArray(ins.docsExtras)    ? ins.docsExtras    : [];
+  const sueltos = Array.isArray(ins.docs)
+    ? ins.docs.map(d => ({ key: 'adj', label: 'Sustento documentario', fileName: d.nombre, id: d.id }))
+    : [];
+  return [...base, ...extra, ...sueltos];
+},
+
     activeRow(){
       const list = this.curr?.detalle || [];
       const i = this.ui.activeRowIdx;

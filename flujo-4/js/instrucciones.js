@@ -264,10 +264,14 @@ approvedRowsCount() {
     return !!(curr && curr.aprobado === true);
   },
 
-    
   },
 
   methods: {
+    isDocSelected(id) {
+  const ins = this.currentIns();
+  return !!ins?.docsGlobalSeleccionados?.some(d => d.id === id);
+},
+    
     // Genera un ID único
     uid() { return Math.random().toString(36).slice(2); },
     
@@ -351,7 +355,8 @@ newInstruction() {
     docsExtras: [], // { id, label, fileName, file }
 
     detalle: [],
-    docs: []
+    docs: [],
+    docsGlobalSeleccionados: [],
   };
 },
 
@@ -362,19 +367,43 @@ guardarTodo() {
   const type = this.state.typesAdded[this.ui.activeTab];
   const list = this.state.instructionsByType[type] || [];
 
-  // Ejemplo: armar FormData por instrucción
-  const fd = new FormData();
-  list.forEach((ins, idx) => {
-    const docs = this.collectDocsOf(ins);
-    docs.forEach((d, i) => {
-      if (d.file) fd.append(`ins_${idx}_file_${i}`, d.file, d.fileName || d.label + '.pdf');
-    });
-  });
+  // Normaliza docs: solo metadata
+  const instructions = list.map((ins) => ({
+    id: ins.id,
+    tipo: type,
+    fecha: ins.fecha || '',
+    moneda: ins.moneda || '',
+    importe: ins.importe || '',
+    descripcion: ins.descripcion || '',
+    detalle: Array.isArray(ins.detalle) ? ins.detalle : [],
+    docs: this.collectDocsOf(ins).map(d => ({
+      id: d.id ?? d.key ?? crypto.randomUUID(),
+      tipo: d.tipo || 'inicial',
+      label: d.label || 'Documento',
+      fileName: d.fileName || '',
+      url: d.url || null
+    }))
+  }));
 
-  console.log('Docs por instrucción:', list.map(ins => this.collectDocsOf(ins)));
+  // Si aún no tienes backend, solo log y persistencia local
+  console.log('Payload a enviar (solo metadata):', { instructions });
+
+  // Si vas a llamar backend:
+  /*
+  fetch('/api/instrucciones/guardar-lote', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ instructions })
+  })
+  .then(r => r.ok ? r.json() : Promise.reject(r))
+  .then(() => this.toastSuccess('Listo para enviar'))
+  .catch(() => this.toastError('No se pudo enviar'));
+  */
+
   this.toastSuccess('Listo para enviar');
   this.saveToLocalStorage();
-},
+}
+,
 
 
     // Elimina una instrucción
@@ -694,14 +723,60 @@ onFileGlobal(e, doc) {
 },
 
 confirmDeleteGlobalDoc(i) {
+  const removed = this.master.globalDocsExtras[i];
   this.master.globalDocsExtras.splice(i, 1);
+  if (!removed) return;
+
+  for (const t of this.state.typesAdded || []) {
+    const list = this.state.instructionsByType[t] || [];
+    for (const ins of list) {
+      if (!Array.isArray(ins.docsGlobalSeleccionados)) continue;
+      ins.docsGlobalSeleccionados = ins.docsGlobalSeleccionados.filter(d => d.id !== removed.id);
+    }
+  }
 },
 
 toggleDocSeleccionado(docId) {
-  if (!this.curr.docsSeleccionados) this.curr.docsSeleccionados = [];
-  const i = this.curr.docsSeleccionados.indexOf(docId);
-  if (i >= 0) this.curr.docsSeleccionados.splice(i, 1);
-  else this.curr.docsSeleccionados.push(docId);
+  const ins = this.currentIns();
+  if (!ins) return;
+
+  if (!Array.isArray(ins.docsGlobalSeleccionados)) {   // ← asegura el array
+    ins.docsGlobalSeleccionados = [];
+  }
+
+  const idx = ins.docsGlobalSeleccionados.findIndex(d => d.id === docId);
+  if (idx >= 0) {
+    ins.docsGlobalSeleccionados.splice(idx, 1);
+    return;
+  }
+
+  const base = this.master.globalDocsExtras.find(d => d.id === docId);
+  if (!base) return;
+
+  ins.docsGlobalSeleccionados.push({
+    id: base.id,
+    label: base.label,
+    fileName: base.fileName || '',
+    file: base.file || null,
+    tipo: 'global',
+    insId: ins.id
+  });
+}
+,
+
+confirmDeleteGlobalDoc(i) {
+  const removed = this.master.globalDocsExtras[i];
+  this.master.globalDocsExtras.splice(i, 1);
+
+  if (!removed) return;
+  // limpiar de cada instrucción donde estuviera seleccionado
+  for (const t of this.state.typesAdded || []) {
+    const list = this.state.instructionsByType[t] || [];
+    for (const ins of list) {
+      if (!Array.isArray(ins.docsGlobalSeleccionados)) continue;
+      ins.docsGlobalSeleccionados = ins.docsGlobalSeleccionados.filter(d => d.id !== removed.id);
+    }
+  }
 },
 
 async confirmDeleteDynamicDoc(di) {
@@ -747,8 +822,12 @@ collectDocsOf(ins) {
   const extra = ins.docsExtras.map(d => ({
     id: d.id, label: d.label, fileName: d.fileName, file: d.file, tipo: 'extra', insId: ins.id
   }));
-  return [...base, ...extra];
+  const globalSel = (ins.docsGlobalSeleccionados || []).map(d => ({
+    id: d.id, label: d.label, fileName: d.fileName, file: d.file, tipo: 'global', insId: ins.id
+  }));
+  return [...base, ...extra, ...globalSel];
 },
+
 // (Opcional) recolectar docs de TODAS las instrucciones del tipo activo
 collectAllDocsOfActiveType() {
   const type = this.state.typesAdded[this.ui.activeTab];
@@ -1244,10 +1323,33 @@ loadFromLocalStorage(key = 'instruccionesData') {
       return;
     }
 
-    // fusiona sin borrar lo actual
     this.master = { ...this.master, ...(stored.master || {}) };
-    this.state = { ...this.state, ...(stored.state || {}) };
-    this.ui     = { ...this.ui, ...(stored.ui || {}) };
+    this.state  = { ...this.state,  ...(stored.state  || {}) };
+    this.ui     = { ...this.ui,     ...(stored.ui     || {}) };
+
+    // 🔧 Normalización de instrucciones antiguas
+    for (const t of this.state.typesAdded || []) {
+      const list = this.state.instructionsByType?.[t] || [];
+      for (const ins of list) {
+        if (!Array.isArray(ins.docsGlobalSeleccionados)) {
+          ins.docsGlobalSeleccionados = [];
+        }
+        if (!Array.isArray(ins.docsIniciales) || ins.docsIniciales.length === 0) {
+          // repone los iniciales (incluye Documento Sustento)
+          ins.docsIniciales = this.initialDocs.map(d => ({ ...d }));
+        } else {
+          // asegura shape de cada doc inicial
+          ins.docsIniciales = ins.docsIniciales.map(d => ({
+            key: d.key ?? 'sustentos',
+            label: d.label ?? 'Documento Sustento',
+            fileName: d.fileName ?? '',
+            file: d.file ?? null
+          }));
+        }
+        if (!Array.isArray(ins.docsExtras)) ins.docsExtras = [];
+        if (!Array.isArray(ins.detalle)) ins.detalle = [];
+      }
+    }
 
     this.toastSuccess('Datos recuperados de localStorage');
   } catch (e) {
