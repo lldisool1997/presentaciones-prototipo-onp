@@ -104,8 +104,8 @@
                     <td class="text-center">{{ (row.ins.detalle || []).filter(r => !!r.aprob).length }}</td>
                     <td class="text-center">
                       <div class="actions flex gap-2 justify-center">
-                        <button class="btn btn-ghost tw-btn-ghost" @click="goToInstruction(row.tipo, row.ins)">Editar</button>
-                        <button class="btn btn-danger btn-outline tw-btn-danger-outline" @click="deleteInstruction(row.tipo, row.ins)">Eliminar</button>
+                        <button class="btn btn-ghost tw-btn-ghost" @click="goToInstruction(row.tipo, row.ins)">Ver Instruccion</button>
+                        <!--<button class="btn btn-danger btn-outline tw-btn-danger-outline" @click="deleteInstruction(row.tipo, row.ins)">Eliminar</button>-->
                       </div>
                     </td>
                   </tr>

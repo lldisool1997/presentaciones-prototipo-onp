@@ -175,22 +175,46 @@ createApp({
     },
 
     // -------- Acciones --------
-    goToInstruction(tipo, ins){
-      Swal.fire({
-        title: 'Editar instrucción',
-        html: `
-          <div style="text-align:left">
-            <div><b>Tipo:</b> ${tipo}</div>
-            <div><b>ID:</b> ${ins.id}</div>
-            <div><b>Descripción:</b> ${ins.descripcion || '—'}</div>
-            <div><b>Fecha:</b> ${ins.fecha || '—'}</div>
-            <div><b>Moneda:</b> ${ins.moneda || '—'}</div>
-            <div><b>Filas:</b> ${(ins.detalle||[]).length}</div>
-            <div><b>Total:</b> ${this.money(this.sumInstruction(ins))}</div>
-          </div>`,
-        icon: 'info'
-      });
-    },
+    goToInstruction(tipo, ins) {
+  // Guarda la selección en localStorage
+  const payload = { tipo, id: ins.id };
+  localStorage.setItem('selectedInstruction', JSON.stringify(payload));
+
+  // Confirmación opcional antes de redirigir
+  /*Swal.fire({
+    title: 'Ver instrucción',
+    html: `
+      <div style="text-align:left">
+        <div><b>Tipo:</b> ${tipo}</div>
+        <div><b>ID:</b> ${ins.id}</div>
+        <div><b>Descripción:</b> ${ins.descripcion || '—'}</div>
+        <div><b>Fecha:</b> ${ins.fecha || '—'}</div>
+        <div><b>Moneda:</b> ${ins.moneda || '—'}</div>
+        <div><b>Filas:</b> ${(ins.detalle || []).length}</div>
+        <div><b>Total:</b> ${this.money(this.sumInstruction(ins))}</div>
+      </div>
+      <p class="mt-2 text-slate-600 text-sm">¿Deseas abrir esta instrucción en modo lectura?</p>
+    `,
+    icon: 'info',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, ver detalle',
+    cancelButtonText: 'Cancelar',
+    reverseButtons: true,
+    buttonsStyling: false,
+    customClass: {
+      popup: 'rounded-xl',
+      confirmButton: 'tw-btn-primary',
+      cancelButton: 'tw-btn',
+      actions: 'flex gap-3 justify-center mt-3'
+    }
+  }).then(res => {
+    if (res.isConfirmed) {
+      window.location.href = 'operaciones.html';
+    }
+  });*/
+   window.location.href = 'operaciones.html';
+},
+
     async deleteInstruction(tipo, ins){
       const { isConfirmed } = await Swal.fire({
         title: '¿Eliminar instrucción?',

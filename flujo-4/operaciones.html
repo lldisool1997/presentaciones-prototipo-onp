@@ -2,485 +2,156 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <title>Instrucciones Pagos Diversos</title>
+  <title>Operaciones - Ver instrucción</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/operaciones.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Si ya tienes un CSS propio para operaciones, mantenlo -->
+  <link rel="stylesheet" href="css/operaciones.css">
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.10.5"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 font-inter">
   <div id="app" class="max-w-screen-2xl mx-auto p-4 md:p-6 space-y-4">
-
-    <div class="bg-sky-900 text-white rounded-xl px-5 py-3 text-center text-lg font-semibold">
-      Instrucciones Pagos Diversos
+    <!-- Header -->
+    <div class="bg-sky-900 text-white rounded-xl px-5 py-3 flex items-center justify-between">
+      <div class="text-lg font-semibold">Operaciones — Visualización de instrucción</div>
+      <div class="flex gap-2">
+        <a href="lista-instrucciones.html" class="border rounded-lg px-2.5">Volver al listado</a>
+      </div>
     </div>
 
+    <!-- Card resumen -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 space-y-3">
-      <div class="flex flex-col md:flex-row gap-3 md:items-end">
-        <div class="w-full md:w-96">
-          <div class="flex flex-row">
-            
-          <label class="block text-xs text-slate-800 mb-1">Tipo de transacción</label>
-            <!--<span class="help-group" tabindex="-1"  style="top: -7px;">
-            <button class="help-btn" type="button" aria-label="Ayuda">?</button>
-            <span class="help-bubble help-top" role="tooltip">
-              Este es tipo de transacción correspondiente a la o las instrucciones.
-              <span class="help-arrow"></span>
-            </span>
-          </span>-->
-          </div>
-           <select v-model="ui.selectedType" class="tw-input w-full">
-    <option value="">— Selecciona —</option>
-    <option v-for="t in master.types" :key="t" :value="t">{{ t }}</option>
-  </select>
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="rounded-full px-3 py-1 bg-slate-50 border text-sm">Tipo: <b class="ml-1">{{ selected?.tipo || '—' }}</b></div>
+        <div class="rounded-full px-3 py-1 bg-slate-50 border text-sm">
+          Estado:
+          <span v-if="curr?.aprobado" class="ml-1">Aprobado</span>
+          <span v-else class="ml-1">Registrado</span>
         </div>
-        <button class="tw-btn" @click="addType">Agregar tipo de transacción +</button>
-
-        <div class="md:ml-auto flex items-center gap-2">
-          <button class="tw-btn-primary" @click="guardarTodo">Guardar y enviar todas las instrucciones</button>
-        </div>
-      </div>
-      <div v-if="state.typesAdded?.length" class="flex flex-wrap gap-2 pt-2">
-        <span v-for="(t, idx) in state.typesAdded" :key="t" class="tw-chip">
-          {{ t }}
-          <button class="tw-chip-x" @click="confirmDeleteType(idx, t)">×</button>
-        </span>
+        <div class="rounded-full px-3 py-1 bg-slate-50 border text-sm">Moneda: <b class="ml-1">{{ curr?.moneda || '—' }}</b></div>
+        <div class="rounded-full px-3 py-1 bg-slate-50 border text-sm">Fecha: <b class="ml-1">{{ curr?.fecha || '—' }}</b></div>
+        <!--
+        <div class="rounded-full px-3 py-1 bg-slate-50 border text-sm">Filas: <b class="ml-1">{{ totalFilas }}</b></div>
+        <div class="rounded-full px-3 py-1 bg-slate-50 border text-sm">Aprobadas: <b class="ml-1">{{ approvedRowsCount }}</b></div>
+        -->
+        <div class="rounded-full px-3 py-1 bg-slate-50 border text-sm">Total detalle: <b class="ml-1">{{ money(totalMonto) }}</b></div>
       </div>
     </div>
 
-    <!-- Tabs de Tipo de Transferencia -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-      <div class="px-4 py-2 border-b border-slate-200 font-semibold">
-        Tipos de Transacción
+    <!-- Secciones -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-2.5">
+      <div class="px-4 py-3 rounded-lg bg-[#f8f9fa] border-b border-slate-200 font-semibold border-l-2 border-l-blue-300">
+        1. Descripción
       </div>
-      <div class="flex flex-wrap gap-2 px-4 pt-3 border-b border-slate-200">
-        <button v-for="(type, idx) in state.typesAdded" :key="idx" class="tw-tab" :class="idx === ui.activeTab ? 'tw-tab-active' : ''" @click="ui.activeTab = idx">
-          Tipo transacción {{idx +1 }}
+      <div class="p-4">
+        <p class="text-slate-700 whitespace-pre-wrap" v-text="curr?.descripcion || '—'"></p>
+      </div>
+
+      <div class="px-4 py-3 rounded-lg bg-[#f8f9fa] border-y border-slate-200 font-semibold border-l-2 border-l-blue-300">
+        2. Cuenta de cargo (cabecera)
+      </div>
+      <div class="p-4 grid md:grid-cols-4 gap-3">
+        <div>
+          <div class="text-xs font-semibold text-slate-700 mb-1">Unidad de Negocio</div>
+          <div class="tw-input bg-slate-50">{{ curr?.unidad || '—' }}</div>
+        </div>
+        <div>
+          <div class="text-xs font-semibold text-slate-700 mb-1">Banco y Cuenta</div>
+          <div class="tw-input bg-slate-50">{{ accountAlias(curr?.cuentaCabeceraId) }}</div>
+        </div>
+        <div>
+          <div class="text-xs font-semibold text-slate-700 mb-1">Moneda</div>
+          <div class="tw-input bg-slate-50">{{ curr?.moneda || '—' }}</div>
+        </div>
+        <div>
+          <div class="text-xs font-semibold text-slate-700 mb-1">Importe</div>
+          <div class="tw-input bg-slate-50">{{ money(curr?.importe) }}</div>
+        </div>
+      </div>
+
+      <div class="px-4 py-3 rounded-lg bg-[#f8f9fa] border-y border-slate-200 font-semibold border-l-2 border-l-blue-300">
+        3. Detalle de abonos
+      </div>
+
+      <!-- Tabs de detalle -->
+      <div class="px-4 pt-3 border-b border-slate-200 flex flex-wrap gap-2">
+        <button
+          v-for="(r, i) in (curr?.detalle || [])"
+          :key="r.uid || i"
+          class="px-3 py-1.5 border rounded-t-lg font-semibold text-sm"
+          :class="i === ui.activeRowIdx ? 'bg-blue-600 text-white border-slate-300' : 'bg-slate-50 text-slate-700 border-slate-200'"
+          @click="ui.activeRowIdx = i"
+        >
+          Abono #{{ i + 1 }}
         </button>
       </div>
 
-      <!-- Paneles de Instrucciones para cada Tipo de Transferencia -->
-      <div v-for="(type, idx) in state.typesAdded" :key="idx" v-show="idx === ui.activeTab">
-        <div class="mx-2 my-4">
-            <div class="px-4 py-3  rounded-lg bg-[#f8f9fa] border-b border-slate-200 font-semibold border-l-2 border-l-blue-300">Instrucciones para 
-              <b class="underline">{{ type }}</b>
-            </div>
+      <!-- Panel del detalle activo -->
+<div class="p-4" v-if="activeRow">
+  <div class="flex flex-col md:flex-col md:items-center md:justify-center gap-4">
+    <div class="grid md:grid-cols-4 gap-3 flex-1">
+      <div v-if="activeRow.personaId">
+        <div class="text-xs font-semibold text-slate-700 mb-1" >Persona</div>
+        <div class="tw-input bg-slate-50">{{ personaNombre(activeRow.personaId) || '—' }}</div>
+      </div>
+      <div v-if="activeRow.unidadNegocio">
+        <div class="text-xs font-semibold text-slate-700 mb-1">Unidad de negocio</div>
+        <div class="tw-input bg-slate-50">{{ activeRow.unidadNegocio || '—' }}</div>
+      </div>
+      <div>
+        <div class="text-xs font-semibold text-slate-700 mb-1">Cuenta</div>
+        <div class="tw-input bg-slate-50">{{ accountAlias(activeRow.cuentaId) }}</div>
+      </div>
+      <div>
+          <div class="text-xs font-semibold text-slate-700 mb-1">Moneda</div>
+          <div class="tw-input bg-slate-50">{{ curr?.moneda || '—' }}</div>
         </div>
-
-        <!-- Tabs de Instrucción dentro del tipo de transacción -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200">
-          <div class="px-4 py-2 border-b border-slate-200 flex items-center gap-3">
-            <span class="font-semibold">Instrucciones</span>
-            <button class="tw-btn" @click="addInstruction(type)">Agregar Instrucción</button>
-              <div class="md:ml-auto flex items-center gap-2">
-              <div class="tw-pill">Instrucciones listas: {{ approvedInstrCount }} / {{ totalInstrCount }}
-
-                 <!-- <span class="help-group" tabindex="-1">
-            <button class="help-btn" type="button" aria-label="Ayuda">?</button>
-            <span class="help-bubble help-top" role="tooltip">
-              La cantidad de instrucciones aprobadas.
-              <span class="help-arrow"></span>
-            </span>
-          </span>-->
-              </div>
-            </div>
-          </div>
-          
-          <div class="flex flex-wrap gap-2 px-4 pt-3 border-b border-slate-200">
-            <button v-for="(ins, i) in state.instructionsByType[type]" :key="ins.id" 
-            class="tw-tab" :class="i === ui.activeInstructionTab ? 'tw-tab-active' : ''" @click="ui.activeInstructionTab = i">
-              Instrucción #{{ i + 1 }}
-            </button>
-          </div>
-          <!-- Acciones de la instrucción -->
-
-          <!-- Contenido de la Instrucción seleccionada -->
-          <div v-if="curr" class="p-4 space-y-4">
-
-
-<div class=" rounded-md p-5 shadow-md">
-
-
-<div class="my-4">
-      <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
-        1. Descripción de la instrucción
+      <div>
+        <div class="text-xs font-semibold text-slate-700 mb-1">Monto</div>
+        <div class="tw-input bg-slate-50 text-right tabular-nums">{{ money(activeRow.monto) }}</div>
       </div>
-  </div>
-
-                       <div class="flex items-center justify-end gap-4 text-sm text-slate-600 mt-2">
-  <label class="inline-flex items-center gap-2 cursor-pointer">
-    <input type="checkbox" v-model="curr.aprobado" class="accent-sky-600" />
-    <span class="font-medium">Listo para enviar</span>
-  </label>
-
-  <button
-    class="tw-btn-danger"
-    @click="confirmDeleteInstruction(ui.activeInstructionTab)"
-    title="Eliminar esta instrucción"
-    v-if="!isInstructionLocked"
-  >
-    Eliminar instrucción
-  </button>
-</div>
-
-            <!-- Descripción y Producto como Textareas -->
-            <div class="grid md:grid-cols-1 gap-3">
-              <div>
-                <label class="tw-label">Descripción</label>
-                <textarea class="tw-input w-full" v-model="curr.descripcion" placeholder="Descripción de la instrucción"
-                 rows="5"
-                :disabled="isInstructionLocked"
-                ></textarea>
-              </div>
-              <!--<div>
-                <label class="tw-label">Producto</label>
-                <textarea class="tw-input w-full" v-model="curr.producto" placeholder="p.ej. Con el producto X"
-                :disabled="isInstructionLocked"
-                ></textarea>
-              </div>-->
-            </div>
-
-            <div class="my-4">
-      <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
-        2. Cuenta de cargo
-      </div>
-  </div>
-
-            <!-- Información adicional -->
-            <div class="grid md:grid-cols-4 gap-3">
-              <div>
-    <label class="tw-label">Unidad de Negocio</label>
-    <select class="tw-input w-full" v-model="curr.unidad" @change="onUnidadCabeceraChange" :disabled="isInstructionLocked">
-      <option value="" disabled>— Selecciona —</option>
-      <option v-for="u in master.unidades" :key="u" :value="u">{{ u }}</option>
-    </select>
-  </div>
-
-  
-             <div>
-            <label class="tw-label">Moneda</label>
-            <select class="tw-input w-full" v-model="curr.moneda" @change="onMonedaChange" :disabled="isInstructionLocked">
-              <option v-for="m in master.monedas" :key="m">{{ m }}</option>
-            </select>
-          </div>
-               <div>
-                <label class="tw-label">Importe</label>
-                <input class="tw-input w-full" v-model="curr.importe" v-money placeholder="1,000.00" :disabled="isInstructionLocked">
-              </div>
-
-  <!-- Cuenta (dependiente de Unidad) -->
-
-              <div>
-                <label class="tw-label">Fecha de Operación</label>
-                <input type="date" class="tw-input w-full" v-model="curr.fecha" :disabled="isInstructionLocked">
-              </div>
-         
-            </div>
-              <div>
-    <label class="tw-label">Banco y Cuenta</label>
-    <select class="tw-input w-full"
-            v-model="curr.cuentaCabeceraId"
-            :disabled="!curr.unidad || isInstructionLocked"
-            
-            >
-      <option value="" disabled>— Selecciona —</option>
-      <option v-for="c in cuentasCabecera" :key="c.id" :value="c.id">
-        {{ c.alias }} — {{ c.numero }}
-      </option>
-    </select>
-    <p v-if="!curr.unidad" class="text-xs text-slate-500 mt-1">Primero elige la unidad.</p>
-  </div>
-
-
-
-<div class="my-4">
-      <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
-        3. Cuentas de abono
-      </div>
-  </div>
-
-
-<!-- Tabla de detalles -->
-<div class="my-4">
-  <div class="flex items-center gap-2 text-right justify-end">
-    <button class="tw-btn"
-        @click="agregarFila()"
-        v-if="!isSingleRowType && !isInstructionLocked"
-        :disabled="isSingleRowType && curr?.detalle?.length >= 1"
-        :title="isSingleRowType ? 'Este tipo solo permite una fila' : ''">
-  + Agregar fila
-</button>
-
-    <!--<span v-if="lockedLayout" class="tw-pill">
-      Modo: {{ lockedLayout === 'persona' ? 'Persona' : 'Unidad de negocio' }}
-    </span>
-    <button v-if="lockedLayout" class="tw-btn-outline" @click="resetLayout()">
-      Cambiar modo
-    </button>-->
-  </div>
-
-  <div class="overflow-x-auto mt-2">
-    <table class="w-full text-sm align-top">
-      <thead class="text-xs text-slate-500">
-        <tr>
-          <th class="p-2 text-left" v-if="showPersonaCol">Persona</th>
-          <th class="p-2 text-left" v-if="!showPersonaCol">Unidad de negocio</th>
-          <th class="p-2 text-left">Banco y Cuenta</th>
-          <th class="p-2 text-right">Monto</th>
-          <!--<th class="p-2 text-center">Aprob.</th>-->
-          <th class="p-2"></th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(r, ri) in curr.detalle" :key="r.uid" class="bg-slate-50 border-y">
-          <!-- Persona -->
-         <!-- Columna Persona (se muestra solo cuando aplique) -->
-<td v-if="showPersonaCol">
-  <select
-    class="tw-input w-full"
-    v-model="r.personaId"
-    @change="onChangePersona(r)"
-    :ref="'personaSel_' + r.uid"
-    disabled
-  >
-    <option value="" disabled>— Selecciona persona —</option>
-    <option v-for="p in personasFiltradas" :key="p.id" :value="p.id" disabled>
-      {{ p.nombre }}
-    </option>
-  </select>
-</td>
-
-
-          <!-- Unidad -->
-          <td class="p-2 min-w-[14rem]" v-if="!showPersonaCol">
-            <select class="tw-input w-full"
-                    v-model="r.unidadNegocio"
-                    :disabled="lockedLayout === 'persona' || isInstructionLocked"
-                    @change="onChangeUnidad(r)">
-              <option value="">— Selecciona unidad —</option>
-              <option v-for="u in master.unidades" :key="u" :value="u">{{ u }}</option>
-            </select>
-          </td>
-
-          <!-- Cuenta (dependiente de persona o unidad) -->
-          <td class="p-2 min-w-[16rem]">
-            <select class="tw-input w-full"
-                    v-model="r.cuentaId"
-                    :disabled="lockedLayout === 'persona' || isInstructionLocked">
-              <option value="">— Selecciona cuenta —</option>
-              <option v-for="c in cuentasPara(r)" :key="c.id" :value="c.id">
-                {{ c.alias }} — 
-                {{ c.numero }}
-              </option>
-            </select>
-          </td>
-
-          <!-- Monto -->
-          <td class="p-2 min-w-[8rem]">
-            <input class="tw-input w-full text-right"
-                   v-model="r.monto" v-money :disabled="isInstructionLocked"
-                   placeholder="0.00" />
-          </td>
-
-          <!-- Aprob -->
-          <!--<td class="p-2 text-center">
-            <input type="checkbox" v-model="r.aprob" class="accent-sky-600">
-          </td>-->
-
-          <!-- Acciones -->
-         <td class="p-2">
-  <div class="flex gap-2 justify-end" v-if="!isSingleRowType">
-    <!--<button class="tw-btn" @click="duplicarFila(ri)">Duplicar</button>-->
-    <button class="tw-btn-danger" v-if="ri >= 1" @click="eliminarFila(ri)">Eliminar</button>
-  </div>
-  <!--<div class="text-xs text-slate-500 text-right" v-else>
-    Fila obligatoria
-  </div>-->
-</td>
-        </tr>
-      </tbody>
-
-      <tfoot class="text-sm font-semibold">
-        <tr>
-          <td class="p-2" colspan="2">
-            Total filas: {{ totalFilas }}
-          </td>
-          <td class="p-2 text-right min-w-[8rem]">{{ totalMontoFormateado }}</td>
-          <td></td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-</div>
-
-
-
-<div class="mt-4">
-<div class="my-4">
-      <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
-        4. Sustentos de la instrucción
-      </div>
-  </div>
-
-  <div class="flex flex-wrap gap-3">
-    <button
-      v-for="doc in master?.globalDocsExtras.filter(e => e.fileName)"
-      :key="doc.id"
-      @click="toggleDocSeleccionado(doc.id)"
-      :disabled="isInstructionLocked"
-      class="relative flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium shadow-sm
-             transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-sky-400"
-      :class="curr.docsSeleccionados?.includes(doc.id)
-              ? 'bg-emerald-50 border-emerald-400 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-500 hover:shadow-md'
-              : 'bg-white border-slate-300 text-slate-500 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-60 disabled:cursor-not-allowed'"
-    >
-      <div class="flex items-center justify-between w-full">
-        <div class="flex items-center gap-2">
-          <!-- Ícono -->
-          <span
-            class="flex-shrink-0 transition-transform duration-200"
-            :class="curr.docsSeleccionados?.includes(doc.id)
-                    ? 'text-emerald-600'
-                    : 'text-slate-400 group-hover:scale-110'"
-          >
-            <svg v-if="curr.docsSeleccionados?.includes(doc.id)"
-                 xmlns="http://www.w3.org/2000/svg"
-                 class="w-5 h-5"
-                 fill="none"
-                 viewBox="0 0 24 24"
-                 stroke="currentColor"
-                 stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-            <svg v-else
-                 xmlns="http://www.w3.org/2000/svg"
-                 class="w-5 h-5"
-                 fill="none"
-                 viewBox="0 0 24 24"
-                 stroke="currentColor"
-                 stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-          </span>
-
-          <!-- Nombre -->
-          <span class="truncate max-w-[11rem]">{{ doc.fileName || doc.label }}</span>
-        </div>
-      </div>
-    </button>
-  </div>
-</div>
-
-
-
-
-</div>
-
-            <!-- Sustento Documentario -->
-            <!-- 2. Sustento documentario -->
-
-
-
-          </div>
-        </div>
-      </div>
-
     </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 space-y-3">
-     <section>
-    <div class="mx-2 my-4">
-      <div class="px-4 py-3  rounded-lg bg-[#f8f9fa] border-b border-slate-200 font-semibold border-l-2 border-l-blue-300">
-        Sustento documentario de las operaciones
+    <!-- Acciones y comisión -->
+    <div class="min-w-fit flex md:flex-row gap-2">
+      <button class="px-3 py-2 border rounded-xl font-semibold"
+              @click="generarCarta(activeRow)">
+        Generar carta
+      </button>
+      <div class="flex items-center gap-2">
+        <label class="text-xs font-semibold text-slate-700">Comisión</label>
+        <input type="number" step="0.01"
+               v-model="activeRow.comision"
+               placeholder="Opcional"
+               class="tw-input w-28 text-right"
+               style="background:#fff" />
       </div>
-  </div>
-
-  <div class="docsec-body">
-    <!-- Tarjetas iniciales (fijas) -->
-   <!-- <div class="doc-grid">
-      <div class="doc-card" v-for="d in curr.docsIniciales" :key="d.key">
-        <div class="doc-card-title">{{ d.label }}</div>
-
-        <label class="uploader-dropzone">
-          <input type="file"
-                 accept="application/pdf"
-                 class="uploader-input"
-                 @change="onFileInicial($event, d)" />
-          <div class="uploader-inner">
-            <div class="uploader-icon">📄</div>
-            <div class="uploader-text">
-              <div class="uploader-action">Seleccionar archivo</div>
-              <div class="uploader-sub">PDF</div>
-              <div class="uploader-file" v-if="d.fileName">{{ d.fileName }}</div>
-            </div>
-          </div>
-        </label>
-      </div>
-    </div>-->
-
-    <!-- Configuración avanzada -->
-    <div class="adv card-soft">
-      <div class="adv-head">
-        <span class="adv-icon">🛠️</span>
-        <span class="adv-title">Configuración avanzada</span>
-      </div>
-
-      <div class="adv-row">
-        <div class="adv-help">
-          Agregue documentos adicionales para el área seleccionada:
-        </div>
-        <div class="adv-form">
-          <input class="tw-input w-1/3"
-                 placeholder="Nombre del nuevo documento"
-                 v-model="ui.newDocName" />
-          <button class="tw-btn-success"
-                  @click="addDynamicDoc">+ Agregar Documento</button>
-        </div>
-      </div>
-
-      <!-- Dinámicos -->
-      <div class="doc-grid mt-3" v-if="master.globalDocsExtras?.length">
-  <div class="doc-card" v-for="(d, di) in master.globalDocsExtras" :key="d.id">
-    <div class="doc-card-title">
-      {{ d.label }}
-      <button class="doc-remove"
-              @click="confirmDeleteGlobalDoc(di)"
-              title="Quitar documento">×</button>
     </div>
-
-    <label class="uploader-dropzone">
-      <input type="file"
-             accept="application/pdf,
-                     application/vnd.ms-excel,
-                     application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-             class="uploader-input"
-             @change="onFileGlobal($event, d)" />
-      <div class="uploader-inner">
-        <div class="uploader-icon">📄</div>
-        <div class="uploader-text">
-          <div class="uploader-action">Seleccionar archivo</div>
-          <div class="uploader-sub">PDF y Excel</div>
-          <div class="uploader-file" v-if="d.fileName">{{ d.fileName }}</div>
-        </div>
-      </div>
-    </label>
   </div>
 </div>
 
-    </div>
-  </div>
-</section>
+
+      <div class="p-4" v-else>
+        <p class="text-slate-500">Sin filas</p>
+      </div>
+
+      <div class="px-4 py-3 rounded-lg bg-[#f8f9fa] border-t border-slate-200 font-semibold border-l-2 border-l-blue-300">
+        4. Documentos cargados (por instrucción)
+      </div>
+      <div class="p-4">
+        <ul class="list-disc ml-5 space-y-1" v-if="docsOfInstruction.length">
+          <li v-for="d in docsOfInstruction" :key="d.key + (d.id || '')">
+            <span class="font-semibold">{{ d.label }}</span>
+            <span v-if="d.fileName" class="text-slate-500"> — {{ d.fileName }}</span>
+            <span v-else class="text-slate-400"> — (no adjunto)</span>
+          </li>
+        </ul>
+        <p v-else class="text-slate-500">No hay documentos listados para esta instrucción.</p>
+      </div>
     </div>
   </div>
 
-  <script src="./js/operaciones.js"></script>
+  <script src="js/operaciones.js"></script>
 </body>
 </html>
