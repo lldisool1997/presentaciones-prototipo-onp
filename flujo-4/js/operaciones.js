@@ -20,7 +20,63 @@ function genId() {
   return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
 }
 
-createApp({
+
+// --- Directiva de formato monetario ---
+const moneyBaseOptions = {
+  digitGroupSeparator: ',',
+  decimalCharacter: '.',
+  decimalPlaces: 2,
+  allowDecimalPadding: true,
+  modifyValueOnWheel: false,
+  emptyInputBehavior: 'null',
+  watchExternalChanges: true,
+  outputFormat: 'number'
+};
+
+const MoneyDirective = {
+  mounted(el, binding) {
+    const opts = { ...moneyBaseOptions, ...(binding.value || {}) };
+    el.__an = new AutoNumeric(el, opts);
+
+    const syncToModel = () => {
+      if (!el.__an) return;
+      const raw = el.__an.getNumericString();
+      const e = new Event('input', { bubbles: true });
+      el.value = raw ?? '';
+      el.dispatchEvent(e);
+    };
+
+    el.__anSync = syncToModel;
+    el.addEventListener('autoNumeric:rawValueModified', syncToModel);
+    el.addEventListener('change', syncToModel);
+  },
+  updated(el, binding) {
+    if (binding.value && el.__an) el.__an.update(binding.value);
+  },
+  unmounted(el) {
+    if (el.__an) {
+      el.removeEventListener('autoNumeric:rawValueModified', el.__anSync);
+      el.removeEventListener('change', el.__anSync);
+      el.__an.remove();
+      delete el.__an;
+      delete el.__anSync;
+    }
+  }
+};
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  customClass: {
+    popup: 'rounded-xl shadow-md',
+    timerProgressBar: 'tw-toast-progress' // opcional (puedes estilizarlo)
+  },
+  timer: 1800,
+  timerProgressBar: true
+});
+
+const app = createApp({
   data(){
     return {
       selected: null,   // { tipo, id }
@@ -521,9 +577,115 @@ removeCarta(idx) {
   if (!confirm('¿Eliminar esta carta?')) return;
   arr.splice(idx, 1);
   this.persistCartasForRow(i);
-}
+},
+
+// CONFIRMAR el ABONO ACTIVO (null-safe + persiste solo la fila)
+confirmAbono() {
+  const i   = this.getActiveRowIdx?.() ?? -1;
+  const row = (i >= 0) ? this.curr?.detalle?.[i] : null;
+  if (!row) return;
+
+  const now = new Date().toISOString();
+  row.estadoAbono   = 'CONFIRMADO';
+  row.estadoAbonoAt = now;
+  // flags de compatibilidad
+  row.abonoConfirmado = true;
+  row.confirmado = true;
+
+  if (typeof this.persistRowFragment === 'function') {
+    this.persistRowFragment(i, {
+      estadoAbono: row.estadoAbono,
+      estadoAbonoAt: row.estadoAbonoAt,
+      abonoConfirmado: true,
+      confirmado: true
+    });
+  } else {
+    // Fallback directo a instruccionesData
+    try {
+      const data = JSON.parse(localStorage.getItem('instruccionesData') || '{}');
+      const tipo = this.selected?.tipo, id = this.selected?.id;
+      const list = data?.state?.instructionsByType?.[tipo] || [];
+      const instIdx = list.findIndex(x => x.id === id);
+      if (instIdx !== -1) {
+        const det = list[instIdx].detalle || [];
+        if (i >= 0 && i < det.length) {
+          det[i] = {
+            ...(det[i] || {}),
+            estadoAbono: 'CONFIRMADO',
+            estadoAbonoAt: now,
+            abonoConfirmado: true,
+            confirmado: true,
+            comision: this.activeRow.comision
+          };
+          localStorage.setItem('instruccionesData', JSON.stringify(data));
+        }
+      }
+    } catch (e) { console.error(e); }
+  }
+},
+
+// ¿ESTÁ CONFIRMADO el ABONO? (acepta fila o índice; null-safe)
+isAbonoConfirmado(rowOrIdx) {
+  // resolver fila
+  let row = null;
+  if (rowOrIdx != null && typeof rowOrIdx === 'object') {
+    row = rowOrIdx;
+  } else if (Number.isInteger(rowOrIdx)) {
+    const det = this.curr?.detalle || [];
+    row = (rowOrIdx >= 0 && rowOrIdx < det.length) ? det[rowOrIdx] : null;
+  } else {
+    // por defecto, usa el abono ACTIVO
+    const i = this.getActiveRowIdx?.() ?? -1;
+    row = (i >= 0) ? this.curr?.detalle?.[i] : null;
+  }
+  if (!row) return false;
+
+  // normaliza estado
+  const st = (row.estadoAbono ?? row.estado ?? '')
+    .toString().trim().toUpperCase();
+
+  // flags de compatibilidad
+  const flag =
+    row.abonoConfirmado === true ||
+    row.confirmado === true;
+
+  return st === 'CONFIRMADO' || flag;
+},
+
+  toastSuccess(msg = 'Operación exitosa') {
+    Toast.fire({ icon: 'success', title: msg });
+  },
+  toastInfo(msg = 'Información') {
+    Toast.fire({ icon: 'info', title: msg });
+  },
+  toastWarn(msg = 'Revisar datos') {
+    Toast.fire({ icon: 'warning', title: msg });
+  },
+  toastError(msg = 'Ocurrió un error') {
+    Toast.fire({ icon: 'error', title: msg });
+  },
+
 
 
 
   }
-}).mount('#app');
+});
+
+
+// Registra la directiva global
+app.directive('money', MoneyDirective);
+
+// Activa detección en DevTools
+app.config.devtools = true;
+
+// Muestra warnings en consola
+app.config.warnHandler = (msg, vm, trace) => {
+  console.warn(`[Vue warning]: ${msg}\nTrace: ${trace}`);
+};
+
+app.config.errorHandler = (err, vm, info) => {
+  console.error(`[Vue error]: ${info}`, err);
+};
+
+
+app.mount("#app");

@@ -7,6 +7,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <!-- Si ya tienes un CSS propio para operaciones, mantenlo -->
+     <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.10.5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="css/operaciones.css">
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 </head>
@@ -238,7 +240,9 @@
         <label class="text-xs font-semibold text-slate-700">Comisión</label>
         <input type="number" step="0.01"
                v-model="activeRow.comision"
+               v-money
                placeholder="Opcional"
+               :disabled="isAbonoConfirmado()"
                class="tw-input w-full text-left"
                style="background:#fff" />
       </div>
@@ -285,6 +289,7 @@
         <button type="button"
                 class="px-2 py-1 text-xs rounded-md border border-slate-300 hover:bg-slate-100"
                 title="Eliminar carta"
+                v-if="!isAbonoConfirmado()"
                 @click="removeCarta(ci)">
           ×
         </button>
@@ -336,7 +341,7 @@
 </section>
 
  <!-- 3. Sustento Documentario -->
-<div class="adv card-soft my-4 w-full">
+<div class="adv card-soft my-4 w-full" v-if="!isAbonoConfirmado()">
   <div class="adv-head">
     <span class="adv-title">Configuración avanzada</span>
   </div>
@@ -426,11 +431,16 @@
 
     <!-- Acciones y comisión -->
     <div class="min-w-fit flex md:flex-row gap-2 w-full justify-end">
-      <button class="px-3 py-2 border rounded-xl font-semibold"
-              @click="generarCarta(activeRow)">
-        Confirmar
-      </button>
+      <button
+  class="px-3 py-2 border rounded-xl font-semibold text-white disabled:opacity-60 disabled:cursor-not-allowed"
+  :class="isAbonoConfirmado() ? 'bg-slate-400' : 'bg-emerald-600 hover:bg-emerald-700'"
+  @click="confirmAbono"
+  :disabled="isAbonoConfirmado()"
+>
+  {{ isAbonoConfirmado() ? 'Abono confirmado' : 'Confirmar' }}
+</button>
        <button class="px-3 py-2 border rounded-xl font-semibold"
+            v-if="!isAbonoConfirmado()"
               @click="generarCarta(activeRow)">
         Generar carta
       </button>
