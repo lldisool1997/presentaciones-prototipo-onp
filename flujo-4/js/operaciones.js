@@ -180,7 +180,17 @@ docsOfInstruction(){
     const i = this.getActiveRowIdx();
     const row = (i >= 0) ? this.curr?.detalle?.[i] : null;
     return Array.isArray(row?.docsOperacion) ? row.docsOperacion : [];
-  }
+  },
+  totalMonto() {
+  const rows = this.curr?.detalle || [];
+  return rows.reduce((acc, r) => acc + this._parseMoney(r?.monto), 0);
+},
+totalMontoFormateado() {
+  return this.totalMonto.toLocaleString('es-PE', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
   },
 
   methods: {
@@ -664,6 +674,14 @@ isAbonoConfirmado(rowOrIdx) {
   toastError(msg = 'Ocurrió un error') {
     Toast.fire({ icon: 'error', title: msg });
   },
+
+  _parseMoney(v) {
+  if (v == null || v === '') return 0;
+  // acepta números, strings con separadores, y el valor de v-money
+  const s = String(v).replace(/\s/g, '').replace(/,/g, '');
+  const n = Number(s);
+  return Number.isFinite(n) ? n : 0;
+}
 
 
 
