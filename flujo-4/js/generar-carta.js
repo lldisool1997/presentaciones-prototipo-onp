@@ -118,6 +118,15 @@ this.$nextTick(() => {
     autorizado2:  mk('#selAutorizado2', 'autorizado2'),
   };
 
+  // Forzar visualmente la plantilla elegida en 'created()'
+  const tsTexto = this._ts?.texto;
+  if (tsTexto) {
+    const val = this.selects.texto; // viene de created(): tpl || 'ORDEN_COMPRA'
+    const opt = this.opciones.plantilla.find(o => o.value === val);
+    if (!tsTexto.options[val]) tsTexto.addOption({ value: val, text: opt?.label || val });
+    if (tsTexto.getValue() !== val) tsTexto.setValue(val, true);
+  }
+
 });
 
 
@@ -140,13 +149,13 @@ this.$nextTick(() => {
   },
 
   created() {
-    // Restaurar de localStorage si existe
-    const st = this.loadState();
-    if (st) {
-      if (st.selects) Object.assign(this.selects, st.selects);
-      if (st.campos)  Object.assign(this.campos,  st.campos);
-    }
-    
+      const st = this.loadState?.();
+  if (st) {
+    Object.assign(this.selects, st.selects || {});
+    Object.assign(this.campos,  st.campos  || {});
+  }
+  const tpl = new URLSearchParams(location.search).get('tpl');
+  this.selects.texto = tpl || 'ORDEN_COMPRA';
   },
 
   methods: {
