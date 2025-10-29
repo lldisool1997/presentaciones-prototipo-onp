@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generar Carta</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- TinyMCE -->
+  <script src="https://cdn.jsdelivr.net/npm/tinymce@7.4.1/tinymce.min.js"></script>
+
+  <!-- Exportadores -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.3.1/html-docx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+
+<!-- Vue 3 -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.4.2/dist/css/tom-select.css">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.2/dist/js/tom-select.complete.min.js"></script>
+
+  <!-- CSS propio (sin cambios) -->
+  <link rel="stylesheet" href="css/generar-carta.css" />
+</head>
+<body class="bg-slate-50 text-slate-800">
+<div id="app">
+  <main class="max-w-screen-2xl mx-auto px-6 py-6 space-y-6">
+    <!-- badge -->
+    <div id="area-badge"
+         style="position:absolute; top:15px; right:20px; background-color:#1e6ba8; color:#fff;
+                font-weight:bold; font-size:0.9rem; padding:6px 14px; border-radius:20px; box-shadow:0 2px 6px rgba(0,0,0,.15);">
+      Perfil: {{ consts.AREA || '—' }}
+    </div>
+
+    <div>
+      <div class="header rounded-2xl rounded-b-none">
+        <h1>Generación de cartas</h1>
+      </div>
+
+      <!-- === Banda de campos (manteniendo tu layout) === -->
+    <section class="bg-white border border-t-0 border-b-0 shadow-sm px-5 space-y-4 mb-0">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
+    <!-- Texto (plantilla) -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Texto (plantilla)</label>
+      <select id="selTexto" v-model="selects.texto" class="tom w-full">
+        <!-- opciones.texto: [{label, value}] -->
+        <option v-for="opt in opciones.plantilla" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+      </select>
+    </div>
+
+    <!-- Atención -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Atención</label>
+      <select id="selAtencion" v-model="selects.atencion" class="tom w-full">
+        <option v-for="opt in opciones.atencion" :key="opt" :value="opt">{{ opt }}</option>
+      </select>
+    </div>
+
+    <!-- Carta Referencia -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Carta Referencia</label>
+      <select id="selReferencia" v-model="selects.referencia" class="tom w-full">
+        <option v-for="opt in opciones.referencia" :key="opt" :value="opt">{{ opt }}</option>
+      </select>
+    </div>
+
+    <!-- Asunto -->
+    <div class="md:col-span-3">
+      <label class="block text-sm font-medium mb-1">Asunto</label>
+      <select id="selAsunto" v-model="selects.asunto" class="tom w-full">
+        <option v-for="opt in opciones.asunto" :key="opt" :value="opt">{{ opt }}</option>
+      </select>
+    </div>
+
+    <!-- Firma 1 -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Firma 1</label>
+      <select id="selFirma1" v-model="selects.firma1" class="tom w-full">
+        <option v-for="opt in opciones.firma1" :key="opt" :value="opt">{{ opt }}</option>
+      </select>
+    </div>
+
+    <!-- Firma 2 -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Firma 2</label>
+      <select id="selFirma2" v-model="selects.firma2" class="tom w-full">
+        <option v-for="opt in opciones.firma2" :key="opt" :value="opt">{{ opt }}</option>
+      </select>
+    </div>
+
+    <!-- Elaborado -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Elaborado</label>
+      <select id="selElaborado" v-model="selects.elaborado" class="tom w-full">
+        <option v-for="opt in opciones.elaborado" :key="opt" :value="opt">{{ opt }}</option>
+      </select>
+    </div>
+
+    <!-- Autorizado 1 -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Autorizado 1</label>
+      <select id="selAutorizado1" v-model="selects.autorizado1" class="tom w-full">
+        <option v-for="opt in opciones.autorizado1" :key="opt" :value="opt">{{ opt }}</option>
+      </select>
+    </div>
+
+    <!-- Autorizado 2 -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Autorizado 2</label>
+      <select id="selAutorizado2" v-model="selects.autorizado2" class="tom w-full">
+        <option v-for="opt in opciones.autorizado2" :key="opt" :value="opt">{{ opt }}</option>
+      </select>
+    </div>
+
+    <!-- Número Digital (input normal) -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Número Digital</label>
+      <input id="txtNumDigital" v-model="campos.numDigital" class="w-full border rounded-lg px-3 py-2" />
+    </div>
+
+    <!-- Checkbox -->
+    <div class="flex items-center gap-2 md:col-span-3">
+      <input id="chkLogo" type="checkbox" v-model="campos.showLogo" class="rounded border-slate-300 text-indigo-600" />
+      <span class="text-sm">Imprimir Logo de proveedor</span>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-2 pt-2">
+    <button class="px-3 py-2 rounded-lg border hover:bg-slate-50" @click="openPreview">Vista previa</button>
+    <button class="px-3 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700" @click="onGenerar">Generar PDF</button>
+  </div>
+</section>
+
+
+
+      <!-- Editores -->
+      <section class="grid grid-cols-1 bg-white gap-5 border rounded-b-xl border-y-0 py-5">
+        <div class="px-5">
+          <div class="border-b-2 border-[#3396d8] mb-4">
+            <h1 class="text-xl font-semibold text-ink flex items-center">
+              <span class="border-l-4 border-[#3396d8] pl-2">Cuerpo</span>
+            </h1>
+          </div>
+          <textarea id="editorBody"></textarea>
+        </div>
+
+        <div class="px-5">
+          <div class="border-b-2 border-[#3396d8] mb-4">
+            <h1 class="text-xl font-semibold text-ink flex items-center">
+              <span class="border-l-4 border-[#3396d8] pl-2">Pie de página</span>
+            </h1>
+          </div>
+          <textarea id="editorFooter"></textarea>
+        </div>
+      </section>
+    </div>
+
+    <!-- Modal preview -->
+    <div id="previewModal" class="fixed inset-0 z-50" :class="{'hidden': !ui.modalOpen}" aria-hidden="true">
+      <div class="absolute inset-0 bg-black/60" @click="toggleModal(false)"></div>
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-screen-lg w-full">
+          <div class="flex items-center justify-between px-4 py-3 border-b header rounded-t-xl">
+            <h4 class="font-semibold">Vista previa (A4)</h4>
+            <button class="rounded-lg px-2 py-1 hover:bg-slate-100" @click="toggleModal(false)">✕</button>
+          </div>
+          <div class="max-h-[80vh] overflow-auto p-4 bg-gray-400">
+            <div id="preview" class="a4 bg-white shadow"></div>
+          </div>
+          <div class="flex justify-end gap-2 px-4 py-3 border-t">
+            <button class="px-3 py-2 rounded-lg bg-slate-900 text-white hover:bg-black" @click="toggleModal(false)">Cerrar</button>
+            <button class="px-3 py-2 rounded-lg border hover:bg-slate-50" @click="printPreview">Imprimir</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- App Vue (sin jQuery) -->
+<script src="js/generar-carta.js"></script>
+</body>
+</html>
