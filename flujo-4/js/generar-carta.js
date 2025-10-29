@@ -1,5 +1,73 @@
 const { createApp } = Vue;
 
+function __genCartaId() {
+  try { return crypto.randomUUID(); } catch(_) {}
+  return 'carta-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,10);
+}
+
+/**
+ * Agrega (push) una carta al abono (fila) identificado por tipo/instId/rowUid|rowIdx
+ * en el localStorage 'instruccionesData'.
+ * Devuelve { ok, tipo, instId, rowIndex, cartaId }
+ */
+function saveCartaEnInstruccionesMulti({ plantilla, numDigital, asunto, firma1, firma2, extra } = {}) {
+  const q = new URLSearchParams(location.search);
+  const tipo   = q.get('tipo');
+  const instId = q.get('instId');
+  const rowUid = q.get('rowUid');
+  const rowIdx = Number(q.get('rowIdx') ?? -1);
+
+  if (!tipo || !instId) return { ok: false, reason: 'missing-ids' };
+
+  let bag;
+  try { bag = JSON.parse(localStorage.getItem('instruccionesData') || '{}'); }
+  catch { bag = {}; }
+
+  const byType = bag?.state?.instructionsByType?.[tipo];
+  if (!Array.isArray(byType)) return { ok: false, reason: 'type-not-found' };
+
+  const instIdx = byType.findIndex(x => String(x.id) === String(instId));
+  if (instIdx === -1) return { ok: false, reason: 'instruction-not-found' };
+
+  const inst = byType[instIdx];
+  const det  = Array.isArray(inst.detalle) ? inst.detalle : [];
+
+  // localizar fila por uid o por índice
+  let i = -1;
+  if (rowUid) i = det.findIndex(r => String(r?.uid ?? r?.id) === String(rowUid));
+  if (i < 0 && rowIdx >= 0 && rowIdx < det.length) i = rowIdx;
+  if (i < 0) return { ok: false, reason: 'row-not-found' };
+
+  // preparar nueva carta
+  const nuevaCarta = {
+    id: __genCartaId(),
+    plantilla:  plantilla ?? null,
+    numDigital: numDigital ?? null,
+    asunto:     asunto ?? null,
+    firma1:     firma1 ?? null,
+    firma2:     firma2 ?? null,
+    fechaISO:   new Date().toISOString(),
+    ...(extra || {})          // por si quieres adjuntar más metadata
+  };
+
+  // escribir en la fila
+  const row = det[i] || {};
+  row.hasCarta = true;
+  if (!Array.isArray(row.cartas)) row.cartas = [];
+  row.cartas.push(nuevaCarta);
+
+  // (opcional) compatibilidad: última carta rápida
+  row.carta = { ...nuevaCarta };
+
+  // persistir
+  det[i] = row;
+  byType[instIdx].detalle = det;
+  try { localStorage.setItem('instruccionesData', JSON.stringify(bag)); } catch {}
+
+  return { ok: true, tipo, instId, rowIndex: i, cartaId: nuevaCarta.id };
+}
+
+
 const app = createApp({
   data() {
     return {
@@ -461,9 +529,19 @@ que se encuentra en su cuenta matriz, a la siguiente cuenta de custodia:</p>
         .from(host.firstElementChild)
         .save();
 
+
+        saveCartaEnInstruccionesMulti({
+          plantilla: this.selects?.texto,
+          numDigital: this.campos?.numDigital,
+          asunto: this.selects?.asunto,
+          firma1: this.selects?.firma1,
+          firma2: this.selects?.firma2,
+          // extra: { cualquierOtroDato: '...' }
+        });
+
+
       host.remove();
 
-      this.marcarCartaGenerada();
       this.volverALaVista();
     },
 
@@ -513,27 +591,27 @@ que se encuentra en su cuenta matriz, a la siguiente cuenta de custodia:</p>
       return { id, fechaISO, area: (this.consts.AREA || undefined) };
     },
 
-    marcarCartaGenerada(){
-      // ejemplo de marca simple en la misma clave
-      const current = this.loadState() || {};
-      current.meta = current.meta || {};
-      current.meta.carta_generada = true;
-      current.meta.carta_fecha = new Date().toISOString();
+    volverALaVista() {
+  const FALLBACK = 'lista-instrucciones.html';
+  const ref = document.referrer;
+  let sameOrigin = false;
+  try { sameOrigin = ref && new URL(ref).origin === location.origin; } catch {}
 
-      // si quieres guardar listado:
-      current.meta.cartas = current.meta.cartas || [];
-      current.meta.cartas.push(this.crearCarta());
+  let navigated = false;
+  const onPop = () => { navigated = true; };
+  window.addEventListener('popstate', onPop, { once: true });
 
-      localStorage.setItem(this.consts.STORAGE_KEY_CARTA, JSON.stringify(current));
-    },
+  history.back();
 
-    volverALaVista(){
-      if (history.length > 1) history.back();
-      else window.location.href = 'back-office-ope-camb.html';
-    },
-
-    methods: {
-  setDefault(key, value) {
+  // Si no navegó, usa referrer same-origin; si no hay, cae al listado
+  setTimeout(() => {
+    if (!navigated) {
+      if (sameOrigin) window.location.replace(ref);
+      else window.location.replace(FALLBACK);
+    }
+  }, 250);
+},
+      setDefault(key, value) {
     // 1) actualiza el v-model
     this.selects[key] = value;
 
@@ -561,8 +639,9 @@ que se encuentra en su cuenta matriz, a la siguiente cuenta de custodia:</p>
       const list = this.opciones[key] || [];
       if (list[idx]) this.setDefault(key, list[idx]);
     }
-  }
-}
+  },
+  
+
 
   }
 });

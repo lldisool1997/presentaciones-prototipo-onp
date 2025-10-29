@@ -168,12 +168,26 @@ docsOfInstruction(){
       return p?.nombre || id;
     },
 
-    // Acciones por detalle (solo lectura: muestra/lanza acción externa)
-     generarCarta(row){
-    // redirige a otra página o genera el documento según tu flujo real
-    const url = `carta.html?id=${encodeURIComponent(this.selected?.id)}&cuenta=${encodeURIComponent(row?.cuentaId || '')}`;
-    window.location.href = url;
-  },
+    // Asegura uid en todas las filas (llámalo en created/mounted una vez)
+ensureRowUids() {
+  const det = this.curr?.detalle || [];
+  det.forEach(r => { if (!r.uid) r.uid = (r.id || genId()); });
+},
+
+// Abre la carta con 'tipo', 'instId' y 'rowUid'
+generarCarta(row){
+  if (!row) return;
+  if (!row.uid) row.uid = (row.id || genId());
+
+  const params = new URLSearchParams({
+    tipo: this.selected?.tipo || '',
+    instId: String(this.selected?.id || ''),
+    rowUid: String(row.uid || ''),
+  });
+
+  // en nueva pestaña/ventana para mantener el estado acá
+  window.open(`generar-carta.html?${params.toString()}`, '_blank', 'noopener');
+},
   generarComision(row){
     // la comisión se guarda dentro del row, puedes usarla luego si la persistes
     if (!row.comision) {
@@ -418,7 +432,7 @@ persistOperacionDocs() {
     if (this.getActiveRowIdx() === -1) {
       this.ui.activeRowIdx = (this.curr?.detalle?.length ? 0 : -1);
     }
-  }
+  },
 
 
   }
