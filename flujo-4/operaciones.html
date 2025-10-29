@@ -201,57 +201,53 @@
     </thead>
 
     <tbody>
-      <tr v-for="(r, ri) in curr.detalle"
-          :key="r.uid"
-          class="border-y"
-          :class="[
-            ri % 2 === 0 ? 'bg-white' : 'bg-slate-50',
-            (activeRow && r.uid === activeRow.uid) ? 'ring-1 ring-sky-200/80' : ''
-          ]">
-        <!-- Persona / Unidad (solo texto) -->
-        <td class="p-2 min-w-[14rem]" v-if="showPersonaCol">
-          <div class="tw-input bg-slate-50">{{ personaNombre(r.personaId) || '—' }}</div>
-        </td>
-        <td class="p-2 min-w-[14rem]" v-else>
-          <div class="tw-input bg-slate-50">{{ r.unidadNegocio || '—' }}</div>
-        </td>
+  <tr class="border-y"
+      :class="['bg-white', 'ring-1 ring-sky-200/80']">
 
-        <!-- Cuenta -->
-        <td class="p-2 min-w-[16rem]">
-          <div class="tw-input bg-slate-50 truncate">
-            {{ accountAlias(r.cuentaId) || '—' }}
-          </div>
-        </td>
+    <!-- Persona / Unidad (solo texto) -->
+    <td class="p-2 min-w-[14rem]" v-if="showPersonaCol">
+      <div class="tw-input bg-slate-50">{{ personaNombre(activeRow.personaId) || '—' }}</div>
+    </td>
+    <td class="p-2 min-w-[14rem]" v-else>
+      <div class="tw-input bg-slate-50">{{ activeRow.unidadNegocio || '—' }}</div>
+    </td>
 
-        <!-- Monto -->
-        <td class="p-2 min-w-[8rem]">
-          <div class="tw-input bg-slate-50 text-right tabular-nums">
-            {{ money(r.monto) }}
-          </div>
-        </td>
+    <!-- Cuenta -->
+    <td class="p-2 min-w-[16rem]">
+      <div class="tw-input bg-slate-50 truncate">
+        {{ accountAlias(activeRow.cuentaId) || '—' }}
+      </div>
+    </td>
 
-        <!-- Acciones (vacío / badges opcionales) -->
-        <td class="p-2 text-right">
-          <span v-if="isAbonoConfirmado(r)"
-                class="inline-flex items-center text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-            Confirmado
-          </span>
-        </td>
-      </tr>
-    </tbody>
+    <!-- Monto -->
+    <td class="p-2 min-w-[8rem]">
+      <div class="tw-input bg-slate-50 text-right tabular-nums">
+        {{ money(activeRow.monto) }}
+      </div>
+    </td>
 
-    <tfoot class="text-sm font-semibold">
-      <tr class="bg-slate-50">
-        <!-- etiqueta ocupa 2 cols; total va en la 3ra -->
-        <td class="p-2" colspan="2">
-          <!--Total filas: {{ totalFilas }}-->
-        </td>
-        <td class="p-2 text-right min-w-[8rem] tabular-nums">
-          {{ totalMontoFormateado }}
-        </td>
-        <td class="p-2"></td>
-      </tr>
-    </tfoot>
+    <!-- Badge -->
+    <td class="p-2 text-right">
+      <span v-if="isAbonoConfirmado()"
+            class="inline-flex items-center text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+        Confirmado
+      </span>
+    </td>
+  </tr>
+</tbody>
+
+<tfoot class="text-sm font-semibold">
+  <tr class="bg-slate-50">
+    <td class="p-2" :colspan="showPersonaCol ? 2 : 2">
+      <!-- vacío / etiqueta si quieres -->
+    </td>
+    <td class="p-2 text-right min-w-[8rem] tabular-nums">
+      {{ activeMontoFormateado }}
+    </td>
+    <td class="p-2"></td>
+  </tr>
+</tfoot>
+
   </table>
 </div>
 

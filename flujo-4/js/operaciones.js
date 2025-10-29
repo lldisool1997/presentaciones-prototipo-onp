@@ -190,7 +190,19 @@ totalMontoFormateado() {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });
-}
+},
+ activeMonto() {
+    const v = this.activeRow?.monto;
+    if (v == null || v === '') return 0;
+    const n = Number(String(v).replace(/\s/g,'').replace(/,/g,''));
+    return Number.isFinite(n) ? n : 0;
+  },
+  activeMontoFormateado() {
+    return this.activeMonto.toLocaleString('es-PE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
   },
 
   methods: {
