@@ -433,6 +433,96 @@ persistOperacionDocs() {
       this.ui.activeRowIdx = (this.curr?.detalle?.length ? 0 : -1);
     }
   },
+  // --- Cartas: helpers por ABONO activo ---
+activeRowCartas() {
+  const i = this.getActiveRowIdx();
+  const row = (i >= 0) ? this.curr?.detalle?.[i] : null;
+  return Array.isArray(row?.cartas) ? row.cartas : [];
+},
+ensureRowCartas(i) {
+  const list = this.curr?.detalle || [];
+  if (!(i >= 0 && i < list.length)) return;
+  if (!Array.isArray(list[i].cartas)) {
+    this.$set ? this.$set(list[i], 'cartas', []) : (list[i].cartas = []);
+    this.persistCartasForRow(i);
+  }
+},
+persistCartasForRow(i) {
+  try {
+    const data = JSON.parse(localStorage.getItem('instruccionesData') || '{}');
+    const tipo = this.selected?.tipo;
+    const id   = this.selected?.id;
+    if (!data?.state?.instructionsByType?.[tipo]) return;
+    const list = data.state.instructionsByType[tipo];
+    const instIdx = list.findIndex(x => x.id === id);
+    if (instIdx === -1) return;
+
+    const det = list[instIdx].detalle || [];
+    if (!(i >= 0 && i < det.length)) return;
+
+    // guarda cartas de la fila i (y bandera hasCarta)
+    const cartas = Array.isArray(this.curr.detalle[i].cartas) ? this.curr.detalle[i].cartas : [];
+    det[i].cartas  = cartas;
+    det[i].hasCarta = cartas.length > 0;
+    // compat: última carta rápida
+    det[i].carta = cartas.length ? { ...cartas[cartas.length - 1] } : undefined;
+
+    localStorage.setItem('instruccionesData', JSON.stringify(data));
+  } catch(e) { console.error(e); }
+},
+
+// Subir archivo firmado para una carta específica
+onUploadCartaFirmada(ev, carta) {
+  const i = this.getActiveRowIdx();
+  if (i === -1 || !carta) return;
+
+  const f = ev.target.files?.[0];
+  if (!f) return;
+
+  // valida PDF únicamente (ajusta si quieres permitir xls/xlsx)
+  const ok = f.type === 'application/pdf' || (f.name.toLowerCase().endsWith('.pdf'));
+  if (!ok) { alert('Solo PDF'); ev.target.value=''; return; }
+
+  carta.signedFileName = f.name;
+  carta.signedFile     = f;
+  carta.signedUrl      = URL.createObjectURL(f);
+  carta.signedAtISO    = new Date().toISOString();
+  this.persistCartasForRow(i);
+},
+
+// Confirmar carta (marcar estado)
+confirmCarta(carta) {
+  const i = this.getActiveRowIdx();
+  if (i === -1 || !carta) return;
+  carta.confirmada   = true;
+  carta.confirmedISO = new Date().toISOString();
+  this.persistCartasForRow(i);
+},
+
+// Quitar archivo firmado (no borra la carta)
+clearCartaFirmada(carta) {
+  const i = this.getActiveRowIdx();
+  if (i === -1 || !carta) return;
+  carta.signedFileName = '';
+  carta.signedFile     = null;
+  carta.signedUrl      = null;
+  carta.signedAtISO    = null;
+  this.persistCartasForRow(i);
+},
+
+// Eliminar carta (de la lista)
+removeCarta(idx) {
+  const i = this.getActiveRowIdx();
+  const list = this.curr?.detalle || [];
+  if (!(i >= 0 && i < list.length)) return;
+  const arr = Array.isArray(list[i].cartas) ? list[i].cartas : [];
+  if (!(idx >= 0 && idx < arr.length)) return;
+
+  if (!confirm('¿Eliminar esta carta?')) return;
+  arr.splice(idx, 1);
+  this.persistCartasForRow(i);
+}
+
 
 
   }
