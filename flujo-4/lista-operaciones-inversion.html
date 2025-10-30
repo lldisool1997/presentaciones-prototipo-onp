@@ -1,0 +1,108 @@
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Listado de Operaciones de Inversión</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/lista-instrucciones.css" />
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <div class="main-container">
+        <div class="header flex items-center justify-center gap-4 mb-3">
+          <h1 class="m-0 text-xl font-semibold">Listado de Operaciones de Inversión</h1>
+        </div>
+
+        <div class="content-wrapper">
+          <!-- Filtros -->
+          <div class="filters-section bg-[#f8f9fa] p-4 rounded-xl border border-gray-200 mb-4">
+            <div class="filters-row flex flex-wrap items-end gap-4 mb-4">
+              <div class="form-group grow flex flex-col gap-1 max-w-[480px]">
+                <label for="fTexto" class="text-sm">Buscar (descripción)</label>
+                <input id="fTexto" v-model.trim="uiFilter.q" type="text" placeholder="Escribe parte de la descripción..." class="tw-input" />
+              </div>
+
+              <div class="form-group flex flex-col gap-1">
+                <label class="text-sm" for="fDesde">Fecha desde</label>
+                <input id="fDesde" type="date" v-model="uiFilter.fechaIni" class="tw-input min-w-[160px]" />
+              </div>
+              <div class="form-group flex flex-col gap-1">
+                <label class="text-sm" for="fHasta">Fecha hasta</label>
+                <input id="fHasta" type="date" v-model="uiFilter.fechaFin" class="tw-input min-w-[160px]" />
+              </div>
+            </div>
+
+            <div class="filters-row flex gap-2">
+              <button class="btn btn-primary tw-btn-primary" @click="applyFilters">Buscar</button>
+              <button class="btn tw-btn" @click="resetFilters">Limpiar</button>
+            </div>
+          </div>
+
+          <!-- Tabla -->
+          <div class="section-header font-semibold my-3">Operaciones de Inversión</div>
+
+          <div class="table-container rounded-xl border border-gray-200 overflow-hidden bg-white">
+            <div class="table-wrapper w-full overflow-auto">
+              <table class="table w-full border-separate border-spacing-0">
+                <thead>
+                  <tr class="bg-gray-100">
+                    <th>Fecha</th>
+                    <th class="text-left">Glosa</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="row in pagedAll" :key="row.id">
+                    <td>{{ row.fecha }}</td>
+                    <td class="ellipsis" :title="row.glosa">{{ row.glosa }}</td>
+                    <td class="text-center">{{ row.estado }}</td>
+                    <td class="text-center">
+                      <button class="btn btn-ghost tw-btn-ghost" @click="goToOperacion(row)">Ver Detalles</button>
+                    </td>
+                  </tr>
+                  <tr v-if="filteredAll.length === 0">
+                    <td class="text-gray-500 text-center py-3" colspan="4">No hay operaciones con los filtros actuales.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginador -->
+            <div class="footer-bar flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-gray-200 bg-gray-50">
+              <div class="totals font-semibold">
+                Mostrando
+                <span class="font-normal">{{ pageFrom }}</span>–<span class="font-normal">{{ pageTo }}</span>
+                de <span class="font-normal">{{ filteredAll.length }}</span>
+              </div>
+
+              <div class="paginator flex flex-row items-center gap-2">
+                <label class="text-sm text-gray-600">Filas por página</label>
+                <select v-model.number="pagination.pageSize" class="tw-input !py-1 !px-2 min-w-[80px]">
+                  <option :value="5">5</option>
+                  <option :value="10">10</option>
+                  <option :value="20">20</option>
+                  <option :value="50">50</option>
+                </select>
+
+                <button class="btn tw-btn" :disabled="pagination.page === 1" @click="toFirst">«</button>
+                <button class="btn tw-btn" :disabled="pagination.page === 1" @click="prevPage">Anterior</button>
+                <div class="px-2 text-sm text-gray-600">Página {{ pagination.page }} / {{ totalPages || 1 }}</div>
+                <button class="btn tw-btn" :disabled="pagination.page >= totalPages" @click="nextPage">Siguiente</button>
+                <button class="btn tw-btn" :disabled="pagination.page >= totalPages" @click="toLast">»</button>
+              </div>
+            </div>
+          </div>
+        </div> <!-- /content-wrapper -->
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="js/lista-operaciones-inversion.js"></script>
+</body>
+</html>

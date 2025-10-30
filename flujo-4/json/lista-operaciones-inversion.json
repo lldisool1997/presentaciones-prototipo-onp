@@ -1,0 +1,22 @@
+{
+    "transferencias": [
+        {
+            "id": "1",
+            "fecha": "2025-10-01",
+            "glosa": "Transferencia a proveedor ABC",
+            "estado": "Completada"
+        },
+        {
+            "id": "2",
+            "fecha": "2025-10-05",
+            "glosa": "Transferencia interna de fondos",
+            "estado": "Pendiente"
+        },
+        {
+            "id": "3",
+            "fecha": "2025-10-10",
+            "glosa": "Pago de salario mes septiembre",
+            "estado": "Completada"
+        }
+    ]
+}
