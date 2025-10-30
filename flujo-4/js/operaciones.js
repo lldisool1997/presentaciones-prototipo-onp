@@ -616,17 +616,57 @@ clearCartaFirmada(carta) {
 },
 
 // Eliminar carta (de la lista)
-removeCarta(idx) {
-  const i = this.getActiveRowIdx();
-  const list = this.curr?.detalle || [];
-  if (!(i >= 0 && i < list.length)) return;
-  const arr = Array.isArray(list[i].cartas) ? list[i].cartas : [];
+// Eliminar carta (de la lista) con Swal + toast
+async removeCarta(idx) {
+  const i   = this.getActiveRowIdx?.() ?? -1;
+  const row = (i >= 0) ? this.curr?.detalle?.[i] : null;
+  if (!row) return;
+
+  const arr = Array.isArray(row.cartas) ? row.cartas : [];
   if (!(idx >= 0 && idx < arr.length)) return;
 
-  if (!confirm('¿Eliminar esta carta?')) return;
-  arr.splice(idx, 1);
-  this.persistCartasForRow(i);
+  // 1) Confirmación (solo Swal)
+  const res = await Swal.fire({
+    title: '¿Eliminar esta carta?',
+    text: 'Esta acción quitará la carta del abono.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    reverseButtons: true,
+    focusCancel: true
+  });
+  if (!res.isConfirmed) {
+    this.toastInfo?.('Eliminación cancelada');
+    return;
+  }
+
+  // 2) Eliminar y persistir
+  try {
+    arr.splice(idx, 1);
+
+    if (typeof this.persistCartasForRow === 'function') {
+      this.persistCartasForRow(i); // ya persiste row.cartas actualizado
+    } else {
+      // Fallback directo a localStorage
+      const data = JSON.parse(localStorage.getItem('instruccionesData') || '{}');
+      const tipo = this.selected?.tipo, id = this.selected?.id;
+      const list = data?.state?.instructionsByType?.[tipo] || [];
+      const instIdx = list.findIndex(x => x.id === id);
+      if (instIdx !== -1 && Array.isArray(list[instIdx].detalle) && list[instIdx].detalle[i]) {
+        list[instIdx].detalle[i].cartas = arr;
+        localStorage.setItem('instruccionesData', JSON.stringify(data));
+      }
+    }
+
+    // 3) Toast de éxito
+    this.toastSuccess?.('Carta eliminada');
+  } catch (e) {
+    console.error(e);
+    this.toastError?.('No se pudo eliminar la carta');
+  }
 },
+
 
 // CONFIRMAR el ABONO ACTIVO (null-safe + persiste solo la fila)
 async confirmAbono() {
