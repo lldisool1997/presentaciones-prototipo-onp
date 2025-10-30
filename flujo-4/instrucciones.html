@@ -25,7 +25,7 @@
       <div class="flex flex-col md:flex-row gap-3 md:items-end">
          <div>
     <label class="tw-label">Unidad de Negocio</label>
-    <select class="tw-input w-full">
+    <select class="tw-input w-full" v-model="ui.selectedUN">
       <option value="" disabled>— Selecciona —</option>
       <option v-for="u in master.unidades" :key="u" :value="u">{{ u }}</option>
     </select>

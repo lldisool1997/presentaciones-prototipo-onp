@@ -337,7 +337,7 @@ addInstruction(type) {
     const row = {
       uid: this.uid(),
       personaId: "",
-      unidadNegocio: "",
+      unidadNegocio: this.ui.selectedUN,
       cuentaId: "",
       monto: "",
       aprob: false
@@ -1241,6 +1241,8 @@ applyTipoRulesForCurrent() {
 
   const meta = this.getTipoMeta(tDesc);
   const moneda = (ins.moneda || 'PEN').toUpperCase();
+
+  this.curr.unidad = this.ui.selectedUN;
 
   if (meta?.tienePersona) {
     // Forzar layout persona
