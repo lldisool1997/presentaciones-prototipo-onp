@@ -928,6 +928,10 @@ openViewer(fileName) {
 
   // Mostrar el modal con el visor
   this.modalVisible = true;  // Mostrar el modal
+},
+
+addComision(activeRow){
+  console.log(activeRow)
 }
 
 
