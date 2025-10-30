@@ -203,7 +203,7 @@
       <div class="tw-input bg-slate-50">{{ curr?.unidad || '—' }}</div>
     </td>
     <td class="p-2 min-w-[14rem]" >
-      <div class="tw-input bg-slate-50">{{ showPersonaCol ? personaNombre(activeRow.personaId) || '—' : "—" }}</div>
+      <div class="tw-input bg-slate-50">{{ activeRow.personaId ? personaNombre(activeRow.personaId) || '—' : "—" }}</div>
     </td>
 
 
@@ -244,6 +244,7 @@
     </td>
   </tr>
       <tr class="border-y"
+      v-if="!activeRow.personaId"
       :class="['bg-white', 'ring-1 ring-sky-200/80']">
 
     <!-- Persona / Unidad (solo texto) -->
@@ -295,7 +296,38 @@
       </span>
     </td>
   </tr>
+  <tr class="border-y"
+      :class="['bg-white', 'ring-1 ring-sky-200/80']">
 
+    <!-- Persona / Unidad (solo texto) -->
+         <td class="p-2 min-w-[14rem]" colspan="4">
+    
+    </td>
+
+
+    <!-- Monto -->
+    <td class="p-2 min-w-[8rem]" colspan="2">
+        <div class="flex items-center gap-2 text-right justify-end">
+      <div class=" bg-slate-50 text-right tabular-nums">
+        <button class="tw-btn"
+     >
+  + Agregar comisión
+</button>
+      </div>
+        </div>
+
+    </td>
+
+
+
+    <!-- Badge -->
+    <td class="p-2 text-right">
+      <span v-if="isAbonoConfirmado()"
+            class="inline-flex items-center text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+        Confirmado
+      </span>
+    </td>
+  </tr>
 </tbody>
 
 <tfoot class="text-sm font-semibold">
@@ -306,6 +338,9 @@
     <td class="p-2 text-right min-w-[8rem] tabular-nums">
       <!--{{ activeMontoFormateado }}-->
     </td>
+    <td class="p-2"></td>
+    <td class="p-2"></td>
+    <td class="p-2"></td>
     <td class="p-2"></td>
   </tr>
 </tfoot>
