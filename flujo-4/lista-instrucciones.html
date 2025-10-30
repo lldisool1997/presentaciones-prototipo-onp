@@ -75,6 +75,7 @@
                   <tr class="bg-gray-100">
                     <th>Estado</th>
                     <!--<th>Tipo</th>-->
+                    <th class="text-left">#</th>
                     <th class="text-left">Descripción</th>
                     <th class="text-center">Usuario</th>
                     <th class="text-center">Fecha</th>
@@ -89,7 +90,8 @@
 
                 <tbody>
                   <!-- Paginación GLOBAL sobre todas las filas ya filtradas -->
-                  <tr v-for="row in pagedAll" :key="row.ins.id">
+                  <tr v-for="(row, index) in pagedAll" :key="row.ins.id">
+                    <td class="text-center">{{ index }}</td>
                     <td class="py-2">
                       <span :class="row.ins.aprobado ? 'badge badge-ok' : 'badge badge-warn'">
                         {{ row.ins.aprobado ? 'Aprobado' : 'Registrado' }}
