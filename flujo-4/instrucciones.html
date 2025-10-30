@@ -37,7 +37,7 @@
           </div>
            <select v-model="ui.selectedType" class="tw-input w-full">
     <option value="">— Selecciona —</option>
-    <option v-for="t in master.types" :key="t" :value="t">{{ t }}</option>
+    <option v-for="t in tiposTransferencia" :key="t.descripcion" :value="t.descripcion">{{t.codigo}} - {{ t.descripcion }}</option>
   </select>
         </div>
         <button class="tw-btn" @click="addType">Agregar tipo de transacción +</button>
@@ -69,7 +69,7 @@
       <div v-for="(type, idx) in state.typesAdded" :key="idx" v-show="idx === ui.activeTab">
         <div class="mx-2 my-4">
             <div class="px-4 py-3  rounded-lg bg-[#f8f9fa] border-b border-slate-200 font-semibold border-l-2 border-l-blue-300">Instrucciones para 
-              <b class="underline">{{ type }}</b>
+              <b class="underline">{{getCodigoTipoTrx(type)}} - {{ type }}</b>
             </div>
         </div>
 

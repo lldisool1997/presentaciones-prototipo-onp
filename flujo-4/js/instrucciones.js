@@ -64,6 +64,8 @@ const { createApp, computed } = Vue;
 const app = createApp({
   data() {
     return {
+      
+      tiposTransferencia: null,
      master: {
         types: [],
         unidades: ["FCR-Macrofondo", "FCR-Emsal", "FCR-Paramonga"],
@@ -267,6 +269,17 @@ approvedRowsCount() {
   },
 
   methods: {
+    getCodigoTipoTrx(trx) {
+      const list = Array.isArray(this.tiposTransferencia) ? this.tiposTransferencia : [];
+      if (trx == null) return null;
+
+      const key = String(trx).trim().toLowerCase();
+      const item = list.find(e =>
+        String(e?.descripcion ?? '').trim().toLowerCase() === key
+      );
+
+      return item?.codigo ?? null;
+    },
     isDocSelected(id) {
   const ins = this.currentIns();
   return !!ins?.docsGlobalSeleccionados?.some(d => d.id === id);
@@ -933,6 +946,7 @@ async loadTiposTransaccion() {
     if (!res.ok) throw new Error('No se pudo cargar tipos-transaccion.json');
 
     const tiposRaw = await res.json();
+    this.tiposTransferencia = Array.isArray(tiposRaw) ? tiposRaw : [];
 
     // --- Normaliza cada item del JSON ---
     const tipos = (Array.isArray(tiposRaw) ? tiposRaw : []).map(t => {
