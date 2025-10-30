@@ -82,10 +82,12 @@ const app = createApp({
       selected: null,   // { tipo, id }
       dataAll: null,    // contenido de localStorage instruccionesData
       curr: null,       // instrucción encontrada
+      tiposTransferencia: null,
       master: {         // fallback si no existe en LS
         monedas: ['PEN','USD'],
         cuentas: [],
-        personas: []
+        personas: [],
+        types: [],
       },
       ui: {
         activeRowIdx: 0,
@@ -114,6 +116,7 @@ const app = createApp({
 
   // 👉 asegura el slot de operación al cargar
   this.ensureOperacionSlot();
+  this.loadTiposTransaccion();
 
   // índice válido si no hay detalle
   if (!this.curr?.detalle?.length) this.ui.activeRowIdx = -1;
@@ -206,6 +209,29 @@ totalMontoFormateado() {
   },
 
   methods: {
+    
+  getCategoriaTipoTrx(trx) {
+      const list = Array.isArray(this.tiposTransferencia) ? this.tiposTransferencia : [];
+      if (trx == null) return null;
+
+      const key = String(trx).trim().toLowerCase();
+      const item = list.find(e =>
+        String(e?.descripcion ?? '').trim().toLowerCase() === key
+      );
+
+      return item?.categoria ?? null;
+    },
+      getCodigoTipoTrx(trx) {
+      const list = Array.isArray(this.tiposTransferencia) ? this.tiposTransferencia : [];
+      if (trx == null) return null;
+
+      const key = String(trx).trim().toLowerCase();
+      const item = list.find(e =>
+        String(e?.descripcion ?? '').trim().toLowerCase() === key
+      );
+
+      return item?.codigo ?? null;
+    },
      ensureOperacionSlot(){
     if (!this.curr) return;
     if (!Array.isArray(this.curr.docsOperacion)) {
@@ -693,7 +719,99 @@ isAbonoConfirmado(rowOrIdx) {
   const s = String(v).replace(/\s/g, '').replace(/,/g, '');
   const n = Number(s);
   return Number.isFinite(n) ? n : 0;
+},
+async loadTiposTransaccion() {
+    try {
+      // Ajusta la ruta si corresponde
+      const res = await fetch('json/tipos-transaccion.json', { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+
+      const tipos = await res.json();            // se espera [{ descripcion, categoria, ... }, ...]
+      this.tiposTransferencia = Array.isArray(tipos) ? tipos : [];
+
+      // Construye master.types SIEMPRE desde el JSON (ignora LS)
+      const types = [...new Set(
+        this.tiposTransferencia
+          .map(t => t?.descripcion)
+          .filter(Boolean)
+          .map(s => String(s).trim())
+      )];
+
+      this.master.types = types;
+
+      // (Opcional) Persistir en el blob de instruccionesData
+      try {
+        const data = JSON.parse(localStorage.getItem('instruccionesData') || '{}');
+        data.master = { ...(data.master || {}), types };
+        localStorage.setItem('instruccionesData', JSON.stringify(data));
+      } catch (e) {
+        console.warn('No se pudo persistir master.types en LS:', e);
+      }
+    } catch (err) {
+      console.error('No se pudo cargar tipos-transaccion.json:', err);
+      this.tiposTransferencia = [];
+      this.master.types = []; // o deja lo que hubiera si prefieres
+    }
+  },
+
+  // Normaliza y muestra el texto “bonito” del tipo
+displayTipoTrx(v) {
+  if (v == null || v === '') return '—';
+  return String(v).trim(); // aquí podrías mapear a un label distinto si quisieras
+},
+
+// Devuelve la categoría (Ingreso/Egreso/otro) del tipo, null-safe
+categoriaTipoTrx(trx) {
+  const list = Array.isArray(this.tiposTransferencia) ? this.tiposTransferencia : [];
+  if (trx == null) return null;
+
+  const key = String(trx).trim().toLowerCase();
+  const item = list.find(e =>
+    String(e?.descripcion ?? '').trim().toLowerCase() === key ||
+    String(e?.categoria ?? '').trim().toLowerCase() === key // por si master.types usa 'categoria'
+  );
+
+  return item?.categoria ?? null;
+},
+
+// Cuando el usuario cambia el tipo en el select del abono activo
+onChangeTipoTransferencia() {
+  const i   = this.getActiveRowIdx?.() ?? -1;
+  const row = (i >= 0) ? this.curr?.detalle?.[i] : null;
+  if (!row) return;
+
+  // Derivar/actualizar campo de categoría (si lo quieres guardar también)
+  row.categoriaTipo = this.categoriaTipoTrx(row.tipoTransferencia) || null;
+
+  // Persistir SOLO esta fila con tu helper si existe
+  if (typeof this.persistRowFragment === 'function') {
+    this.persistRowFragment(i, {
+      tipoTransferencia: row.tipoTransferencia ?? null,
+      categoriaTipo: row.categoriaTipo ?? null
+    });
+  } else {
+    // Fallback: persistencia directa en instruccionesData
+    try {
+      const data = JSON.parse(localStorage.getItem('instruccionesData') || '{}');
+      const tipo = this.selected?.tipo;
+      const id   = this.selected?.id;
+      const list = data?.state?.instructionsByType?.[tipo] || [];
+      const instIdx = list.findIndex(x => x.id === id);
+      if (instIdx !== -1) {
+        const det = list[instIdx].detalle || [];
+        if (i >= 0 && i < det.length) {
+          det[i] = {
+            ...(det[i] || {}),
+            tipoTransferencia: row.tipoTransferencia ?? null,
+            categoriaTipo: row.categoriaTipo ?? null
+          };
+          localStorage.setItem('instruccionesData', JSON.stringify(data));
+        }
+      }
+    } catch (e) { console.error(e); }
+  }
 }
+
 
 
 

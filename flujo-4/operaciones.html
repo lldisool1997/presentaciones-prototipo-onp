@@ -194,14 +194,63 @@
       <tr>
         <th class="p-2 text-left" v-if="showPersonaCol">Persona</th>
         <th class="p-2 text-left" v-else>Unidad de negocio</th>
+        <th class="p-2 text-left">Tipo de transacción</th>
         <th class="p-2 text-left">Banco y cuenta</th>
+        <th class="p-2 text-left">Ingreso/Egreso</th>
         <th class="p-2 text-right">Monto</th>
         <th class="p-2 w-12"></th>
       </tr>
     </thead>
 
     <tbody>
-  <tr class="border-y"
+    <tr class="border-y"
+      :class="['bg-white', 'ring-1 ring-sky-200/80']">
+
+    <!-- Persona / Unidad (solo texto) -->
+    <td class="p-2 min-w-[14rem]" v-if="showPersonaCol">
+      <div class="tw-input bg-slate-50">{{ personaNombre(activeRow.personaId) || '—' }}</div>
+    </td>
+    <td class="p-2 min-w-[14rem]" v-else>
+      <div class="tw-input bg-slate-50">{{ curr?.unidad || '—' }}</div>
+    </td>
+
+      <td class="p-2 min-w-[16rem]">
+      <div class="tw-input bg-slate-50 truncate">
+        {{getCodigoTipoTrx(selected.tipo)}} - {{selected.tipo}}
+      </div>
+    </td>
+
+    <!-- Cuenta -->
+    <td class="p-2 min-w-[16rem]">
+      <div class="tw-input bg-slate-50 truncate">
+        {{ accountAlias(curr?.cuentaCabeceraId) }}
+      </div>
+    </td>
+
+            <td class="p-2 min-w-[16rem]">
+      <div class="tw-input bg-slate-50 truncate">
+        {{getCategoriaTipoTrx(selected.tipo)}}
+      </div>
+    </td>
+
+    <!-- Monto -->
+    <td class="p-2 min-w-[8rem]">
+      <div class="tw-input bg-slate-50 text-right tabular-nums">
+        {{ money(activeRow.monto) }}
+      </div>
+    </td>
+
+
+
+    <!-- Badge -->
+    <td class="p-2 text-right">
+      <span v-if="isAbonoConfirmado()"
+            class="inline-flex items-center text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+        Confirmado
+      </span>
+    </td>
+  </tr>
+      <tr class="border-y"
       :class="['bg-white', 'ring-1 ring-sky-200/80']">
 
     <!-- Persona / Unidad (solo texto) -->
@@ -211,6 +260,17 @@
     <td class="p-2 min-w-[14rem]" v-else>
       <div class="tw-input bg-slate-50">{{ activeRow.unidadNegocio || '—' }}</div>
     </td>
+      <td class="p-2 min-w-[16rem]">
+  <select
+    class="tw-input w-full"
+    v-model="activeRow.tipoTransferencia"        
+    :disabled="isAbonoConfirmado() || isInstructionLocked"
+    @change="onChangeTipoTransferencia"       
+  >
+    <option value="">— Selecciona —</option>
+    <option v-for="t in tiposTransferencia" :key="t.descripcion" :value="t.descripcion">{{t.codigo}} - {{ t.descripcion }}</option>
+  </select>
+</td>
 
     <!-- Cuenta -->
     <td class="p-2 min-w-[16rem]">
@@ -218,6 +278,13 @@
         {{ accountAlias(activeRow.cuentaId) || '—' }}
       </div>
     </td>
+
+        <td class="p-2 min-w-[16rem]">
+  <div class="tw-input bg-slate-50 truncate">
+    {{ categoriaTipoTrx(activeRow?.tipoTransferencia) || '—' }}
+  </div>
+</td>
+
 
     <!-- Monto -->
     <td class="p-2 min-w-[8rem]">
@@ -234,6 +301,7 @@
       </span>
     </td>
   </tr>
+
 </tbody>
 
 <tfoot class="text-sm font-semibold">
@@ -242,7 +310,7 @@
       <!-- vacío / etiqueta si quieres -->
     </td>
     <td class="p-2 text-right min-w-[8rem] tabular-nums">
-      {{ activeMontoFormateado }}
+      <!--{{ activeMontoFormateado }}-->
     </td>
     <td class="p-2"></td>
   </tr>
@@ -275,7 +343,7 @@
 
   <!-- === Cartas del abono activo (encima de Sustento documentario) === -->
 <section v-if="activeRow && activeRowCartas().length"
-         class="p-4 border rounded-lg bg-white shadow mb-4">
+         class="p-4 border rounded-lg bg-white shadow mb-4  w-full">
   <div class="flex items-start justify-between gap-4">
     <div>
       <h2 class="text-lg font-semibold text-gray-800 mb-1">📄 Cartas del abono #{{ getActiveRowIdx() + 1 }}</h2>
@@ -310,16 +378,16 @@
         <button type="button"
                 class="px-2 py-1 text-xs rounded-md border border-slate-300 hover:bg-slate-100"
                 title="Eliminar carta"
-                v-if="!isAbonoConfirmado()"
+                v-if="!isAbonoConfirmado() && !c.confirmada"
                 @click="removeCarta(ci)">
           ×
         </button>
       </div>
 
       <!-- Acciones -->
-      <div class="mt-3 flex items-center gap-2">
+      <div class="mt-3 flex items-center gap-2" >
         <!-- Subir firmada -->
-        <label class="px-2 py-1 text-xs rounded-md bg-blue-600 hover:bg-blue-700 text-white cursor-pointer">
+        <label class="px-2 py-1 text-xs rounded-md bg-blue-600 hover:bg-blue-700 text-white cursor-pointer" v-if="!c.confirmada">
           Subir Carta Firmada
           <input type="file" accept="application/pdf" class="hidden"
                  @change="onUploadCartaFirmada($event, c)">
@@ -339,6 +407,7 @@
         <button type="button"
                 class="px-2 py-1 text-xs rounded-md border border-slate-300 hover:bg-slate-100 disabled:opacity-50"
                 :disabled="!c.signedFileName"
+                v-if="!c.confirmada"
                 @click="clearCartaFirmada(c)">
           Quitar archivo
         </button>
@@ -347,7 +416,9 @@
         <button type="button"
                 class="px-2 py-1 text-xs rounded-md bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-60"
                 :disabled="c.confirmada !== true && !c.signedFileName"
-                @click="confirmCarta(c)">
+                @click="confirmCarta(c)"
+                v-if="!c.confirmada"
+                >
           {{ c.confirmada ? 'Confirmada' : 'Confirmar' }}
         </button>
       </div>
@@ -362,7 +433,7 @@
 </section>
 
  <!-- 3. Sustento Documentario -->
-<div class="adv card-soft my-4 w-full" v-if="!isAbonoConfirmado()">
+<div class="adv card-soft my-4 w-full" >
   <div class="adv-head">
     <span class="adv-title">Configuración avanzada</span>
   </div>
@@ -372,7 +443,7 @@
     Agregue documentos del abono #<strong>{{ (ui.activeRowIdx >= 0) ? (ui.activeRowIdx + 1) : '—' }}</strong>
   </div>
 
-  <div class="adv-form">
+  <div class="adv-form" v-if="!isAbonoConfirmado()">
     <input class="tw-input w-1/3"
            placeholder="Nombre de la etiqueta"
            v-model="ui.newDocOpName" />
@@ -396,6 +467,7 @@
       {{ d.label }}
       <button class="doc-remove"
               @click="confirmDeleteOperacionDoc(i)"
+              v-if="!isAbonoConfirmado()"
               title="Quitar documento">×</button>
     </div>
 
@@ -405,6 +477,7 @@
                      application/vnd.ms-excel,
                      application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
              class="uploader-input"
+             :disabled="isAbonoConfirmado()"
              @change="onFileOperacion($event, d)" />
       <div class="uploader-inner">
         <div class="uploader-icon">📄</div>
@@ -432,6 +505,7 @@
       </button>
 
       <button type="button"
+      v-if="!isAbonoConfirmado()"
               class="border border-slate-300 text-slate-700 hover:bg-slate-50 text-sm font-semibold px-3 py-1.5 rounded-md disabled:opacity-60 disabled:cursor-not-allowed"
               @click="clearOperacionFile(d)"
               :disabled="!d.fileName">
