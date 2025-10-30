@@ -192,8 +192,9 @@
   <table class="w-full text-sm align-top">
     <thead class="text-xs text-slate-600 bg-slate-50 sticky top-0 z-10">
       <tr>
-        <th class="p-2 text-left" v-if="showPersonaCol">Persona</th>
-        <th class="p-2 text-left" v-else>Unidad de negocio</th>
+        
+        <th class="p-2 text-left">Unidad de negocio</th>
+        <th class="p-2 text-left">Persona</th>
         <th class="p-2 text-left">Tipo de transacción</th>
         <th class="p-2 text-left">Banco y cuenta</th>
         <th class="p-2 text-left">Ingreso/Egreso</th>
@@ -207,12 +208,13 @@
       :class="['bg-white', 'ring-1 ring-sky-200/80']">
 
     <!-- Persona / Unidad (solo texto) -->
-    <td class="p-2 min-w-[14rem]" v-if="showPersonaCol">
-      <div class="tw-input bg-slate-50">{{ personaNombre(activeRow.personaId) || '—' }}</div>
-    </td>
-    <td class="p-2 min-w-[14rem]" v-else>
+         <td class="p-2 min-w-[14rem]">
       <div class="tw-input bg-slate-50">{{ curr?.unidad || '—' }}</div>
     </td>
+    <td class="p-2 min-w-[14rem]" >
+      <div class="tw-input bg-slate-50">{{ showPersonaCol ? personaNombre(activeRow.personaId) || '—' : "—" }}</div>
+    </td>
+
 
       <td class="p-2 min-w-[16rem]">
       <div class="tw-input bg-slate-50 truncate">
@@ -254,11 +256,12 @@
       :class="['bg-white', 'ring-1 ring-sky-200/80']">
 
     <!-- Persona / Unidad (solo texto) -->
-    <td class="p-2 min-w-[14rem]" v-if="showPersonaCol">
-      <div class="tw-input bg-slate-50">{{ personaNombre(activeRow.personaId) || '—' }}</div>
-    </td>
-    <td class="p-2 min-w-[14rem]" v-else>
+     
+    <td class="p-2 min-w-[14rem]">
       <div class="tw-input bg-slate-50">{{ activeRow.unidadNegocio || '—' }}</div>
+    </td>
+    <td class="p-2 min-w-[14rem]" >
+      <div class="tw-input bg-slate-50">{{ personaNombre(activeRow.personaId) || '—' }}</div>
     </td>
       <td class="p-2 min-w-[16rem]">
   <select
