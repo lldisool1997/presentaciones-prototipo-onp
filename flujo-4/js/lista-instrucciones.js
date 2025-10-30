@@ -64,11 +64,19 @@ createApp({
       const to = this.pagination.page * this.pagination.pageSize;
       return Math.min(to, this.filteredAll.length);
     },
-    pagedAll(){
-      const start = (this.pagination.page - 1) * this.pagination.pageSize;
-      const end   = start + this.pagination.pageSize;
-      return this.filteredAll.slice(start, end);
-    },
+    pagedAll() {
+  const start = (this.pagination.page - 1) * this.pagination.pageSize;
+  const end = start + this.pagination.pageSize;
+
+  // Obtener las filas para la página actual
+  const rows = this.filteredAll.slice(start, end);
+
+  // Agregar el índice de la fila a cada elemento
+  return rows.map((row, index) => {
+    row.index = start + index + 1;  // Establecer el índice real
+    return row;
+  });
+},
 
     // Suma global de lo filtrado
     sumFiltered(){

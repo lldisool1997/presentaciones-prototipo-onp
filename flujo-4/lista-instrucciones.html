@@ -91,7 +91,7 @@
                 <tbody>
                   <!-- Paginación GLOBAL sobre todas las filas ya filtradas -->
                   <tr v-for="(row, index) in pagedAll" :key="row.ins.id">
-                    <td class="text-center">{{ index }}</td>
+                     <td class="text-center">{{ row.index }}</td> <!-- Numeración -->
                     <td class="py-2">
                       <span :class="row.ins.aprobado ? 'badge badge-ok' : 'badge badge-warn'">
                         {{ row.ins.aprobado ? 'Aprobado' : 'Registrado' }}
