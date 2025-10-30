@@ -83,6 +83,9 @@ const app = createApp({
       dataAll: null,    // contenido de localStorage instruccionesData
       curr: null,       // instrucción encontrada
       tiposTransferencia: null,
+      modalVisible: false,
+      iframeSrc: '',
+      fileExtension: '',
       master: {         // fallback si no existe en LS
         monedas: ['PEN','USD'],
         cuentas: [],
@@ -909,7 +912,30 @@ validateAbonoListo(row) {
 
 
 
+openViewer(fileName) {
+  // Obtener la extensión del archivo
+  const extension = fileName.split('.').pop().toLowerCase();
+  this.fileExtension = extension;
 
+  // Si es PDF, usamos Google Docs Viewer para abrirlo
+  if (extension === 'pdf') {
+    // Ruta al archivo PDF público usando Google Docs Viewer
+    this.iframeSrc = `https://docs.google.com/viewer?url=https://www.orimi.com/pdf-test.pdf&embedded=true`;
+  } else if (extension === 'xls' || extension === 'xlsx') {
+    // Ruta al archivo Excel público (usando Office Online Viewer)
+     this.iframeSrc = `https://view.officeapps.live.com/op/embed.aspx?src=https://cmapspublic2.ihmc.us/rid%3D1PPCPHPNS-ZV0LZT-2WDF/Planilla`;
+  }
+
+  // Mostrar el modal con el visor
+  this.modalVisible = true;  // Mostrar el modal
+}
+
+
+,
+        closeModal() {
+          this.modalVisible = false;  // Cerrar el modal
+          this.iframeSrc = '';        // Limpiar la fuente del iframe
+        }
 
   }
 });
