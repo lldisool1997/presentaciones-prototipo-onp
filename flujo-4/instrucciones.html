@@ -23,8 +23,19 @@
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 space-y-3">
       <div class="flex flex-col md:flex-row gap-3 md:items-end">
+         <div>
+    <label class="tw-label">Unidad de Negocio</label>
+    <select class="tw-input w-full">
+      <option value="" disabled>— Selecciona —</option>
+      <option v-for="u in master.unidades" :key="u" :value="u">{{ u }}</option>
+    </select>
+  </div>
         <div class="w-full md:w-96">
+          
+          
           <div class="flex flex-row">
+
+            
             
           <label class="block text-xs text-slate-800 mb-1">Tipo de transacción</label>
             <!--<span class="help-group" tabindex="-1"  style="top: -7px;">
