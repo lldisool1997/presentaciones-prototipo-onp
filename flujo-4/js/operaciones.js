@@ -629,27 +629,51 @@ removeCarta(idx) {
 },
 
 // CONFIRMAR el ABONO ACTIVO (null-safe + persiste solo la fila)
-confirmAbono() {
+async confirmAbono() {
   const i   = this.getActiveRowIdx?.() ?? -1;
   const row = (i >= 0) ? this.curr?.detalle?.[i] : null;
   if (!row) return;
 
+  // 1) VALIDACIÓN → SOLO TOASTS (nada de Swal aquí)
+  const { ok, errors } = this.validateAbonoListo(row);
+  if (!ok) {
+    // Muestra motivos en toast (tu toastWarn / toastError)
+    this.toastWarn('Antes de confirmar:\n• ' + errors.join('\n• '));
+    return;
+  }
+
+  // 2) CONFIRMACIÓN → SOLO SWAL (sin éxito/fracaso aquí)
+  const res = await Swal.fire({
+    title: '¿Confirmar abono?',
+    text: 'Esta acción registrará el abono como CONFIRMADO.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, confirmar',
+    cancelButtonText: 'Cancelar',
+    reverseButtons: true,
+    focusCancel: true
+  });
+  if (!res.isConfirmed) {
+    this.toastInfo?.('Confirmación cancelada'); // opcional
+    return;
+  }
+
+  // 3) PERSISTIR → y al final SOLO TOAST de éxito
   const now = new Date().toISOString();
-  row.estadoAbono   = 'CONFIRMADO';
-  row.estadoAbonoAt = now;
-  // flags de compatibilidad
-  row.abonoConfirmado = true;
-  row.confirmado = true;
+  row.estadoAbono     = 'CONFIRMADO';
+  row.estadoAbonoAt   = now;
+  row.abonoConfirmado = true;  // compat
+  row.confirmado      = true;  // compat
 
   if (typeof this.persistRowFragment === 'function') {
     this.persistRowFragment(i, {
-      estadoAbono: row.estadoAbono,
-      estadoAbonoAt: row.estadoAbonoAt,
+      estadoAbono: 'CONFIRMADO',
+      estadoAbonoAt: now,
       abonoConfirmado: true,
-      confirmado: true
+      confirmado: true,
+      comision: this.activeRow?.comision ?? null
     });
   } else {
-    // Fallback directo a instruccionesData
     try {
       const data = JSON.parse(localStorage.getItem('instruccionesData') || '{}');
       const tipo = this.selected?.tipo, id = this.selected?.id;
@@ -664,14 +688,17 @@ confirmAbono() {
             estadoAbonoAt: now,
             abonoConfirmado: true,
             confirmado: true,
-            comision: this.activeRow.comision
+            comision: this.activeRow?.comision ?? null
           };
           localStorage.setItem('instruccionesData', JSON.stringify(data));
         }
       }
     } catch (e) { console.error(e); }
   }
+
+  this.toastSuccess('Abono confirmado');
 },
+
 
 // ¿ESTÁ CONFIRMADO el ABONO? (acepta fila o índice; null-safe)
 isAbonoConfirmado(rowOrIdx) {
@@ -811,7 +838,34 @@ onChangeTipoTransferencia() {
       }
     } catch (e) { console.error(e); }
   }
-}
+},
+// --- VALIDACIONES DE CONFIRMACIÓN ---
+hasCartasPendientes(row) {
+  const cartas = Array.isArray(row?.cartas) ? row.cartas : [];
+  return cartas.some(c => c?.confirmada !== true);
+},
+
+hasSustentosPendientes(row) {
+  const docs = Array.isArray(row?.docsOperacion) ? row.docsOperacion : [];
+  // si no hay docs, no hay pendientes
+  if (docs.length === 0) return false;
+  // si hay docs, TODOS deben tener un archivo adjunto (fileName o url)
+  return docs.some(d => !((d?.fileName && String(d.fileName).trim() !== '') || d?.url));
+},
+
+isTipoTransferenciaSet(row) {
+  const v = row?.tipoTransferencia;
+  return v != null && String(v).trim() !== '';
+},
+
+validateAbonoListo(row) {
+  const errors = [];
+  if (!this.isTipoTransferenciaSet(row)) errors.push('Falta seleccionar el tipo de transacción.');
+  if (this.hasSustentosPendientes(row)) errors.push('Hay sustentos del abono sin archivo adjunto.');
+  if (this.hasCartasPendientes(row))    errors.push('Existen cartas sin confirmar.');
+  return { ok: errors.length === 0, errors };
+},
+
 
 
 
