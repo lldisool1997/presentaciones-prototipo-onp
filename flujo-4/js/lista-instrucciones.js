@@ -89,7 +89,7 @@ createApp({
         if(stored.state)  this.state  = { ...this.state,  ...stored.state  };
         this.state.typesAdded = Array.isArray(this.state.typesAdded) ? this.state.typesAdded : [];
         this.state.instructionsByType = this.state.instructionsByType || {};
-        this.toast('Datos cargados desde LocalStorage');
+        //this.toast('Datos cargados desde LocalStorage');
       }catch(e){
         console.error(e);
         this.toast('No se pudo cargar desde LocalStorage', 'error');
