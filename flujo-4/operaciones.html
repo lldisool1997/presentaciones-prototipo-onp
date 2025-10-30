@@ -471,23 +471,32 @@
               title="Quitar documento">×</button>
     </div>
 
-    <label class="uploader-dropzone">
-      <input type="file"
-             accept="application/pdf,
-                     application/vnd.ms-excel,
-                     application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-             class="uploader-input"
-             :disabled="isAbonoConfirmado()"
-             @change="onFileOperacion($event, d)" />
-      <div class="uploader-inner">
-        <div class="uploader-icon">📄</div>
-        <div class="uploader-text">
-          <div class="uploader-action">Seleccionar archivo</div>
-          <div class="uploader-sub">PDF y Excel</div>
-          <div class="uploader-file" v-if="d.fileName">{{ d.fileName }}</div>
-        </div>
-      </div>
-    </label>
+    <label
+  class="uploader-dropzone"
+  :class="isAbonoConfirmado()
+            ? 'opacity-60 cursor-not-allowed pointer-events-none'
+            : 'cursor-pointer'"
+  :aria-disabled="isAbonoConfirmado()"
+>
+  <input
+    type="file"
+    accept="application/pdf,
+            application/vnd.ms-excel,
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    class="uploader-input"
+    :disabled="isAbonoConfirmado()"
+    :tabindex="isAbonoConfirmado() ? -1 : 0"
+    @change="onFileOperacion($event, d)"
+  />
+  <div class="uploader-inner">
+    <div class="uploader-icon">📄</div>
+    <div class="uploader-text">
+      <div class="uploader-action">Seleccionar archivo</div>
+      <div class="uploader-sub">PDF y Excel</div>
+      <div class="uploader-file" v-if="d.fileName">{{ d.fileName }}</div>
+    </div>
+  </div>
+</label>
 
     <div class="flex gap-2 mt-2">
       <a v-if="d.url"

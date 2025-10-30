@@ -326,6 +326,7 @@ addOperacionDoc(){
 },
 
 onFileOperacion(ev, d){
+  if (this.isAbonoConfirmado()) { ev.target.value = ''; return; }
   const f = ev.target.files?.[0];
   if (!f) return;
   if (!this.isFileAllowed(f)) { alert('Solo PDF o Excel'); ev.target.value = ''; return; }
