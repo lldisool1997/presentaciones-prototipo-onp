@@ -125,6 +125,8 @@ const app = createApp({
         'Solicitud de operación de transferencia y apertura'
       ],
       plantilla: [
+        
+        { label: 'Transferencia a terceros', value: 'TRANSFERENCIA_TERCEROS' },
         { label: 'Orden de compra', value: 'ORDEN_COMPRA' },
         { label: 'Custodio', value: 'CUSTODIO' },
         { label: 'Repo', value: 'TPL_REPO' },
@@ -319,6 +321,32 @@ que se encuentra en su cuenta matriz, a la siguiente cuenta de custodia:</p>
 <p>Los títulos involucrados y las fechas de recompra se detallan en el anexo correspondiente.</p>
         `.trim();
       }
+
+      if (val === 'TRANSFERENCIA_TERCEROS') {
+  return `
+<p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales – FCR</strong>, 
+con RUC N° <strong>20421413216</strong>, a fin de solicitarle efectúe las siguientes operaciones:</p>
+<br>
+<p style="margin-left: 40px; line-height: 1.6;">
+  <strong>CARGO DE:</strong>&nbsp;&nbsp;&nbsp;&nbsp;S/ 218,132.61 de la <strong>CUENTA CORRIENTE M.N N° 000-000-341835</strong>, 
+  en el <strong>BANCO DE LA NACIÓN</strong>, con CCI <strong>018-000-0000000341835-07</strong><br>
+  <strong>ABONO A:</strong>&nbsp;&nbsp;&nbsp;&nbsp;S/ 218,132.61 a la <strong>CUENTA CORRIENTE M.N N° 000-000-299294</strong>, 
+  en el <strong>BANCO DE LA NACIÓN</strong>, con CCI <strong>018-000-0000000299294-09</strong><br>
+  <strong>Son:</strong>&nbsp;&nbsp;&nbsp;&nbsp;DOSCIENTOS DIECIOCHO MIL CIENTO TREINTA Y DOS Y 61/100 SOLES.
+</p>
+<br>
+<p>Los gastos de transferencia sírvanse cargarlos a la(s) cuenta(s) mencionada(s).</p>
+
+<p>Asimismo, autorizamos al señor <strong>Jorge Armando Alcala Benites</strong>, identificado con DNI N° <strong>41541651</strong> 
+a la señora <strong>Damaris Jael Calachahuín Huaman</strong>, identificada con DNI N° <strong>41544415</strong>, 
+a recibir la documentación respectiva.</p>
+
+<p>Agradecidos por la atención, quedamos</p>
+
+<p>Atentamente,</p>
+<p><strong>Back Office Tesorería — FCR</strong></p>
+  `.trim();
+}
       return `<p>Nos dirigimos a usted en representación del <strong>Fondo Consolidado de Reservas Previsionales</strong> (FCR).</p>`;
     },
 
