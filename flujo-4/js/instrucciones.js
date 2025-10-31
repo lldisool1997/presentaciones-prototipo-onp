@@ -360,7 +360,7 @@ addInstruction(type) {
     const row = {
       uid: this.uid(),
       personaId: "",
-      unidadNegocio: this.ui.selectedUN,
+      unidadNegocio: "",
       cuentaId: "",
       monto: "",
       aprob: false

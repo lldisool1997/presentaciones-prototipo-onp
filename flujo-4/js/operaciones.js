@@ -779,6 +779,13 @@ async confirmAbono() {
   const row = (i >= 0) ? this.curr?.detalle?.[i] : null;
   if (!row) return;
 
+  console.log("123x")
+
+    // 1) Validar comisiones antes de confirmar
+  if (!this.validateCommissions()) {
+    return; // Si hay errores, no procedemos con la confirmación
+  }
+
   // 1) VALIDACIÓN → SOLO TOASTS (nada de Swal aquí)
   const { ok, errors } = this.validateAbonoListo(row);
   if (!ok) {
@@ -1253,6 +1260,38 @@ removeDetalleFila(index) {
     const transaccionesEncontradas = this.tiposTransferencia.filter(t => tiposTransacciones.includes(t.codigo))
     return transaccionesEncontradas;
   },
+
+ validateCommissions() {
+  const errors = [];
+  
+  // Recorrer cada fila de detalle
+  this.curr?.detalle?.forEach((detalle, idx) => {
+    // Verificar si es una comisión
+    if (detalle.tipoTransaccion && (detalle.tipoTransaccion.includes("Comisión"))) {
+      // Verificar si tiene cuenta asignada
+      if (!detalle.cuentaId || detalle.cuentaId.trim() === "") {
+        errors.push(`La comisión en el abono #${idx + 1} no tiene cuenta asignada.`);
+      }
+      // Verificar si tiene monto asignado
+      if (!detalle.monto || parseFloat(detalle.monto) <= 0) {
+        errors.push(`La comisión en el abono #${idx + 1} no tiene un monto válido.`);
+      }
+    }
+  });
+
+  if (errors.length > 0) {
+    // Mostrar alertas de error
+    Swal.fire({
+      title: "Error al confirmar",
+      text: errors.join("\n"),
+      icon: "error"
+    });
+    return false;
+  }
+  return true;
+}
+
+
 
 
 
