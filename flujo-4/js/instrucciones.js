@@ -108,7 +108,7 @@ const app = createApp({
     ],
 
        initialDocs: [
-      { key: 'sustentos', label: 'Documento Sustento', fileName: '', file: null },
+      //{ key: 'sustentos', label: 'Documento Sustento', fileName: '', file: null },
       //{ key: 'legal',  label: 'Informe Legal',       fileName: '', file: null },
       //{ key: 'acta',   label: 'Acta de Comité de Inversiones', fileName: '', file: null }
     ],
@@ -677,6 +677,10 @@ currentIns() { return this.curr; }, // alias corto
 
 // ==== Upload INICIALES (a nivel instrucción) ====
 onFileInicial(ev, doc) {
+
+  console.log(ev);
+  console.log(doc);
+
   const ins = this.currentIns();
   if (!ins) return;
 
@@ -691,6 +695,11 @@ onFileInicial(ev, doc) {
 
   doc.file = f;          // el doc pertenece a ESTA instrucción
   doc.fileName = f.name;
+},
+
+isPdf(file) {
+  if (!file) return false;
+  return file.type === 'application/pdf' || /\.pdf$/i.test(file.name || '');
 },
 
 // ==== Upload DINÁMICOS (a nivel instrucción) ====
@@ -713,20 +722,24 @@ onFileExtra(ev, d) {
 
 
 addDynamicDoc() {
-   const name = (this.ui.newDocName || '').trim();
+  const name = (this.ui.newDocName || '').trim();
   if (!name) { this.toastInfo('Escriba el nombre del documento'); return; }
 
+  const ins = this.currentIns();
+  if (!ins) return;
+  if (!Array.isArray(ins.docsExtras)) ins.docsExtras = [];
 
-
-  this.master.globalDocsExtras.push({
+  ins.docsExtras.push({
     id: this.uid(),
-    label: this.ui.newDocName.trim(),
+    label: name,
     file: null,
-    fileName: "",
+    fileName: ''
   });
-  this.ui.newDocName = "";
-   this.toastSuccess('Nuebo documento registrado'); return;
+
+  this.ui.newDocName = '';
+  this.toastSuccess('Documento agregado a la instrucción');
 },
+
 
 onFileGlobal(e, doc) {
   const file = e.target.files[0];
@@ -1384,12 +1397,12 @@ loadFromLocalStorage(key = 'instruccionesData') {
   mounted() {
     this.$nextTick(() => {
       // Si usas Tom Select, tu <select> debe tener id="selectTipoTransaccion"
-      new TomSelect('#selectTipoTransaccion', {
+      /*new TomSelect('#selectTipoTransaccion', {
         create: true,
         placeholder: 'Escribe o selecciona un tipo...',
         sortField: { field: 'text', direction: 'asc' },
         onChange: (v) => { this.ui.selectedType = v; }
-      });
+      });*/
     });
   },
   
