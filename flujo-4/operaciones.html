@@ -237,10 +237,7 @@
 
     <!-- Badge -->
     <td class="p-2 text-right">
-      <span v-if="isAbonoConfirmado()"
-            class="inline-flex items-center text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-        Confirmado
-      </span>
+
     </td>
   </tr>
       <tr class="border-y"
@@ -290,12 +287,119 @@
 
     <!-- Badge -->
     <td class="p-2 text-right">
-      <span v-if="isAbonoConfirmado()"
-            class="inline-flex items-center text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-        Confirmado
-      </span>
+
     </td>
   </tr>
+
+  <tr
+  v-for="(detalle, index) in activeRow.detalle"
+  :key="detalle.uid"
+  class="border-y"
+  :class="['bg-white', 'ring-1 ring-sky-200/80']"
+>
+  <!-- Unidad de negocio -->
+  <td class="p-2 min-w-[14rem]">
+  <select
+  v-model="detalle.unidadNegocio"
+  class="tw-input w-full bg-slate-50"
+    @change="setCuentaPorUnidadOPersona(detalle)"
+>
+  <option
+    v-for="u in getUnidadesDeNegocio(detalle)"
+    :key="u"
+    :value="u"
+  >{{ u }}</option>
+</select>
+</td>
+
+  <!-- Persona -->
+ <td class="p-2 min-w-[14rem]">
+  <select
+  v-model="detalle.personaId"
+  class="tw-input w-full bg-slate-50"
+    @change="setCuentaPorUnidadOPersona(detalle)"
+>
+  <option
+    v-for="p in getPersonas()"
+    :key="p"
+    :value="p"
+  >{{ personaNombre(p) }}</option>
+</select>
+</td>
+
+  <!-- Tipo de transacción -->
+  <td class="p-2 min-w-[16rem]">
+    <select
+      v-model="detalle.tipoTransaccion"
+      class="tw-input w-full bg-slate-50"
+      :disabled="isAbonoConfirmado() || isInstructionLocked"
+      @change="onChangeTipoTransferencia"
+    >
+      <option value="">— Selecciona —</option>
+      <option
+        v-for="t in tiposTransferencia"
+        :key="t.descripcion"
+        :value="t.descripcion"
+      >
+        {{ t.codigo }} - {{ t.descripcion }}
+      </option>
+    </select>
+  </td>
+
+  <!-- Banco y cuenta -->
+<td class="p-2 min-w-[16rem]">
+  <select
+  v-model="detalle.cuentaId"
+  class="tw-input w-full bg-slate-50"
+  :disabled="getCuentas(detalle).length === 0"
+>
+  <option
+    v-if="getCuentas(detalle).length === 0"
+    value=""
+  >— Selecciona unidad/persona —</option>
+
+  <option
+    v-for="c in getCuentas(detalle)"
+    :key="c.id"
+    :value="c.id"
+  >{{ c.alias }} — {{ c.numero }}</option>
+</select>
+</td>
+
+
+  <!-- Ingreso / Egreso -->
+  <td class="p-2 min-w-[16rem]">
+    <div class="tw-input bg-slate-50 truncate">
+      {{ categoriaTipoTrx(detalle.tipoTransaccion || activeRow.tipoTransferencia) || '—' }}
+    </div>
+  </td>
+
+  <!-- Monto -->
+  <td class="p-2 min-w-[8rem]">
+    <input
+      v-model="detalle.monto"
+      class="tw-input text-right tabular-nums w-full"
+      type="number"
+      placeholder="0.00"
+      :disabled="isAbonoConfirmado() || isInstructionLocked"
+    />
+  </td>
+
+  <!-- Estado -->
+  <td class="p-2 text-right">
+  <button
+    type="button"
+    class="px-2 py-1 text-xs rounded-md bg-red-600 hover:bg-red-700 text-white"
+    @click="removeDetalleFila(index)"
+    v-if="!isAbonoConfirmado()"
+    title="Eliminar fila"
+  >
+    ×
+  </button>
+</td>
+</tr>
+
+
   <tr class="border-y"
       :class="['bg-white', 'ring-1 ring-sky-200/80']">
 
@@ -310,6 +414,7 @@
         <div class="flex items-center gap-2 text-right justify-end">
       <div class=" bg-slate-50 text-right tabular-nums">
         <button class="tw-btn"
+        v-if="!bloqueoFilaComision()"
         @click="addComision(activeRow)"
      >
   + Agregar comisión

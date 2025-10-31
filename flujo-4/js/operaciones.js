@@ -930,16 +930,174 @@ openViewer(fileName) {
   this.modalVisible = true;  // Mostrar el modal
 },
 
-addComision(activeRow){
-  console.log(activeRow)
-}
 
-
-,
         closeModal() {
           this.modalVisible = false;  // Cerrar el modal
           this.iframeSrc = '';        // Limpiar la fuente del iframe
-        }
+        },
+        // Método para obtener las opciones de moneda
+  getMonedas() {
+    // Esto puede ser de alguna fuente de datos, como una API o almacenamiento local
+    return ['PEN', 'USD']; // Ejemplo de monedas disponibles
+  },
+
+  // Método para obtener las cuentas de abono
+  getCuentasAbono() {
+    // Deberías tener las cuentas en tu objeto master o como dato
+    return this.master?.cuentas?.filter(cuenta => cuenta.tipo === 'abono') || [];
+  },
+
+  // Método para obtener las cuentas de cargo
+  getCuentasCargo() {
+    // Deberías tener las cuentas en tu objeto master o como dato
+    return this.master?.cuentas?.filter(cuenta => cuenta.tipo === 'cargo') || [];
+  },
+
+  // Método para obtener las opciones de tipos de transferencia
+  getTiposTransferencia() {
+    return this.tiposTransferencia || [];
+  },
+
+  // Agregar comisión al activeRow
+  // Agregar comisión al activeRow
+addComision(activeRow) {
+  if (!activeRow.detalle) {
+    activeRow.detalle = [];
+  }
+
+  // Obtener todas las unidades disponibles (de tu helper actual)
+  const unidades = this.getUnidadesDeNegocio();
+
+  // Obtener la unidad de negocio usada en la comisión anterior (si hay)
+  const ultimaUnidad =
+    activeRow.detalle.length > 0
+      ? activeRow.detalle[activeRow.detalle.length - 1].unidadNegocio
+      : null;
+
+  // Buscar una unidad diferente
+  const nuevaUnidad =
+    unidades.find(u => u !== ultimaUnidad) ||
+    this.curr?.unidad ||
+    activeRow.unidadNegocio ||
+    '';
+
+  // Crear la nueva comisión
+  const detailComision = {
+    uid: genId(),
+    unidadNegocio: nuevaUnidad, // 👈 diferente a la anterior
+    personaId: activeRow.personaId || '',
+    tipoTransaccion: activeRow.tipoTransaccion || '',
+    cuentaId: activeRow.cuentaId || '',
+    categoriaTipo: activeRow.categoriaTipo || '',
+    moneda: this.getMonedas().find(m => m === activeRow.moneda) || 'PEN',
+    monto: 0,
+    comision: 0,
+    descripcion: 'Comisión de operación',
+  };
+
+  // Asignar cuentas
+  const cuentaAbono =
+    this.getCuentasAbono().find(c => c.id === activeRow.cuentaCabeceraId) || {
+      alias: 'Cuenta Abono',
+      numero: '—',
+    };
+  const cuentaCargo =
+    this.getCuentasCargo().find(c => c.id === activeRow.cuentaId) || {
+      alias: 'Cuenta Cargo',
+      numero: '—',
+    };
+
+  detailComision.cuentaAbono = cuentaAbono;
+  detailComision.cuentaCargo = cuentaCargo;
+
+  // Asignar tipo de transferencia
+  const tipos = this.getTiposTransferencia();
+  const tipoTransferencia =
+    tipos.find(t => t.descripcion === activeRow.tipoTransferencia) || {
+      descripcion: 'Ingreso',
+      categoria: 'Egreso',
+    };
+  detailComision.tipoTransaccion = tipoTransferencia.descripcion;
+
+  // Agregar al array
+  activeRow.detalle.push(detailComision);
+},
+
+
+
+  // === Métodos para selects dependientes ===
+// === Unidades de negocio (dedup + sin nulos) ===
+getUnidadesDeNegocio(detalle) {
+  const arr = [
+    this.curr?.unidad,
+    this.activeRow?.unidadNegocio,
+  ].filter(v => v != null && v !== '');
+  return [...new Set(arr)];
+},
+
+// === Personas (dedup + sin nulos) ===
+getPersonas() {
+  const arr = [
+    this.curr?.personaId,
+    this.activeRow?.personaId,
+  ].filter(v => v != null && v !== '');
+  return [...new Set(arr)];
+},
+
+// === Cuentas por fila (filtra por unidad+persona del detalle; dedup + sin nulos) ===
+getCuentas(detalle) {
+  const unidad  = detalle?.unidadNegocio;
+  const persona = detalle?.personaId;
+  const ids = [];
+
+  // cuenta de cabecera (curr)
+  if (
+    this.curr?.cuentaCabeceraId &&
+    (unidad ? this.curr?.unidad === unidad : true) &&
+    (persona ? this.curr?.personaId === persona : true)
+  ) {
+    ids.push(this.curr.cuentaCabeceraId);
+  }
+
+  // cuenta del activeRow
+  if (
+    this.activeRow?.cuentaId &&
+    (unidad ? this.activeRow?.unidadNegocio === unidad : true) &&
+    (persona ? this.activeRow?.personaId === persona : true)
+  ) {
+    ids.push(this.activeRow.cuentaId);
+  }
+
+  // elimina nulos/vacíos y duplicados
+  const unicas = [...new Set(ids.filter(v => v != null && v !== ''))];
+
+  // mapea a { id, alias }
+  return unicas.map(id => ({ id, alias: this.accountAlias(id) }));
+},
+
+
+
+
+// se ejecuta al cambiar unidad o persona
+setCuentaPorUnidadOPersona(detalle) {
+  const opciones = this.getCuentas(detalle);
+  const ids = opciones.map(o => o.id);
+
+  if (!ids.includes(detalle.cuentaId)) {
+    detalle.cuentaId = opciones.length ? opciones[0].id : null;
+  }
+},
+
+bloqueoFilaComision(){
+  return this.activeRow.detalle?.length > 1;
+},
+
+removeDetalleFila(index) {
+ this.activeRow.detalle.splice(index, 1);
+      this.persistOperacionDocsForRow(this.getActiveRowIdx());
+      this.toastSuccess('Comisión eliminada');
+},
+
 
   }
 });
