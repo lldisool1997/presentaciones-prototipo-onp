@@ -10,7 +10,12 @@
      <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.10.5"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="css/operaciones.css">
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-select@3.20.3/dist/vue-select.css">
+<script src="https://unpkg.com/vue@3.4.15/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/vue-select@3.20.3"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css">
+<script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 font-inter">
   <div id="app" class="max-w-screen-2xl mx-auto p-4 md:p-6 space-y-4">
@@ -254,7 +259,7 @@
     </td>
       <td class="p-2 min-w-[16rem]">
   <select
-    class="tw-input w-full"
+    class="tomselect-tipo tw-input w-full bg-slate-50 rounded-md border border-slate-200"
     v-model="activeRow.tipoTransferencia"        
     :disabled="isAbonoConfirmado() || isInstructionLocked"
     @change="onChangeTipoTransferencia"       

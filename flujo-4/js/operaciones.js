@@ -1,5 +1,6 @@
 const { createApp, computed } = Vue;
 
+
 // UUID v4 con fallbacks (crypto.randomUUID -> crypto.getRandomValues -> Math.random)
 function genId() {
   // 1) Soporte nativo
@@ -31,6 +32,83 @@ const moneyBaseOptions = {
   emptyInputBehavior: 'null',
   watchExternalChanges: true,
   outputFormat: 'number'
+};
+
+// Polyfill defensivo para CSS.escape (por si el browser no lo trae)
+if (typeof CSS === 'undefined' || typeof CSS.escape !== 'function') {
+  window.CSS = window.CSS || {};
+  CSS.escape = CSS.escape || function (s) {
+    return String(s).replace(/[^a-zA-Z0-9_\-]/g, ch => '\\' + ch);
+  };
+}
+
+// === Directiva global: v-tomselect ===
+const TomSelectDirective = {
+  mounted(el, binding) {
+    // Opciones por defecto + override vía v-tomselect="{ ... }"
+    const opts = {
+      maxOptions: 500,
+      allowEmptyOption: true,
+      create: false,
+      placeholder: (binding?.value && binding.value.placeholder) || 'Seleccione…',
+      // Si estás en modal, fija el contenedor del dropdown
+      dropdownParent: (el.closest('.p-dialog, .modal') || document.body),
+      onChange(val) {
+        // Sincroniza con v-model (no dispara loops)
+        el.value = (val ?? '');
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true }));
+      },
+    };
+
+    // Inicializar instancia
+    const ts = new TomSelect(el, opts);
+    el._ts = ts;
+
+    // Valor inicial: solo si existe en <option>, sino deja placeholder
+    const initial = (el.value ?? '').toString().trim();
+    const exists = !!(initial && el.querySelector(`option[value="${CSS.escape(initial)}"]`));
+    if (exists) ts.setValue(initial, true); else ts.clear(true);
+
+    // Observer para opciones dinámicas: refresca sin perder selección
+    const mo = new MutationObserver(() => {
+      const val = (el.value ?? '').toString().trim();
+      ts.refreshOptions(false);
+      const ok = !!(val && el.querySelector(`option[value="${CSS.escape(val)}"]`));
+      if (ok && ts.getValue() !== val) ts.setValue(val, true);
+      if (!ok) ts.clear(true);
+    });
+    mo.observe(el, { childList: true, subtree: true });
+    el._tsObserver = mo;
+
+    // Respeta el disabled inicial de Vue
+    if (el.disabled) ts.disable();
+  },
+
+  updated(el) {
+    const ts = el._ts;
+    if (!ts) return;
+
+    // Sincroniza disabled/enabled
+    if (el.disabled) ts.disable(); else ts.enable();
+
+    // Re-sincroniza valor tras updates de Vue (tabs, async, etc.)
+    const val = (el.value ?? '').toString().trim();
+    const exists = !!(val && el.querySelector(`option[value="${CSS.escape(val)}"]`));
+    if (exists) {
+      if (ts.getValue() !== val) ts.setValue(val, true);
+    } else {
+      ts.clear(true); // placeholder si no hay valor
+    }
+    ts.refreshOptions(false);
+  },
+
+  unmounted(el) {
+    try { el._tsObserver?.disconnect(); } catch {}
+    try { el._ts?.destroy(); } catch {}
+    delete el._tsObserver;
+    delete el._ts;
+  }
 };
 
 const MoneyDirective = {
@@ -124,6 +202,11 @@ const app = createApp({
   // índice válido si no hay detalle
   if (!this.curr?.detalle?.length) this.ui.activeRowIdx = -1;
 },
+watch: {
+  'ui.activeRowIdx'() { this.syncTipoTrxTom(); },                 // al cambiar de tab
+  'tiposTransferencia': { handler() { this.syncTipoTrxTom(); }, deep: true }, // al recargar opciones
+  'activeRow.tipoTransferencia'() { this.syncTipoTrxTom(); },     // si modelo cambia por código
+},
 
   computed: {
     totalFilas(){
@@ -210,8 +293,29 @@ totalMontoFormateado() {
     });
   }
   },
+  
 
   methods: {
+
+    initTomSelect(el, options = {}) {
+  if (!el) return;
+  if (el.tomselect) el.tomselect.destroy(); // limpia si ya existe
+
+  const select = new TomSelect(el, {
+    create: false,
+    maxOptions: 100,
+    placeholder: 'Seleccione una opción',
+    allowEmptyOption: true,
+    ...options,
+    onChange: (val) => {
+      // sincroniza con Vue
+      const event = new Event('input', { bubbles: true });
+      el.value = val;
+      el.dispatchEvent(event);
+    },
+  });
+}
+,
     
   getCategoriaTipoTrx(trx) {
       const list = Array.isArray(this.tiposTransferencia) ? this.tiposTransferencia : [];
@@ -1107,6 +1211,20 @@ removeDetalleFila(index) {
       this.toastSuccess('Comisión eliminada');
 },
 
+syncTipoTrxSelect2() {
+    this.$nextTick(() => {
+      const el = document.querySelector('.select2-hidden-accessible[name="tipoTransferencia"]');
+      if (!el) return;
+      const v = this.activeRow?.tipoTransferencia ?? '';
+      if (v && String(v).trim() !== '') {
+        $(el).val(v).trigger('change.select2');   // pinta el valor guardado
+      } else {
+        $(el).val(null).trigger('change.select2'); // muestra placeholder
+      }
+    });
+  },
+
+
 
   }
 });
@@ -1127,5 +1245,5 @@ app.config.errorHandler = (err, vm, info) => {
   console.error(`[Vue error]: ${info}`, err);
 };
 
-
+app.directive('tomselect', TomSelectDirective);
 app.mount("#app");
