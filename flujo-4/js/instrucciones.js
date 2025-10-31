@@ -262,8 +262,8 @@ approvedRowsCount() {
     return !this.showPersonaCol;
   },
    isInstructionLocked() {
-    const curr = this.curr;
-    return !!(curr && curr.aprobado === true);
+    //const curr = this.curr;
+    return false; //!!(curr && curr.aprobado === true);
   },
 
   },
@@ -361,7 +361,7 @@ newInstruction() {
     fecha: new Date().toISOString().slice(0, 10),
     moneda: "PEN",
     importe: "",
-    aprobado: false,
+    aprobado: true,
 
       // 👇 documentos a nivel de instrucción
     docsIniciales: DOCS_INICIALES.map(d => ({ ...d })), // copia por instrucción
