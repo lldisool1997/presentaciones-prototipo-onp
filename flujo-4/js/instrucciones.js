@@ -66,6 +66,7 @@ const app = createApp({
     return {
       
       tiposTransferencia: null,
+      relacionUOtiposTransferencia: null,
      master: {
         types: [],
         unidades: ["FCR-Macrofondo", "FCR-Emsal", "FCR-Paramonga"],
@@ -138,6 +139,7 @@ const app = createApp({
       this.loadMacroCuentasAndReplace?.();
   this.loadTiposTransaccion();
   this.loadFromLocalStorage();
+  this.loadUOTipoTransaccion();
   },
 
 watch: {
@@ -948,7 +950,44 @@ normalizeBankName(b) {
 },
 
 // -------- índice de tipos --------
-// -------- índice de tipos --------
+
+async loadUOTipoTransaccion(){
+try {
+    const res = await fetch('json/UN_TIPOTRX.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('No se pudo cargar tipos-transaccion.json');
+
+    const tiposRaw = await res.json();
+    this.relacionUOtiposTransferencia = Array.isArray(tiposRaw) ? tiposRaw : [];
+    console.log(this.relacionUOtiposTransferencia)
+
+    this.toastSuccess('Tipos de transacción cargados');
+  } catch (e) {
+    console.error(e);
+    this.toastError('No se pudo cargar tipos de transacción');
+  }
+},
+
+  getTipoTransaccionPorUnidad(unidadNegocio) {
+    // Filtramos las transacciones por la unidad de negocio
+    const resultados = this.relacionUOtiposTransferencia.filter(item => item.DESCRIPCIONLOCAL === unidadNegocio);
+
+    
+    // Extraemos el array de tipos de transacción
+    const tiposTransacciones = resultados.map(item => item.TIPOTRANSACCION);
+         //   console.log(unidadNegocio)
+       // console.log(resultados)
+
+       // console.log(tiposTransacciones)
+       // console.log(this.tiposTransferencia)
+    
+    // Filtramos los objetos de tipos de transacción en this.tiposTransferencia que coinciden
+    const transaccionesEncontradas = this.tiposTransferencia.filter(t => tiposTransacciones.includes(t.codigo));
+
+    
+    return transaccionesEncontradas;
+  },
+
+
 async loadTiposTransaccion() {
   try {
     const res = await fetch('json/tipos-transaccion.json', { cache: 'no-cache' });

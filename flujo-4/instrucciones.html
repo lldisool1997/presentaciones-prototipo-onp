@@ -22,48 +22,42 @@
     </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 space-y-3">
-      <div class="flex flex-col md:flex-row gap-3 md:items-end">
-         <div>
-    <label class="tw-label">Unidad de Negocio</label>
-    <select class="tw-input w-full" v-model="ui.selectedUN">
-      <option value="" disabled>— Selecciona —</option>
-      <option v-for="u in master.unidades" :key="u" :value="u">{{ u }}</option>
-    </select>
-  </div>
-        <div class="w-full md:w-96">
-          
-          
-          <div class="flex flex-row">
-
-            
-            
-          <label class="block text-xs text-slate-800 mb-1">Tipo de transacción</label>
-            <!--<span class="help-group" tabindex="-1"  style="top: -7px;">
-            <button class="help-btn" type="button" aria-label="Ayuda">?</button>
-            <span class="help-bubble help-top" role="tooltip">
-              Este es tipo de transacción correspondiente a la o las instrucciones.
-              <span class="help-arrow"></span>
-            </span>
-          </span>-->
-          </div>
-           <select v-model="ui.selectedType" class="tw-input w-full">
-    <option value="">— Selecciona —</option>
-    <option v-for="t in tiposTransferencia" :key="t.descripcion" :value="t.descripcion">{{t.codigo}} - {{ t.descripcion }}</option>
-  </select>
-        </div>
-        <button class="tw-btn" @click="addType">Agregar tipo de transacción +</button>
-
-        <div class="md:ml-auto flex items-center gap-2">
-          <button class="tw-btn-primary" @click="guardarTodo">Guardar y enviar todas las instrucciones</button>
-        </div>
-      </div>
-      <div v-if="state.typesAdded?.length" class="flex flex-wrap gap-2 pt-2">
-        <span v-for="(t, idx) in state.typesAdded" :key="t" class="tw-chip">
-          {{ t }}
-          <button class="tw-chip-x" @click="confirmDeleteType(idx, t)">×</button>
-        </span>
-      </div>
+  <div class="flex flex-col md:flex-row gap-3 md:items-end">
+    <div>
+      <label class="tw-label">Unidad de Negocio</label>
+      <select class="tw-input w-full" v-model="ui.selectedUN">
+        <option value="" disabled>— Selecciona —</option>
+        <option v-for="u in master.unidades" :key="u" :value="u">{{ u }}</option>
+      </select>
     </div>
+    
+    <div class="w-full md:w-96">
+      <div class="flex flex-row">
+        <label class="block text-xs text-slate-800 mb-1">Tipo de transacción</label>
+      </div>
+      <select v-model="ui.selectedType" class="tw-input w-full">
+        <option value="">— Selecciona —</option>
+        <option v-for="t in getTipoTransaccionPorUnidad(ui.selectedUN)" :key="t.descripcion" :value="t.descripcion">
+          {{ t.codigo }} - {{ t.descripcion }}
+        </option>
+      </select>
+    </div>
+    
+    <button class="tw-btn" @click="addType">Agregar tipo de transacción +</button>
+    
+    <div class="md:ml-auto flex items-center gap-2">
+      <button class="tw-btn-primary" @click="guardarTodo">Guardar y enviar todas las instrucciones</button>
+    </div>
+  </div>
+
+  <div v-if="state.typesAdded?.length" class="flex flex-wrap gap-2 pt-2">
+    <span v-for="(t, idx) in state.typesAdded" :key="t" class="tw-chip">
+      {{ t }}
+      <button class="tw-chip-x" @click="confirmDeleteType(idx, t)">×</button>
+    </span>
+  </div>
+</div>
+
 
     <!-- Tabs de Tipo de Transferencia -->
     <div class="bg-white rounded-xl shadow-sm border border-slate-200">
