@@ -80,6 +80,6 @@
   { "codigo": "ICD", "descripcion": "Intereses Ctas Bancarias Dólar", "categoria": "Ingreso", "tienePersona": false, "idPersona": null },
   { "codigo": "INT", "descripcion": "Intereses Ctas Bancarias Soles", "categoria": "Ingreso", "tienePersona": false, "idPersona": null },
   { "codigo": "CNS", "descripcion": "Comisión Bancaria en Soles", "categoria": "Egreso", "tienePersona": false, "idPersona": null },
-  { "codigo": "DPT", "descripcion": "Devol.FASP- Tesoro Publico", "categoria": "Egreso", "tienePersona": true, "idPersona": "per-004", "predeterminado": false }
+  { "codigo": "DPT", "descripcion": "Devol.FASP- Tesoro Publico", "categoria": "Egreso", "tienePersona": true, "idPersona": "per-004", "selectable": true }
  
 ]

@@ -67,6 +67,7 @@ const app = createApp({
       
       tiposTransferencia: null,
       relacionUOtiposTransferencia: null,
+      personasMaster: [],
      master: {
         types: [],
         unidades: ["FCR-Macrofondo", "FCR-Emsal", "FCR-Paramonga"],
@@ -140,6 +141,7 @@ const app = createApp({
       
       this.loadMacroCuentasAndReplace?.();
   this.loadTiposTransaccion();
+  this.loadPersonas();
   this.loadFromLocalStorage();
   this.loadUOTipoTransaccion();
   },
@@ -260,8 +262,17 @@ approvedRowsCount() {
     const t = this.currentType;
     if (!t) return false;
     const meta = this.state.tiposByDesc?.[String(t).trim().toLowerCase()];
-    return !!meta?.tienePersona;
+    console.log(meta)
+    return meta?.tienePersona && !meta.selectable;
   },
+   showSelectablePersonaCol() {
+    const t = this.currentType;
+    if (!t) return false;
+    const meta = this.state.tiposByDesc?.[String(t).trim().toLowerCase()];
+    return meta?.tienePersona && meta.selectable;
+  },
+
+
   showUnidadCol() {
     return !this.showPersonaCol;
   },
@@ -273,6 +284,14 @@ approvedRowsCount() {
   },
 
   methods: {
+      getPersonasSelectable(){
+    return this.personasMaster;
+  },
+
+  setCuentaPersona(r){
+    r.cuentaId = 'cta-banco-de-la-nacion-fcr-ley-n-28046-pen-1'; //Estático
+    return this.personasMaster.filter(e => e.idPersona == r.personaSelectableId)[0]
+  },
     getCodigoTipoTrx(trx) {
       const list = Array.isArray(this.tiposTransferencia) ? this.tiposTransferencia : [];
       if (trx == null) return null;
@@ -969,8 +988,25 @@ try {
   }
 },
 
+async loadPersonas(){
+try {
+    const res = await fetch('json/personas.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('No se pudo cargar depersonas.json');
+
+    const tiposRaw = await res.json();
+    this.personasMaster = Array.isArray(tiposRaw) ? tiposRaw : [];
+
+    this.toastSuccess('Tipos de transacción cargados');
+  } catch (e) {
+    console.error(e);
+    this.toastError('No se pudo cargar tipos de transacción');
+  }
+},
+
   getTipoTransaccionPorUnidad(unidadNegocio) {
     // Filtramos las transacciones por la unidad de negocio
+    if(!this.relacionUOtiposTransferencia)
+      return;
     const resultados = this.relacionUOtiposTransferencia.filter(item => item.DESCRIPCIONLOCAL === unidadNegocio);
 
     
@@ -1020,7 +1056,8 @@ async loadTiposTransaccion() {
         descripcion: desc,
         categoria: cat,
         tienePersona,
-        idPersona: idp
+        idPersona: idp,
+        selectable: t.selectable
       };
     }).filter(t => t.descripcion); // desc obligatoria
 

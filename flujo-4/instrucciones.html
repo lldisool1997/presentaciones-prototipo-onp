@@ -228,7 +228,8 @@
       <thead class="text-xs text-slate-500">
         <tr>
           <th class="p-2 text-left" v-if="showPersonaCol">Persona</th>
-          <th class="p-2 text-left" v-if="!showPersonaCol">Unidad de negocio</th>
+          <th class="p-2 text-left" v-if="!showPersonaCol && !showSelectablePersonaCol">Unidad de negocio</th>
+          <th class="p-2 text-left" v-if="showSelectablePersonaCol">Persona</th>
           <th class="p-2 text-left">Banco y Cuenta</th>
           <th class="p-2 text-right">Monto</th>
           <!--<th class="p-2 text-center">Aprob.</th>-->
@@ -239,6 +240,7 @@
       <tbody>
         <tr v-for="(r, ri) in curr.detalle" :key="r.uid" class="bg-slate-50 border-y">
           <!-- Persona -->
+           
          <!-- Columna Persona (se muestra solo cuando aplique) -->
 <td v-if="showPersonaCol">
   <select
@@ -255,9 +257,22 @@
   </select>
 </td>
 
+<td v-if="showSelectablePersonaCol">
+  <select
+    class="tw-input w-full"
+    v-model="r.personaSelectableId"
+    @change="setCuentaPersona(r)"
+  >
+    <option value="" disabled>— Selecciona persona —</option>
+    <option v-for="p in getPersonasSelectable()" :key="p.idPersona" :value="p.idPersona" >
+      {{ p.descripcion }}
+    </option>
+  </select>
+</td>
+
 
           <!-- Unidad -->
-          <td class="p-2 min-w-[14rem]" v-if="!showPersonaCol">
+          <td class="p-2 min-w-[14rem]" v-if="!showPersonaCol && !showSelectablePersonaCol">
             <select class="tw-input w-full"
                     v-model="r.unidadNegocio"
                     :disabled="lockedLayout === 'persona' || isInstructionLocked"
@@ -268,7 +283,7 @@
           </td>
 
           <!-- Cuenta (dependiente de persona o unidad) -->
-          <td class="p-2 min-w-[16rem]">
+          <td class="p-2 min-w-[16rem]" v-if="!showSelectablePersonaCol">
             <select class="tw-input w-full"
                     v-model="r.cuentaId"
                     :disabled="lockedLayout === 'persona' || isInstructionLocked">
@@ -278,6 +293,12 @@
                 {{ c.numero }}
               </option>
             </select>
+          </td>
+
+          <td class="p-2 min-w-[16rem]" v-if="showSelectablePersonaCol">
+            <div class="tw-input bg-slate-50 truncate">
+              {{ setCuentaPersona(r) ? setCuentaPersona(r)?.banco + " " + setCuentaPersona(r)?.numero : "-"}}
+            </div>
           </td>
 
           <!-- Monto -->
