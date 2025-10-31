@@ -202,11 +202,6 @@ const app = createApp({
   // índice válido si no hay detalle
   if (!this.curr?.detalle?.length) this.ui.activeRowIdx = -1;
 },
-watch: {
-  'ui.activeRowIdx'() { this.syncTipoTrxTom(); },                 // al cambiar de tab
-  'tiposTransferencia': { handler() { this.syncTipoTrxTom(); }, deep: true }, // al recargar opciones
-  'activeRow.tipoTransferencia'() { this.syncTipoTrxTom(); },     // si modelo cambia por código
-},
 
   computed: {
     totalFilas(){
@@ -1115,13 +1110,13 @@ addComision(activeRow) {
   detailComision.cuentaCargo = cuentaCargo;
 
   // Asignar tipo de transferencia
-  const tipos = this.getTiposTransferencia();
+  /*const tipos = this.getTiposTransferencia();
   const tipoTransferencia =
     tipos.find(t => t.descripcion === activeRow.tipoTransferencia) || {
       descripcion: 'Ingreso',
       categoria: 'Egreso',
     };
-  detailComision.tipoTransaccion = tipoTransferencia.descripcion;
+  detailComision.tipoTransaccion = tipoTransferencia.descripcion;*/
 
   this.setCuentaPorUnidadOPersona(detailComision)
 
