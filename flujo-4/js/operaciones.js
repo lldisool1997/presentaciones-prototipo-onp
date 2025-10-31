@@ -987,7 +987,7 @@ addComision(activeRow) {
     unidadNegocio: nuevaUnidad, // 👈 diferente a la anterior
     personaId: activeRow.personaId || '',
     tipoTransaccion: activeRow.tipoTransaccion || '',
-    cuentaId: activeRow.cuentaId || '',
+    cuentaId: '',
     categoriaTipo: activeRow.categoriaTipo || '',
     moneda: this.getMonedas().find(m => m === activeRow.moneda) || 'PEN',
     monto: 0,
@@ -1018,6 +1018,8 @@ addComision(activeRow) {
       categoria: 'Egreso',
     };
   detailComision.tipoTransaccion = tipoTransferencia.descripcion;
+
+  this.setCuentaPorUnidadOPersona(detailComision)
 
   // Agregar al array
   activeRow.detalle.push(detailComision);
@@ -1069,8 +1071,15 @@ getCuentas(detalle) {
   }
 
   // elimina nulos/vacíos y duplicados
-  const unicas = [...new Set(ids.filter(v => v != null && v !== ''))];
+  let unicas = [...new Set(ids.filter(v => v != null && v !== ''))];
 
+  let cuentas = [];
+
+  if(this.activeRow.detalle){
+    cuentas = this.activeRow.detalle.filter(e => e.uid != detalle.uid).map(e => e.cuentaId)
+    unicas = unicas.filter(e => !cuentas.includes(e));
+  }
+  
   // mapea a { id, alias }
   return unicas.map(id => ({ id, alias: this.accountAlias(id) }));
 },
