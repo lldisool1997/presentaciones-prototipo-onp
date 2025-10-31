@@ -779,7 +779,6 @@ async confirmAbono() {
   const row = (i >= 0) ? this.curr?.detalle?.[i] : null;
   if (!row) return;
 
-  console.log("123x")
 
     // 1) Validar comisiones antes de confirmar
   if (!this.validateCommissions()) {

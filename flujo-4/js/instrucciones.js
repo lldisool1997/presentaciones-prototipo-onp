@@ -1100,9 +1100,9 @@ async loadTiposTransaccion() {
    // console.table(this.unidadTypes.slice(0, 10));
 
     // Limpia selección si quedó inválida
-    if (this.ui.selectedType && !seen.has(this.ui.selectedType.toLowerCase())) {
+    /*if (this.ui.selectedType && !seen.has(this.ui.selectedType.toLowerCase())) {
       this.ui.selectedType = '';
-    }
+    }*/
 
     this.toastSuccess('Tipos de transacción cargados');
   } catch (e) {
@@ -1330,7 +1330,7 @@ applyTipoRulesForCurrent() {
   const meta = this.getTipoMeta(tDesc);
   const moneda = (ins.moneda || 'PEN').toUpperCase();
 
-  this.curr.unidad = this.ui.selectedUN;
+  //this.curr.unidad = this.ui.selectedUN;
 
   if (meta?.tienePersona) {
     // Forzar layout persona
