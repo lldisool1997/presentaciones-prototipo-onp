@@ -80,11 +80,13 @@ const app = createApp({
     { id: "per-001", nombre: "ONP-PENSIONES EMSAL", "bancoPreferido": "BANCO DE LA NACIÓN",   cuentaId: "cta-bbva-pen",  moneda: "PEN" },
     { id: "per-002", nombre: "ONP-PENSIONES EMSAL",  "bancoPreferido": "BANCO DE LA NACIÓN", cuentaId: "cta-bcp-pen",   moneda: "PEN" },
     { id: "per-003", nombre: "A & B ECOSISTEMAS S.R.L.", "bancoPreferido": "BN",  cuentaId: "cta-ibk-pen",   moneda: "PEN" },
+    { id: "per-004", nombre: "A & B ECOSISTEMAS S.R.L.", "bancoPreferido": "BN",  cuentaId: "cta-ibk-pen",   moneda: "PEN" },
 
     // USD
     { id: "usd-001", nombre: "ONP-PENSIONES EMSAL", "bancoPreferido": "BANCO DE LA NACIÓN",   cuentaId: "cta-bbva-usd",  moneda: "USD" },
     { id: "usd-002", nombre: "ONP-PENSIONES EMSAL", "bancoPreferido": "BANCO DE LA NACIÓN",  cuentaId: "cta-bcp-usd",   moneda: "USD" },
     { id: "usd-003", nombre: "A & B ECOSISTEMAS S.R.L.", "bancoPreferido": "BN",  cuentaId: "cta-ibk-usd",   moneda: "USD" },
+    { id: "usd-004", nombre: "A & B ECOSISTEMAS S.R.L.", "bancoPreferido": "BN",  cuentaId: "cta-ibk-usd",   moneda: "USD" },
   ],
   cuentas: [
     // BBVA
