@@ -262,7 +262,7 @@ approvedRowsCount() {
     const t = this.currentType;
     if (!t) return false;
     const meta = this.state.tiposByDesc?.[String(t).trim().toLowerCase()];
-    console.log(meta)
+    //console.log(meta)
     return meta?.tienePersona && !meta.selectable;
   },
    showSelectablePersonaCol() {
@@ -422,7 +422,7 @@ guardarTodo() {
   }));
 
   // Si aún no tienes backend, solo log y persistencia local
-  console.log('Payload a enviar (solo metadata):', { instructions });
+  //console.log('Payload a enviar (solo metadata):', { instructions });
 
   // Si vas a llamar backend:
   /*
@@ -979,7 +979,7 @@ try {
 
     const tiposRaw = await res.json();
     this.relacionUOtiposTransferencia = Array.isArray(tiposRaw) ? tiposRaw : [];
-    console.log(this.relacionUOtiposTransferencia)
+    //console.log(this.relacionUOtiposTransferencia)
 
     this.toastSuccess('Tipos de transacción cargados');
   } catch (e) {
@@ -1092,11 +1092,11 @@ async loadTiposTransaccion() {
     this.unidadTypes  = [...new Set(unidadTypes)];
 
     // (Debug útil)
-    console.log('Total tipos:', tipos.length);
-    console.log('Tipos con persona:', this.personaTypes.length);
-    console.table(this.personaTypes.slice(0, 10));
-    console.log('Tipos por unidad:', this.unidadTypes.length);
-    console.table(this.unidadTypes.slice(0, 10));
+   // console.log('Total tipos:', tipos.length);
+   // console.log('Tipos con persona:', this.personaTypes.length);
+   // console.table(this.personaTypes.slice(0, 10));
+   // console.log('Tipos por unidad:', this.unidadTypes.length);
+   // console.table(this.unidadTypes.slice(0, 10));
 
     // Limpia selección si quedó inválida
     if (this.ui.selectedType && !seen.has(this.ui.selectedType.toLowerCase())) {
@@ -1272,8 +1272,8 @@ async loadMacroCuentasAndReplace() {
       return { ...p, cuentaId };
     });
 
-          console.log("1")
-          console.log(this.master.personas)
+          //console.log("1")
+          //console.log(this.master.personas)
 
     this.toastSuccess('Catálogo bancario actualizado y personas asignadas');
   } catch (e) {
@@ -1353,7 +1353,7 @@ applyTipoRulesForCurrent() {
 
       if (row.personaId) {
         row.cuentaId = this.resolveCuentaForPersona(row.personaId, moneda) || '';
-        console.log(row.cuentaId)
+       
       }
       // En modo persona, limpia unidad
       row.unidadNegocio = '';
@@ -1362,6 +1362,11 @@ applyTipoRulesForCurrent() {
     // Cabecera (opcional): toma la cuenta de la primera fila
     if (!ins.cuentaCabeceraId && ins.detalle[0]?.cuentaId) {
       ins.cuentaCabeceraId = ins.detalle[0].cuentaId;
+    }
+
+    if (meta?.selectable){
+      ins.cuentaCabeceraId = "cta-banco-de-la-nacion-fcr-ley-n-28046-pen-1";
+      ins.unidadNegocio = this.curr.unidad;
     }
 
   } else {

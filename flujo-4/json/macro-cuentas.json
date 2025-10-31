@@ -5,11 +5,12 @@
     "per-003": { "nombre": "María López",  "bancoPreferido": "BANCO DE LA NACIÓN", "unidadPreferida": "FCR-PARAMONGA" },
     "usd-001": { "nombre": "Juan Pérez",   "bancoPreferido": "BANCO DE LA NACIÓN",      "unidadPreferida": "FCR-MACROFONDO" },
     "usd-002": { "nombre": "ACME S.A.C.",  "bancoPreferido": "BANCO DE LA NACIÓN",       "unidadPreferida": "FCR-MACROFONDO" },
-    "usd-003": { "nombre": "María López",  "bancoPreferido": "BANCO DE LA NACIÓN", "unidadPreferida": "FCR-MACROFONDO" }
+    "usd-003": { "nombre": "María López",  "bancoPreferido": "BANCO DE LA NACIÓN", "unidadPreferida": "FCR-MACROFONDO" },
+    "per-004": { "nombre": "MEF-DGTP-CUENTA PRINCIPAL",  "bancoPreferido": "BANCO DE LA NACIÓN", "unidadPreferida": "FCR-FCR-LEY N° 28046" }
   },
 
   "unidades": {
-    "FCR-LEY N° 28046": {
+    "FCR-LEY Nº 28046": {
       "BANCO DE CRÉDITO": [
         { "numero": "193-13814691-0-31", "moneda": "PEN" },
         { "numero": "193-14004253-0-09", "moneda": "PEN" },
