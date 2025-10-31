@@ -266,13 +266,13 @@
     </td>
       <td class="p-2 min-w-[16rem]">
   <select
-    class="tomselect-tipo tw-input w-full bg-slate-50 rounded-md border border-slate-200"
+    class="tomselect-tipo tw-input w-full  rounded-md border border-slate-200"
     v-model="activeRow.tipoTransferencia"        
     :disabled="isAbonoConfirmado() || isInstructionLocked"
     @change="onChangeTipoTransferencia"       
   >
     <option value="">— Selecciona —</option>
-    <option v-for="t in tiposTransferencia" :key="t.descripcion" :value="t.descripcion">{{t.codigo}} - {{ t.descripcion }}</option>
+    <option v-for="t in getTipoTransaccionPorUnidad(activeRow.unidadNegocio)" :key="t.descripcion" :value="t.descripcion">{{t.codigo}} - {{ t.descripcion }}</option>
   </select>
 </td>
 

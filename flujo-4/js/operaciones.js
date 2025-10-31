@@ -162,6 +162,7 @@ const app = createApp({
       curr: null,       // instrucción encontrada
       tiposTransferencia: null,
       modalVisible: false,
+        relacionUOtiposTransferencia: null,
       iframeSrc: '',
       fileExtension: '',
       master: {         // fallback si no existe en LS
@@ -198,6 +199,7 @@ const app = createApp({
   // 👉 asegura el slot de operación al cargar
   this.ensureOperacionSlot();
   this.loadTiposTransaccion();
+  this.loadUOTipoTransaccion();
 
   // índice válido si no hay detalle
   if (!this.curr?.detalle?.length) this.ui.activeRowIdx = -1;
