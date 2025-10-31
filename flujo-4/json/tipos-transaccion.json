@@ -78,6 +78,7 @@
   { "codigo": "CXI", "descripcion": "Retorno de Inversion", "categoria": "Ingreso", "tienePersona": false, "idPersona": null },
   { "codigo": "ICE", "descripcion": "Intereses Ctas Bancarias Euros", "categoria": "Ingreso", "tienePersona": false, "idPersona": null },
   { "codigo": "ICD", "descripcion": "Intereses Ctas Bancarias Dólar", "categoria": "Ingreso", "tienePersona": false, "idPersona": null },
-  { "codigo": "INT", "descripcion": "Intereses Ctas Bancarias Soles", "categoria": "Ingreso", "tienePersona": false, "idPersona": null }
-
+  { "codigo": "INT", "descripcion": "Intereses Ctas Bancarias Soles", "categoria": "Ingreso", "tienePersona": false, "idPersona": null },
+  { "codigo": "CNS", "descripcion": "Comisión Bancaria en Soles", "categoria": "Egreso", "tienePersona": false, "idPersona": null }
+ 
 ]

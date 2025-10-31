@@ -1035,10 +1035,12 @@ openViewer(fileName) {
           this.iframeSrc = '';        // Limpiar la fuente del iframe
         },
         // Método para obtener las opciones de moneda
-  getMonedas() {
-    // Esto puede ser de alguna fuente de datos, como una API o almacenamiento local
-    return ['PEN', 'USD']; // Ejemplo de monedas disponibles
-  },
+getMonedas() {
+  const list = Array.isArray(this.master?.monedas)
+    ? this.master.monedas
+    : ['PEN', 'USD'];
+  return list;
+},
 
   // Método para obtener las cuentas de abono
   getCuentasAbono() {
@@ -1193,6 +1195,26 @@ setCuentaPorUnidadOPersona(detalle) {
 
   if (!ids.includes(detalle.cuentaId)) {
     detalle.cuentaId = opciones.length ? opciones[0].id : null;
+    
+    if(detalle.cuentaId){
+      detalle.moneda = this.curr.moneda
+      detalle.tipoTransaccion = this.getDescripcionTipoTrxPorMoneda(this.curr.moneda)
+    }
+  }
+},
+
+// Devuelve la descripción del tipo de transacción (comisión) según moneda
+getDescripcionTipoTrxPorMoneda(moneda) {
+  if (!moneda) return '';
+  const m = String(moneda).trim().toUpperCase();
+
+  switch (m) {
+    case 'PEN':
+      return 'Comisión Bancaria en Soles';
+    case 'USD':
+      return 'Comisión Bancaria en Dolares';
+    default:
+      return '';
   }
 },
 
@@ -1206,18 +1228,8 @@ removeDetalleFila(index) {
       this.toastSuccess('Comisión eliminada');
 },
 
-syncTipoTrxSelect2() {
-    this.$nextTick(() => {
-      const el = document.querySelector('.select2-hidden-accessible[name="tipoTransferencia"]');
-      if (!el) return;
-      const v = this.activeRow?.tipoTransferencia ?? '';
-      if (v && String(v).trim() !== '') {
-        $(el).val(v).trigger('change.select2');   // pinta el valor guardado
-      } else {
-        $(el).val(null).trigger('change.select2'); // muestra placeholder
-      }
-    });
-  },
+
+
 
 
 

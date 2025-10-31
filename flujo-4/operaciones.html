@@ -184,7 +184,7 @@
       <!-- Panel del detalle activo -->
 <div class="p-4" v-if="activeRow">
   <div class="flex flex-col md:flex-col md:items-center md:justify-center gap-4">
-    <div class="mt-2 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow">
+    <div class="mt-2 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow w-full">
   <table class="w-full text-sm align-top">
     <thead class="text-xs text-slate-600 bg-slate-50 sticky top-0 z-10">
       <tr>
@@ -194,6 +194,7 @@
         <th class="p-2 text-left">Tipo de transacción</th>
         <th class="p-2 text-left">Banco y cuenta</th>
         <th class="p-2 text-left">Ingreso/Egreso</th>
+        <th class="p-2 text-left">Moneda</th>
         <th class="p-2 text-right">Monto</th>
         <th class="p-2 w-12"></th>
       </tr>
@@ -230,6 +231,12 @@
         {{getCategoriaTipoTrx(selected.tipo)}}
       </div>
     </td>
+
+            <td class="p-2 min-w-[5rem]">
+  <div class="tw-input bg-slate-50 truncate">
+    {{ curr?.moneda || '—' }}
+  </div>
+</td>
 
     <!-- Monto -->
     <td class="p-2 min-w-[8rem]">
@@ -282,6 +289,12 @@
   </div>
 </td>
 
+            <td class="p-2 min-w-[5rem]">
+  <div class="tw-input bg-slate-50 truncate">
+    {{ curr?.moneda || '—' }}
+  </div>
+</td>
+
 
     <!-- Monto -->
     <td class="p-2 min-w-[8rem]">
@@ -289,6 +302,7 @@
         {{ money(activeRow.monto) }}
       </div>
     </td>
+    
 
     <!-- Badge -->
     <td class="p-2 text-right">
@@ -304,45 +318,40 @@
 >
   <!-- Unidad de negocio -->
   <td class="p-2 min-w-[14rem]">
-  <select
-  v-model="detalle.unidadNegocio"
-  class="tw-input w-full bg-slate-50"
-    @change="setCuentaPorUnidadOPersona(detalle)"
->
-  <option
-    v-for="u in getUnidadesDeNegocio(detalle)"
-    :key="u"
-    :value="u"
-  >{{ u }}</option>
-</select>
-</td>
+    <select
+      v-model="detalle.unidadNegocio"
+      class="tw-input w-full bg-slate-50"
+      @change="setCuentaPorUnidadOPersona(detalle)"
+    >
+      <option v-for="u in getUnidadesDeNegocio(detalle)" :key="u" :value="u">{{ u }}</option>
+    </select>
+  </td>
 
   <!-- Persona -->
- <td class="p-2 min-w-[14rem]">
-  <select
-  v-model="detalle.personaId"
-  class="tw-input w-full bg-slate-50"
-    @change="setCuentaPorUnidadOPersona(detalle)"
->
-  <option
-    v-for="p in getPersonas()"
-    :key="p"
-    :value="p"
-  >{{ personaNombre(p) }}</option>
-</select>
-</td>
+  <td class="p-2 min-w-[14rem]">
+    <select
+      v-model="detalle.personaId"
+      class="tw-input w-full bg-slate-50"
+      @change="setCuentaPorUnidadOPersona(detalle)"
+    >
+      <option v-for="p in getPersonas()" :key="p" :value="p">{{ personaNombre(p) }}</option>
+    </select>
+  </td>
 
-  <!-- Tipo de transacción -->
+  <!-- Tipo de transacción (solo comisiones) -->
   <td class="p-2 min-w-[16rem]">
     <select
       v-model="detalle.tipoTransaccion"
       class="tw-input w-full bg-slate-50"
-      :disabled="isAbonoConfirmado() || isInstructionLocked"
+      disabled
       @change="onChangeTipoTransferencia"
     >
       <option value="">— Selecciona —</option>
       <option
-        v-for="t in tiposTransferencia"
+        v-for="t in tiposTransferencia.filter(tt =>
+          tt.descripcion === 'Comisión Bancaria en Soles' ||
+          tt.descripcion === 'Comisión Bancaria en Dolares'
+        )"
         :key="t.descripcion"
         :value="t.descripcion"
       >
@@ -352,31 +361,36 @@
   </td>
 
   <!-- Banco y cuenta -->
-<td class="p-2 min-w-[16rem]">
-  <select
-  v-model="detalle.cuentaId"
-  class="tw-input w-full bg-slate-50"
-  :disabled="getCuentas(detalle).length === 0"
->
-  <option
-    v-if="getCuentas(detalle).length === 0"
-    value=""
-  >— Selecciona unidad/persona —</option>
-
-  <option
-    v-for="c in getCuentas(detalle)"
-    :key="c.id"
-    :value="c.id"
-  >{{ c.alias }} — {{ c.numero }}</option>
-</select>
-</td>
-
+  <td class="p-2 min-w-[16rem]">
+    <select
+      v-model="detalle.cuentaId"
+      class="tw-input w-full bg-slate-50"
+      :disabled="getCuentas(detalle).length === 0"
+    >
+      <option v-if="getCuentas(detalle).length === 0" value="">— Selecciona unidad/persona —</option>
+      <option v-for="c in getCuentas(detalle)" :key="c.id" :value="c.id">
+        {{ c.alias }} — {{ c.numero }}
+      </option>
+    </select>
+  </td>
 
   <!-- Ingreso / Egreso -->
   <td class="p-2 min-w-[16rem]">
     <div class="tw-input bg-slate-50 truncate">
       {{ categoriaTipoTrx(detalle.tipoTransaccion) || '—' }}
     </div>
+  </td>
+
+  <!-- Moneda (NUEVO, antes de Monto) -->
+  <td class="p-2 min-w-[8rem]">
+    <select
+      v-model="detalle.moneda"
+      class="tw-input w-full bg-slate-50"
+      disabled
+    >
+      <option value="">— Selecciona —</option>
+      <option v-for="m in getMonedas()" :key="m" :value="m">{{ m }}</option>
+    </select>
   </td>
 
   <!-- Monto -->
@@ -392,17 +406,18 @@
 
   <!-- Estado -->
   <td class="p-2 text-right">
-  <button
-    type="button"
-    class="px-2 py-1 text-xs rounded-md bg-red-600 hover:bg-red-700 text-white"
-    @click="removeDetalleFila(index)"
-    v-if="!isAbonoConfirmado()"
-    title="Eliminar fila"
-  >
-    ×
-  </button>
-</td>
+    <button
+      type="button"
+      class="px-2 py-1 text-xs rounded-md bg-red-600 hover:bg-red-700 text-white"
+      @click="removeDetalleFila(index)"
+      v-if="!isAbonoConfirmado()"
+      title="Eliminar fila"
+    >
+      ×
+    </button>
+  </td>
 </tr>
+
 
 
   <tr class="border-y"
