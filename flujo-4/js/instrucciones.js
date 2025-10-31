@@ -683,10 +683,11 @@ isFileAllowed(file) {
   if (!file) return false;
 
   const allowedMimeTypes = [
-    'application/pdf',
-    'application/vnd.ms-excel', // .xls
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' // .xlsx
-  ];
+  'application/pdf',
+  'application/vnd.ms-excel', // .xls
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+  'message/rfc822' // .eml
+];
 
   const allowedExts = ['pdf', 'xls', 'xlsx'];
   const ext = file.name.split('.').pop().toLowerCase();
