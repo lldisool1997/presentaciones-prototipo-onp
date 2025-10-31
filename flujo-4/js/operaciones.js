@@ -1159,8 +1159,8 @@ getCuentas(detalle) {
   // cuenta de cabecera (curr)
   if (
     this.curr?.cuentaCabeceraId &&
-    (unidad ? this.curr?.unidad === unidad : true) &&
-    (persona ? this.curr?.personaId === persona : true)
+    (unidad ? this.curr?.unidad === unidad : true)
+    //(persona ? this.curr?.personaId === persona : true)
   ) {
     ids.push(this.curr.cuentaCabeceraId);
   }
