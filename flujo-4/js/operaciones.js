@@ -233,6 +233,7 @@ const app = createApp({
     // En operaciones.js -> computed.docsOfInstruction (reemplaza la función)
 docsOfInstruction(){
   const ins = this.curr;
+  console.log(ins)
   if (!ins) return [];
 
   const norm = (d, tipo) => ({
@@ -244,14 +245,14 @@ docsOfInstruction(){
   });
 
   //const base    = Array.isArray(ins.docsIniciales)            ? ins.docsIniciales.map(d => norm(d,'inicial')) : [];
-  //const extra   = Array.isArray(ins.docsExtras)               ? ins.docsExtras.map(d => norm(d,'extra'))      : [];
-  const global  = Array.isArray(ins.docsGlobalSeleccionados)  ? ins.docsGlobalSeleccionados.map(d => norm(d,'global')) : [];
+  const extra   = Array.isArray(ins.docsExtras)               ? ins.docsExtras.map(d => norm(d,'extra'))      : [];
+  //const global  = Array.isArray(ins.docsGlobalSeleccionados)  ? ins.docsGlobalSeleccionados.map(d => norm(d,'global')) : [];
   /*const sueltos = Array.isArray(ins.docs)
     ? ins.docs.map(d => norm({ id:d.id, label:'Sustento documentario', fileName: d.nombre }, 'adj'))
     : [];*/
 
   // iniciales → extras → globales → sueltos
-  return [...global];
+  return [...extra];
 },
     activeRow(){
       const list = this.curr?.detalle || [];

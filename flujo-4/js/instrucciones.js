@@ -675,50 +675,46 @@ isFileAllowed(file) {
 currentIns() { return this.curr; }, // alias corto
 
 
-// ==== Upload INICIALES (a nivel instrucción) ====
+// Método para manejar archivo inicial
 onFileInicial(ev, doc) {
-
-  console.log(ev);
-  console.log(doc);
-
-  const ins = this.currentIns();
-  if (!ins) return;
-
   const f = ev.target.files?.[0];
   if (!f) return;
 
+  // Asegurarse de que el archivo es PDF
   if (!this.isPdf(f)) {
     this.toastError('Solo se permite PDF');
     ev.target.value = '';
     return;
   }
 
-  doc.file = f;          // el doc pertenece a ESTA instrucción
-  doc.fileName = f.name;
+  // Asignar el archivo y su nombre
+  doc.file = f; // Asignar el archivo
+  doc.fileName = f.name; // Asignar el nombre del archivo
 },
 
-isPdf(file) {
-  if (!file) return false;
-  return file.type === 'application/pdf' || /\.pdf$/i.test(file.name || '');
-},
-
-// ==== Upload DINÁMICOS (a nivel instrucción) ====
+// Método para manejar archivos adicionales
 onFileExtra(ev, d) {
-  const ins = this.currentIns();
-  if (!ins) return;
-
   const f = ev.target.files?.[0];
   if (!f) return;
 
+  // Verificar si el archivo está permitido (PDF o Excel)
   if (!this.isFileAllowed(f)) {
     this.toastError('Solo se permiten archivos PDF o Excel');
     ev.target.value = '';
     return;
   }
 
+  // Asignar el archivo y su nombre
   d.file = f;
   d.fileName = f.name;
 },
+
+
+isPdf(file) {
+  if (!file) return false;
+  return file.type === 'application/pdf' || /\.pdf$/i.test(file.name || '');
+},
+
 
 
 addDynamicDoc() {
