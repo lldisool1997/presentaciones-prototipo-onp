@@ -180,11 +180,11 @@
           <div class="section-header">3. Información de la instrucción al Backoffice</div>
       <!-- Tabs header -->
       <div class="flex items-center justify-between mb-2 mt-2">
-        <ul id="tabs" class="tabs-list">
+        <!--<ul id="tabs" class="tabs-list">
           <li class="mr-2">
             <a href="#tab-instruir" class="tab-link active">Compra de la inversión</a>
           </li>
-        </ul>
+        </ul>-->
       </div>
 
       <!-- Panels -->
@@ -256,6 +256,25 @@
            class="w-full rounded-xl border-2 border-gray-200 p-2.5 bg-gray-50"
            value="4.5900" disabled>
   </div>
+
+    <div class="col-span-3">
+    <label class="block text-sm font-semibold mb-1">Descripción de la instrucción</label>
+    <textarea class="w-full border border-gray-300 rounded-lg p-2.5 text-gray-800" rows="5">
+    </textarea>
+  </div>
+    <div class="col-span-3 gap-5 flex flex-row">
+               <div class="w-full">
+            <label class="block text-sm font-semibold mb-1">Banco cuenta destino</label>
+            <select id="banco_destino_base" class="banco_destino w-full"></select>
+            <p class="text-xs text-gray-500 mt-1">Selecciona el banco destino del aporte.</p>
+          </div>
+          <div class="w-full">
+            <label class="block text-sm font-semibold mb-1">Nro cuenta destino</label>
+            <div id="cuenta_destino_base" class="flex gap-2">
+              <select class="cuenta_destino w-full"></select>
+            </div>
+          </div>
+    </div>
 </div>
 
 
@@ -343,13 +362,13 @@
 
         <div class="flex justify-end gap-3">
   <a href="#" class="btn-secondary">Cancelar</a>
-  <button type="button"
+  <!--<button type="button"
         id="agregar-carta-btn"
         class="btn-info btnCartaOp btn-carta"
         data-url-operacion="generar-carta-aprobacion.html" 
         data-param="panel">                         
   Agregar Carta
-</button>
+</button>-->
 
   <button type="submit" id="confirmar-principal" class="btn-primary btn-registrar">Confirmar</button>
 </div>
