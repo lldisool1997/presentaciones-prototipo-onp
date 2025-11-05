@@ -1453,7 +1453,8 @@ function bloquearCamposSoloLectura($panel) {
 function desbloquearCamposGlobales(){
   // Deshabilitar todos los inputs, selects y textareas
   //$("#confirmar-principal").prop("disabled", false);
-  //$("#agregar-carta-btn").prop("disabled", false);
+ $("#agregar-carta-btn").prop("disabled", false);
+ $("#agregar-carta-btn").prop("disabled", false);
 }
 
 /**
