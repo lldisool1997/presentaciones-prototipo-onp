@@ -1260,19 +1260,24 @@ removeDetalleFila(index) {
     return transaccionesEncontradas;
   },
 
- validateCommissions() {
+validateCommissions() {
   const errors = [];
-  
+
   // Recorrer cada fila de detalle
   this.curr?.detalle?.forEach((detalle, idx) => {
     // Verificar si es una comisión
-    if (detalle.tipoTransaccion && (detalle.tipoTransaccion.includes("Comisión"))) {
+    if (detalle.tipoTransferencia && detalle.tipoTransferencia.includes("Comisión")) {
       // Verificar si tiene cuenta asignada
       if (!detalle.cuentaId || detalle.cuentaId.trim() === "") {
         errors.push(`La comisión en el abono #${idx + 1} no tiene cuenta asignada.`);
       }
-      // Verificar si tiene monto asignado
-      if (!detalle.monto || parseFloat(detalle.monto) <= 0) {
+
+      // Verificar si tiene monto asignado y es un valor numérico válido
+      // Eliminar separadores de miles y convertir a número
+      const monto = parseFloat(detalle.monto.replace(/,/g, '').trim());
+      
+      // Verificar que el monto sea válido (es decir, no NaN y mayor que cero)
+      if (isNaN(monto) || monto <= 0) {
         errors.push(`La comisión en el abono #${idx + 1} no tiene un monto válido.`);
       }
     }
@@ -1289,6 +1294,8 @@ removeDetalleFila(index) {
   }
   return true;
 }
+
+
 
 
 

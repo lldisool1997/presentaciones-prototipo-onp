@@ -684,6 +684,8 @@ function aprobacion_inst_corto_plazo_upsert() {
 
 // Ready
 $(function(){
+
+    initBancoCuenta($("#banco_destino_base"), $("#cuenta_destino_base"));
   // Toastr cfg
   toastr.options = { positionClass:"toast-top-right", timeOut:2500, progressBar:true };
 

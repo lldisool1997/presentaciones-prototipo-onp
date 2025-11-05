@@ -95,7 +95,7 @@
       </div>
 
         <div class="px-4 py-3 rounded-lg bg-[#f8f9fa] border-t border-slate-200 font-semibold border-l-2 border-l-blue-300">
-        2. Documentos de la instrucción
+        2. Documentos sustentatorios
           </div>
           <div class="p-4">
                 <div class="p-4">
@@ -142,30 +142,10 @@
 
       </div>
 
-      <div class="px-4 py-3 rounded-lg bg-[#f8f9fa] border-y border-slate-200 font-semibold border-l-2 border-l-blue-300">
-        3. Cuenta de cargo
-      </div>
-      <div class="p-4 grid md:grid-cols-4 gap-3">
-        <div>
-          <div class="text-xs font-semibold text-slate-700 mb-1">Unidad de Negocio</div>
-          <div class="tw-input bg-slate-50">{{ curr?.unidad || '—' }}</div>
-        </div>
-        <div>
-          <div class="text-xs font-semibold text-slate-700 mb-1">Banco y Cuenta</div>
-          <div class="tw-input bg-slate-50">{{ accountAlias(curr?.cuentaCabeceraId) }}</div>
-        </div>
-        <div>
-          <div class="text-xs font-semibold text-slate-700 mb-1">Moneda</div>
-          <div class="tw-input bg-slate-50">{{ curr?.moneda || '—' }}</div>
-        </div>
-        <div>
-          <div class="text-xs font-semibold text-slate-700 mb-1">Importe</div>
-          <div class="tw-input bg-slate-50">{{ money(curr?.importe) }}</div>
-        </div>
-      </div>
+     
 
       <div class="px-4 py-3 rounded-lg bg-[#f8f9fa] border-y border-slate-200 font-semibold border-l-2 border-l-blue-300">
-        4. Detalle de abonos
+        3. Detalle de la instrucción
       </div>
 
       <!-- Tabs de detalle -->
@@ -492,7 +472,7 @@
       </div>-->
     <div class="my-4 w-full">
       <div class="px-4 text-gray-800 border-b border-slate-200 font-semibold border-l-2 border-l-blue-300 border-b-blue-300">
-        2. Sustento documentario del abono #{{ getActiveRowIdx() + 1}}
+        4. Sustento documentario del abono #{{ getActiveRowIdx() + 1}}
       </div>
   </div>
 
